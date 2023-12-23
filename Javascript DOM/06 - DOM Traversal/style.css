@@ -1,0 +1,109 @@
+body {
+	margin: 50px;
+	font-family: arial;
+	background-color: #666;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.container {
+	width: 900px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.card {
+	transition: all 300ms ease;
+	display: inline-block;
+	width: 220px;
+	padding: 0 80px;
+	height: 80px;
+	font-size: 16px;
+	line-height: 80px;
+	border-radius: 40px;
+	background-color: #f1f1f1;
+	margin: 20px;
+	position: relative;
+	text-align: center;
+}
+
+.card img {
+	float: left;
+	margin: 0 10px 0 -80px;
+	height: 80px;
+	width: 80px;
+	border-radius: 50%;
+	position: relative;
+}
+
+.card .nama,
+.card .telp {
+	display: block;
+	line-height: 20px;
+	padding: 0 5px;
+}
+
+.card .nama {
+	margin-left: 20px;
+	margin-top: 20px;
+	font-size: 20px;
+}
+
+.card .telp {
+	margin-left: 20px;
+	margin-top: 5px;
+	font-size: 16px;
+	color: #aaa;
+}
+
+.card .close {
+	font-size: 24px;
+	font-weight: bold;
+	color: rgb(153, 153, 153);
+	position: absolute;
+	top: 0;
+	right: 30px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.card:hover .close {
+	color: red;
+}
+
+.active {
+	width: 20px;
+	border-radius: 40px;
+	transition: all 300ms ease;
+	position: relative;
+}
+
+.active .nama,
+.active .telp {
+	display: none;
+}
+
+.active .close {
+	font-size: 24px;
+	font-weight: bold;
+	color: rgb(153, 153, 153);
+	position: absolute;
+	top: 0;
+	right: 30px;
+	cursor: pointer;
+}
+
+.active img {
+	position: relative;
+	left: 0;
+	/* float: left; */
+	margin-right: 0;
+	height: 80px;
+	width: 80px;
+	border-radius: 50%;
+	position: relative;
+}

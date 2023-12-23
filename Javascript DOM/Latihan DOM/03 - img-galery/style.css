@@ -1,0 +1,60 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #ccc;
+}
+
+.container {
+	width: 600px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	margin: 20px auto;
+	border: 5px solid white;
+	overflow: hidden;
+}
+
+.thumbnail {
+	width: 600px;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.img-child {
+	width: calc(100% / 3);
+	height: calc(400px / 3);
+	border: 3px solid #ccc;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+.img-child img {
+	transition: all 300ms ease;
+	width: 100%;
+}
+
+.img-child img:hover {
+	opacity: 0.5;
+	transform: scale(1.1);
+}
+
+.fade {
+	opacity: 0;
+	animation: fade 500ms forwards;
+}
+
+.active {
+	transform: scale(1.1);
+	opacity: 0.5;
+}
+
+@keyframes fade {
+	to {
+		opacity: 1;
+	}
+}
