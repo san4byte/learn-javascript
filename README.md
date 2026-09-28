@@ -88,6 +88,29 @@ Pengembangan aplikasi skala industri menggunakan modul dan bundler:
 
 ---
 
+### 5. [05 - JavaScript OOP (Programmer Zaman Now)](05-oop/)
+
+Pemrograman Berorientasi Objek mendalam mengikuti silabus Programmer Zaman Now (PZN):
+
+1. [01 - Constructor Function](05-oop/01-constructor-function/README.md)
+2. [02 - Prototype Inheritance](05-oop/02-prototype/README.md)
+3. [03 - Class](05-oop/03-class/README.md)
+4. [04 - Class Inheritance (extends)](05-oop/04-class-inheritance/README.md)
+5. [05 - Super Constructor](05-oop/05-super-constructor/README.md)
+6. [06 - Super Method (Method Overriding)](05-oop/06-super-method/README.md)
+7. [07 - Getter dan Setter](05-oop/07-getter-setter/README.md)
+8. [08 - Public Class Field](05-oop/08-public-class-field/README.md) *(Lanjutan)*
+9. [09 - Private Class Field (#)](05-oop/09-private-class-field/README.md) *(Lanjutan)*
+10. [10 - Private Method (#)](05-oop/10-private-method/README.md) *(Lanjutan)*
+11. [11 - Operator instanceof](05-oop/11-operator-instanceof/README.md) *(Lanjutan)*
+12. [12 - Static Field](05-oop/12-static-field/README.md) *(Lanjutan)*
+13. [13 - Static Method](05-oop/13-static-method/README.md) *(Lanjutan)*
+14. [14 - Error Handling Class](05-oop/14-error-handling-class/README.md) *(Lanjutan)*
+15. [15 - Custom Error Class](05-oop/15-custom-error/README.md) *(Lanjutan)*
+16. [16 - Iterable dan Iterator](05-oop/16-iterable-iterator/README.md) *(Lanjutan)*
+
+---
+
 ## 🛠️ Cara Menjalankan Kode
 
 ### 1. Menjalankan File JavaScript via Node.js
