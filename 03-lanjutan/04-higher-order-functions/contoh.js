@@ -1,55 +1,23 @@
-// contoh high order function
-// function repeat(n, action) {
-// 	for (let i = 0; i < n; i++) {
-// 		action(i);
-// 	}
-// }
-// repeat(10, console.log);
-
-//
-// let total = 0,
-// 	count = 1;
-
-// while (count <= 10) {
-// 	total += count;
-// 	count++;
-// }
-
-// console.log(total);
+// Penjelasan lengkap dapat dibaca pada README.md
+// Higher-Order Functions: filter, map, reduce, dan method chaining
 
 const angka = [-1, 8, 9, 1, 4, -5, -4, 3, 2, 9];
 
-// * filter
-// mencari angka yang >= 3
+// 1. Filter angka >= 3
+const filterAngka = angka.filter((a) => a >= 3);
+console.log("Filter >= 3:", filterAngka);
 
-// ? for
-// const newAngka = [];
-// for (let i = 0; i < angka.length; i++) {
-// 	if (angka[i] >= 3) {
-// 		newAngka.push(angka[i]);
-// 	}
-// }
+// 2. Map (kalikan 2)
+const mapAngka = filterAngka.map((a) => a * 2);
+console.log("Map dikalikan 2:", mapAngka);
 
-// ? filter
-// const newAngka = angka.filter((e) => e >= 3); // arrow function
-// console.log(newAngka);
+// 3. Reduce (jumlahkan seluruh elemen)
+const reduceAngka = mapAngka.reduce((acc, curr) => acc + curr, 0);
+console.log("Total reduce:", reduceAngka);
 
-// ? map
-// semua nagka di array angka dikali 2
-// const newAngka = angka.map((e) => e * 2);
-// console.log(angka);
-// console.log(newAngka);
-
-// ? reduce
-// menjumlahkan seluruh isi array angka
-// const newAngka = angka.reduce((acumulator, curentvalue) => acumulator + curentvalue, 0);
-// console.log(newAngka);
-
-// ? method chaining
-// gabungan fillter, map, reduce
-const hasil = angka
-	.filter((e) => e >= 5)
-	.map((e) => e * 3)
-	.map((e) => e / 2)
-	.reduce((acc, cuu) => acc + cuu);
-console.log(hasil);
+// 4. Method Chaining (gabungan filter -> map -> reduce)
+const hasilChaining = angka
+  .filter((a) => a > 5)
+  .map((a) => a * 3)
+  .reduce((acc, curr) => acc + curr, 0);
+console.log("Hasil chaining:", hasilChaining);

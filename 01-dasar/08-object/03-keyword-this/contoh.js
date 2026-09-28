@@ -1,28 +1,24 @@
-// * konsep this
+// Penjelasan lengkap dapat dibaca pada README.md
+// Perilaku keyword 'this' pada berbagai konteks
 
-// todo: cara 1 - funtion deklaration
+// 1. Function Declaration (this = global/window)
 function halo() {
-	console.log(this);
-	console.log("hallo");
+  console.log("this pada function biasa:", this === globalThis);
 }
 halo();
-//! this mengembalikan object global
 
-// todo: cara 2 - object literal
-let obj = { a: 10, nama: "joko" };
-// method halo
-obj.halo = function () {
-	console.log(this);
-	console.log("hallo");
+// 2. Object Literal (this = objek pemilik)
+let obj = {
+  nama: "joko",
+  halo: function () {
+    console.log("this pada method objek:", this.nama);
+  },
 };
 obj.halo();
-// ! this mengembalikan object yang bersangkutan
 
-// todo: cara 3 - constructor
-function Halo2() {
-	console.log(this);
-	console.log("hallo");
+// 3. Constructor Function (this = instance objek baru)
+function HaloConstructor(nama) {
+  this.nama = nama;
 }
-let obj2 = new Halo2();
-let obj3 = new Halo2();
-// ! this mengembalikan object yang baru dibuat
+let objBaru = new HaloConstructor("budi");
+console.log("this pada instance baru:", objBaru.nama);

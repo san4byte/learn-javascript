@@ -1,14 +1,13 @@
-// const judul = document.getElementById("judul");
-// judul.innerHTML = "Joko Santoso";
+// Penjelasan lengkap dapat dibaca pada README.md
+// Manipulasi atribut dan isi elemen HTML
 
-// const sectionA = document.querySelector("#a");
-// sectionA.innerHTML = "Hello World!!";
+const judul = document.getElementById("judul");
+judul.innerHTML = "Joko Santoso";
+judul.style.color = "salmon";
 
-// const judul = document.getElementById("judul");
-// judul.style.color = "salmon";
-
-// const judul = document.getElementsByTagName("h1")[0];
-// const a = document.querySelector("section#a a");
-// judul.setAttribute("name", "joko");
+const sectionA = document.querySelector("#a");
+const a = document.querySelector("section#a a");
+judul.setAttribute("name", "joko");
 
 const p2 = document.querySelector(".p2");
+p2.classList.add("label");

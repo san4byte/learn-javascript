@@ -1,3 +1,5 @@
+// Penjelasan lengkap dapat dibaca pada README.md
+// Pengecekan bilangan ganjil atau genap
 let angka = prompt("masukkan angka:");
 if (angka % 2 == 0) {
   alert(angka + " adalah bilangan GENAP");

@@ -1,36 +1,23 @@
-// console.log(i);
-// var i = 10;
-// output : undefined
-// hoisting
+// Penjelasan lengkap dapat dibaca pada README.md
+// Demonstrasi variabel: var (hoisting & function scope), let & const (block scope)
 
-// *
-// for (let i = 0; i < 10; i++) {
-// 	console.log(i);
-// }
-// console.log(i);
-// ? output : 0 - 10
-// function test() {
-// 	for (let i = 0; i < 10; i++) {
-// 		console.log(i);
-// 	}
-// }
-// test();
-// console.log(i);
-// ? output : 0 - 9 [angka 10 eror karena javascript menganut function scope
+console.log("--- Hoisting dengan var ---");
+console.log(i); // undefined
+var i = 10;
 
-// * const
-// const i = 10;
-// i = 15
-// ? output : eror
+console.log("--- Block scope let ---");
+for (let j = 0; j < 5; j++) {
+  console.log("Nilai j:", j);
+}
+
+console.log("--- Mutasi Objek dan Array dengan const ---");
 const mhs = {
-	nama: "joko santoso",
-	umur: 20,
+  nama: "joko santoso",
+  umur: 20,
 };
-
-mhs.umur = 30;
+mhs.umur = 30; // Properti dapat diubah
 console.log(mhs);
-// ? no eror
-// * atau
-const i = [1, 2, 3];
-i.push(4);
-// ? mo eror
+
+const angka = [1, 2, 3];
+angka.push(4); // Elemen dapat ditambah
+console.log(angka);

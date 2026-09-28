@@ -1,17 +1,7 @@
-// function
-function volumeKubus(a, b) {
-  let volumeA = a * a * a;
-  let volumeB = b * b * b;
-
-  let hasil = volumeA + volumeB;
-
-  return hasil;
-}
-// panggil
-console.log(volumeKubus(10, 5));
-
-// refactoring (penyerdehana'an)
+// Penjelasan lengkap dapat dibaca pada README.md
+// Menghitung total volume dua kubus
 function volumeKubus(a, b) {
   return a * a * a + b * b * b;
 }
-console.log(volumeKubus(10, 5));
+
+console.log("Total volume kubus (sisi 10 dan 5):", volumeKubus(10, 5));

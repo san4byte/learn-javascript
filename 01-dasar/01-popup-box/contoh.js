@@ -1,3 +1,4 @@
+// Penjelasan lengkap dapat dibaca pada README.md
 alert("selamat datang...");
 var lagi = true;
 

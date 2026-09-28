@@ -1,14 +1,12 @@
-// var penumpang
+// Penjelasan lengkap dapat dibaca pada README.md
+// Project Pengelolaan Kursi Penumpang Angkot
 let penumpang = [];
 
-// function tambah penumpang
 function tambahPenumpang(namaPenumpang, penumpang) {
-  // jika tidak ada penumpang
   if (penumpang.length == 0) {
     penumpang.push(namaPenumpang);
     return penumpang;
   } else {
-    // agar logic benar nama penumpang yang sama harus dipisah dengan undifinrd
     if (penumpang.includes(namaPenumpang)) {
       console.log(namaPenumpang + " sudah ada di angkot");
       return penumpang;
@@ -25,12 +23,9 @@ function tambahPenumpang(namaPenumpang, penumpang) {
   }
 }
 
-// function hapus penumpang
 function hapusPenumpang(namaPenumpang, penumpang) {
-  // cek isi angkot
-  // jika kosong
   if (penumpang.length == 0) {
-    console.log("maaf penumpang masih kosong");
+    console.log("Angkot masih kosong.");
     return penumpang;
   } else {
     for (let i = 0; i < penumpang.length; i++) {
@@ -38,9 +33,15 @@ function hapusPenumpang(namaPenumpang, penumpang) {
         penumpang[i] = undefined;
         return penumpang;
       } else if (i == penumpang.length - 1) {
-        console.log("maaf " + namaPenumpang + " tidak ada diangkot");
+        console.log(namaPenumpang + " tidak ada di dalam angkot.");
         return penumpang;
       }
     }
   }
 }
+
+tambahPenumpang("Joko", penumpang);
+tambahPenumpang("Samsul", penumpang);
+console.log("Daftar penumpang:", penumpang);
+hapusPenumpang("Joko", penumpang);
+console.log("Setelah Joko turun:", penumpang);

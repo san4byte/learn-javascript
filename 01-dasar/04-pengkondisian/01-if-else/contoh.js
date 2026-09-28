@@ -1,6 +1,7 @@
+// Penjelasan lengkap dapat dibaca pada README.md
+// Pengkondisian if else untuk status angkot
 let jmlAngkot = 10;
 let angkotBeroprasi = 6;
-let noAngkot = 1;
 
 for (let noAngkot = 1; noAngkot <= jmlAngkot; noAngkot++) {
   if (noAngkot <= angkotBeroprasi) {

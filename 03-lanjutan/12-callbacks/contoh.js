@@ -1,8 +1,11 @@
-// callbacks
-// synchronus callbacks
+// Penjelasan lengkap dapat dibaca pada README.md
+// Synchronous Callback sederhana
 
-function pesan(callback) {
-	const nama = prompt(`Masukkan nama:`);
-	callback(nama);
+function sapa(callback) {
+  const nama = "Joko";
+  callback(nama);
 }
-pesan((nama) => alert(`Hallo ${nama}`));
+
+sapa((nama) => {
+  console.log(`Halo ${nama}, selamat datang!`);
+});
