@@ -9,7 +9,9 @@ Setiap topik dilengkapi dengan file dokumentasi (`README.md`) yang menjelaskan k
 ## 📚 Daftar Isi dan Urutan Belajar
 
 ### 1. [01 - JavaScript Dasar](01-dasar/)
+
 Fondasi logika pemrograman, sintaks dasar, dan struktur data:
+
 1. [01 - Popup Box (alert, prompt, confirm)](01-dasar/01-popup-box/README.md)
 2. [02 - Variabel dan Scope (var, let, const)](01-dasar/02-variabel/README.md)
 3. [03 - Pengulangan (Looping)](01-dasar/03-pengulangan/)
@@ -41,7 +43,9 @@ Fondasi logika pemrograman, sintaks dasar, dan struktur data:
 ---
 
 ### 2. [02 - JavaScript DOM (Document Object Model)](02-dom/)
+
 Interaksi JavaScript dengan dokumen web dan antarmuka HTML:
+
 1. [01 - Pengenalan DOM](02-dom/01-intro/README.md)
 2. [02 - DOM Selection](02-dom/02-dom-selection/README.md)
 3. [03 - DOM Manipulasi Element](02-dom/03-dom-manipulasi-element/README.md)
@@ -55,7 +59,9 @@ Interaksi JavaScript dengan dokumen web dan antarmuka HTML:
 ---
 
 ### 3. [03 - JavaScript Lanjutan (ES6 & Asynchronous)](03-lanjutan/)
+
 Fitur-fitur modern JavaScript dan pemrograman asinkron:
+
 1. [01 - Object Lanjutan (Prototype Inheritance & Class)](03-lanjutan/01-object-lanjutan/README.md)
 2. [02 - Closures dan Lexical Scope](03-lanjutan/02-closures/README.md)
 3. [03 - Arrow Function](03-lanjutan/03-arrow-function/README.md)
@@ -75,7 +81,9 @@ Fitur-fitur modern JavaScript dan pemrograman asinkron:
 ---
 
 ### 4. [04 - JavaScript Modular (Webpack & Tooling)](04-modular/)
+
 Pengembangan aplikasi skala industri menggunakan modul dan bundler:
+
 - [Arsitektur Webpack 5, SCSS Loader, dan Code Splitting](04-modular/README.md)
 
 ---
@@ -83,7 +91,9 @@ Pengembangan aplikasi skala industri menggunakan modul dan bundler:
 ## 🛠️ Cara Menjalankan Kode
 
 ### 1. Menjalankan File JavaScript via Node.js
+
 Sebagian besar materi dasar dan lanjutan yang tidak membutuhkan objek browser `window`/`document` dapat langsung dijalankan di terminal menggunakan Node.js:
+
 ```bash
 # Contoh menjalankan materi variabel
 node 01-dasar/02-variabel/contoh.js
@@ -93,9 +103,11 @@ node 03-lanjutan/04-higher-order-functions/contoh.js
 ```
 
 ### 2. Menjalankan Materi DOM di Browser
+
 Untuk materi yang melibatkan DOM atau popup browser, cukup buka file `index.html` yang ada di setiap folder materi langsung di browser Anda, atau gunakan ekstensi seperti **Live Server** di VS Code.
 
 ### 3. Menjalankan Proyek Modular Webpack
+
 ```bash
 cd 04-modular
 npm install
