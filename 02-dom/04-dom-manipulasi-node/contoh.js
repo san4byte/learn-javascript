@@ -1,31 +1,28 @@
-// Penjelasan lengkap dapat dibaca pada README.md
-// Membuat, menyisipkan, mengganti, dan menghapus node DOM
+// Penjelasan lengkap materi ini dapat dilihat di README.md
 
-// 1. createElement & appendChild
-const pBaru = document.createElement("p");
-const textpBaru = document.createTextNode("Paragraf Baru");
-pBaru.appendChild(textpBaru);
+if (typeof document === 'undefined') {
+  console.log("--- 04. DOM Manipulasi Node ---");
+  console.log("Buka file 'index.html' di browser untuk melihat pembuatan elemen HTML baru!");
+} else {
+  console.log("--- 04. DOM Manipulasi Node (Browser) ---");
 
-const sectionA = document.getElementById("a");
-sectionA.appendChild(pBaru);
+  const kontainerList = document.getElementById("daftar-tugas");
 
-// 2. insertBefore
-const liBaru = document.createElement("li");
-const textLiBaru = document.createTextNode("Item Baru");
-liBaru.appendChild(textLiBaru);
+  if (kontainerList) {
+    // 1. Buat element <li> baru di memori
+    const itemBaru1 = document.createElement("li");
+    itemBaru1.textContent = "Tugas Baru: Belajar Manipulasi Node (appendChild)";
+    itemBaru1.style.color = "#16a34a"; // Hijau
 
-const ul = document.querySelector("#b ul");
-const li2 = document.querySelector("#b ul li:nth-child(2)");
-ul.insertBefore(liBaru, li2);
+    // 2. Sisipkan ke akhir daftar
+    kontainerList.appendChild(itemBaru1);
+    console.log("Berhasil menambahkan item di akhir.");
 
-// 3. removeChild
-const link = document.getElementsByTagName("a")[0];
-sectionA.removeChild(link);
-
-// 4. replaceChild
-const sectionB = document.getElementById("b");
-const p4 = sectionB.querySelector("p");
-const h2Baru = document.createElement("h2");
-const textH2Baru = document.createTextNode("Judul Baru!");
-h2Baru.appendChild(textH2Baru);
-sectionB.replaceChild(h2Baru, p4);
+    // 3. Buat item prioritas tinggi di paling awal (prepend)
+    const itemPrioritas = document.createElement("li");
+    itemPrioritas.textContent = "Tugas Mendesak: Minum Air Putih (prepend)";
+    itemPrioritas.style.color = "#ea580c"; // Oranye
+    kontainerList.prepend(itemPrioritas);
+    console.log("Berhasil menambahkan item prioritas di awal.");
+  }
+}

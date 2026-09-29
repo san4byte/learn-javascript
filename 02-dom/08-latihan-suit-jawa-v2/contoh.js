@@ -1,56 +1,24 @@
-// function pilihan computer
-function getPilihanComp() {
-	const comp = Math.random();
+// Penjelasan lengkap materi ini dapat dilihat di README.md
 
-	if (comp < 0.34) return "gajah";
-	if (comp >= 0.34 && comp <= 0.67) return "orang";
-	return "semut";
+if (typeof document === 'undefined') {
+  console.log("--- 08. Game Suit Jawa GUI ---");
+  console.log("Buka file 'index.html' di browser Anda untuk memainkan game Suit Jawa visual!");
+} else {
+  console.log("--- 08. Game Suit Jawa GUI (Browser) ---");
+
+  function getPilihanKomputer() {
+    const acak = Math.random();
+    if (acak < 0.34) return "gajah";
+    if (acak <= 0.67) return "orang";
+    return "semut";
+  }
+
+  function tentukanHasil(player, comp) {
+    if (player === comp) return "SERI!";
+    if (player === "gajah") return comp === "orang" ? "MENANG!" : "KALAH!";
+    if (player === "orang") return comp === "gajah" ? "KALAH!" : "MENANG!";
+    if (player === "semut") return comp === "orang" ? "KALAH!" : "MENANG!";
+  }
+
+  console.log("Mesin game Suit Jawa siap merespon klik gambar.");
 }
-
-// function hasil
-function getHasil(comp, player) {
-	if (player == comp) return "SERI!";
-	if (player == "gajah") return comp == "orang" ? "MENANG!" : "KALAH!";
-	if (player == "semut") return comp == "gajah" ? "MENANG!" : "KALAH!";
-	if (player == "orang") return comp == "semut" ? "MENANG!" : "KALAH!";
-}
-
-// function animasi putar
-function putar() {
-	const imgComputer = document.querySelector(".img-komputer");
-	const gambar = ["gajah", "semut", "orang"];
-	const waktuMulai = new Date().getTime();
-	let i = 0;
-	setInterval(function () {
-		if (new Date().getTime() - waktuMulai > 1000) {
-			clearInterval;
-			return;
-		}
-
-		imgComputer.setAttribute(`src`, `./img/${gambar[i++]}.png`);
-		if (i == gambar.length) i = 0;
-	}, 100);
-}
-
-// pilihan player
-// * lebih ringkas
-const pilihan = document.querySelectorAll("li img");
-pilihan.forEach(function (pil) {
-	pil.addEventListener("click", function () {
-		const pilihanComp = getPilihanComp();
-		const pilihanPlayer = pil.className;
-		const hasil = getHasil(pilihanComp, pilihanPlayer);
-
-		putar();
-
-		setTimeout(function () {
-			// img pilihan comp
-			const imgComputer = document.querySelector(".img-komputer");
-			imgComputer.setAttribute(`src`, `./img/${pilihanComp}.png`);
-
-			// hasil
-			const info = document.querySelector(".info");
-			info.innerHTML = hasil;
-		}, 1000);
-	});
-});

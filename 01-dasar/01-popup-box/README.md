@@ -1,63 +1,88 @@
-# 01 - Popup Box (alert, prompt, confirm)
+# 01 - Popup Box (alert, prompt, dan confirm)
 
-## Tujuan Belajar
-- Memahami fungsi interaksi dialog bawaan browser.
-- Membedakan fungsi dan nilai kembalian dari `alert()`, `prompt()`, dan `confirm()`.
-- Menggabungkan popup dialog dengan perulangan untuk alur input interaktif.
-
-## Penjelasan Konsep
-JavaScript menyediakan tiga dialog bawaan (popup box) yang berjalan secara modal (memblokir eksekusi baris kode berikutnya sampai pengguna merespons dialog):
-1. **`alert(pesan)`**: Menampilkan kotak dialog informasi sederhana dengan satu tombol OK. Tidak mengembalikan nilai apapun (`undefined`).
-2. **`prompt(pesan, default)`**: Menampilkan kotak input teks. Mengembalikan string yang diketik pengguna, atau `null` jika pengguna menekan tombol Cancel.
-3. **`confirm(pesan)`**: Menampilkan kotak dialog konfirmasi dengan tombol OK dan Cancel. Mengembalikan boolean `true` jika memilih OK dan `false` jika memilih Cancel.
-
-## Contoh Kode
-```javascript
-// Penjelasan lengkap dapat dibaca pada README.md
-alert("selamat datang...");
-var lagi = true;
-
-while (lagi) {
-  var nama = prompt("masukan nama");
-  alert("hallo " + nama);
-
-  lagi = confirm("coba lagi");
-}
-
-alert("terima kasih");
-```
-
-### Output
-```text
-(Muncul dialog alert: "selamat datang...")
-(Muncul input prompt meminta nama, misal user mengetik "Joko")
-(Muncul dialog alert: "hallo Joko")
-(Muncul dialog confirm: "coba lagi", jika OK maka loop berlanjut, jika Cancel loop berhenti)
-(Muncul dialog alert penutup: "terima kasih")
-```
-
-## Penjelasan Tambahan
-- **Analogi Kehidupan Sehari-hari**:
-  - `alert()` seperti pengumuman pengeras suara di stasiun: Anda hanya mendengarkan dan menekan "mengerti".
-  - `prompt()` seperti resepsionis yang menyodorkan formulir: meminta Anda menuliskan nama atau data.
-  - `confirm()` seperti kasir yang bertanya "Apakah ingin cetak struk?": hanya butuh jawaban Ya atau Tidak.
-- **Kenapa Penting & Penggunaan di Proyek Nyata**:
-  Popup bawaan browser sangat berguna saat fase belajar logika, debugging cepat, atau prototyping kasar. Di aplikasi produksi modern, developer biasanya menggantinya dengan modal kustom (seperti SweetAlert atau Bootstrap Modal) agar tampilan UI lebih estetik dan tidak memblokir thread browser.
-- **Kesalahan Umum Pemula**:
-  - Lupa bahwa nilai kembalian dari `prompt()` selalu bertipe `string`. Jika ingin operasi matematika, harus dikonversi dengan `parseInt()` atau `Number()`.
-  - Terjebak dalam *infinite loop* jika kondisi penghenti pada `confirm()` tidak di-update dengan benar.
-- **Best Practice**:
-  Gunakan `confirm()` untuk aksi berbahaya (seperti konfirmasi hapus data penting) jika belum memiliki komponen modal UI kustom.
-
-## Latihan
-1. Buat program yang meminta user memasukkan dua angka via `prompt()`, jumlahkan kedua angka tersebut, lalu tampilkan hasilnya via `alert()`. (Ingat konversi tipe data string ke number).
-2. Buat popup konfirmasi `confirm("Apakah Anda yakin ingin keluar?")`. Jika user memilih Cancel, tampilkan `alert("Anda tetap di halaman")`.
-
-## Ringkasan Poin Penting
-- `alert()` hanya memberi pesan informasi.
-- `prompt()` mengambil input teks (tipe data string).
-- `confirm()` mengambil keputusan Ya/Tidak (tipe data boolean).
-- Ketiganya bersifat sinkron dan memblokir eksekusi script browser sementara.
+## 1. 🎯 Tujuan Belajar
+- Memahami fungsi dialog bawaan browser: alert(), prompt(), dan confirm().
+- Mengetahui nilai balik (return value) dari masing-masing fungsi dialog.
+- Mampu membuat pengulangan interaktif berbasis konfirmasi pengguna.
+- Membuat kode universal yang aman dijalankan baik di Terminal (Node.js) maupun Browser.
 
 ---
-[Materi Selanjutnya: 02 - Variabel ➡️](../02-variabel/README.md)
+
+## 2. 📖 Penjelasan Konsep
+JavaScript di browser menyediakan 3 fungsi dialog interaktif modal sederhana:
+1. **`alert(pesan)`**: Menampilkan pesan informasi kepada pengguna dengan tombol OK. Mengembalikan nilai `undefined`.
+2. **`prompt(pesan, defaultValue)`**: Menampilkan input teks yang meminta pengguna mengetikkan sesuatu. Mengembalikan nilai bertipe `String` jika pengguna menekan OK, atau `null` jika pengguna menekan Batal (*Cancel*).
+3. **`confirm(pertanyaan)`**: Menampilkan kotak pertanyaan dengan tombol OK dan Batal. Mengembalikan nilai Boolean: `true` jika menekan OK, dan `false` jika menekan Batal.
+
+### ⚠️ Sifat Blocking:
+Dialog popup browser bersifat **blocking / synchronous**: seluruh eksekusi skrip JavaScript dan render antarmuka halaman web akan terhenti total sampai pengguna menekan salah satu tombol pada dialog tersebut.
+
+---
+
+## 3. 💻 Contoh Kode (`contoh.js`)
+```javascript
+// Penjelasan lengkap materi ini dapat dilihat di README.md
+
+// 1. Helper Universal (agar kode tidak crash saat dijalankan via terminal Node.js)
+const universalAlert = typeof alert !== 'undefined' ? alert : (msg) => console.log(`[ALERT]: ${msg}`);
+const universalPrompt = typeof prompt !== 'undefined' ? prompt : (msg) => "Joko Santoso";
+const universalConfirm = typeof confirm !== 'undefined' ? confirm : (msg) => false; // agar loop berhenti di terminal
+
+universalAlert("Selamat datang di Pembelajaran JavaScript!");
+
+let lanjut = true;
+let hitungan = 1;
+
+while (lanjut && hitungan <= 2) {
+  const nama = universalPrompt("Masukkan nama Anda:");
+  universalAlert(`Halo ${nama}, ini iterasi ke-${hitungan}`);
+  
+  // Konfirmasi apakah ingin mengulang lagi
+  lanjut = universalConfirm("Apakah Anda ingin mencoba lagi?");
+  hitungan++;
+}
+
+universalAlert("Terima kasih telah berkunjung!");
+```
+
+---
+
+## 4. 🖥️ Output yang Diharapkan
+```text
+[ALERT]: Selamat datang di Pembelajaran JavaScript!
+[ALERT]: Halo Joko Santoso, ini iterasi ke-1
+[ALERT]: Terima kasih telah berkunjung!
+```
+
+---
+
+## 5. 💡 Penjelasan Tambahan
+
+### 🎭 Analogi Dunia Nyata
+> Popup box seperti **penjaga pintu palang kereta api**: saat palang turun (popup muncul), semua kendaraan di jalan raya berhenti total (blocking). Kendaraan baru boleh jalan kembali setelah palang diangkat (pengguna menekan tombol).
+
+### 🏢 Real-World Use Case
+1. **Konfirmasi Penghapusan Data Sensitif**: Menampilkan `confirm('Apakah Anda yakin ingin menghapus data ini secara permanen?')` sebelum memicu request delete ke database.
+2. **Rapid Prototyping & Debugging Cepat**: Menguji aliran data logika tanpa perlu membuat elemen form HTML yang rumit.
+
+### ⚠️ Common Pitfalls (Jebakan Umum)
+* **Error 'alert is not defined' di Node.js**: Pemula sering kaget saat menjalankan file di terminal dengan `node script.js` dan mengalami crash. Objek `alert`, `prompt`, dan `confirm` adalah milik browser (`window`), bukan milik runtime Node.js.
+* **Nilai Kembalian prompt() Selalu String**: Jika pengguna mengetik angka `25`, `prompt()` mengembalikan string `"25"`. Jika Anda melakukan `25 + 5`, hasilnya adalah `"255"`, bukan `30`. Lakukan parsing angka dengan `parseInt()` atau `Number()`.
+* **Mengganggu Pengalaman Pengguna (UX)**: Jangan menggunakan popup box bawaan untuk aplikasi produksi komersial karena menghentikan interaksi user dan tampilannya tidak bisa dikustomisasi dengan CSS.
+
+### 🌟 Best Practice
+* Selalu gunakan helper guard jika ingin script Anda kompatibel di terminal maupun browser.
+* Untuk aplikasi web modern di produksi, gantikan popup box bawaan browser dengan komponen UI Modal HTML/CSS kustom (misal SweetAlert2 atau Dialog Tailwind/Bootstrap).
+
+---
+
+## 6. ✍️ Latihan Mandiri
+1. Buatlah program yang meminta input umur pengguna melalui `prompt()`. Jika umur >= 17, tampilkan alert 'Boleh membuat SIM', jika kurang dari 17 tampilkan alert 'Belum cukup umur'.
+2. Pastikan input string dari `prompt` dikonversi menjadi tipe data number menggunakan `Number()`.
+
+---
+
+## 7. 🧭 Navigasi
+- ➡️ **Selanjutnya:** [02 - Variabel dan Scope (var, let, const)](../02-variabel-dan-scope/README.md)
+- 🏠 **Daftar Isi Modul 01:** [README Modul 01](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

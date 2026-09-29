@@ -1,29 +1,29 @@
-// Penjelasan lengkap dapat dibaca pada README.md
-// Seleksi elemen DOM menggunakan berbagai method
+// Penjelasan lengkap materi ini dapat dilihat di README.md
 
-const judul = document.getElementById("judul");
-judul.style.color = "salmon";
-judul.style.backgroundColor = "#ccc";
-judul.innerHTML = "Joko santoso";
+if (typeof document === 'undefined') {
+  console.log("--- 02. DOM Selection ---");
+  console.log("Buka file 'index.html' di browser untuk melihat demonstrasi seleksi elemen secara visual!");
+} else {
+  console.log("--- 02. DOM Selection (Browser) ---");
 
-const p = document.getElementsByTagName("p");
-for (let i = 0; i < p.length; i++) {
-  p[i].style.backgroundColor = "lightblue";
-}
+  // 1. getElementById -> Mengembalikan 1 elemen unik
+  const judul = document.getElementById("judul-utama");
+  if (judul) {
+    judul.style.color = "#2563eb";
+    console.log("Berhasil menyeleksi ID:", judul.tagName);
+  }
 
-const h1 = document.getElementsByTagName("h1")[0];
-h1.style.fontSize = "50px";
+  // 2. querySelector -> Menyeleksi 1 elemen pertama menggunakan sintaks selector CSS
+  const paragrafPertama = document.querySelector(".deskripsi");
+  console.log("Teks paragraf pertama:", paragrafPertama?.textContent);
 
-const p1 = document.getElementsByClassName("p1")[0];
-p1.innerHTML = "ini paragraf 1 yang diubah di javascript";
-
-const p4 = document.querySelector("#b p");
-p4.style.backgroundColor = "salmon";
-
-const li2 = document.querySelector("#b ul li:nth-child(2)");
-li2.style.color = "green";
-
-const pDua = document.querySelectorAll("p");
-for (let j = 0; j < pDua.length; j++) {
-  pDua[j].style.backgroundColor = "grey";
+  // 3. querySelectorAll -> Menyeleksi SELURUH elemen yang cocok (NodeList)
+  const semuaItem = document.querySelectorAll("ul.daftar-belajar li");
+  console.log(`Ditemukan ${semuaItem.length} item daftar:`);
+  
+  // NodeList mendukung forEach langsung:
+  semuaItem.forEach((item, index) => {
+    item.textContent = `${index + 1}. ${item.textContent}`;
+    console.log(`- Item ${index + 1}: ${item.textContent}`);
+  });
 }

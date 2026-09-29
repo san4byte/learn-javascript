@@ -1,24 +1,22 @@
-const container = document.querySelector(".container"),
-	imgParent = document.querySelector(".img-parents"),
-	imgChild = document.querySelectorAll(".thumb");
+// Penjelasan lengkap materi ini dapat dilihat di README.md
 
-container.addEventListener("click", (e) => {
-	if (e.target.className == "thumb") {
-		// menyamakan atribut src
-		imgParent.src = e.target.src;
-		// animation
-		imgParent.classList.add("fade");
-		// setTimeout untuk meghilangkan animasi
-		setTimeout(() => {
-			imgParent.classList.remove("fade");
-		}, 500);
-	}
-	// perulangan untuk opacity
-	imgChild.forEach((child) => {
-		if (child.classList.contains("active")) {
-			child.classList.remove("active");
-		}
-	});
+if (typeof document === 'undefined') {
+  console.log("--- 09. Image Gallery ---");
+  console.log("Buka file 'index.html' di browser Anda untuk melihat interaksi galeri foto!");
+} else {
+  console.log("--- 09. Image Gallery (Browser) ---");
 
-	e.target.classList.add("active");
-});
+  const kontainerGaleri = document.querySelector(".galeri-kontainer");
+  const gambarUtama = document.querySelector(".gambar-jumbo");
+
+  if (kontainerGaleri && gambarUtama) {
+    // Terapkan Event Delegation pada kontainer thumbnail
+    kontainerGaleri.addEventListener("click", function (e) {
+      if (e.target.classList.contains("thumb")) {
+        // Ganti sumber gambar jumbo
+        gambarUtama.src = e.target.src;
+        console.log(`Gambar aktif diubah ke: ${e.target.src}`);
+      }
+    });
+  }
+}

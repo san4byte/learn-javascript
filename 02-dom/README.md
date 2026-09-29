@@ -1,0 +1,33 @@
+# 🎨 Modul 02: JavaScript DOM (Document Object Model)
+
+Selamat datang di **Modul 02**! Document Object Model (DOM) adalah jembatan yang menghubungkan kode JavaScript dengan dokumen HTML di browser. Modul ini mengajarkan bagaimana membuat halaman web yang hidup, dinamis, dan merespon aksi pengguna secara interaktif.
+
+---
+
+## 📚 Daftar Materi Pembelajaran:
+
+1. [01 - Pengenalan DOM & DOM Tree](01-intro/README.md)
+   - Konsep dasar antarmuka W3C, struktur hierarki pohon dokumen, dan 4 tipe node utama.
+2. [02 - DOM Selection](02-dom-selection/README.md)
+   - 5 method seleksi elemen, perbedaan Single Element vs HTMLCollection vs NodeList.
+3. [03 - DOM Manipulasi Element](03-dom-manipulasi-element/README.md)
+   - Manipulasi teks aman (`textContent` vs `innerHTML`), atribut, dan manipulasi class CSS via `classList`.
+4. [04 - DOM Manipulasi Node](04-dom-manipulasi-node/README.md)
+   - Membuat dan menyisipkan elemen dinamis (`createElement`, `appendChild`, `prepend`, `insertBefore`).
+5. [05 - DOM Events](05-dom-events/README.md)
+   - Merespon aksi klik dan keyboard pengguna menggunakan `addEventListener()` dan event object `e`.
+6. [06 - DOM Traversal dan Event Delegation](06-dom-traversal/README.md)
+   - Menelusuri silsilah elemen, fenomena event bubbling, dan teknik optimasi performa *Event Delegation*.
+7. [07 - Latihan Mandiri: Manipulasi Warna Background](07-latihan-ubah-warna/README.md)
+   - Mengubah warna latar belakang menggunakan angka acak RGB dan slider range interaktif.
+8. [08 - Latihan Mandiri: Game Suit Jawa GUI Interaktif](08-latihan-suit-jawa-v2/README.md)
+   - Membangun antarmuka visual game Suit Jawa dengan animasi putar gambar komputer.
+9. [09 - Latihan Mandiri: Galeri Gambar Interaktif](09-latihan-image-gallery/README.md)
+   - Komponen thumbnail gambar e-commerce modern dengan efek transisi fade-in.
+
+---
+
+## 🧭 Navigasi
+- ⬅️ **Modul Sebelumnya:** [01 - JavaScript Dasar](../01-dasar/README.md)
+- ➡️ **Modul Selanjutnya:** [03 - Asynchronous JavaScript](../03-asynchronous/README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../README.md)

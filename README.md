@@ -1,82 +1,82 @@
 # 🚀 Panduan Belajar JavaScript (Learn JS)
 
-Selamat datang di repositori dokumentasi belajar JavaScript lengkap! Repositori ini dirancang dengan alur pembelajaran yang terstruktur, rapi, dan mudah dipahami, mulai dari fondasi dasar logika pemrograman, manipulasi DOM di browser, fitur modern ES6+ dan asinkron, hingga build tools modular industri.
+Selamat datang di repositori dokumentasi belajar JavaScript lengkap! Repositori ini dirancang dengan alur pembelajaran yang terstruktur, rapi, dan mudah dipahami, mulai dari fondasi dasar logika pemrograman & sintaks modern ES6+, manipulasi DOM di browser, pemrograman asinkron berbasis Event Loop & Promise, build tools modular industri, Pemrograman Berorientasi Objek (OOP), hingga Web API esensial standar industri.
 
-Setiap topik dilengkapi dengan file dokumentasi (`README.md`) yang menjelaskan konsep, analogi, studi kasus nyata, contoh kode bersih (`contoh.js`), serta file antarmuka browser (`index.html`).
+Setiap topik materi dilengkapi dengan file dokumentasi terstandarisasi (`README.md`) dengan **7 bagian pembelajaran** (Tujuan Belajar, Penjelasan Konsep Mendalam, Contoh Kode, Output yang Diharapkan, Analogi Nyata + Use Case + Common Pitfalls + Best Practice, Latihan Mandiri, dan Navigasi 4 Arah), contoh kode bersih dan universal (`contoh.js`), serta file antarmuka browser (`index.html`).
 
 ---
 
 ## 📚 Daftar Isi dan Urutan Belajar
 
-### 1. [01 - JavaScript Dasar](01-dasar/)
+### 1. [01 - JavaScript Dasar & Modern ES6+](01-dasar/)
 
-Fondasi logika pemrograman, sintaks dasar, dan struktur data:
+Fondasi logika pemrograman, sintaks dasar, dan fitur modern ES6+ yang terintegrasi:
 
 1. [01 - Popup Box (alert, prompt, confirm)](01-dasar/01-popup-box/README.md)
-2. [02 - Variabel dan Scope (var, let, const)](01-dasar/02-variabel/README.md)
-3. [03 - Pengulangan (Looping)](01-dasar/03-pengulangan/)
-   - [03.1 - While Loop](01-dasar/03-pengulangan/01-while/README.md)
-   - [03.2 - For Loop](01-dasar/03-pengulangan/02-for/README.md)
-   - [03.3 - Pengulangan Bersarang (Nested Loops)](01-dasar/03-pengulangan/03-pengulangan-bersarang/README.md)
-4. [04 - Pengkondisian (Conditional Flow)](01-dasar/04-pengkondisian/)
-   - [04.1 - If Else](01-dasar/04-pengkondisian/01-if-else/README.md)
-   - [04.2 - Else If](01-dasar/04-pengkondisian/02-else-if/README.md)
-5. [05 - Project Simulasi Angkot](01-dasar/05-project-angkot/README.md)
-6. [06 - Function](01-dasar/06-function/)
-   - [06.1 - Pengenalan Fungsi](01-dasar/06-function/01-intro/README.md)
-   - [06.2 - Parameter dan Argumen](01-dasar/06-function/02-parameter-argumen/README.md)
-   - [06.3 - Variable Scope](01-dasar/06-function/03-scope/README.md)
-   - [06.4 - Fungsi Rekursif](01-dasar/06-function/04-rekursif/README.md)
-   - [06.5 - Project Perhitungan Volume Dua Kubus](01-dasar/06-function/05-project-volume-kubus/README.md)
-7. [07 - Array](01-dasar/07-array/)
-   - [07.1 - Manipulasi Array](01-dasar/07-array/01-manipulasi-array/README.md)
-   - [07.2 - Project Pengelolaan Kursi Penumpang](01-dasar/07-array/02-project-kelola-penumpang/README.md)
-8. [08 - Object](01-dasar/08-object/)
-   - [08.1 - Dasar Object](01-dasar/08-object/01-dasar-object/README.md)
-   - [08.2 - Tiga Cara Membuat Object](01-dasar/08-object/02-membuat-object/README.md)
-   - [08.3 - Konsep Keyword This](01-dasar/08-object/03-keyword-this/README.md)
-   - [08.4 - Latihan Pengelolaan Angkot Berbasis Objek](01-dasar/08-object/04-latihan-angkot-object/README.md)
-9. [09 - Project Game Interaktif](01-dasar/09-project-game/)
-   - [09.1 - Game Suit Jawa](01-dasar/09-project-game/01-suit-jawa/README.md)
-   - [09.2 - Game Tebak Angka](01-dasar/09-project-game/02-tebak-angka/README.md)
+2. [02 - Variabel dan Scope (var, let, const, Hoisting & TDZ)](01-dasar/02-variabel-dan-scope/README.md)
+3. [03 - Template Literals & String Interpolation](01-dasar/03-template-literals/README.md)
+4. [04 - Pengulangan (Looping)](01-dasar/04-pengulangan/)
+   - [04.1 - While Loop & Do-While](01-dasar/04-pengulangan/01-while/README.md)
+   - [04.2 - For Loop](01-dasar/04-pengulangan/02-for/README.md)
+   - [04.3 - Pengulangan Bersarang (Nested Loops)](01-dasar/04-pengulangan/03-pengulangan-bersarang/README.md)
+   - [04.4 - Perulangan Modern: For..of dan For..in](01-dasar/04-pengulangan/04-for-of-for-in/README.md)
+5. [05 - Pengkondisian (Conditional Flow)](01-dasar/05-pengkondisian/)
+   - [05.1 - If Else dan Ternary Operator](01-dasar/05-pengkondisian/01-if-else/README.md)
+   - [05.2 - Else If dan Switch Case](01-dasar/05-pengkondisian/02-else-if-switch/README.md)
+6. [06 - Project Simulasi Pengelolaan Angkot](01-dasar/06-project-angkot/README.md)
+7. [07 - Function](01-dasar/07-function/)
+   - [07.1 - Pengenalan Function](01-dasar/07-function/01-intro/README.md)
+   - [07.2 - Parameter, Argumen & Default Parameter](01-dasar/07-function/02-parameter-argumen/README.md)
+   - [07.3 - Variable Scope dan Scope Chain](01-dasar/07-function/03-scope/README.md)
+   - [07.4 - Closures dan Lexical Scope](01-dasar/07-function/04-closures/README.md)
+   - [07.5 - Arrow Function & Konteks Keyword This](01-dasar/07-function/05-arrow-function/README.md)
+   - [07.6 - Higher-Order Functions (Filter, Map, Reduce)](01-dasar/07-function/06-higher-order-functions/README.md)
+   - [07.7 - Rest Parameter (...args)](01-dasar/07-function/07-rest-parameter/README.md)
+   - [07.8 - Fungsi Rekursif](01-dasar/07-function/08-rekursif/README.md)
+   - [07.9 - Project Perhitungan Volume Dua Kubus](01-dasar/07-function/09-project-volume-kubus/README.md)
+8. [08 - Array](01-dasar/08-array/)
+   - [08.1 - Manipulasi Array](01-dasar/08-array/01-manipulasi-array/README.md)
+   - [08.2 - Destructuring Array dan Spread Operator](01-dasar/08-array/02-destructuring-spread/README.md)
+   - [08.3 - Project Pengelolaan Kursi Penumpang Angkot](01-dasar/08-array/03-project-kelola-penumpang/README.md)
+9. [09 - Object](01-dasar/09-object/)
+   - [09.1 - Dasar Object (Properti dan Method)](01-dasar/09-object/01-dasar-object/README.md)
+   - [09.2 - Tiga Cara Membuat Object](01-dasar/09-object/02-membuat-object/README.md)
+   - [09.3 - Konsep Keyword This](01-dasar/09-object/03-keyword-this/README.md)
+   - [09.4 - Destructuring Object dan Object Spread](01-dasar/09-object/04-destructuring-spread/README.md)
+   - [09.5 - Object Lanjutan: Prototype Inheritance](01-dasar/09-object/05-object-lanjutan/README.md)
+   - [09.6 - Latihan Pengelolaan Angkot Berbasis Objek](01-dasar/09-object/06-latihan-angkot-object/README.md)
+10. [10 - Project Game Interaktif](01-dasar/10-project-game/)
+    - [10.1 - Game Suit Jawa](01-dasar/10-project-game/01-suit-jawa/README.md)
+    - [10.2 - Game Tebak Angka](01-dasar/10-project-game/02-tebak-angka/README.md)
 
 ---
 
 ### 2. [02 - JavaScript DOM (Document Object Model)](02-dom/)
 
-Interaksi JavaScript dengan dokumen web dan antarmuka HTML:
+Interaksi JavaScript dengan dokumen web dan antarmuka HTML dinamis:
 
-1. [01 - Pengenalan DOM](02-dom/01-intro/README.md)
+1. [01 - Pengenalan DOM & DOM Tree](02-dom/01-intro/README.md)
 2. [02 - DOM Selection](02-dom/02-dom-selection/README.md)
 3. [03 - DOM Manipulasi Element](02-dom/03-dom-manipulasi-element/README.md)
 4. [04 - DOM Manipulasi Node](02-dom/04-dom-manipulasi-node/README.md)
 5. [05 - DOM Events](02-dom/05-dom-events/README.md)
-6. [06 - DOM Traversal dan Event Bubbling](02-dom/06-dom-traversal/README.md)
-7. [07 - Latihan Manipulasi Warna Background](02-dom/07-latihan-ubah-warna/README.md)
-8. [08 - Latihan Game Suit Jawa GUI](02-dom/08-latihan-suit-jawa-v2/README.md)
-9. [09 - Latihan Galeri Gambar Interaktif](02-dom/09-latihan-image-gallery/README.md)
+6. [06 - DOM Traversal dan Event Delegation](02-dom/06-dom-traversal/README.md)
+7. [07 - Latihan Mandiri: Manipulasi Warna Background](02-dom/07-latihan-ubah-warna/README.md)
+8. [08 - Latihan Mandiri: Game Suit Jawa GUI Interaktif](02-dom/08-latihan-suit-jawa-v2/README.md)
+9. [09 - Latihan Mandiri: Galeri Gambar Interaktif](02-dom/09-latihan-image-gallery/README.md)
 
 ---
 
-### 3. [03 - JavaScript Lanjutan (ES6 & Asynchronous)](03-lanjutan/)
+### 3. [03 - Asynchronous JavaScript (Event Loop, Promise, Fetch & Async/Await)](03-asynchronous/)
 
-Fitur-fitur modern JavaScript dan pemrograman asinkron:
+Pemrograman asinkron modern untuk menangani proses non-blocking dan request jaringan internet:
 
-1. [01 - Object Lanjutan (Prototype Inheritance & Class)](03-lanjutan/01-object-lanjutan/README.md)
-2. [02 - Closures dan Lexical Scope](03-lanjutan/02-closures/README.md)
-3. [03 - Arrow Function](03-lanjutan/03-arrow-function/README.md)
-4. [04 - Higher-Order Functions (Filter, Map, Reduce)](03-lanjutan/04-higher-order-functions/README.md)
-5. [05 - Template Literals & Tagged Templates](03-lanjutan/05-template-literals/README.md)
-6. [06 - Destructuring Assignment](03-lanjutan/06-destructuring/README.md)
-7. [07 - Perulangan Modern: For..of dan For..in](03-lanjutan/07-for-of-for-in/README.md)
-8. [08 - Spread Operator](03-lanjutan/08-spread-operator/README.md)
-9. [09 - Rest Parameter](03-lanjutan/09-rest-parameter/README.md)
-10. [10 - Pengenalan Asynchronous & Event Loop](03-lanjutan/10-asynchronous-intro/README.md)
-11. [11 - Timing Events (setTimeout & setInterval)](03-lanjutan/11-timing-events/README.md)
-12. [12 - Callbacks](03-lanjutan/12-callbacks/README.md)
-13. [13 - Promise (Konsep Pending, Fulfilled, Rejected)](03-lanjutan/13-promise/README.md)
-14. [14 - Fetch API](03-lanjutan/14-fetch/README.md)
-15. [15 - Async / Await & Robust Error Handling](03-lanjutan/15-async-await/README.md)
+1. [01 - Asynchronous Intro & Event Loop Architecture](03-asynchronous/01-event-loop-intro/README.md)
+2. [02 - Timing Events (setTimeout & setInterval)](03-asynchronous/02-timing-events/README.md)
+3. [03 - Callbacks dan Masalah Callback Hell](03-asynchronous/03-callbacks/README.md)
+4. [04 - Promise (Pending, Fulfilled, Rejected)](03-asynchronous/04-promise/README.md)
+5. [05 - Fetch API (HTTP Request Modern)](03-asynchronous/05-fetch/README.md)
+6. [06 - Async dan Await](03-asynchronous/06-async-await/README.md)
 
 ---
 
@@ -99,15 +99,28 @@ Pemrograman Berorientasi Objek mendalam mengikuti silabus Programmer Zaman Now (
 5. [05 - Super Constructor](05-oop/05-super-constructor/README.md)
 6. [06 - Super Method (Method Overriding)](05-oop/06-super-method/README.md)
 7. [07 - Getter dan Setter](05-oop/07-getter-setter/README.md)
-8. [08 - Public Class Field](05-oop/08-public-class-field/README.md) _(Lanjutan)_
-9. [09 - Private Class Field (#)](05-oop/09-private-class-field/README.md) _(Lanjutan)_
-10. [10 - Private Method (#)](05-oop/10-private-method/README.md) _(Lanjutan)_
-11. [11 - Operator instanceof](05-oop/11-operator-instanceof/README.md) _(Lanjutan)_
-12. [12 - Static Field](05-oop/12-static-field/README.md) _(Lanjutan)_
-13. [13 - Static Method](05-oop/13-static-method/README.md) _(Lanjutan)_
-14. [14 - Error Handling Class](05-oop/14-error-handling-class/README.md) _(Lanjutan)_
-15. [15 - Custom Error Class](05-oop/15-custom-error/README.md) _(Lanjutan)_
-16. [16 - Iterable dan Iterator](05-oop/16-iterable-iterator/README.md) _(Lanjutan)_
+8. [08 - Public Class Field](05-oop/08-public-class-field/README.md)
+9. [09 - Private Class Field (#)](05-oop/09-private-class-field/README.md)
+10. [10 - Private Method (#)](05-oop/10-private-method/README.md)
+11. [11 - Operator instanceof](05-oop/11-operator-instanceof/README.md)
+12. [12 - Static Field](05-oop/12-static-field/README.md)
+13. [13 - Static Method](05-oop/13-static-method/README.md)
+14. [14 - Error Handling Class](05-oop/14-error-handling-class/README.md)
+15. [15 - Custom Error Class](05-oop/15-custom-error/README.md)
+16. [16 - Iterable dan Iterator](05-oop/16-iterable-iterator/README.md)
+
+---
+
+### 6. [06 - Modern Web API & Real-World JavaScript](06-modern-web-api/)
+
+Pola arsitektur, Web API browser modern, dan teknik optimasi performa yang digunakan sehari-hari di industri:
+
+1. [01 - Web Storage API (localStorage, sessionStorage, Cookies)](06-modern-web-api/01-web-storage/README.md)
+2. [02 - Modern Syntax ES2020-ES2023 (Optional Chaining, Nullish Coalescing, Immutability)](06-modern-web-api/02-modern-syntax-es2020/README.md)
+3. [03 - URL, URLSearchParams, dan FormData API](06-modern-web-api/03-url-and-formdata/README.md)
+4. [04 - Asynchronous Paralel & AbortController](06-modern-web-api/04-async-parallel-abort/README.md)
+5. [05 - Optimasi Performa Event (Debounce dan Throttle)](06-modern-web-api/05-debounce-throttle/README.md)
+6. [06 - Intersection Observer API (Lazy Loading & Infinite Scroll)](06-modern-web-api/06-intersection-observer/README.md)
 
 ---
 
@@ -115,19 +128,22 @@ Pemrograman Berorientasi Objek mendalam mengikuti silabus Programmer Zaman Now (
 
 ### 1. Menjalankan File JavaScript via Node.js
 
-Sebagian besar materi dasar dan lanjutan yang tidak membutuhkan objek browser `window`/`document` dapat langsung dijalankan di terminal menggunakan Node.js:
+Seluruh materi logika, algoritma, OOP, dan Web API yang tidak mewajibkan interaksi layar dapat langsung dijalankan di terminal menggunakan Node.js:
 
 ```bash
-# Contoh menjalankan materi variabel
-node 01-dasar/02-variabel/contoh.js
+# Menjalankan materi fungsi
+node 01-dasar/07-function/01-intro/contoh.js
 
-# Contoh menjalankan materi higher-order functions
-node 03-lanjutan/04-higher-order-functions/contoh.js
+# Menjalankan materi Promise
+node 03-asynchronous/04-promise/contoh.js
+
+# Menjalankan materi OOP
+node 05-oop/16-iterable-iterator/contoh.js
 ```
 
-### 2. Menjalankan Materi DOM di Browser
+### 2. Menjalankan Materi DOM & Browser di Browser
 
-Untuk materi yang melibatkan DOM atau popup browser, cukup buka file `index.html` yang ada di setiap folder materi langsung di browser Anda, atau gunakan ekstensi seperti **Live Server** di VS Code.
+Untuk materi yang melibatkan DOM atau event visual, cukup buka file `index.html` yang ada di setiap folder materi langsung di browser Anda, atau gunakan ekstensi seperti **Live Server** di VS Code.
 
 ### 3. Menjalankan Proyek Modular Webpack
 

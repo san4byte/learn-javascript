@@ -1,14 +1,83 @@
-# 09 - Latihan Galeri Gambar Interaktif
+# 09 - Latihan Mandiri: Galeri Gambar Interaktif (Image Gallery)
 
-## Tujuan Belajar
-- Menerapkan teknik *Event Delegation* pada galeri thumbnail foto.
-- Mengganti atribut gambar utama (`src`) secara dinamis saat thumbnail diklik.
-- Menambahkan efek animasi pergantian gambar via CSS class dan event transit.
-
-## Penjelasan Konsep
-Daripada memasang puluhan event listener ke tiap thumbnail, satu event listener dipasang di container utama. Ketika elemen thumbnail (`e.target.classList.contains('thumb')`) diklik, atribut `src` gambar jumbo utama diperbarui dan kelas animasi opacity ditambahkan.
-
-Tinjau implementasi di [contoh.js](contoh.js).
+## 1. 🎯 Tujuan Belajar
+- Membangun galeri foto interaktif dengan gambar utama (Hero Image) dan thumbnail.
+- Menerapkan Event Delegation pada kontainer thumbnail foto.
+- Menambahkan efek animasi transisi halus (Fade-in) saat gambar berganti.
 
 ---
-[⬅️ Materi Sebelumnya: 08 - Latihan Suit Jawa GUI](../08-latihan-suit-jawa-v2/README.md) | [Materi Selanjutnya: 03-Lanjutan Object Lanjutan ➡️](../../03-lanjutan/01-object-lanjutan/README.md)
+
+## 2. 📖 Penjelasan Konsep
+Proyek **Galeri Gambar** adalah komponen antarmuka yang paling sering kita temui di halaman detail produk toko online (seperti Tokopedia, Shopee, Amazon):
+* Ada satu gambar berukuran besar di bagian tengah (**Jumbo / Hero Image**).
+* Di bagian bawah terdapat deretan gambar-gambar kecil (**Thumbnails**).
+* Ketika salah satu thumbnail diklik:
+  1. `src` gambar utama diganti dengan `src` thumbnail yang diklik.
+  2. Thumbnail yang sedang aktif diberi border sorotan (*active class*).
+  3. Gambar utama memunculkan efek transisi fade-in halus.
+
+---
+
+## 3. 💻 Contoh Kode (`contoh.js`)
+```javascript
+// Penjelasan lengkap materi ini dapat dilihat di README.md
+
+if (typeof document === 'undefined') {
+  console.log("--- 09. Image Gallery ---");
+  console.log("Buka file 'index.html' di browser Anda untuk melihat interaksi galeri foto!");
+} else {
+  console.log("--- 09. Image Gallery (Browser) ---");
+
+  const kontainerGaleri = document.querySelector(".galeri-kontainer");
+  const gambarUtama = document.querySelector(".gambar-jumbo");
+
+  if (kontainerGaleri && gambarUtama) {
+    // Terapkan Event Delegation pada kontainer thumbnail
+    kontainerGaleri.addEventListener("click", function (e) {
+      if (e.target.classList.contains("thumb")) {
+        // Ganti sumber gambar jumbo
+        gambarUtama.src = e.target.src;
+        console.log(`Gambar aktif diubah ke: ${e.target.src}`);
+      }
+    });
+  }
+}
+```
+
+---
+
+## 4. 🖥️ Output yang Diharapkan
+```text
+--- 09. Image Gallery (Browser) ---
+Gambar aktif diubah ke: http://127.0.0.1:5500/02-dom/09-latihan-image-gallery/img/1.jpg
+```
+
+---
+
+## 5. 💡 Penjelasan Tambahan
+
+### 🎭 Analogi Dunia Nyata
+> Galeri gambar seperti **proyektor slide foto**: Anda memilih satu slide kecil dari rak penyimpanan (thumbnail), memasukkannya ke slot proyektor, dan gambar besar langsung terpancar di layar utama bioskop.
+
+### 🏢 Real-World Use Case
+1. **Halaman Detail Produk Toko Online**: Pengguna melihat foto sepatu dari berbagai sudut (depan, samping, belakang, sol).
+2. **Katalog Portofolio Fotografer / Desainer**: Menampilkan karya foto beresolusi tinggi secara rapi dan cepat.
+
+### ⚠️ Common Pitfalls (Jebakan Umum)
+* **Animasi Fade-in Tidak Terulang**: Jika class animasi CSS tidak di-remove sebelum dipasang kembali, browser tidak akan memutar ulang animasi fade-in pada klik kedua. Berikan jeda waktu `setTimeout(() => img.classList.remove('fade'), 500)`.
+
+### 🌟 Best Practice
+* Selalu manfaatkan Event Delegation pada kontainer pembungkus thumbnail agar kode lebih hemat memori dan mendukung penambahan thumbnail baru secara dinamis.
+
+---
+
+## 6. ✍️ Latihan Mandiri
+1. Tambahkan efek transparansi (opacity 0.5) pada thumbnail yang tidak aktif, dan berikan opacity 1.0 penuh dengan border biru pada thumbnail yang sedang aktif.
+
+---
+
+## 7. 🧭 Navigasi
+- ⬅️ **Sebelumnya:** [08 - Latihan Game Suit Jawa GUI](../08-latihan-suit-jawa-v2/README.md)
+- ➡️ **Selanjutnya:** [Modul 03 - Asynchronous JavaScript](../../03-asynchronous/README.md)
+- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
