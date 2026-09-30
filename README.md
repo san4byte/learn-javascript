@@ -124,6 +124,31 @@ Pola arsitektur, Web API browser modern, dan teknik optimasi performa yang digun
 
 ---
 
+### 7. [07 - JavaScript Standard Library (Programmer Zaman Now)](07-standard-library/)
+
+Pustaka standar bawaan (Standard Library) JavaScript mencakup objek global, tipe primitif modern, penanganan data waktu, koleksi modern, dan metaprogramming:
+
+1. [01 - Number (Static Properties, Methods, dan Number Parsing)](07-standard-library/01-number/README.md)
+2. [02 - String (Instance Methods, Search, Transform, dan Padding)](07-standard-library/02-string/README.md)
+3. [03 - Array (Queue FIFO, Stack LIFO, Search, dan Advanced Transform)](07-standard-library/03-array/README.md)
+4. [04 - Object (Static Methods: Freeze, Seal, Assign, Values, Keys, Entries)](07-standard-library/04-object/README.md)
+5. [05 - JSON (Serialization, Deserialization, Replacer, dan Reviver)](07-standard-library/05-json/README.md)
+6. [06 - BigInt (Arbitrary-Precision Integers dan Batasan Operasi)](07-standard-library/06-bigint/README.md)
+7. [07 - Date (Epoch Timestamp, ISO 8601, Parsing, Getter dan Setter)](07-standard-library/07-date/README.md)
+8. [08 - Math (Konstanta Matematika, Pembulatan, dan Operasi Angka)](07-standard-library/08-math/README.md)
+9. [09 - Boolean (Boolean Wrapper, toString, dan valueOf)](07-standard-library/09-boolean/README.md)
+10. [10 - Map (Key-Value Collection Modern, Perbedaan dengan Object)](07-standard-library/10-map/README.md)
+11. [11 - Set (Koleksi Nilai Unik dan Eliminasi Duplikasi)](07-standard-library/11-set/README.md)
+12. [12 - Symbol (Primitive Unik dan Global Symbol Registry)](07-standard-library/12-symbol/README.md)
+13. [13 - RegExp (Pola Regex, Modifiers, Assertions, dan String Match)](07-standard-library/13-regexp/README.md)
+14. [14 - Proxy (Metaprogramming, Interceptor Handler, Get dan Set Traps)](07-standard-library/14-proxy/README.md)
+15. [15 - Reflect (Refleksi Objek Modern dan Pasangan Ideal Proxy)](07-standard-library/15-reflect/README.md)
+16. [16 - URL Encoding (encodeURI, encodeURIComponent, dan Decode)](07-standard-library/16-encode/README.md)
+17. [17 - Base64 (btoa, atob, dan Penanganan Teks UTF-8 Unicode)](07-standard-library/17-base64/README.md)
+18. [18 - Eval (Eksekusi Dinamis, Analisis Risiko Keamanan, dan Alternatif)](07-standard-library/18-eval/README.md)
+
+---
+
 ## 🛠️ Cara Menjalankan Kode
 
 ### 1. Menjalankan File JavaScript via Node.js
@@ -139,6 +164,9 @@ node 03-asynchronous/04-promise/contoh.js
 
 # Menjalankan materi OOP
 node 05-oop/16-iterable-iterator/contoh.js
+
+# Menjalankan materi Standard Library
+node 07-standard-library/01-number/contoh.js
 ```
 
 ### 2. Menjalankan Materi DOM & Browser di Browser
