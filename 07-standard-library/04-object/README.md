@@ -2,7 +2,10 @@
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami kumpulan Static Methods esensial pada fungsi global `Object`.\n- Menguasai proteksi integritas objek: perbedaan mendalam `Object.freeze()` vs `Object.seal()`.\n- Menggabungkan dan menyalin properti objek dengan `Object.assign()`.\n- Mengekstraksi struktur objek menggunakan `Object.keys()`, `Object.values()`, `Object.entries()`, dan `Object.getOwnPropertyNames()`.
+- Memahami kumpulan Static Methods esensial pada fungsi global `Object`.
+- Menguasai proteksi integritas objek: perbedaan mendalam `Object.freeze()` vs `Object.seal()`.
+- Menggabungkan dan menyalin properti objek dengan `Object.assign()`.
+- Mengekstraksi struktur objek menggunakan `Object.keys()`, `Object.values()`, `Object.entries()`, dan `Object.getOwnPropertyNames()`.
 
 ---
 
@@ -50,49 +53,52 @@ Integritas data objek dapat dilindungi dengan dua tingkatan:
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log('--- 1. Pengamanan Objek: Object.seal() vs Object.freeze() ---');
+console.log("--- 1. Proteksi Objek: Object.freeze() vs Object.seal() ---");
 const configServer = {
-  host: 'localhost',
-  port: 8080,
+  host: "localhost",
+  port: 8080
 };
 
-// Object.seal: tidak bisa tambah/hapus, tapi nilai bisa diubah
-Object.seal(configServer);
-configServer.port = 9000; // Berhasil diubah
-configServer.timeout = 5000; // Gagal (diabaikan atau error di strict mode)
-delete configServer.host; // Gagal
-console.log('Hasil Object.seal()       :', configServer);
+// Bekukan objek secara total (immutable)
+Object.freeze(configServer);
 
-const userAdmin = {
-  username: 'admin_joko',
-  role: 'superadmin',
+// Uji coba mutasi (tidak akan mengubah nilai pada objek yang di-freeze):
+configServer.port = 9000;
+configServer.timeout = 5000;
+
+console.log("Hasil pembuktian freeze :", configServer);
+console.log("Apakah objek di-freeze? :", Object.isFrozen(configServer)); // true
+
+console.log("\n--- 2. Iterasi Pasangan Data dengan Object.entries() ---");
+const kursValas = {
+  USD: 16000,
+  EUR: 17500,
+  SGD: 12000,
+  JPY: 105
 };
 
-// Object.freeze: tidak bisa tambah, hapus, maupun ubah nilai
-Object.freeze(userAdmin);
-userAdmin.role = 'biasa'; // Gagal
-delete userAdmin.username; // Gagal
-console.log('Hasil Object.freeze()     :', userAdmin);
+// Iterasi praktis menggunakan destructuring [kunci, nilai]
+for (const [mataUang, nilaiRupiah] of Object.entries(kursValas)) {
+  console.log(`1 ${mataUang.padEnd(4)} = Rp ${nilaiRupiah.toLocaleString("id-ID")}`);
+}
 
-console.log('\n--- 2. Penggabungan Objek: Object.assign() ---');
-const profilDasar = { nama: 'Joko Santoso' };
-const profilKontak = { email: 'joko@example.com', kota: 'Jakarta' };
-const preferensi = { tema: 'dark' };
+console.log("\n--- 3. Analitik Data: Object.values() & Array.reduce() ---");
+function hitungRataRataKurs(dataKurs) {
+  const daftarNilai = Object.values(dataKurs);
+  
+  if (daftarNilai.length === 0) {
+    return "Data kurs kosong";
+  }
 
-const profilLengkap = Object.assign({}, profilDasar, profilKontak, preferensi);
-console.log('Profil Hasil Merge        :', profilLengkap);
+  const totalNilai = daftarNilai.reduce((total, val) => total + val, 0);
+  const rataRata = totalNilai / daftarNilai.length;
 
-console.log('\n--- 3. Ekstraksi Data: keys, values, entries, getOwnPropertyNames ---');
-const produk = {
-  id: 'PRD-101',
-  nama: 'Keyboard Mekanikal',
-  harga: 850000,
-};
+  return `Rata-rata Nilai Kurs: Rp ${rataRata.toLocaleString("id-ID", {
+    maximumFractionDigits: 2
+  })}`;
+}
 
-console.log('Object.keys()             :', Object.keys(produk));
-console.log('Object.values()           :', Object.values(produk));
-console.log('Object.entries()          :', Object.entries(produk));
-console.log('getOwnPropertyNames()     :', Object.getOwnPropertyNames(produk));
+console.log(hitungRataRataKurs(kursValas));
 ```
 
 ---
@@ -100,27 +106,18 @@ console.log('getOwnPropertyNames()     :', Object.getOwnPropertyNames(produk));
 ## 4. 🖥️ Output yang Diharapkan
 
 ```text
---- 1. Pengamanan Objek: Object.seal() vs Object.freeze() ---
-Hasil Object.seal()       : { host: 'localhost', port: 9000 }
-Hasil Object.freeze()     : { username: 'admin_joko', role: 'superadmin' }
+--- 1. Proteksi Objek: Object.freeze() vs Object.seal() ---
+Hasil pembuktian freeze : { host: 'localhost', port: 8080 }
+Apakah objek di-freeze? : true
 
---- 2. Penggabungan Objek: Object.assign() ---
-Profil Hasil Merge        : {
-  nama: 'Joko Santoso',
-  email: 'joko@example.com',
-  kota: 'Jakarta',
-  tema: 'dark'
-}
+--- 2. Iterasi Pasangan Data dengan Object.entries() ---
+1 USD  = Rp 16.000
+1 EUR  = Rp 17.500
+1 SGD  = Rp 12.000
+1 JPY  = Rp 105
 
---- 3. Ekstraksi Data: keys, values, entries, getOwnPropertyNames ---
-Object.keys()             : [ 'id', 'nama', 'harga' ]
-Object.values()           : [ 'id', 'nama', 'harga' ] -> [ 'PRD-101', 'Keyboard Mekanikal', 850000 ]
-Object.entries()          : [
-  [ 'id', 'PRD-101' ],
-  [ 'nama', 'Keyboard Mekanikal' ],
-  [ 'harga', 850000 ]
-]
-getOwnPropertyNames()     : [ 'id', 'nama', 'harga' ]
+--- 3. Analitik Data: Object.values() & Array.reduce() ---
+Rata-rata Nilai Kurs: Rp 11.401,25
 ```
 
 ---

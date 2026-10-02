@@ -2,7 +2,11 @@
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami objek bawaan `Math` sebagai namespace utilitas matematika statis.\n- Menguasai konstanta matematika fundamental: `Math.PI` dan `Math.E`.\n- Memahami 4 teknik pembulatan angka: `round()`, `floor()`, `ceil()`, dan `trunc()`.\n- Menguasai operasi kalkulasi: `abs()`, `min()`, `max()`, `pow()`, `sqrt()`, dan randomisasi angka `Math.random()`.\n- Mengetahui bahwa seluruh method di objek `Math` **hanya bekerja untuk tipe `Number`**, bukan `BigInt`.
+- Memahami objek bawaan `Math` sebagai namespace utilitas matematika statis.
+- Menguasai konstanta matematika fundamental: `Math.PI` dan `Math.E`.
+- Memahami 4 teknik pembulatan angka: `round()`, `floor()`, `ceil()`, dan `trunc()`.
+- Menguasai operasi kalkulasi: `abs()`, `min()`, `max()`, `pow()`, `sqrt()`, dan randomisasi angka `Math.random()`.
+- Mengetahui bahwa seluruh method di objek `Math` **hanya bekerja untuk tipe `Number`**, bukan `BigInt`.
 
 ---
 
@@ -124,24 +128,34 @@ Angka acak dadu kedua        : [Angka antara 1 sampai 6]
 
 ### 🏢 Real-World Use Case
 
-1. **Paginasi Halaman Web**: Menghitung total lembar halaman menggunakan `Math.ceil(totalBarang / barangPerHalaman)` agar barang sisa tetap mendapat 1 halaman baru.\n2. **Game & Simulasi (RNG)**: Menentukan giliran dadu, drop rate item RPG, atau penentuan pemenang undian menggunakan `Math.random()`.\n3. **Pencarian Nilai Ekstrem**: Mencari harga produk termurah dan termahal dari array katalog dengan `Math.min(...hargaList)`.
+1. **Paginasi Halaman Web**: Menghitung total lembar halaman menggunakan `Math.ceil(totalBarang / barangPerHalaman)` agar barang sisa tetap mendapat 1 halaman baru.
+2. **Game & Simulasi (RNG)**: Menentukan giliran dadu, drop rate item RPG, atau penentuan pemenang undian menggunakan `Math.random()`.
+3. **Pencarian Nilai Ekstrem**: Mencari harga produk termurah dan termahal dari array katalog dengan `Math.min(...hargaList)`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Memasukkan BigInt ke Math**: Menulis `Math.max(10n, 5n)` melempar `TypeError`. Math hanya menerima Number biasa.\n* **Tertukar antara `floor()` dan `trunc()` pada angka negatif**: `Math.floor(-1.2)` menghasilkan `-2`, sedangkan `Math.trunc(-1.2)` menghasilkan `-1`.\n* **Ketidakamanan Kriptografi pada `Math.random()`**: `Math.random()` bukan generator acak yang aman secara kriptografi (_not cryptographically secure_). Jangan gunakan untuk token autentikasi atau reset password; gunakan `crypto.getRandomValues()` di Web Crypto API.
+- **Memasukkan BigInt ke Math**: Menulis `Math.max(10n, 5n)` melempar `TypeError`. Math hanya menerima Number biasa.
+- **Tertukar antara `floor()` dan `trunc()` pada angka negatif**: `Math.floor(-1.2)` menghasilkan `-2`, sedangkan `Math.trunc(-1.2)` menghasilkan `-1`.
+- **Ketidakamanan Kriptografi pada `Math.random()`**: `Math.random()` bukan generator acak yang aman secara kriptografi (_not cryptographically secure_). Jangan gunakan untuk token autentikasi atau reset password; gunakan `crypto.getRandomValues()` di Web Crypto API.
 
 ### 🌟 Best Practice
 
-- Gunakan `Math.ceil()` untuk paginasi data agar elemen pecahan terakhir tidak hilang dari tampilan pengguna.\n* Gunakan spread operator bersama `Math.max(...arr)` dan `Math.min(...arr)` untuk mencari nilai ekstrem array secara elegan.\n* Kuasai rumus standar integer random: `Math.floor(Math.random() * (max - min + 1)) + min`.
+- Gunakan `Math.ceil()` untuk paginasi data agar elemen pecahan terakhir tidak hilang dari tampilan pengguna.
+- Gunakan spread operator bersama `Math.max(...arr)` dan `Math.min(...arr)` untuk mencari nilai ekstrem array secara elegan.
+- Kuasai rumus standar integer random: `Math.floor(Math.random() * (max - min + 1)) + min`.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
 
-1. Buat fungsi `hitungTotalHalaman(totalItem, itemPerHalaman)` yang mengembalikan jumlah halaman yang dibutuhkan menggunakan `Math.ceil()`.\n2. Buat fungsi `lemparKoin()` yang mengembalikan string `'Gambar'` atau `'Angka'` dengan probabilitas seimbang 50:50 menggunakan `Math.random()`.
+1. Buat fungsi `hitungTotalHalaman(totalItem, itemPerHalaman)` yang mengembalikan jumlah halaman yang dibutuhkan menggunakan `Math.ceil()`.
+2. Buat fungsi `lemparKoin()` yang mengembalikan string `'Gambar'` atau `'Angka'` dengan probabilitas seimbang 50:50 menggunakan `Math.random()`.
 
 ---
 
 ## 7. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [07 - Date](../07-date/README.md)\n- ➡️ **Selanjutnya:** [09 - Boolean](../09-boolean/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [07 - Date](../07-date/README.md)
+- ➡️ **Selanjutnya:** [09 - Boolean](../09-boolean/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

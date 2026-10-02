@@ -1,30 +1,58 @@
 # 05 - JSON (JavaScript Object Notation: Serialize, Deserialize, Replacer, dan Reviver)
 
 ## 1. 🎯 Tujuan Belajar
-- Memahami format pertukaran data standar industri: JSON (JavaScript Object Notation).\n- Menguasai serialisasi objek JavaScript menjadi string JSON dengan `JSON.stringify()`.\n- Menguasai deserialisasi string JSON menjadi objek JavaScript dengan `JSON.parse()`.\n- Memahami parameter canggih: fungsi **Replacer** dan format indentasi pada stringify, serta fungsi **Reviver** pada parse.
+
+- Memahami format pertukaran data standar industri: JSON (JavaScript Object Notation).
+- Menguasai serialisasi objek JavaScript menjadi string JSON dengan `JSON.stringify()`.
+- Menguasai deserialisasi string JSON menjadi objek JavaScript dengan `JSON.parse()`.
+- Memahami parameter lanjutan: fungsi **Replacer** dan format indentasi pada stringify, serta fungsi **Reviver** pada parse.
+- Mengetahui cara kerja method kustom `toJSON()`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
-**JSON (JavaScript Object Notation)** adalah format pertukaran data berbasis teks standar terbuka yang ringan dan mudah dibaca manusia maupun mesin. Di JavaScript, objek global bawaan **`JSON`** menyediakan dua method utama: `JSON.stringify` dan `JSON.parse`.
+## 2. 📖 Penjelasan Konsep & Referensi Lengkap
 
-### 1. `JSON.stringify(value, [replacer], [space])`
-Mengonversi objek atau nilai JavaScript menjadi string teks JSON.
-* **`value`**: Objek/data yang ingin diubah menjadi string JSON.
-* **`replacer`**: Opsional. Berupa array properti yang diizinkan untuk disertakan, atau fungsi filter/transformasi `(key, value) => modifiedValue`.
-* **`space`**: Opsional. Jumlah spasi indentasi (misal `2`) untuk menghasilkan format teks yang rapi dan mudah dibaca (*pretty print*).
+**JSON (JavaScript Object Notation)** adalah format pertukaran data berbasis teks standar terbuka yang ringan, independen dari bahasa pemrograman, dan mudah dibaca manusia maupun mesin. Di JavaScript, objek global bawaan **`JSON`** menyediakan API esensial untuk transformasi data:
 
-### 2. `JSON.parse(text, [reviver])`
-Menganalisis string JSON dan merekonstruksinya kembali menjadi nilai atau objek JavaScript.
-* **`text`**: String JSON yang valid (harus memakai tanda kutip ganda `"` untuk key dan string).
-* **`reviver`**: Opsional. Fungsi transformasi `(key, value) => modifiedValue` yang dieksekusi pada setiap pasangan key-value sebelum hasil akhir dikembalikan (sangat berguna untuk mengonversi string ISO tanggal kembali menjadi objek `Date`).
+### Tabel Referensi API `JSON`
 
-### 3. Tipe Data yang Tidak Didukung JSON
-JSON adalah format data murni, sehingga tidak mendukung:
-* `undefined` (akan dihapus dari objek atau menjadi `null` di dalam array).
-* `Function` / Method (akan diabaikan dan dihapus).
-* `Symbol` (diabaikan).
-* Nilai sirkular (*circular reference* akan melempar fatal error `TypeError: Converting circular structure to JSON`).
+| Method / Fitur | Parameter | Tipe Return | Penjelasan & Contoh Singkat |
+| :--- | :--- | :--- | :--- |
+| `JSON.stringify()` | `(value, [replacer], [space])` | `string` | Mengubah nilai/objek JS menjadi string JSON. Mendukung filtering & indentasi. |
+| `JSON.parse()` | `(text, [reviver])` | `any` (Object/Array/primitif) | Mem-parsing string JSON valid menjadi struktur data JavaScript asli. |
+| `toJSON()` | `()` | `any` | Method khusus pada objek/class yang otomatis dipanggil oleh `JSON.stringify()` untuk kustomisasi hasil serialisasi. |
+
+---
+
+### Komponen Parameter Lanjutan
+
+#### 1. Replacer (`JSON.stringify`)
+Dapat berupa:
+- **Array of Strings/Numbers**: Bertindak sebagai *whitelist* properti yang diizinkan masuk ke output string JSON.
+- **Fungsi `(key, value) => any`**: Berjalan untuk setiap key-value (termasuk root objek di awal dengan `key: ""`). Jika me-return `undefined`, properti tersebut dihilangkan.
+
+#### 2. Space Indentasi (`JSON.stringify`)
+- Berupa angka (misal: `2` atau `4`) atau karakter string (misal: `"\t"`).
+- Digunakan untuk menghasilkan output rapi bertingkat (*pretty print*), sangat ideal untuk logging atau penulisan file konfigurasi.
+
+#### 3. Reviver (`JSON.parse`)
+- Fungsi `(key, value) => any` yang berjalan pada setiap pasangan properti hasil deserialisasi.
+- Sangat berguna untuk mengubah kembali string ISO 8601 menjadi objek `Date` asli, atau memodifikasi nilai primitif saat objek direkonstruksi.
+
+---
+
+### Perbandingan Tipe Data: Didukung vs Tidak Didukung
+
+| Tipe Data | Status di JSON | Perilaku Saat `JSON.stringify()` |
+| :--- | :--- | :--- |
+| `String`, `Number`, `Boolean`, `null` | ✅ Didukung penuh | Dikonversi persis sesuai representasi JSON. |
+| `Object` (Plain `{}`) & `Array` (`[]`) | ✅ Didukung penuh | Direpresentasikan rekursif menjadi `{ ... }` atau `[ ... ]`. |
+| `Date` | ⚠️ Terserialisasi ke String | Otomatis diubah ke string ISO 8601 (`toISOString()`), bukan tipe objek khusus JSON. |
+| `undefined` | ❌ Tidak didukung | Dihapus jika berada di dalam objek, diubah menjadi `null` jika di dalam array. |
+| `Function` / Method | ❌ Tidak didukung | Dihapus / diabaikan sepenuhnya. |
+| `Symbol` | ❌ Tidak didukung | Dihapus / diabaikan sepenuhnya. |
+| `BigInt` | ❌ Tidak didukung bawaan | Melempar error `TypeError: Do not know how to serialize a BigInt` (kecuali didefinisikan `toJSON`). |
+| Circular Reference (Objek sirkular) | ❌ Dilarang | Melempar error `TypeError: Converting circular structure to JSON`. |
 
 ---
 
@@ -32,69 +60,58 @@ JSON adalah format data murni, sehingga tidak mendukung:
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Dasar JSON.stringify & JSON.parse ---");
-const dataUser = {
-  id: 101,
-  nama: "Joko Santoso",
-  email: "joko@example.com",
-  isVerified: true,
-  tags: ["javascript", "developer"]
+console.log("--- 1. Serialisasi Objek ke JSON (Filtering Replacer & Indentasi) ---");
+const transaksi = {
+  id: "TRX-001",
+  total: 150000,
+  status: "LUNAS",
+  pinRahasia: 1234,
+  waktu: "2026-10-02T10:00:00.000Z"
 };
 
-// Serialisasi ke String JSON
-const jsonString = JSON.stringify(dataUser);
-console.log("Tipe data jsonString :", typeof jsonString);
-console.log("Hasil stringify      :", jsonString);
+// Filter data: sembunyikan 'pinRahasia' dengan menyertakan whitelist properti, indentasi 2 spasi
+const jsonString = JSON.stringify(transaksi, ["id", "total", "status", "waktu"], 2);
+console.log("Hasil stringify (Pretty Print):");
+console.log(jsonString);
 
-// Deserialisasi kembali ke Objek JavaScript
-const userObj = JSON.parse(jsonString);
-console.log("Kembali jadi objek   :", userObj.nama, "(ID:", userObj.id + ")");
-
-console.log("\n--- 2. Pretty Print & Replacer Array (Filtering Properti) ---");
-// Hanya menyertakan 'nama' dan 'email', diformat dengan indentasi 2 spasi
-const jsonRapi = JSON.stringify(dataUser, ["nama", "email"], 2);
-console.log("Pretty Print Terfilter:\n" + jsonRapi);
-
-console.log("\n--- 3. Reviver Parameter pada JSON.parse (Konversi Tanggal Otomatis) ---");
-const jsonDenganTanggal = JSON.stringify({
-  transaksiId: "TRX-9988",
-  total: 500000,
-  waktu: new Date().toISOString()
-});
-console.log("String JSON mentah   :", jsonDenganTanggal);
-
-// Gunakan reviver untuk mengembalikan string ISO kembali menjadi instance Date
-const parsedTransaksi = JSON.parse(jsonDenganTanggal, (key, value) => {
+console.log("\n--- 2. Deserialisasi JSON ke Objek (Reviver Tanggal) ---");
+// Parse kembali teks JSON dengan reviver untuk merekonstruksi objek Date asli
+const transaksiBaru = JSON.parse(jsonString, (key, val) => {
   if (key === "waktu") {
-    return new Date(value); // ubah string tanggal jadi objek Date asli
+    return new Date(val);
   }
-  return value;
+  return val;
 });
 
-console.log("Tipe properti waktu  :", typeof parsedTransaksi.waktu);
-console.log("Tahun transaksi      :", parsedTransaksi.waktu.getFullYear());
+console.log("Hasil parse objek         :", transaksiBaru);
+console.log("Apakah waktu berupa Date? :", transaksiBaru.waktu instanceof Date);
+console.log("Tahun transaksi           :", transaksiBaru.waktu.getFullYear());
+console.log("Format tanggal lokal      :", transaksiBaru.waktu.toLocaleDateString("id-ID"));
 ```
 
 ---
 
 ## 4. 🖥️ Output yang Diharapkan
 ```text
---- 1. Dasar JSON.stringify & JSON.parse ---
-Tipe data jsonString : string
-Hasil stringify      : {"id":101,"nama":"Joko Santoso","email":"joko@example.com","isVerified":true,"tags":["javascript","developer"]}
-Kembali jadi objek   : Joko Santoso (ID: 101)
-
---- 2. Pretty Print & Replacer Array (Filtering Properti) ---
-Pretty Print Terfilter:
+--- 1. Serialisasi Objek ke JSON (Filtering Replacer & Indentasi) ---
+Hasil stringify (Pretty Print):
 {
-  "nama": "Joko Santoso",
-  "email": "joko@example.com"
+  "id": "TRX-001",
+  "total": 150000,
+  "status": "LUNAS",
+  "waktu": "2026-10-02T10:00:00.000Z"
 }
 
---- 3. Reviver Parameter pada JSON.parse (Konversi Tanggal Otomatis) ---
-String JSON mentah   : {"transaksiId":"TRX-9988","total":500000,"waktu":"2026-09-30T13:50:00.000Z"}
-Tipe properti waktu  : object
-Tahun transaksi      : 2026
+--- 2. Deserialisasi JSON ke Objek (Reviver Tanggal) ---
+Hasil parse objek         : {
+  id: 'TRX-001',
+  total: 150000,
+  status: 'LUNAS',
+  waktu: 2026-10-02T10:00:00.000Z
+}
+Apakah waktu berupa Date? : true
+Tahun transaksi           : 2026
+Format tanggal lokal      : 2/10/2026
 ```
 
 ---
