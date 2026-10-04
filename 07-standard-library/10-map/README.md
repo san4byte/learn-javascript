@@ -2,7 +2,10 @@
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami struktur data `Map` sebagai koleksi pasangan kunci-nilai modern di ES6.\n- Menganalisis perbedaan fundamental dan keunggulan `Map` dibandingkan `Object` biasa.\n- Menguasai method dan properti utama: `set()`, `get()`, `has()`, `delete()`, `clear()`, dan properti `size`.\n- Mampu melakukan iterasi pasangan data pada Map menggunakan `forEach()` dan `for...of`.
+- Memahami struktur data `Map` sebagai koleksi pasangan kunci-nilai modern di ES6.
+- Menganalisis perbedaan fundamental dan keunggulan `Map` dibandingkan `Object` biasa.
+- Menguasai method dan properti utama: `set()`, `get()`, `has()`, `delete()`, `clear()`, dan properti `size`.
+- Mampu melakukan iterasi pasangan data pada Map menggunakan `forEach()` dan `for...of`.
 
 ---
 
@@ -35,6 +38,25 @@ Sebelum ES6, developer JavaScript terpaksa menggunakan objek biasa `{}` sebagai 
 - **`map.entries()`**: Mengembalikan iterator pasangan `[key, value]`.
 - **`map.forEach((value, key, map) => ...)`**: Melakukan iterasi callback pada setiap elemen (perhatikan: parameter `value` berada di urutan pertama sebelum `key`!).
 
+### 3. Kunci Bertipe Objek: Value vs Reference (Kenapa Wajib Pakai Variabel?)
+
+Di JavaScript, objek disimpan berdasarkan **alamat referensi memori** (*pass-by-reference*), bukan berdasarkan nilai teks isinya:
+- Dua objek literal `{ role: "admin" } === { role: "admin" }` bernilai **`false`** karena JavaScript memesan dua alamat memori yang berbeda setiap kali tanda `{}` ditulis.
+- **Jebakan Tanpa Variabel**:
+  ```javascript
+  const map = new Map();
+  map.set({ role: "admin" }, "Akses Penuh");
+  console.log(map.get({ role: "admin" })); // undefined! ❌
+  ```
+  `map.get()` menghasilkan `undefined` karena objek yang dimasukkan saat `get` adalah objek baru dengan alamat memori yang berbeda.
+- **Solusi Wajib**: Simpan objek ke dalam variabel terlebih dahulu agar referensi memorinya identik:
+  ```javascript
+  const kunciAdmin = { role: "admin" }; // Alamat memori tunggal tersimpan di variabel
+  map.set(kunciAdmin, "Akses Penuh");
+  console.log(map.get(kunciAdmin)); // "Akses Penuh" ✅
+  ```
+- **Primitif vs Objek**: Nilai primitif (Number, String, Boolean) dibandingkan berdasarkan **nilai murni** (*by value*), sehingga `map.get(101)` atau `map.get("sessionId")` langsung ditemukan tanpa harus menggunakan variabel.
+
 ---
 
 ## 3. 💻 Contoh Kode (`contoh.js`)
@@ -42,46 +64,30 @@ Sebelum ES6, developer JavaScript terpaksa menggunakan objek biasa `{}` sebagai 
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log('--- 1. Membuat dan Mengisi Map ---');
-const mapPengguna = new Map();
+console.log("--- 1. Inisialisasi & Pengisian Map (.set) ---");
+const sesiUser = new Map();
 
-// Map mengizinkan tipe data apa pun sebagai Key!
-const kunciObjek = { role: 'admin' };
-const kunciFungsi = function () {};
+// Kunci pada Map bisa bertipe Number, String, maupun Objek Referensi!
+const kunciAdmin = { role: "admin" };
 
-mapPengguna.set('joko', 'Joko Santoso');
-mapPengguna.set(101, 'ID Numerik 101');
-mapPengguna.set(kunciObjek, 'Akses Spesial Administrator');
-mapPengguna.set(kunciFungsi, 'Handler Khusus');
+sesiUser.set(101, "Joko Santoso");
+sesiUser.set("sessionId", "SESS-XYZ-999");
+sesiUser.set(kunciAdmin, "Akses Penuh Server");
 
-console.log('Ukuran Map saat ini (size)  :', mapPengguna.size);
-console.log("Akses key string ('joko')   :", mapPengguna.get('joko'));
-console.log('Akses key number (101)      :', mapPengguna.get(101));
-console.log('Akses key objek referensi   :', mapPengguna.get(kunciObjek));
+console.log("Akses Key Number (101)      :", sesiUser.get(101));
+console.log("Akses Key Objek (kunciAdmin):", sesiUser.get(kunciAdmin));
+console.log("Cek Keberadaan Key sessionId:", sesiUser.has("sessionId"));
+console.log("Total Pasangan Data (size)  :", sesiUser.size);
 
-console.log('\n--- 2. Pengecekan dan Penghapusan Data ---');
-console.log("Apakah ada key 'joko'?      :", mapPengguna.has('joko')); // true
-console.log("Apakah ada key 'budi'?      :", mapPengguna.has('budi')); // false
-
-mapPengguna.delete(101); // Hapus data key 101
-console.log('Ukuran setelah delete(101)  :', mapPengguna.size);
-
-console.log('\n--- 3. Iterasi Map dengan for...of dan forEach ---');
-const daftarHarga = new Map([
-  ['Laptop', 15000000],
-  ['Mouse', 250000],
-  ['Keyboard', 800000],
-]);
-
-// Iterasi dengan destructuring pasangan [kunci, nilai]
-for (const [produk, harga] of daftarHarga) {
-  console.log(`- ${produk.padEnd(10)}: Rp ${harga.toLocaleString('id-ID')}`);
+console.log("\n--- 2. Iterasi Pasangan Data Map dengan for...of ---");
+for (const [kunci, nilai] of sesiUser) {
+  console.log("Key :", kunci, "==> Value :", nilai);
 }
 
-console.log('\nIterasi dengan forEach:');
-daftarHarga.forEach((harga, produk) => {
-  console.log(`Produk: ${produk} | Harga: ${harga}`);
-});
+console.log("\n--- 3. Menghapus Data (.delete) & Cek Ukuran Baru ---");
+const statusHapus = sesiUser.delete("sessionId");
+console.log("Apakah sessionId terhapus?  :", statusHapus);
+console.log("Ukuran Map setelah dihapus  :", sesiUser.size);
 ```
 
 ---
@@ -89,26 +95,20 @@ daftarHarga.forEach((harga, produk) => {
 ## 4. 🖥️ Output yang Diharapkan
 
 ```text
---- 1. Membuat dan Mengisi Map ---
-Ukuran Map saat ini (size)  : 4
-Akses key string ('joko')   : Joko Santoso
-Akses key number (101)      : ID Numerik 101
-Akses key objek referensi   : Akses Spesial Administrator
+--- 1. Inisialisasi & Pengisian Map (.set) ---
+Akses Key Number (101)      : Joko Santoso
+Akses Key Objek (kunciAdmin): Akses Penuh Server
+Cek Keberadaan Key sessionId: true
+Total Pasangan Data (size)  : 3
 
---- 2. Pengecekan dan Penghapusan Data ---
-Apakah ada key 'joko'?      : true
-Apakah ada key 'budi'?      : false
-Ukuran setelah delete(101)  : 3
+--- 2. Iterasi Pasangan Data Map dengan for...of ---
+Key : 101 ==> Value : Joko Santoso
+Key : sessionId ==> Value : SESS-XYZ-999
+Key : { role: 'admin' } ==> Value : Akses Penuh Server
 
---- 3. Iterasi Map dengan for...of dan forEach ---
-- Laptop    : Rp 15.000.000
-- Mouse     : Rp 250.000
-- Keyboard  : Rp 800.000
-
-Iterasi dengan forEach:
-Produk: Laptop | Harga: 15000000
-Produk: Mouse | Harga: 250000
-Produk: Keyboard | Harga: 800000
+--- 3. Menghapus Data (.delete) & Cek Ukuran Baru ---
+Apakah sessionId terhapus?  : true
+Ukuran Map setelah dihapus  : 2
 ```
 
 ---
@@ -121,24 +121,34 @@ Produk: Keyboard | Harga: 800000
 
 ### 🏢 Real-World Use Case
 
-1. **Sistem Cache Memori (In-Memory Caching)**: Menyimpan hasil komputasi berat dengan objek parameter request sebagai kuncinya.\n2. **Metadata Elemen DOM**: Memetakan elemen tombol HTML langsung sebagai kunci tanpa harus mengubah atau mencemari objek DOM itu sendiri.\n3. **Frekuensi Penghitungan Kata**: Menghitung jumlah kemunculan kata atau ID pengguna dengan penambahan data berkecepatan tinggi.
+1. **Sistem Cache Memori (In-Memory Caching)**: Menyimpan hasil komputasi berat dengan objek parameter request sebagai kuncinya.
+2. **Metadata Elemen DOM**: Memetakan elemen tombol HTML langsung sebagai kunci tanpa harus mengubah atau mencemari objek DOM itu sendiri.
+3. **Frekuensi Penghitungan Kata**: Menghitung jumlah kemunculan kata atau ID pengguna dengan penambahan data berkecepatan tinggi.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Mengakses Map dengan bracket notation `map[key]`**: Menulis `map['nama'] = 'Joko'` tidak menyimpan data ke dalam struktur Map internal, melainkan menambahkan properti objek JS biasa. Properti `map.size` tidak akan bertambah! Selalu gunakan `map.set()` dan `map.get()`.\n* **Perbandingan referensi pada kunci objek**: `map.set({}, 'data')` tidak bisa diambil dengan `map.get({})` karena kedua objek literal tersebut memiliki alamat memori referensi yang berbeda.\n* **Serialisasi JSON langsung**: `JSON.stringify(map)` menghasilkan string kosong `{}` karena JSON tidak mendukung Map secara native. Konversi dulu ke objek via `Object.fromEntries(map)`.
+- **Mengakses Map dengan bracket notation `map[key]`**: Menulis `map['nama'] = 'Joko'` tidak menyimpan data ke dalam struktur Map internal, melainkan menambahkan properti objek JS biasa. Properti `map.size` tidak akan bertambah! Selalu gunakan `map.set()` dan `map.get()`.
+- **Perbandingan referensi pada kunci objek**: Menulis `map.set({ role: 'admin' }, 'data')` **tidak bisa diambil** dengan `map.get({ role: 'admin' })` dan akan mengembalikan `undefined`! Hal ini terjadi karena kedua tanda kurung kurawal `{}` tersebut memesan alamat memori yang berbeda. Kunci objek wajib disimpan ke dalam satu variabel referensi terlebih dahulu.
+- **Serialisasi JSON langsung**: `JSON.stringify(map)` menghasilkan string kosong `{}` karena JSON tidak mendukung Map secara native. Konversi dulu ke objek via `Object.fromEntries(map)`.
 
 ### 🌟 Best Practice
 
-- Gunakan `Map` jika kunci tidak diketahui hingga runtime atau bertipe non-string.\n* Gunakan `Map` jika Anda membutuhkan frekuensi penambahan dan penghapusan key secara berkala demi performa memori yang optimal.\n* Gunakan `Object` biasa jika Anda hanya memerlukan struktur data rekaman statis (_record_) yang telah ditentukan field-fieldnya sejak awal.
+- Gunakan `Map` jika kunci tidak diketahui hingga runtime atau bertipe non-string.
+- Gunakan `Map` jika Anda membutuhkan frekuensi penambahan dan penghapusan key secara berkala demi performa memori yang optimal.
+- Gunakan `Object` biasa jika Anda hanya memerlukan struktur data rekaman statis (_record_) yang telah ditentukan field-fieldnya sejak awal.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
 
-1. Buatlah class `CacheService` sederhana yang menggunakan `Map` di dalamnya, memiliki method `simpan(kunci, nilai)` dan `ambil(kunci)`.\n2. Diberikan array string `['apel', 'jeruk', 'apel', 'mangga', 'jeruk', 'apel']`. Gunakan `Map` untuk menghitung frekuensi kemunculan setiap buah.
+1. Buatlah class `CacheService` sederhana yang menggunakan `Map` di dalamnya, memiliki method `simpan(kunci, nilai)` dan `ambil(kunci)`.
+2. Diberikan array string `['apel', 'jeruk', 'apel', 'mangga', 'jeruk', 'apel']`. Gunakan `Map` untuk menghitung frekuensi kemunculan setiap buah.
 
 ---
 
 ## 7. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [09 - Boolean](../09-boolean/README.md)\n- ➡️ **Selanjutnya:** [11 - Set](../11-set/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [09 - Boolean](../09-boolean/README.md)
+- ➡️ **Selanjutnya:** [11 - Set](../11-set/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

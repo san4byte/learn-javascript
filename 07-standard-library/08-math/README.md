@@ -53,38 +53,29 @@ Seluruh method di dalam `Math` dirancang khusus untuk tipe data `Number` 64-bit 
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log('--- 1. Konstanta Matematika ---');
-console.log('Nilai Pi (Math.PI)           :', Math.PI);
-console.log('Nilai Euler (Math.E)         :', Math.E);
+console.log("--- 1. Paginasi Halaman dengan Math.ceil() ---");
+const totalProduk = 53;
+const produkPerHalaman = 10;
 
-console.log('\n--- 2. Perbedaan 4 Metode Pembulatan ---');
-const angkaPositif = 4.7;
-const angkaNegatif = -4.7;
+// Pembulatan ke atas menjamin item sisa tetap memperoleh lembar halaman tersendiri
+const totalHalaman = Math.ceil(totalProduk / produkPerHalaman);
+console.log(`Total Halaman (${totalProduk} produk, ${produkPerHalaman}/hal) :`, totalHalaman);
 
-console.log('Math.round(4.7)  :', Math.round(angkaPositif)); // 5 (terdekat)
-console.log('Math.floor(4.7)  :', Math.floor(angkaPositif)); // 4 (ke bawah)
-console.log('Math.ceil(4.7)   :', Math.ceil(angkaPositif)); // 5 (ke atas)
-console.log('Math.trunc(4.7)  :', Math.trunc(angkaPositif)); // 4 (potong desimal)
+console.log("\n--- 2. Pencarian Nilai Ekstrem (Math.min & Math.max) ---");
+const daftarHarga = [150000, 45000, 750000, 20000, 120000];
 
-console.log('\nPerilaku pada angka negatif:');
-console.log('Math.floor(-4.7) :', Math.floor(angkaNegatif)); // -5 (lebih kecil)
-console.log('Math.trunc(-4.7) :', Math.trunc(angkaNegatif)); // -4 (hanya buang .7)
+// Menggunakan spread operator (...) untuk memecah elemen array menjadi argumen
+const hargaTermurah = Math.min(...daftarHarga);
+const hargaTermahal = Math.max(...daftarHarga);
 
-console.log('\n--- 3. Operasi Min, Max, Abs, Pow, Sqrt ---');
-console.log('Nilai Mutlak Math.abs(-150)  :', Math.abs(-150)); // 150
-console.log('Terkecil dari deret          :', Math.min(10, 5, 80, 2, 45)); // 2
-console.log('Terbesar dari deret          :', Math.max(10, 5, 80, 2, 45)); // 80
-console.log('Pangkat 2^8 (Math.pow)       :', Math.pow(2, 8)); // 256
-console.log('Akar dari 144 (Math.sqrt)    :', Math.sqrt(144)); // 12
+console.log("Daftar Harga Katalog :", daftarHarga);
+console.log("Harga Termurah       : Rp", hargaTermurah.toLocaleString("id-ID"));
+console.log("Harga Termahal       : Rp", hargaTermahal.toLocaleString("id-ID"));
 
-console.log('\n--- 4. Menghasilkan Angka Acak dalam Rentang (Random Range) ---');
-// Rumus umum angka acak bulat antara min dan max (inklusif):
-function acakRentang(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-console.log('Angka acak dadu (1 - 6)      :', acakRentang(1, 6));
-console.log('Angka acak dadu kedua        :', acakRentang(1, 6));
+console.log("\n--- 3. Generator Angka Acak dalam Rentang (Math.random) ---");
+// Rumus angka acak bulat antara min dan max: Math.floor(Math.random() * (max - min + 1)) + min
+const diskon = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
+console.log(`Voucher Diskon Acak (10% - 50%) : ${diskon}%`);
 ```
 
 ---
@@ -92,30 +83,16 @@ console.log('Angka acak dadu kedua        :', acakRentang(1, 6));
 ## 4. 🖥️ Output yang Diharapkan
 
 ```text
---- 1. Konstanta Matematika ---
-Nilai Pi (Math.PI)           : 3.141592653589793
-Nilai Euler (Math.E)         : 2.718281828459045
+--- 1. Paginasi Halaman dengan Math.ceil() ---
+Total Halaman (53 produk, 10/hal) : 6
 
---- 2. Perbedaan 4 Metode Pembulatan ---
-Math.round(4.7)  : 5
-Math.floor(4.7)  : 4
-Math.ceil(4.7)   : 5
-Math.trunc(4.7)  : 4
+--- 2. Pencarian Nilai Ekstrem (Math.min & Math.max) ---
+Daftar Harga Katalog : [ 150000, 45000, 750000, 20000, 120000 ]
+Harga Termurah       : Rp 20.000
+Harga Termahal       : Rp 750.000
 
-Perilaku pada angka negatif:
-Math.floor(-4.7) : -5
-Math.trunc(-4.7) : -4
-
---- 3. Operasi Min, Max, Abs, Pow, Sqrt ---
-Nilai Mutlak Math.abs(-150)  : 150
-Terkecil dari deret          : 2
-Terbesar dari deret          : 80
-Pangkat 2^8 (Math.pow)       : 256
-Akar dari 144 (Math.sqrt)    : 12
-
---- 4. Menghasilkan Angka Acak dalam Rentang (Random Range) ---
-Angka acak dadu (1 - 6)      : [Angka antara 1 sampai 6]
-Angka acak dadu kedua        : [Angka antara 1 sampai 6]
+--- 3. Generator Angka Acak dalam Rentang (Math.random) ---
+Voucher Diskon Acak (10% - 50%) : [Angka antara 10% sampai 50%]
 ```
 
 ---

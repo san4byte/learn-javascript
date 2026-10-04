@@ -2,7 +2,10 @@
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami struktur data `Set` sebagai himpunan nilai unik tanpa duplikasi.\n- Membedakan cara kerja dan karakteristik `Set` dibandingkan dengan `Array`.\n- Menguasai method dan properti utama: `add()`, `has()`, `delete()`, `clear()`, dan `size`.\n- Mampu melakukan eliminasi duplikasi data array secara instan menggunakan kombinasi `Set` dan _Spread Operator_.
+- Memahami struktur data `Set` sebagai himpunan nilai unik tanpa duplikasi.
+- Membedakan cara kerja dan karakteristik `Set` dibandingkan dengan `Array`.
+- Menguasai method dan properti utama: `add()`, `has()`, `delete()`, `clear()`, dan `size`.
+- Mampu melakukan eliminasi duplikasi data array secara instan menggunakan kombinasi `Set` dan _Spread Operator_.
 
 ---
 
@@ -40,44 +43,33 @@
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log('--- 1. Dasar Pembuatan dan Manipulasi Set ---');
-const setAngka = new Set();
+console.log("--- 1. Dasar Pembuatan Set & Penolakan Duplikasi ---");
+const daftarTag = new Set();
 
-setAngka.add(10);
-setAngka.add(20);
-setAngka.add(30);
-setAngka.add(10); // Duplikat: otomatis diabaikan!
-setAngka.add(20); // Duplikat: otomatis diabaikan!
+// Mendukung Method Chaining (.add().add())
+daftarTag.add("js").add("ts").add("go");
 
-console.log('Isi Set unik                 :', setAngka);
-console.log('Jumlah elemen unik (size)    :', setAngka.size); // 3
+// Coba tambahkan duplikat 'js' dan nilai angka 1
+daftarTag.add("js").add(1);
 
-console.log('\n--- 2. Pengecekan Cepat (has) & Penghapusan (delete) ---');
-console.log('Apakah angka 20 ada di Set?  :', setAngka.has(20)); // true
-console.log('Apakah angka 99 ada di Set?  :', setAngka.has(99)); // false
+console.log("Isi Set saat ini             :", daftarTag);
+console.log("Jumlah elemen unik (size)    :", daftarTag.size); // 4 ('js' duplikat diabaikan)
 
-setAngka.delete(20); // Hapus angka 20
-console.log('Setelah angka 20 dihapus     :', setAngka);
+console.log("\n--- 2. Pengecekan Cepat (has) & Penghapusan (delete) ---");
+console.log("Apakah ada tag 'ts'?         :", daftarTag.has("ts")); // true
+console.log("Apakah ada tag 'py'?         :", daftarTag.has("py")); // false
 
-console.log('\n--- 3. Trik Industri: Eliminasi Duplikasi Array Instan ---');
-const daftarEmailDuplikat = [
-  'joko@example.com',
-  'budi@example.com',
-  'joko@example.com',
-  'siti@example.com',
-  'budi@example.com',
-];
+daftarTag.delete("js");
+console.log("Setelah tag 'js' dihapus     :", daftarTag);
+console.log("Ukuran Set setelah dihapus   :", daftarTag.size); // 3
 
-// Ubah Array -> Set (duplikat hilang) -> Spread kembali ke Array
-const emailUnik = [...new Set(daftarEmailDuplikat)];
-console.log('Array asli duplikat (5 data) :', daftarEmailDuplikat.length);
-console.log('Array bersih unik            :', emailUnik);
+console.log("\n--- 3. Trik Industri: Deduplikasi Array Instan ---");
+const kategoriMentah = ["frontend", "backend", "frontend", "devops", "backend", "ui-ux"];
+console.log("Array Mentah (6 data)        :", kategoriMentah);
 
-console.log('\n--- 4. Iterasi Elemen Set ---');
-const setKategori = new Set(['Elektronik', 'Pakaian', 'Buku']);
-for (const kategori of setKategori) {
-  console.log('- Kategori Produk:', kategori);
-}
+// Mengubah Array -> Set (duplikat lenyap) -> Spread (...) kembali menjadi Array
+const kategoriUnik = [...new Set(kategoriMentah)];
+console.log("Array Bersih (Bebas Duplikat):", kategoriUnik);
 ```
 
 ---
@@ -85,23 +77,19 @@ for (const kategori of setKategori) {
 ## 4. 🖥️ Output yang Diharapkan
 
 ```text
---- 1. Dasar Pembuatan dan Manipulasi Set ---
-Isi Set unik                 : Set(3) { 10, 20, 30 }
-Jumlah elemen unik (size)    : 3
+--- 1. Dasar Pembuatan Set & Penolakan Duplikasi ---
+Isi Set saat ini             : Set(4) { 'js', 'ts', 'go', 1 }
+Jumlah elemen unik (size)    : 4
 
 --- 2. Pengecekan Cepat (has) & Penghapusan (delete) ---
-Apakah ada angka 20 di Set?  : true
-Apakah ada angka 99 di Set?  : false
-Setelah angka 20 dihapus     : Set(2) { 10, 30 }
+Apakah ada tag 'ts'?         : true
+Apakah ada tag 'py'?         : false
+Setelah tag 'js' dihapus     : Set(3) { 'ts', 'go', 1 }
+Ukuran Set setelah dihapus   : 3
 
---- 3. Trik Industri: Eliminasi Duplikasi Array Instan ---
-Array asli duplikat (5 data) : 5
-Array bersih unik            : [ 'joko@example.com', 'budi@example.com', 'siti@example.com' ]
-
---- 4. Iterasi Elemen Set ---
-- Kategori Produk: Elektronik
-- Kategori Produk: Pakaian
-- Kategori Produk: Buku
+--- 3. Trik Industri: Deduplikasi Array Instan ---
+Array Mentah (6 data)        : [ 'frontend', 'backend', 'frontend', 'devops', 'backend', 'ui-ux' ]
+Array Bersih (Bebas Duplikat): [ 'frontend', 'backend', 'devops', 'ui-ux' ]
 ```
 
 ---
@@ -114,24 +102,34 @@ Array bersih unik            : [ 'joko@example.com', 'budi@example.com', 'siti@e
 
 ### 🏢 Real-World Use Case
 
-1. **Deduplikasi Data (Unique Filtering)**: Membersihkan array ID transaksi, tag artikel, atau nomor telepon pengguna yang duplikat dengan `[...new Set(array)]`.\n2. **Pengecekan Izin Akses Pengguna (Permissions Check)**: Menyimpan daftar _role permissions_ (`'READ'`, `'WRITE'`, `'DELETE'`) di dalam Set agar pengecekan hak akses `permissions.has('WRITE')` berjalan secepat kilat ($O(1)$).\n3. **Pencatatan Online Users**: Menyimpan daftar ID user yang sedang aktif di chatroom tanpa takut terjadi pencatatan dobel.
+1. **Deduplikasi Data (Unique Filtering)**: Membersihkan array ID transaksi, tag artikel, atau nomor telepon pengguna yang duplikat dengan `[...new Set(array)]`.
+2. **Pengecekan Izin Akses Pengguna (Permissions Check)**: Menyimpan daftar _role permissions_ (`'READ'`, `'WRITE'`, `'DELETE'`) di dalam Set agar pengecekan hak akses `permissions.has('WRITE')` berjalan secepat kilat ($O(1)$).
+3. **Pencatatan Online Users**: Menyimpan daftar ID user yang sedang aktif di chatroom tanpa takut terjadi pencatatan dobel.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Mengira objek berbeda isi dianggap sama**: `new Set([{}, {}])` memiliki ukuran `2`, karena dua objek literal tersebut berada di alamat memori yang berbeda. Set menggunakan algoritma _SameValueZero_.\n* **Tidak bisa mengambil data via index**: Menulis `mySet[0]` akan menghasilkan `undefined`. Anda harus menggunakan `for...of` atau mengonversinya menjadi array `[...mySet][0]`.\n* **Menghindari `NaN` duplikat**: Berbeda dengan operator `===` di mana `NaN !== NaN`, Set menganggap seluruh nilai `NaN` adalah identik dan tidak akan menduplikasikannya.
+- **Mengira objek berbeda isi dianggap sama**: `new Set([{}, {}])` memiliki ukuran `2`, karena dua objek literal tersebut berada di alamat memori yang berbeda. Set menggunakan algoritma _SameValueZero_.
+- **Tidak bisa mengambil data via index**: Menulis `mySet[0]` akan menghasilkan `undefined`. Anda harus menggunakan `for...of` atau mengonversinya menjadi array `[...mySet][0]`.
+- **Menghindari `NaN` duplikat**: Berbeda dengan operator `===` di mana `NaN !== NaN`, Set menganggap seluruh nilai `NaN` adalah identik dan tidak akan menduplikasikannya.
 
 ### 🌟 Best Practice
 
-- Gunakan kombinasi `[...new Set(arr)]` sebagai cara tercepat dan paling elegan untuk membuang elemen duplikat primitif di JavaScript.\n* Gunakan `Set` alih-alih `Array` jika skenario aplikasi Anda sering melakukan operasi pengecekan keberadaan item (`has()`) pada ribuan data.\n* Gunakan method bawaan Set ES2024 jika tersedia di runtime Anda (seperti `union()`, `intersection()`, `difference()`).
+- Gunakan kombinasi `[...new Set(arr)]` sebagai cara tercepat dan paling elegan untuk membuang elemen duplikat primitif di JavaScript.
+- Gunakan `Set` alih-alih `Array` jika skenario aplikasi Anda sering melakukan operasi pengecekan keberadaan item (`has()`) pada ribuan data.
+- Gunakan method bawaan Set ES2024 jika tersedia di runtime Anda (seperti `union()`, `intersection()`, `difference()`).
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
 
-1. Buat fungsi `gabungTagUnik(tagLama, tagBaru)` yang menerima dua array string dan mengembalikan satu array baru yang berisi gabungan seluruh tag tanpa ada duplikasi.\n2. Buat class `TagManager` dengan method `tambahTag(tag)` dan `cekTag(tag)` yang memanfaatkan struktur data `Set`.
+1. Buat fungsi `gabungTagUnik(tagLama, tagBaru)` yang menerima dua array string dan mengembalikan satu array baru yang berisi gabungan seluruh tag tanpa ada duplikasi.
+2. Buat class `TagManager` dengan method `tambahTag(tag)` dan `cekTag(tag)` yang memanfaatkan struktur data `Set`.
 
 ---
 
 ## 7. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [10 - Map](../10-map/README.md)\n- ➡️ **Selanjutnya:** [12 - Symbol](../12-symbol/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [10 - Map](../10-map/README.md)
+- ➡️ **Selanjutnya:** [12 - Symbol](../12-symbol/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

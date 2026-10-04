@@ -1,7 +1,10 @@
 # 18 - Eval (Eksekusi Dinamis, Analisis Risiko Keamanan, dan Alternatif Aman)
 
 ## 1. 🎯 Tujuan Belajar
-- Memahami fungsi bawaan `eval()` sebagai parser dan eksekutor ekspresi string kode JavaScript dinamis.\n- Memahami mengapa `eval()` **sangat berbahaya dan dijuluki 'eval is evil'** di industri software.\n- Menganalisis dampak negatif `eval()` terhadap keamanan (XSS, Code Injection) dan performa (hilangnya optimasi V8/JIT Compiler).\n- Menguasai alternatif modern yang aman: `JSON.parse()`, objek Lookup Table, dan `new Function()` terisolasi.
+- Memahami fungsi bawaan `eval()` sebagai parser dan eksekutor ekspresi string kode JavaScript dinamis.
+- Memahami mengapa `eval()` **sangat berbahaya dan dijuluki 'eval is evil'** di industri software.
+- Menganalisis dampak negatif `eval()` terhadap keamanan (XSS, Code Injection) dan performa (hilangnya optimasi V8/JIT Compiler).
+- Menguasai alternatif modern yang aman: `JSON.parse()`, objek Lookup Table, dan `new Function()` terisolasi.
 
 ---
 
@@ -111,20 +114,29 @@ Hasil parse JSON aman: sukses
 > `eval()` seperti **memberikan kunci brankas master bank dan hak otorisasi penuh kepada sembarang orang asing yang datang lewat loket**: Anda berharap orang tersebut hanya ingin menukar uang koin, namun karena Anda memberinya wewenang mutlak, ia bisa menguras brankas atau membakar kantor bank Anda.
 
 ### 🏢 Real-World Use Case
-1. **Taman Bermain Kode Online (REPL / Code Playground)**: Tool seperti DevTools Console atau CodePen membutuhkan eksekusi string dinamis (namun selalu dijalankan di lingkungan Sandbox web worker yang sangat terisolasi).\n2. **Mesin Template & Compiler Internal**: Digunakan secara sangat hati-hati oleh tim inti pembuat bundler/transpiler seperti Babel.\n3. **Saran Industri**: 99.9% aplikasi web komersial **sama sekali tidak membutuhkan `eval()`**.
+1. **Taman Bermain Kode Online (REPL / Code Playground)**: Tool seperti DevTools Console atau CodePen membutuhkan eksekusi string dinamis (namun selalu dijalankan di lingkungan Sandbox web worker yang sangat terisolasi).
+2. **Mesin Template & Compiler Internal**: Digunakan secara sangat hati-hati oleh tim inti pembuat bundler/transpiler seperti Babel.
+3. **Saran Industri**: 99.9% aplikasi web komersial **sama sekali tidak membutuhkan `eval()`**.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Membuka Celah XSS Mematikan**: Memasukkan parameter URL atau data form ke `eval()` adalah tiket ekspres terjadinya serangan peretasan data pengguna.\n* **Menghancurkan Kecepatan Aplikasi**: V8 engine tidak bisa mengoptimalkan variabel di sekitar `eval()` sehingga seluruh fungsi tempat `eval` berada akan mengalami degradasi kecepatan yang signifikan.\n* **Diblokir oleh Content Security Policy (CSP)**: Website modern di produksi mengaktifkan CSP yang otomatis memblokir eksekusi `eval()` demi keamanan server.
+- **Membuka Celah XSS Mematikan**: Memasukkan parameter URL atau data form ke `eval()` adalah tiket ekspres terjadinya serangan peretasan data pengguna.
+- **Menghancurkan Kecepatan Aplikasi**: V8 engine tidak bisa mengoptimalkan variabel di sekitar `eval()` sehingga seluruh fungsi tempat `eval` berada akan mengalami degradasi kecepatan yang signifikan.
+- **Diblokir oleh Content Security Policy (CSP)**: Website modern di produksi mengaktifkan CSP yang otomatis memblokir eksekusi `eval()` demi keamanan server.
 
 ### 🌟 Best Practice
-* Pegang prinsip emas: **'Never use eval()!'**.\n* Gunakan `JSON.parse()` murni saat ingin membaca struktur data dari string teks.\n* Gunakan Lookup Table objek pemetaan fungsi untuk kalkulator atau pengeksekusi perintah berbasis teks.
+- Pegang prinsip emas: **'Never use eval()!'**.
+- Gunakan `JSON.parse()` murni saat ingin membaca struktur data dari string teks.
+- Gunakan Lookup Table objek pemetaan fungsi untuk kalkulator atau pengeksekusi perintah berbasis teks.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
-1. Buatlah fungsi `kalkulatorStringAman(angka1, operator, angka2)` yang mendukung operator `+`, `-`, `*`, dan `/` menggunakan teknik *Lookup Table* tanpa menggunakan `eval()`.\n2. Jelaskan secara tertulis mengapa kode `JSON.parse('{"x": 10}')` jauh lebih aman dibandingkan dengan `eval('({"x": 10})')`.
+1. Buatlah fungsi `kalkulatorStringAman(angka1, operator, angka2)` yang mendukung operator `+`, `-`, `*`, dan `/` menggunakan teknik *Lookup Table* tanpa menggunakan `eval()`.
+2. Jelaskan secara tertulis mengapa kode `JSON.parse('{"x": 10}')` jauh lebih aman dibandingkan dengan `eval('({"x": 10})')`.
 
 ---
 
 ## 7. 🧭 Navigasi
-- ⬅️ **Sebelumnya:** [17 - Base64](../17-base64/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [17 - Base64](../17-base64/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

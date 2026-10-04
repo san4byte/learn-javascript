@@ -2,7 +2,10 @@
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami `Reflect` sebagai objek statis bawaan ES6 untuk operasi intersepsi dan refleksi JavaScript.\n- Mengetahui method-method utama Reflect: `Reflect.get()`, `Reflect.set()`, `Reflect.has()`, dan `Reflect.deleteProperty()`.\n- Memahami keunggulan pengembalian nilai boolean pada Reflect dibanding melempar exception pada operator lama.\n- Menguasai integrasi sempurna antara `Reflect` dan `Proxy` untuk mempertahankan perilaku bawaan bahasa.
+- Memahami `Reflect` sebagai objek statis bawaan ES6 untuk operasi intersepsi dan refleksi JavaScript.
+- Mengetahui method-method utama Reflect: `Reflect.get()`, `Reflect.set()`, `Reflect.has()`, dan `Reflect.deleteProperty()`.
+- Memahami keunggulan pengembalian nilai boolean pada Reflect dibanding melempar exception pada operator lama.
+- Menguasai integrasi sempurna antara `Reflect` dan `Proxy` untuk mempertahankan perilaku bawaan bahasa.
 
 ---
 
@@ -46,53 +49,60 @@ Alih-alih memanggil `target[prop] = value` secara manual di dalam Proxy handler,
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log('--- 1. Operasi Refleksi Standar dengan Reflect ---');
-const mahasiswa = {
-  nim: '123456',
-  nama: 'Joko Santoso',
-  jurusan: 'Teknik Informatika',
+console.log("--- 1. Operasi Refleksi Standar dengan Reflect ---");
+const user = {
+  nama: "Joko",
+  umur: 25,
+  role: "admin",
 };
 
-// 1. Membaca properti (Reflect.get)
-console.log('Reflect.get(nama)         :', Reflect.get(mahasiswa, 'nama'));
+// Membaca properti dengan Reflect.get
+console.log("Reflect.get(user, 'nama')   :", Reflect.get(user, "nama"));
 
-// 2. Memeriksa properti (Reflect.has - pengganti operator 'in')
-console.log('Reflect.has(jurusan)      :', Reflect.has(mahasiswa, 'jurusan')); // true
-console.log('Reflect.has(fakultas)     :', Reflect.has(mahasiswa, 'fakultas')); // false
+// Memeriksa properti dengan Reflect.has
+console.log("Reflect.has(user, 'role')   :", Reflect.has(user, "role"));
 
-// 3. Menghapus properti dengan return boolean (Reflect.deleteProperty)
-const suksesHapus = Reflect.deleteProperty(mahasiswa, 'nim');
-console.log('Status hapus properti nim :', suksesHapus); // true
-console.log('Objek setelah dihapus     :', mahasiswa);
+// Menghapus properti dengan Reflect.deleteProperty
+const statusHapus = Reflect.deleteProperty(user, "role");
+console.log("Status hapus properti role  :", statusHapus);
+console.log("Objek setelah dihapus       :", user);
 
-console.log('\n--- 2. Kolaborasi Sempurna: Proxy + Reflect ---');
+console.log("\n--- 2. Kolaborasi Sempurna: Proxy + Reflect ---");
 const produk = {
-  nama: 'Monitor Ultra-Wide',
-  harga: 4500000,
+  nama: "Laptop",
+  harga: 10000000,
 };
 
-const handlerLogging = {
+const handler = {
   get(target, property, receiver) {
-    console.log(`[ACCESS LOG]: Membaca properti '${String(property)}'`);
-    // Teruskan eksekusi default ke Reflect.get dengan receiver yang aman
+    console.log(`[ACCESS LOG]: Mengakses properti '${String(property)}'`);
     return Reflect.get(target, property, receiver);
   },
 
   set(target, property, value, receiver) {
-    if (property === 'harga' && value < 0) {
-      console.warn('[VALIDASI GAGAL]: Harga tidak boleh minus!');
-      return false;
+    if (property === "harga" && value < 0) {
+      throw new Error("Harga tidak boleh negatif!");
     }
-    console.log(`[MUTATION LOG]: Mengubah '${String(property)}' ->`, value);
-    // Teruskan penulisan ke Reflect.set
+
     return Reflect.set(target, property, value, receiver);
   },
 };
 
-const proxyProduk = new Proxy(produk, handlerLogging);
-console.log('Baca nama via proxy :', proxyProduk.nama);
-proxyProduk.harga = 4200000;
-console.log('Harga baru produk   :', proxyProduk.harga);
+const proxyProduk = new Proxy(produk, handler);
+
+// Uji coba pembacaan via proxy
+console.log("Baca nama via proxy         :", proxyProduk.nama);
+
+// Uji coba penulisan via proxy
+try {
+  proxyProduk.harga = 12000000;
+  console.log("Berhasil ubah harga         :", proxyProduk.harga);
+
+  // Memicu validasi error:
+  proxyProduk.harga = -1;
+} catch (error) {
+  console.error("Gagal update harga          :", error.message);
+}
 ```
 
 ---
@@ -101,18 +111,17 @@ console.log('Harga baru produk   :', proxyProduk.harga);
 
 ```text
 --- 1. Operasi Refleksi Standar dengan Reflect ---
-Reflect.get(nama)         : Joko Santoso
-Reflect.has(jurusan)      : true
-Reflect.has(fakultas)     : false
-Status hapus properti nim : true
-Objek setelah dihapus     : { nama: 'Joko Santoso', jurusan: 'Teknik Informatika' }
+Reflect.get(user, 'nama')   : Joko
+Reflect.has(user, 'role')   : true
+Status hapus properti role  : true
+Objek setelah dihapus       : { nama: 'Joko', umur: 25 }
 
 --- 2. Kolaborasi Sempurna: Proxy + Reflect ---
-[ACCESS LOG]: Membaca properti 'nama'
-Baca nama via proxy : Monitor Ultra-Wide
-[MUTATION LOG]: Mengubah 'harga' -> 4200000
-[ACCESS LOG]: Membaca properti 'harga'
-Harga baru produk   : 4200000
+[ACCESS LOG]: Mengakses properti 'nama'
+Baca nama via proxy         : Laptop
+[ACCESS LOG]: Mengakses properti 'harga'
+Berhasil ubah harga         : 12000000
+Gagal update harga          : Harga tidak boleh negatif!
 ```
 
 ---
@@ -125,24 +134,34 @@ Harga baru produk   : 4200000
 
 ### 🏢 Real-World Use Case
 
-1. **Proxy Forwarding**: Menjadi cara standar meneruskan operasi pencegatan di dalam Proxy trap kembali ke objek target.\n2. **Manipulasi Objek Terproteksi**: Mengetahui apakah penambahan properti berhasil atau gagal tanpa program mengalami crash (`if (!Reflect.defineProperty(...))`).\n3. **Pemanggilan Konstruktor Dinamis**: Memanggil constructor fungsi dengan parameter array menggunakan `Reflect.construct(TargetClass, argsList)`.
+1. **Proxy Forwarding**: Menjadi cara standar meneruskan operasi pencegatan di dalam Proxy trap kembali ke objek target.
+2. **Manipulasi Objek Terproteksi**: Mengetahui apakah penambahan properti berhasil atau gagal tanpa program mengalami crash (`if (!Reflect.defineProperty(...))`).
+3. **Pemanggilan Konstruktor Dinamis**: Memanggil constructor fungsi dengan parameter array menggunakan `Reflect.construct(TargetClass, argsList)`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Mengira Reflect adalah konstruktor**: Menulis `new Reflect()` akan menghasilkan `TypeError: Reflect is not a constructor`.\n* **Lupa argumen `receiver` saat berkolaborasi dengan Proxy**: Jika objek target memiliki *getter* yang mengandalkan keyword `this`, tidak menyertakan parameter `receiver` pada `Reflect.get(target, prop, receiver)` akan merusak konteks `this` ke objek asal, bukan ke Proxy.\n* **Mengganti operasi sederhana tanpa alasan**: Untuk kode aplikasi bisnis umum, `obj.nama` tetap lebih bersih daripada `Reflect.get(obj, 'nama')`. Gunakan Reflect untuk metaprogramming, library, dan Proxy.
+- **Mengira Reflect adalah konstruktor**: Menulis `new Reflect()` akan menghasilkan `TypeError: Reflect is not a constructor`.
+- **Lupa argumen `receiver` saat berkolaborasi dengan Proxy**: Jika objek target memiliki *getter* yang mengandalkan keyword `this`, tidak menyertakan parameter `receiver` pada `Reflect.get(target, prop, receiver)` akan merusak konteks `this` ke objek asal, bukan ke Proxy.
+- **Mengganti operasi sederhana tanpa alasan**: Untuk kode aplikasi bisnis umum, `obj.nama` tetap lebih bersih daripada `Reflect.get(obj, 'nama')`. Gunakan Reflect untuk metaprogramming, library, dan Proxy.
 
 ### 🌟 Best Practice
 
-- Selalu gunakan `Reflect` di dalam trap `Proxy` untuk meneruskan operasi default daripada melakukan manipulasi langsung ke `target`.\n* Sertakan selalu parameter `receiver` pada `Reflect.get` dan `Reflect.set` demi integritas binding keyword `this` pada getter/setter.\n* Gunakan `Reflect.ownKeys(target)` untuk mengambil semua kunci objek (string keys sekaligus Symbol keys) dalam satu langkah ringkas.
+- Selalu gunakan `Reflect` di dalam trap `Proxy` untuk meneruskan operasi default daripada melakukan manipulasi langsung ke `target`.
+- Sertakan selalu parameter `receiver` pada `Reflect.get` dan `Reflect.set` demi integritas binding keyword `this` pada getter/setter.
+- Gunakan `Reflect.ownKeys(target)` untuk mengambil semua kunci objek (string keys sekaligus Symbol keys) dalam satu langkah ringkas.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
 
-1. Ubah kode pemeriksaan `if ('email' in user)` dan penghapusan `delete user.password` menjadi versi modern menggunakan method `Reflect`.\n2. Buatlah sebuah Proxy handler yang menggunakan `Reflect.ownKeys()` untuk mencatat seluruh daftar properti yang dimiliki oleh objek target.
+1. Ubah kode pemeriksaan `if ('email' in user)` dan penghapusan `delete user.password` menjadi versi modern menggunakan method `Reflect`.
+2. Buatlah sebuah Proxy handler yang menggunakan `Reflect.ownKeys()` untuk mencatat seluruh daftar properti yang dimiliki oleh objek target.
 
 ---
 
 ## 7. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [14 - Proxy](../14-proxy/README.md)\n- ➡️ **Selanjutnya:** [16 - Encode](../16-encode/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [14 - Proxy](../14-proxy/README.md)
+- ➡️ **Selanjutnya:** [16 - Encode](../16-encode/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
