@@ -12,7 +12,9 @@ const aksiDibatalkan = riwayatAksi.pop();
 console.log('Aksi di-undo (pop)            :', aksiDibatalkan);
 console.log('Sisa tumpukan aksi            :', riwayatAksi);
 
-console.log('\n--- 2. Studi Kasus Nyata: Antrean Pesanan (Queue FIFO, Search, & Reduce) ---');
+console.log(
+  '\n--- 2. Studi Kasus Nyata: Antrean Pesanan (Queue FIFO, Search, & Reduce) ---'
+);
 class AntreanPesanan {
   // Enkapsulasi data antrean menggunakan Private Field (#)
   #daftar = [];

@@ -2,7 +2,9 @@
 
 console.log('--- 1. Manipulasi Query Param dengan URLSearchParams ---');
 // Simulasi URL katalog produk di toko online
-const urlKatalog = new URL('https://toko-online.com/katalog?kategori=elektronik&halaman=1');
+const urlKatalog = new URL(
+  'https://toko-online.com/katalog?kategori=elektronik&halaman=1'
+);
 
 const params = urlKatalog.searchParams;
 
@@ -19,7 +21,8 @@ console.log('Query String baru :', params.toString());
 console.log('Full URL baru     :', urlKatalog.toString());
 
 console.log('\n--- 2. Membaca Query String dari URL Saat Ini ---');
-const queryStringContoh = '?keyword=laptop+gaming&min_price=10000000&brand=asus';
+const queryStringContoh =
+  '?keyword=laptop+gaming&min_price=10000000&brand=asus';
 const pencarianParams = new URLSearchParams(queryStringContoh);
 
 console.log('Kata kunci cari :', pencarianParams.get('keyword'));
@@ -31,7 +34,9 @@ for (const [kunci, nilai] of pencarianParams.entries()) {
   console.log(`- ${kunci}: ${nilai}`);
 }
 
-console.log('\n--- 3. Bekerja dengan FormData (Simulasi Pengiriman Formulir) ---');
+console.log(
+  '\n--- 3. Bekerja dengan FormData (Simulasi Pengiriman Formulir) ---'
+);
 // Di browser, Anda bisa membuat FormData langsung dari elemen HTML: new FormData(formElement)
 // Di sini kita demonstrasikan pembuatan dan manipulasi FormData terprogram:
 const formData = new FormData();
@@ -42,7 +47,9 @@ formData.append('email', 'joko@example.com');
 formData.append('bio', 'Web Developer & Lifelong Learner');
 
 // Simulasi lampiran file berkas foto profil (Blob / File)
-const fileSimulasi = new Blob(['konten binary gambar simulasi'], { type: 'image/png' });
+const fileSimulasi = new Blob(['konten binary gambar simulasi'], {
+  type: 'image/png',
+});
 formData.append('avatar', fileSimulasi, 'avatar-joko.png');
 
 // Menginspeksi isi FormData

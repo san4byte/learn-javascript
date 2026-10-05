@@ -1,9 +1,10 @@
 # 04 - Object (Static Methods: Freeze, Seal, Assign, Values, Keys, Entries)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami kumpulan Static Methods esensial pada fungsi global `Object`.
-> * **Kapan Digunakan**: Menguasai proteksi integritas objek: perbedaan mendalam `Object.freeze()` vs `Object.seal()`.
-> * **Aturan Praktis**: Gunakan `Object.freeze()` untuk seluruh objek konfigurasi global dan enum agar tidak mengalami mutasi tak terduga (_accidental mutation_).
+>
+> - **Fungsi Utama**: Memahami kumpulan Static Methods esensial pada fungsi global `Object`.
+> - **Kapan Digunakan**: Menguasai proteksi integritas objek: perbedaan mendalam `Object.freeze()` vs `Object.seal()`.
+> - **Aturan Praktis**: Gunakan `Object.freeze()` untuk seluruh objek konfigurasi global dan enum agar tidak mengalami mutasi tak terduga (_accidental mutation_).
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -65,7 +66,7 @@ Integritas data objek dapat dilindungi dengan dua tingkatan:
 console.log('--- 1. Proteksi Objek: Object.freeze() vs Object.seal() ---');
 const configServer = {
   host: 'localhost',
-  port: 8080
+  port: 8080,
 };
 
 // Bekukan objek secara total (immutable)
@@ -83,18 +84,20 @@ const kursValas = {
   USD: 16000,
   EUR: 17500,
   SGD: 12000,
-  JPY: 105
+  JPY: 105,
 };
 
 // Iterasi praktis menggunakan destructuring [kunci, nilai]
 for (const [mataUang, nilaiRupiah] of Object.entries(kursValas)) {
-  console.log(`1 ${mataUang.padEnd(4)} = Rp ${nilaiRupiah.toLocaleString('id-ID')}`);
+  console.log(
+    `1 ${mataUang.padEnd(4)} = Rp ${nilaiRupiah.toLocaleString('id-ID')}`
+  );
 }
 
 console.log('\n--- 3. Analitik Data: Object.values() & Array.reduce() ---');
 function hitungRataRataKurs(dataKurs) {
   const daftarNilai = Object.values(dataKurs);
-  
+
   if (daftarNilai.length === 0) {
     return 'Data kurs kosong';
   }
@@ -103,7 +106,7 @@ function hitungRataRataKurs(dataKurs) {
   const rataRata = totalNilai / daftarNilai.length;
 
   return `Rata-rata Nilai Kurs: Rp ${rataRata.toLocaleString('id-ID', {
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   })}`;
 }
 
@@ -133,7 +136,6 @@ Rata-rata Nilai Kurs: Rp 11.401,25
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
 
 1. **Konstanta Aplikasi & Enum**: Membekukan kamus status pesanan (`const STATUS = Object.freeze({ PENDING: 'PENDING', SUCCESS: 'SUCCESS' })`) agar nilainya tidak bisa sengaja ditimpa oleh developer lain.
@@ -143,12 +145,14 @@ Rata-rata Nilai Kurs: Rp 11.401,25
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
 - **Freeze bersifat Shallow**: Jika objek memiliki properti objek anak (`user.alamat.kota`), memanggil `Object.freeze(user)` tidak otomatis membekukan `user.alamat`. Properti `kota` masih bisa diubah!
+
 * **Nama method lama**: Jangan gunakan istilah non-standar seperti `Object.getPropertyNames()`, nama standar ECMAScript adalah `Object.getOwnPropertyNames()`.
 * **Kegagalan tersembunyi tanpa Strict Mode**: Di lingkungan non-strict, memodifikasi properti yang dibekukan tidak memunculkan error melainkan gagal secara diam-diam (_fail silently_).
 
 ### 🌟 Best Practice
 
 - Gunakan `Object.freeze()` untuk seluruh objek konfigurasi global dan enum agar tidak mengalami mutasi tak terduga (_accidental mutation_).
+
 * Gunakan `Object.entries()` dikombinasikan dengan perulangan `for (const [kunci, nilai] of Object.entries(obj))` untuk iterasi objek yang sangat bersih.
 * Periksa status proteksi objek menggunakan `Object.isFrozen(obj)` atau `Object.isSealed(obj)` jika diperlukan.
 

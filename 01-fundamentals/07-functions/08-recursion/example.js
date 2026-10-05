@@ -24,19 +24,21 @@ function faktorial(n) {
 console.log('5! =', faktorial(5));
 console.log('4! =', faktorial(4));
 
-console.log('\n--- 3. Studi Kasus Nyata: Menelusuri Kategori Bersarang (Tree/Folder) ---');
+console.log(
+  '\n--- 3. Studi Kasus Nyata: Menelusuri Kategori Bersarang (Tree/Folder) ---'
+);
 const strukturFolder = {
   nama: 'Root',
   subFolder: [
     { nama: 'Dokumen', subFolder: [{ nama: 'Surat.docx', subFolder: [] }] },
-    { nama: 'Gambar', subFolder: [{ nama: 'Foto.jpg', subFolder: [] }] }
-  ]
+    { nama: 'Gambar', subFolder: [{ nama: 'Foto.jpg', subFolder: [] }] },
+  ],
 };
 
 function cetakPohonFolder(folder, level = 0) {
   const indentasi = '  '.repeat(level);
   console.log(`${indentasi}📁 ${folder.nama}`);
-  
+
   for (const anak of folder.subFolder) {
     cetakPohonFolder(anak, level + 1); // Rekursi menelusuri sub-folder sedalam apapun
   }

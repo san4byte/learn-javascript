@@ -1,9 +1,10 @@
 # 04 - Promise (Konsep Pending, Fulfilled, Rejected)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami konsep Promise sebagai objek representasi nilai masa depan.
-> * **Kapan Digunakan**: Memahami 3 status utama Promise: `pending`, `fulfilled`, dan `rejected`.
-> * **Aturan Praktis**: Selalu letakkan satu buah `.catch()` di bagian paling akhir dari rantai `.then()` untuk menangkap seluruh kemungkinan error di tingkatan mana pun.
+>
+> - **Fungsi Utama**: Memahami konsep Promise sebagai objek representasi nilai masa depan.
+> - **Kapan Digunakan**: Memahami 3 status utama Promise: `pending`, `fulfilled`, dan `rejected`.
+> - **Aturan Praktis**: Selalu letakkan satu buah `.catch()` di bagian paling akhir dari rantai `.then()` untuk menangkap seluruh kemungkinan error di tingkatan mana pun.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -61,7 +62,10 @@ function verifikasiAkunBank(saldoMinimal) {
 
     setTimeout(() => {
       if (saldoMinimal >= 50000) {
-        resolve({ status: 'Aktif', pesan: 'Rekening valid dan saldo mencukupi.' });
+        resolve({
+          status: 'Aktif',
+          pesan: 'Rekening valid dan saldo mencukupi.',
+        });
       } else {
         reject(new Error('Saldo di bawah ketentuan minimal (Rp 50.000)!'));
       }
@@ -110,7 +114,6 @@ Sedang memverifikasi rekening di sistem pusat...
 ---
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
-
 
 ### 🏢 Real-World Use Case
 

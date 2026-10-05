@@ -1,9 +1,10 @@
 # 05 - DOM Events (Merespon Aksi Pengguna)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami konsep Event sebagai sinyal bahwa suatu aksi telah terjadi di halaman web.
-> * **Kapan Digunakan**: Memahami 3 cara menangani event: Inline Attribute, DOM Property, dan `addEventListener()`.
-> * **Aturan Praktis**: Selalu gunakan **`addEventListener()`** untuk mendaftarkan event di aplikasi modern.
+>
+> - **Fungsi Utama**: Memahami konsep Event sebagai sinyal bahwa suatu aksi telah terjadi di halaman web.
+> - **Kapan Digunakan**: Memahami 3 cara menangani event: Inline Attribute, DOM Property, dan `addEventListener()`.
+> - **Aturan Praktis**: Selalu gunakan **`addEventListener()`** untuk mendaftarkan event di aplikasi modern.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -76,7 +77,9 @@ if (typeof document === 'undefined') {
   if (tombolAksi) {
     // 1. Mendaftarkan Event Listener Klik
     tombolAksi.addEventListener('click', function (e) {
-      console.log(`[EVENT KLIK] Tombol diklik! Koordinat: (${e.clientX}, ${e.clientY})`);
+      console.log(
+        `[EVENT KLIK] Tombol diklik! Koordinat: (${e.clientX}, ${e.clientY})`
+      );
       tombolAksi.textContent = 'Tombol Berhasil Diklik!';
       tombolAksi.style.backgroundColor = '#16a34a';
     });
@@ -85,7 +88,9 @@ if (typeof document === 'undefined') {
   if (kotakInput) {
     // 2. Mendaftarkan Event Listener Keyboard (keyup)
     kotakInput.addEventListener('keyup', function (e) {
-      console.log(`[KEYBOARD]: Pengguna menekan tombol '${e.key}' | Nilai teks: "${this.value}"`);
+      console.log(
+        `[KEYBOARD]: Pengguna menekan tombol '${e.key}' | Nilai teks: "${this.value}"`
+      );
     });
   }
 }
@@ -105,7 +110,6 @@ if (typeof document === 'undefined') {
 ---
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
-
 
 ### 🏢 Real-World Use Case
 

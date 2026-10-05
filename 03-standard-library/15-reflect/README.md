@@ -1,9 +1,10 @@
 # 15 - Reflect (Refleksi Objek Modern dan Pasangan Ideal Proxy)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami `Reflect` sebagai objek statis bawaan ES6 untuk operasi intersepsi dan refleksi JavaScript.
-> * **Kapan Digunakan**: Mengetahui method-method utama Reflect: `Reflect.get()`, `Reflect.set()`, `Reflect.has()`, dan `Reflect.deleteProperty()`.
-> * **Aturan Praktis**: Selalu gunakan `Reflect` di dalam trap `Proxy` untuk meneruskan operasi default daripada melakukan manipulasi langsung ke `target`.
+>
+> - **Fungsi Utama**: Memahami `Reflect` sebagai objek statis bawaan ES6 untuk operasi intersepsi dan refleksi JavaScript.
+> - **Kapan Digunakan**: Mengetahui method-method utama Reflect: `Reflect.get()`, `Reflect.set()`, `Reflect.has()`, dan `Reflect.deleteProperty()`.
+> - **Aturan Praktis**: Selalu gunakan `Reflect` di dalam trap `Proxy` untuk meneruskan operasi default daripada melakukan manipulasi langsung ke `target`.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -137,7 +138,6 @@ Gagal update harga          : Harga tidak boleh negatif!
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
 
 1. **Proxy Forwarding**: Menjadi cara standar meneruskan operasi pencegatan di dalam Proxy trap kembali ke objek target.
@@ -147,7 +147,7 @@ Gagal update harga          : Harga tidak boleh negatif!
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
 - **Mengira Reflect adalah konstruktor**: Menulis `new Reflect()` akan menghasilkan `TypeError: Reflect is not a constructor`.
-- **Lupa argumen `receiver` saat berkolaborasi dengan Proxy**: Jika objek target memiliki *getter* yang mengandalkan keyword `this`, tidak menyertakan parameter `receiver` pada `Reflect.get(target, prop, receiver)` akan merusak konteks `this` ke objek asal, bukan ke Proxy.
+- **Lupa argumen `receiver` saat berkolaborasi dengan Proxy**: Jika objek target memiliki _getter_ yang mengandalkan keyword `this`, tidak menyertakan parameter `receiver` pada `Reflect.get(target, prop, receiver)` akan merusak konteks `this` ke objek asal, bukan ke Proxy.
 - **Mengganti operasi sederhana tanpa alasan**: Untuk kode aplikasi bisnis umum, `obj.nama` tetap lebih bersih daripada `Reflect.get(obj, 'nama')`. Gunakan Reflect untuk metaprogramming, library, dan Proxy.
 
 ### 🌟 Best Practice

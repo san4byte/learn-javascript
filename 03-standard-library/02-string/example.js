@@ -6,7 +6,9 @@ console.log("Apakah email memiliki '@'?          :", email.includes('@'));
 console.log("Apakah berawalan 'joko'?             :", email.startsWith('joko'));
 console.log("Apakah berakhiran '.co.id'?          :", email.endsWith('.co.id'));
 
-console.log('\n--- 2. Studi Kasus Nyata: Generator Kode Invoice (buatKodeInvoice) ---');
+console.log(
+  '\n--- 2. Studi Kasus Nyata: Generator Kode Invoice (buatKodeInvoice) ---'
+);
 function buatKodeInvoice(prefix, kategori, nomorUrut) {
   // 1. Bersihkan spasi di ujung dan ubah ke uppercase
   const kodePrefix = prefix.trim().toUpperCase();
@@ -28,7 +30,10 @@ console.log(
 );
 // Output: "INV-ALAT-KANTOR-00042"
 
-console.log("String Nomor Urut 1 Digit ('7')      :", buatKodeInvoice('trx ', 'gadget', '7'));
+console.log(
+  "String Nomor Urut 1 Digit ('7')      :",
+  buatKodeInvoice('trx ', 'gadget', '7')
+);
 // Output: "TRX-GADGET-00007"
 
 console.log(

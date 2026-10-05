@@ -7,7 +7,11 @@ function fetchMock(endpoint, delayMs, shouldFail = false) {
       if (shouldFail) {
         reject(new Error(`Gagal memuat data dari ${endpoint}`));
       } else {
-        resolve({ endpoint, data: `Hasil dari ${endpoint}`, waktu: `${delayMs}ms` });
+        resolve({
+          endpoint,
+          data: `Hasil dari ${endpoint}`,
+          waktu: `${delayMs}ms`,
+        });
       }
     }, delayMs);
   });
@@ -47,7 +51,11 @@ async function loadWidgetHalaman() {
     if (res.status === 'fulfilled') {
       console.log(`Widget ${index + 1} [SUKSES]:`, res.value.endpoint);
     } else {
-      console.log(`Widget ${index + 1} [GAGAL]:`, res.reason.message, '(Tampilkan fallback UI)');
+      console.log(
+        `Widget ${index + 1} [GAGAL]:`,
+        res.reason.message,
+        '(Tampilkan fallback UI)',
+      );
     }
   });
 }
@@ -59,7 +67,9 @@ async function demonstrasiAbort() {
 
   // Jadwalkan pembatalan setelah 100 milidetik
   setTimeout(() => {
-    console.log('[User menekan tombol Batal / mengetik kata baru] -> Membatalkan request!');
+    console.log(
+      '[User menekan tombol Batal / mengetik kata baru] -> Membatalkan request!',
+    );
     controller.abort();
   }, 100);
 
@@ -76,7 +86,9 @@ async function demonstrasiAbort() {
     });
   } catch (err) {
     if (err.name === 'AbortError') {
-      console.log('Request berhasil dibatalkan secara aman tanpa membocorkan memori.');
+      console.log(
+        'Request berhasil dibatalkan secara aman tanpa membocorkan memori.',
+      );
     } else {
       console.error('Terjadi error lain:', err);
     }

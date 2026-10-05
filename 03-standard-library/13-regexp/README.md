@@ -1,9 +1,10 @@
 # 13 - RegExp (Pola Regex, Modifiers, Assertions, Character Classes, dan String Match)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami regular expression melalui objek bawaan `RegExp` di JavaScript.
-> * **Kapan Digunakan**: Membedakan cara deklarasi literal (`/.../`) dan konstruktor (`new RegExp()`).
-> * **Aturan Praktis**: Gunakan literal `/pola/` jika pola bersifat statis agar browser mengompilasi regex di awal dengan performa maksimal.
+>
+> - **Fungsi Utama**: Memahami regular expression melalui objek bawaan `RegExp` di JavaScript.
+> - **Kapan Digunakan**: Membedakan cara deklarasi literal (`/.../`) dan konstruktor (`new RegExp()`).
+> - **Aturan Praktis**: Gunakan literal `/pola/` jika pola bersifat statis agar browser mengompilasi regex di awal dengan performa maksimal.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -21,7 +22,7 @@
 
 > `RegExp` seperti **anjing pelacak kepolisian yang telah dilatih mencium aroma spesifik**: ia tidak peduli apakah target yang Anda cari berwarna biru atau merah; ia hanya mencocokkan jejak pola bentuk yang Anda berikan (misalnya: pola 3 huruf diikuti 4 angka) di antara ribuan tumpukan dokumen.
 
-**Regular Expression (RegExp)** adalah serangkaian karakter yang membentuk pola pencarian (*search pattern*). RegExp digunakan untuk validasi format teks (email, username, nomor HP), pencarian substring tingkat lanjut, serta pembersihan atau penggantian pola teks.
+**Regular Expression (RegExp)** adalah serangkaian karakter yang membentuk pola pencarian (_search pattern_). RegExp digunakan untuk validasi format teks (email, username, nomor HP), pencarian substring tingkat lanjut, serta pembersihan atau penggantian pola teks.
 
 ---
 
@@ -30,6 +31,7 @@
 Berikut adalah cara membaca pola regex yang tampak rumit menjadi sangat mudah dipahami dengan diagram penunjuk:
 
 #### 1. Studi Kasus: Pola Validasi Username
+
 Aturan: Dimulai dengan huruf, panjang total 3–16 karakter, hanya boleh huruf, angka, dan garis bawah (`_`).
 
 ```text
@@ -45,6 +47,7 @@ Aturan: Dimulai dengan huruf, panjang total 3–16 karakter, hanya boleh huruf, 
 ```
 
 #### 2. Studi Kasus: Pola Nomor HP Indonesia (dari `example.js`)
+
 Aturan: Diawali `08`, diikuti 9 sampai 11 digit angka (total panjang 11–13 digit).
 
 ```text
@@ -60,6 +63,7 @@ Aturan: Diawali `08`, diikuti 9 sampai 11 digit angka (total panjang 11–13 dig
 ```
 
 #### 3. Studi Kasus: Ekstraksi Invoice dengan Flag Global
+
 Aturan: Format `INV-YYYY-XXXXX`, diambil semua kecocokannya di dalam dokumen.
 
 ```text
@@ -76,6 +80,7 @@ Aturan: Format `INV-YYYY-XXXXX`, diambil semua kecocokannya di dalam dokumen.
 ```
 
 #### 4. Studi Kasus: Pola Email Standar
+
 Aturan: Format username, tanda `@`, nama domain, dan ekstensi minimal 2 huruf.
 
 ```text
@@ -98,9 +103,9 @@ Aturan: Format username, tanda `@`, nama domain, dan ekstensi minimal 2 huruf.
 
 JavaScript menyediakan dua cara untuk membuat objek RegExp:
 
-| Cara Pembuatan | Sintaks | Kapan Digunakan? | Sifat & Performa |
-| :--- | :--- | :--- | :--- |
-| **Sintaks Literal** | `const regex = /pola/flags;` | Pola sudah tetap/statis sejak awal coding. | Dikompilasi saat skrip dimuat (lebih cepat & efisien). |
+| Cara Pembuatan           | Sintaks                                      | Kapan Digunakan?                                       | Sifat & Performa                                                          |
+| :----------------------- | :------------------------------------------- | :----------------------------------------------------- | :------------------------------------------------------------------------ |
+| **Sintaks Literal**      | `const regex = /pola/flags;`                 | Pola sudah tetap/statis sejak awal coding.             | Dikompilasi saat skrip dimuat (lebih cepat & efisien).                    |
 | **Konstruktor `RegExp`** | `const regex = new RegExp("pola", "flags");` | Pola dibuat dinamis (misal: dari input form/variabel). | Dikompilasi saat runtime. Karakter khusus wajib double backslash (`\\d`). |
 
 ```javascript
@@ -121,14 +126,14 @@ const regexAngka = new RegExp('\\d{4}', 'g'); // Sama dengan /\d{4}/g
 
 Flags diletakkan setelah garis miring penutup `/pola/flags` untuk memodifikasi cara kerja pencarian:
 
-| Flag | Nama | Penjelasan Singkat | Contoh & Efek |
-| :---: | :--- | :--- | :--- |
-| **`i`** | *Ignore Case* | Mengabaikan perbedaan huruf besar dan kecil. | `/halo/i` cocok dengan `"HALO"`, `"Halo"`, `"halo"`. |
-| **`g`** | *Global* | Mencari **semua** kecocokan di dalam string, tidak berhenti di temuan pertama. | `"a a a".match(/a/g)` menghasilkan `['a', 'a', 'a']`. |
-| **`m`** | *Multiline* | Mengubah anchor `^` dan `$` agar berlaku di **setiap baris** (`\n`), bukan hanya awal/akhir dokumen. | Cocok untuk validasi data teks multi-baris. |
-| **`s`** | *Dot All* | Mengizinkan tanda titik `.` mencocokkan karakter baris baru (`\n`). | `/halo.dunia/s` cocok meski ada enter di antara kata. |
-| **`u`** | *Unicode* | Mengaktifkan penanganan karakter Unicode & Emoji secara presisi (UTF-16 surrogate pairs). | `/\u{1F600}/u` mencocokkan emoji 😀. |
-| **`y`** | *Sticky* | Pencarian hanya dilakukan tepat pada indeks `lastIndex` saat ini. | Digunakan pada parser atau tokenizer bahasa pemrograman. |
+|  Flag   | Nama          | Penjelasan Singkat                                                                                   | Contoh & Efek                                            |
+| :-----: | :------------ | :--------------------------------------------------------------------------------------------------- | :------------------------------------------------------- |
+| **`i`** | _Ignore Case_ | Mengabaikan perbedaan huruf besar dan kecil.                                                         | `/halo/i` cocok dengan `"HALO"`, `"Halo"`, `"halo"`.     |
+| **`g`** | _Global_      | Mencari **semua** kecocokan di dalam string, tidak berhenti di temuan pertama.                       | `"a a a".match(/a/g)` menghasilkan `['a', 'a', 'a']`.    |
+| **`m`** | _Multiline_   | Mengubah anchor `^` dan `$` agar berlaku di **setiap baris** (`\n`), bukan hanya awal/akhir dokumen. | Cocok untuk validasi data teks multi-baris.              |
+| **`s`** | _Dot All_     | Mengizinkan tanda titik `.` mencocokkan karakter baris baru (`\n`).                                  | `/halo.dunia/s` cocok meski ada enter di antara kata.    |
+| **`u`** | _Unicode_     | Mengaktifkan penanganan karakter Unicode & Emoji secara presisi (UTF-16 surrogate pairs).            | `/\u{1F600}/u` mencocokkan emoji 😀.                     |
+| **`y`** | _Sticky_      | Pencarian hanya dilakukan tepat pada indeks `lastIndex` saat ini.                                    | Digunakan pada parser atau tokenizer bahasa pemrograman. |
 
 ---
 
@@ -138,55 +143,56 @@ Pola RegExp tersusun dari blok-blok pembangun berikut:
 
 #### A. Character Classes (Kategori Karakter)
 
-| Simbol | Arti / Padanan | Contoh Kecocokan | Lawan / Negasi (Huruf Kapital) |
-| :---: | :--- | :--- | :--- |
-| **`\d`** | Digit angka `[0-9]` | `"5"`, `"0"` | **`\D`**: Bukan digit angka |
+|  Simbol  | Arti / Padanan                                   | Contoh Kecocokan           | Lawan / Negasi (Huruf Kapital)                   |
+| :------: | :----------------------------------------------- | :------------------------- | :----------------------------------------------- |
+| **`\d`** | Digit angka `[0-9]`                              | `"5"`, `"0"`               | **`\D`**: Bukan digit angka                      |
 | **`\w`** | Karakter kata (alfanumerik + `_`) `[a-zA-Z0-9_]` | `"a"`, `"Z"`, `"9"`, `"_"` | **`\W`**: Bukan kata (spasi, tanda baca, simbol) |
-| **`\s`** | Whitespace (spasi, tab, baris baru) | `" "`, `"\t"`, `"\n"` | **`\S`**: Bukan spasi |
-| **`.`** | Sembarang karakter apapun (kecuali `\n`) | `"a"`, `"9"`, `"@"`, `"-"` | *(Aktifkan flag `s` agar mencakup `\n`)* |
+| **`\s`** | Whitespace (spasi, tab, baris baru)              | `" "`, `"\t"`, `"\n"`      | **`\S`**: Bukan spasi                            |
+| **`.`**  | Sembarang karakter apapun (kecuali `\n`)         | `"a"`, `"9"`, `"@"`, `"-"` | _(Aktifkan flag `s` agar mencakup `\n`)_         |
 
 #### B. Assertions & Boundaries (Posisi & Batas)
 
-| Simbol | Arti | Contoh | Keterangan |
-| :---: | :--- | :--- | :--- |
-| **`^`** | Awal string / baris | `/^Halo/` | String harus dimulai dengan kata `"Halo"`. |
-| **`$`** | Akhir string / baris | `/Dunia$/` | String harus diakhiri kata `"Dunia"`. |
-| **`\b`** | Batas kata (*word boundary*) | `/\bcat\b/` | Hanya cocok dengan `"cat"`, bukan `"caterpillar"` atau `"bobcat"`. |
-| **`\B`** | Bukan batas kata | `/\Bcat/` | Cocok jika `"cat"` berada di dalam kata lain (`"bobcat"`). |
+|  Simbol  | Arti                         | Contoh      | Keterangan                                                         |
+| :------: | :--------------------------- | :---------- | :----------------------------------------------------------------- |
+| **`^`**  | Awal string / baris          | `/^Halo/`   | String harus dimulai dengan kata `"Halo"`.                         |
+| **`$`**  | Akhir string / baris         | `/Dunia$/`  | String harus diakhiri kata `"Dunia"`.                              |
+| **`\b`** | Batas kata (_word boundary_) | `/\bcat\b/` | Hanya cocok dengan `"cat"`, bukan `"caterpillar"` atau `"bobcat"`. |
+| **`\B`** | Bukan batas kata             | `/\Bcat/`   | Cocok jika `"cat"` berada di dalam kata lain (`"bobcat"`).         |
 
 #### C. Quantifiers (Frekuensi Kemunculan)
 
 Quantifier menentukan berapa kali elemen sebelumnya boleh muncul berurutan:
 
-| Simbol | Jumlah Kemunculan | Penjelasan Sederhana |
-| :---: | :--- | :--- |
-| **`+`** | 1 kali atau lebih ($\ge 1$) | Wajib ada minimal satu kali (`\d+` cocok `"1"`, `"1234"`). |
-| **`*`** | 0 kali atau lebih ($\ge 0$) | Boleh tidak ada sama sekali, boleh ada banyak. |
-| **`?`** | 0 atau 1 kali (opsional) | Boleh ada 1, boleh tidak ada (`https?` cocok `"http"` atau `"https"`). |
-| **`{n}`** | Tepat $n$ kali | Tepat sekian kali (`\d{4}` cocok untuk 4 digit tahun). |
-| **`{n,}`** | Minimal $n$ kali | Minimal sekian kali tanpa batas atas (`\d{3,}`). |
-| **`{n,m}`** | Minimal $n$ kali, maksimal $m$ kali | Rentang batas kemunculan (`\d{9,11}`). |
+|   Simbol    | Jumlah Kemunculan                   | Penjelasan Sederhana                                                   |
+| :---------: | :---------------------------------- | :--------------------------------------------------------------------- |
+|   **`+`**   | 1 kali atau lebih ($\ge 1$)         | Wajib ada minimal satu kali (`\d+` cocok `"1"`, `"1234"`).             |
+|   **`*`**   | 0 kali atau lebih ($\ge 0$)         | Boleh tidak ada sama sekali, boleh ada banyak.                         |
+|   **`?`**   | 0 atau 1 kali (opsional)            | Boleh ada 1, boleh tidak ada (`https?` cocok `"http"` atau `"https"`). |
+|  **`{n}`**  | Tepat $n$ kali                      | Tepat sekian kali (`\d{4}` cocok untuk 4 digit tahun).                 |
+| **`{n,}`**  | Minimal $n$ kali                    | Minimal sekian kali tanpa batas atas (`\d{3,}`).                       |
+| **`{n,m}`** | Minimal $n$ kali, maksimal $m$ kali | Rentang batas kemunculan (`\d{9,11}`).                                 |
 
-> 💡 **Greedy vs Lazy:** 
+> 💡 **Greedy vs Lazy:**
 > Secara default, quantifier bersifat **Greedy** (rakus mengambil kecocokan sepanjang mungkin). Tambahkan tanda `?` di belakang quantifier (`+?`, `*?`) untuk mengubahnya menjadi **Lazy** (berhenti di kecocokan terpendek).
 
 #### D. Groups & Ranges (Himpunan & Pengelompokan)
 
-| Simbol | Nama | Penjelasan & Contoh |
-| :---: | :--- | :--- |
-| **`[abc]`** | *Character Set* | Cocok dengan **salah satu** karakter di dalam kurung: `'a'`, `'b'`, atau `'c'`. |
-| **`[^abc]`** | *Negated Set* | Cocok dengan karakter **apapun selain** `'a'`, `'b'`, dan `'c'`. |
-| **`[a-z]`** | *Range* Huruf Kecil | Semua huruf kecil dari `a` sampai `z`. |
-| **`[A-Z]`** | *Range* Huruf Besar | Semua huruf besar dari `A` sampai `Z`. |
-| **`[0-9]`** | *Range* Angka | Semua angka dari `0` sampai `9` (setara `\d`). |
-| **`(abc)`** | *Capturing Group* | Mengelompokkan pola bersama dan menyimpan kecocokannya untuk diekstrak. |
-| **`(?:abc)`** | *Non-Capturing Group* | Mengelompokkan pola tanpa menyimpan hasil ekstraksi (menghemat memori). |
-| **`(?<nama>abc)`** | *Named Group* | Memberikan nama alias pada grup ekstraksi agar dapat diakses via `result.groups.nama`. |
-| **`a\|b`** | *Alternation (OR)* | Memilih salah satu: cocok dengan pola `'a'` **atau** pola `'b'`. |
+|       Simbol       | Nama                  | Penjelasan & Contoh                                                                    |
+| :----------------: | :-------------------- | :------------------------------------------------------------------------------------- |
+|    **`[abc]`**     | _Character Set_       | Cocok dengan **salah satu** karakter di dalam kurung: `'a'`, `'b'`, atau `'c'`.        |
+|    **`[^abc]`**    | _Negated Set_         | Cocok dengan karakter **apapun selain** `'a'`, `'b'`, dan `'c'`.                       |
+|    **`[a-z]`**     | _Range_ Huruf Kecil   | Semua huruf kecil dari `a` sampai `z`.                                                 |
+|    **`[A-Z]`**     | _Range_ Huruf Besar   | Semua huruf besar dari `A` sampai `Z`.                                                 |
+|    **`[0-9]`**     | _Range_ Angka         | Semua angka dari `0` sampai `9` (setara `\d`).                                         |
+|    **`(abc)`**     | _Capturing Group_     | Mengelompokkan pola bersama dan menyimpan kecocokannya untuk diekstrak.                |
+|   **`(?:abc)`**    | _Non-Capturing Group_ | Mengelompokkan pola tanpa menyimpan hasil ekstraksi (menghemat memori).                |
+| **`(?<nama>abc)`** | _Named Group_         | Memberikan nama alias pada grup ekstraksi agar dapat diakses via `result.groups.nama`. |
+|     **`a\|b`**     | _Alternation (OR)_    | Memilih salah satu: cocok dengan pola `'a'` **atau** pola `'b'`.                       |
 
 #### E. Escape Characters (Karakter Khusus)
 
 Jika Anda ingin mencari karakter simbol regex secara harfiah, beri tanda garis miring terbalik (`\`) di depannya:
+
 ```text
 Karakter khusus:  .  *  +  ?  ^  $  {  }  (  )  [  ]  |  \  /
 Contoh escape  :  \. (mencari titik), \$ (mencari dollar), \/ (mencari garis miring)
@@ -196,16 +202,16 @@ Contoh escape  :  \. (mencari titik), \$ (mencari dollar), \/ (mencari garis mir
 
 ### 4. Method RegExp & Method String Terkait
 
-| Method | Pemilik | Tipe Return | Kegunaan Utama |
-| :--- | :---: | :---: | :--- |
-| **`regex.test(str)`** | `RegExp` | `boolean` | **Validasi Form**: Menguji apakah string memenuhi pola (`true`/`false`). |
-| **`regex.exec(str)`** | `RegExp` | `Array` / `null` | Mengambil detail pencocokan pertama beserta capturing groups & indeks. |
-| **`str.match(regex)`** | `String` | `Array` / `null` | **Ekstraksi Data**: Mengambil array hasil kecocokan teks. |
-| **`str.matchAll(regex)`** | `String` | `Iterator` | Mengambil seluruh temuan beserta grup ekstraksi (wajib flag `/g`). |
-| **`str.search(regex)`** | `String` | `number` | Mencari posisi indeks pertama kecocokan (`-1` jika tidak ditemukan). |
-| **`str.replace(regex, baru)`** | `String` | `string` | **Sensor / Sanitasi**: Mengganti substring yang cocok dengan teks baru. |
-| **`str.replaceAll(regex, baru)`** | `String` | `string` | Mengganti seluruh kecocokan (regex wajib menggunakan flag `/g`). |
-| **`str.split(regex)`** | `String` | `Array` | Memecah string menjadi array berdasarkan pemisah pola regex. |
+| Method                            | Pemilik  |   Tipe Return    | Kegunaan Utama                                                           |
+| :-------------------------------- | :------: | :--------------: | :----------------------------------------------------------------------- |
+| **`regex.test(str)`**             | `RegExp` |    `boolean`     | **Validasi Form**: Menguji apakah string memenuhi pola (`true`/`false`). |
+| **`regex.exec(str)`**             | `RegExp` | `Array` / `null` | Mengambil detail pencocokan pertama beserta capturing groups & indeks.   |
+| **`str.match(regex)`**            | `String` | `Array` / `null` | **Ekstraksi Data**: Mengambil array hasil kecocokan teks.                |
+| **`str.matchAll(regex)`**         | `String` |    `Iterator`    | Mengambil seluruh temuan beserta grup ekstraksi (wajib flag `/g`).       |
+| **`str.search(regex)`**           | `String` |     `number`     | Mencari posisi indeks pertama kecocokan (`-1` jika tidak ditemukan).     |
+| **`str.replace(regex, baru)`**    | `String` |     `string`     | **Sensor / Sanitasi**: Mengganti substring yang cocok dengan teks baru.  |
+| **`str.replaceAll(regex, baru)`** | `String` |     `string`     | Mengganti seluruh kecocokan (regex wajib menggunakan flag `/g`).         |
+| **`str.split(regex)`**            | `String` |     `Array`      | Memecah string menjadi array berdasarkan pemisah pola regex.             |
 
 ---
 
@@ -225,7 +231,8 @@ console.log(`Apakah '${noHpSalah}' valid? :`, regexNoHp.test(noHpSalah)); // fal
 
 console.log('\n--- 2. Ekstraksi Data dengan str.match() ---');
 const regexInvoice = /INV-\d{4}-\d+/g;
-const pesan = 'Pesanan nomor INV-2026-001 dan INV-2026-002 telah berhasil dibayar.';
+const pesan =
+  'Pesanan nomor INV-2026-001 dan INV-2026-002 telah berhasil dibayar.';
 
 const daftarInvoice = pesan.match(regexInvoice);
 console.log('Nomor Invoice Ditemukan   :', daftarInvoice);
@@ -259,7 +266,6 @@ Komentar Disensor         : Website ini lambat dan *** sekali, desainnya ***.
 ---
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
-
 
 ### 🏢 Real-World Use Case
 

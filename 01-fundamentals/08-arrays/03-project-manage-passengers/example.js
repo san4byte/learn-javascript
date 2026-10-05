@@ -14,7 +14,9 @@ function tambahPenumpang(nama, kursi) {
 
   // 2. Cek apakah nama sudah ada (duplikasi)
   if (kursi.includes(nama)) {
-    console.log(`[DITOLAK]: Penumpang bernama '${nama}' sudah ada di dalam angkot!`);
+    console.log(
+      `[DITOLAK]: Penumpang bernama '${nama}' sudah ada di dalam angkot!`
+    );
     return kursi;
   }
 
@@ -29,13 +31,17 @@ function tambahPenumpang(nama, kursi) {
 
   // 4. Jika seluruh kursi terisi penuh, tambah di kursi belakang
   kursi.push(nama);
-  console.log(`[NAIK]: Seluruh kursi penuh, ${nama} duduk di kursi paling belakang (kursi ${kursi.length}).`);
+  console.log(
+    `[NAIK]: Seluruh kursi penuh, ${nama} duduk di kursi paling belakang (kursi ${kursi.length}).`
+  );
   return kursi;
 }
 
 function turunkanPenumpang(nama, kursi) {
   if (kursi.length === 0) {
-    console.log('[PERINGATAN]: Angkot masih kosong, tidak ada penumpang yang bisa turun.');
+    console.log(
+      '[PERINGATAN]: Angkot masih kosong, tidak ada penumpang yang bisa turun.'
+    );
     return kursi;
   }
 
@@ -47,7 +53,9 @@ function turunkanPenumpang(nama, kursi) {
     }
   }
 
-  console.log(`[GAGAL]: Tidak ada penumpang bernama '${nama}' di dalam angkot.`);
+  console.log(
+    `[GAGAL]: Tidak ada penumpang bernama '${nama}' di dalam angkot.`
+  );
   return kursi;
 }
 

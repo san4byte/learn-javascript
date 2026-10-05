@@ -21,7 +21,14 @@ console.log("Setelah tag 'js' dihapus     :", daftarTag);
 console.log('Ukuran Set setelah dihapus   :', daftarTag.size); // 3
 
 console.log('\n--- 3. Trik Industri: Deduplikasi Array Instan ---');
-const kategoriMentah = ['frontend', 'backend', 'frontend', 'devops', 'backend', 'ui-ux'];
+const kategoriMentah = [
+  'frontend',
+  'backend',
+  'frontend',
+  'devops',
+  'backend',
+  'ui-ux',
+];
 console.log('Array Mentah (6 data)        :', kategoriMentah);
 
 // Mengubah Array -> Set (duplikat lenyap) -> Spread (...) kembali menjadi Array

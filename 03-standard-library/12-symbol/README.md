@@ -1,42 +1,45 @@
 # 12 - Symbol (Primitive Unik dan Global Symbol Registry)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami `Symbol` sebagai tipe data primitif ke-7 yang menjamin keunikan identitas 100%.
-> * **Kapan Digunakan**: Mampu membuat Symbol lokal dengan deskripsi opsional menggunakan fungsi `Symbol()`.
-> * **Aturan Praktis**: Gunakan Symbol ketika membuat properti metadata internal pada objek yang tidak boleh tercampur dalam serialisasi JSON atau iterasi umum.
+>
+> - **Fungsi Utama**: Memahami `Symbol` sebagai tipe data primitif ke-7 yang menjamin keunikan identitas 100%.
+> - **Kapan Digunakan**: Mampu membuat Symbol lokal dengan deskripsi opsional menggunakan fungsi `Symbol()`.
+> - **Aturan Praktis**: Gunakan Symbol ketika membuat properti metadata internal pada objek yang tidak boleh tercampur dalam serialisasi JSON atau iterasi umum.
 
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami `Symbol` sebagai tipe data primitif ke-7 yang menjamin keunikan identitas 100%.
 - Mampu membuat Symbol lokal dengan deskripsi opsional menggunakan fungsi `Symbol()`.
 - Menguasai **Global Symbol Registry** dengan method `Symbol.for()` dan `Symbol.keyFor()`.
-- Memahami penggunaan Symbol sebagai kunci properti objek yang tersembunyi (*hidden/non-enumerable properties*).
+- Memahami penggunaan Symbol sebagai kunci properti objek yang tersembunyi (_hidden/non-enumerable properties_).
 
 ---
 
 ## 2. 📖 Penjelasan Konsep & Referensi Lengkap
 
 ### 🎭 Analogi Dunia Nyata
+
 > `Symbol()` lokal seperti **sidik jari biometrik manusia**: meskipun ada dua orang bernama sama persis 'Joko Santoso', sidik jari keduanya dijamin 100% berbeda dan unik. Sementara `Symbol.for()` seperti **nomor induk registrasi kependudukan (NIK) terpusat di kantor Dukcapil**: siapapun instansi yang meminta NIK atas kode tersebut akan selalu mendapatkan satu identitas yang sama.
 
-**`Symbol`** adalah tipe data primitif yang diperkenalkan pada ES6. Karakteristik utama dari Symbol adalah **setiap nilai Symbol yang dibuat selalu bersifat unik dan tidak dapat diubah (*immutable*)**, bahkan jika dua Symbol dibuat dengan deskripsi teks yang persis sama.
+**`Symbol`** adalah tipe data primitif yang diperkenalkan pada ES6. Karakteristik utama dari Symbol adalah **setiap nilai Symbol yang dibuat selalu bersifat unik dan tidak dapat diubah (_immutable_)**, bahkan jika dua Symbol dibuat dengan deskripsi teks yang persis sama.
 
 ### Tabel Referensi API `Symbol`
 
-| Fitur / Method | Parameter | Tipe Return | Kegunaan & Contoh Singkat |
-| :--- | :--- | :--- | :--- |
-| **`Symbol([description])`** | `description` (opsional) | `symbol` | Membuat Symbol lokal unik baru: `const s = Symbol("id");` |
-| **`sym.description`** | - | `string` / `undefined` | Properti baca-saja (*read-only*) untuk melihat teks deskripsi Symbol. |
-| **`Symbol.for(key)`** | `key` (string) | `symbol` | Mencari di Global Registry; jika belum ada, otomatis dibuatkan. Bersifat *shared*. |
-| **`Symbol.keyFor(sym)`** | `sym` (symbol) | `string` / `undefined` | Mengambil nama key dari Symbol yang terdaftar di Global Registry. |
-| **`Object.getOwnPropertySymbols(obj)`** | `obj` | `Array<symbol>` | Mengambil seluruh properti Symbol yang terpasang pada suatu objek. |
-| **`Reflect.ownKeys(obj)`** | `obj` | `Array<string \| symbol>` | Mengambil **seluruh** kunci properti objek (baik String biasa maupun Symbol). |
+| Fitur / Method                          | Parameter                | Tipe Return               | Kegunaan & Contoh Singkat                                                          |
+| :-------------------------------------- | :----------------------- | :------------------------ | :--------------------------------------------------------------------------------- |
+| **`Symbol([description])`**             | `description` (opsional) | `symbol`                  | Membuat Symbol lokal unik baru: `const s = Symbol("id");`                          |
+| **`sym.description`**                   | -                        | `string` / `undefined`    | Properti baca-saja (_read-only_) untuk melihat teks deskripsi Symbol.              |
+| **`Symbol.for(key)`**                   | `key` (string)           | `symbol`                  | Mencari di Global Registry; jika belum ada, otomatis dibuatkan. Bersifat _shared_. |
+| **`Symbol.keyFor(sym)`**                | `sym` (symbol)           | `string` / `undefined`    | Mengambil nama key dari Symbol yang terdaftar di Global Registry.                  |
+| **`Object.getOwnPropertySymbols(obj)`** | `obj`                    | `Array<symbol>`           | Mengambil seluruh properti Symbol yang terpasang pada suatu objek.                 |
+| **`Reflect.ownKeys(obj)`**              | `obj`                    | `Array<string \| symbol>` | Mengambil **seluruh** kunci properti objek (baik String biasa maupun Symbol).      |
 
 ---
 
 ### Well-Known Symbols (Symbol Bawaan JavaScript)
 
-JavaScript menggunakan Symbol bawaan sistem (*Well-Known Symbols*) untuk mengekspos mekanisme internal bahasa:
+JavaScript menggunakan Symbol bawaan sistem (_Well-Known Symbols_) untuk mengekspos mekanisme internal bahasa:
+
 - **`Symbol.iterator`**: Menentukan metode iterator default untuk perulangan `for...of`.
 - **`Symbol.toPrimitive`**: Menentukan konversi objek menjadi nilai primitif.
 - **`Symbol.hasInstance`**: Mengatur perilaku operator `instanceof`.
@@ -71,7 +74,7 @@ const TOKEN_SECRET = Symbol('token');
 const user = {
   nama: 'Joko Santoso',
   role: 'Developer',
-  [TOKEN_SECRET]: 'RAHASIA_12345'
+  [TOKEN_SECRET]: 'RAHASIA_12345',
 };
 
 console.log('Akses properti biasa      :', user.nama);
@@ -125,31 +128,35 @@ keyFor pada Symbol lokal  : undefined
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
+
 1. **Mencegah Tabrakan Nama Properti (Property Collision)**: Saat membuat plugin atau library open-source yang menyematkan metadata ke objek milik developer lain tanpa risiko merusak properti aslinya.
 2. **Konstanta Unik (Enum)**: Membuat nilai state yang tidak mungkin tertukar secara kebetulan dengan string biasa.
 3. **Well-Known Symbols**: Fitur internal JavaScript seperti `Symbol.iterator`, `Symbol.toPrimitive`, dan `Symbol.hasInstance` untuk memodifikasi perilaku bawaan bahasa.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Memanggil `new Symbol()`**: Symbol adalah tipe primitif. Memanggil dengan keyword `new` akan menghasilkan fatal error `TypeError: Symbol is not a constructor`.
-* **Mengira Symbol adalah data rahasia absolut (Private)**: Symbol menyembunyikan properti dari `for...in` dan `JSON.stringify`, namun ia **bukan enkapsulasi privat sejati**. Developer lain tetap bisa membacanya menggunakan `Object.getOwnPropertySymbols(obj)` atau `Reflect.ownKeys(obj)`.
-* **Tidak bisa dikonversi implisit ke string**: Menulis `console.log('ID: ' + id1)` melempar `TypeError: Cannot convert a Symbol value to a string`. Anda harus memanggil `id1.toString()` atau `String(id1)` secara eksplisit.
+
+- **Memanggil `new Symbol()`**: Symbol adalah tipe primitif. Memanggil dengan keyword `new` akan menghasilkan fatal error `TypeError: Symbol is not a constructor`.
+- **Mengira Symbol adalah data rahasia absolut (Private)**: Symbol menyembunyikan properti dari `for...in` dan `JSON.stringify`, namun ia **bukan enkapsulasi privat sejati**. Developer lain tetap bisa membacanya menggunakan `Object.getOwnPropertySymbols(obj)` atau `Reflect.ownKeys(obj)`.
+- **Tidak bisa dikonversi implisit ke string**: Menulis `console.log('ID: ' + id1)` melempar `TypeError: Cannot convert a Symbol value to a string`. Anda harus memanggil `id1.toString()` atau `String(id1)` secara eksplisit.
 
 ### 🌟 Best Practice
-* Gunakan Symbol ketika membuat properti metadata internal pada objek yang tidak boleh tercampur dalam serialisasi JSON atau iterasi umum.
-* Selalu sertakan deskripsi string pada `Symbol('deskripsi')` untuk mempermudah proses debugging di console.
-* Gunakan `Symbol.for()` jika Anda merancang arsitektur multi-modul yang membutuhkan koordinasi identifier bersama.
+
+- Gunakan Symbol ketika membuat properti metadata internal pada objek yang tidak boleh tercampur dalam serialisasi JSON atau iterasi umum.
+- Selalu sertakan deskripsi string pada `Symbol('deskripsi')` untuk mempermudah proses debugging di console.
+- Gunakan `Symbol.for()` jika Anda merancang arsitektur multi-modul yang membutuhkan koordinasi identifier bersama.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
+
 1. Buat objek `mobil` dengan properti biasa `merk` dan properti tersembunyi `[Symbol('nomorRangka')]`. Tunjukkan bahwa `Object.keys(mobil)` hanya mencetak `merk`.
 2. Daftarkan Symbol global dengan identifier `'pengaturan.bahasa'` menggunakan `Symbol.for()`, lalu buktikan bahwa pemanggilan di baris lain menghasilkan referensi yang identik.
 
 ---
 
 ## 7. 🧭 Navigasi
+
 - ⬅️ **Sebelumnya:** [11 - Set](../11-set/README.md)
 - ➡️ **Selanjutnya:** [13 - RegExp](../13-regexp/README.md)
 - 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)

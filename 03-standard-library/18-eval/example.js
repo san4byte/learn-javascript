@@ -1,6 +1,8 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log('--- 1. Cara Kerja Dasar eval() (Hanya untuk Demonstrasi Teori) ---');
+console.log(
+  '--- 1. Cara Kerja Dasar eval() (Hanya untuk Demonstrasi Teori) ---'
+);
 const a = 15;
 const b = 5;
 
@@ -21,8 +23,8 @@ console.log('\n--- 3. Alternatif Aman: Kamus Operasi (Lookup Table) ---');
 const operasiAman = {
   tambah: (x, y) => x + y,
   kurang: (x, y) => x - y,
-  kali:   (x, y) => x * y,
-  bagi:   (x, y) => (y !== 0 ? x / y : 'Error: Pembagian nol'),
+  kali: (x, y) => x * y,
+  bagi: (x, y) => (y !== 0 ? x / y : 'Error: Pembagian nol'),
 };
 
 function hitungAman(x, y, tipeOperasi) {
@@ -41,4 +43,3 @@ console.log('\n--- 4. Alternatif Aman untuk Parsing Data: JSON.parse ---');
 const jsonStr = '{"status": "sukses", "kode": 200}';
 const dataObj = JSON.parse(jsonStr); // 100% aman dari eksekusi kode jahat
 console.log('Hasil parse JSON aman:', dataObj.status);
-

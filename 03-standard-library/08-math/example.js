@@ -6,7 +6,10 @@ const produkPerHalaman = 10;
 
 // Pembulatan ke atas menjamin item sisa tetap memperoleh lembar halaman tersendiri
 const totalHalaman = Math.ceil(totalProduk / produkPerHalaman);
-console.log(`Total Halaman (${totalProduk} produk, ${produkPerHalaman}/hal) :`, totalHalaman);
+console.log(
+  `Total Halaman (${totalProduk} produk, ${produkPerHalaman}/hal) :`,
+  totalHalaman
+);
 
 console.log('\n--- 2. Pencarian Nilai Ekstrem (Math.min & Math.max) ---');
 const daftarHarga = [150000, 45000, 750000, 20000, 120000];

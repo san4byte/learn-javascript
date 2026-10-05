@@ -22,19 +22,23 @@ function buatRekeningTabungan(saldoAwal) {
   return {
     setorUang: function (jumlah) {
       saldo += jumlah;
-      console.log(`Setor Rp ${jumlah.toLocaleString('id-ID')} | Saldo saat ini: Rp ${saldo.toLocaleString('id-ID')}`);
+      console.log(
+        `Setor Rp ${jumlah.toLocaleString('id-ID')} | Saldo saat ini: Rp ${saldo.toLocaleString('id-ID')}`
+      );
     },
     tarikUang: function (jumlah) {
       if (jumlah <= saldo) {
         saldo -= jumlah;
-        console.log(`Tarik Rp ${jumlah.toLocaleString('id-ID')} | Sisa saldo: Rp ${saldo.toLocaleString('id-ID')}`);
+        console.log(
+          `Tarik Rp ${jumlah.toLocaleString('id-ID')} | Sisa saldo: Rp ${saldo.toLocaleString('id-ID')}`
+        );
       } else {
         console.log('Penarikan gagal: Saldo tidak mencukupi!');
       }
     },
     cekSaldo: function () {
       return saldo;
-    }
+    },
   };
 }
 
@@ -44,4 +48,7 @@ rekeningJoko.tarikUang(100000);
 
 // Mencoba membobol saldo secara langsung:
 console.log('Akses langsung rekeningJoko.saldo:', rekeningJoko.saldo); // undefined (AMAN!)
-console.log('Saldo resmi via cekSaldo()          : Rp', rekeningJoko.cekSaldo().toLocaleString('id-ID'));
+console.log(
+  'Saldo resmi via cekSaldo()          : Rp',
+  rekeningJoko.cekSaldo().toLocaleString('id-ID')
+);

@@ -54,4 +54,3 @@ try {
 } catch (error) {
   console.error('Gagal update harga          :', error.message);
 }
-

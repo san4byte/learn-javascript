@@ -17,7 +17,7 @@ Selamat datang di **Modul 05**! Document Object Model (DOM) adalah jembatan yang
 5. [05 - DOM Events](05-dom-events/README.md)
    - Merespon aksi klik dan keyboard pengguna menggunakan `addEventListener()` dan event object `e`.
 6. [06 - DOM Traversal dan Event Delegation](06-dom-traversal/README.md)
-   - Menelusuri silsilah elemen, fenomena event bubbling, dan teknik optimasi performa *Event Delegation*.
+   - Menelusuri silsilah elemen, fenomena event bubbling, dan teknik optimasi performa _Event Delegation_.
 7. [07 - HTML Form Elements](07-html-form-elements/README.md)
    - Mengambil nilai input (`input.value`), validasi form, dan mencegah refresh browser via `event.preventDefault()`.
 8. [08 - HTML Table Elements](08-html-table-elements/README.md)
@@ -32,11 +32,13 @@ Selamat datang di **Modul 05**! Document Object Model (DOM) adalah jembatan yang
 ---
 
 ## 🛠️ Cara Menjalankan
+
 Buka file `index.html` yang tersedia di masing-masing sub-folder langsung di browser Anda, atau gunakan ekstensi **Live Server** di VS Code.
 
 ---
 
 ## 🧭 Navigasi
+
 - ⬅️ **Modul Sebelumnya:** [04 - JavaScript Modules](../04-modules/README.md)
 - ➡️ **Modul Selanjutnya:** [06 - Asynchronous JavaScript](../06-asynchronous/README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../README.md)

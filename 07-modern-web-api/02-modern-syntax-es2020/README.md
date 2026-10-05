@@ -1,11 +1,13 @@
 # 02 - Modern Syntax ES2020-ES2023 (Optional Chaining, Nullish Coalescing, Immutability)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Menguasai sintaks Optional Chaining (`?.`) untuk mengakses nested object tanpa memicu TypeError.
-> * **Kapan Digunakan**: Memahami perbedaan krusial antara Nullish Coalescing (`??`) dan Logical OR (`||`).
-> * **Aturan Praktis**: Gabungkan `?.` dengan `??` untuk nilai default yang bersih dan elegan:
+>
+> - **Fungsi Utama**: Menguasai sintaks Optional Chaining (`?.`) untuk mengakses nested object tanpa memicu TypeError.
+> - **Kapan Digunakan**: Memahami perbedaan krusial antara Nullish Coalescing (`??`) dan Logical OR (`||`).
+> - **Aturan Praktis**: Gabungkan `?.` dengan `??` untuk nilai default yang bersih dan elegan:
 
 ## 1. 🎯 Tujuan Belajar
+
 - Menguasai sintaks Optional Chaining (`?.`) untuk mengakses nested object tanpa memicu TypeError.
 - Memahami perbedaan krusial antara Nullish Coalescing (`??`) dan Logical OR (`||`).
 - Mampu menduplikasi objek bertingkat secara mendalam menggunakan `structuredClone()`.
@@ -16,35 +18,43 @@
 ## 2. 📖 Penjelasan Konsep
 
 ### 🎭 Analogi Dunia Nyata
-> **Optional Chaining (`?.`)** dianalogikan seperti kurir pengantar paket: kurir mengetuk pagar rumah Anda; jika rumah kosong/pagar terkunci, kurir mencatat 'penerima tidak ditemukan' (`undefined`) dan langsung pulang dengan selamat. Tanpa `?.`, kurir akan mendobrak pintu rumah dan membunyikan alarm keras polisi (*Crash / TypeError*).
 
-JavaScript terus berevolusi setiap tahun melalui komite TC39. Fitur-fitur yang dirilis antara tahun 2020 hingga 2023 membawa perubahan besar pada cara developer menulis kode industri: lebih ringkas, aman dari error runtime, dan menganut prinsip *immutability*.
+> **Optional Chaining (`?.`)** dianalogikan seperti kurir pengantar paket: kurir mengetuk pagar rumah Anda; jika rumah kosong/pagar terkunci, kurir mencatat 'penerima tidak ditemukan' (`undefined`) dan langsung pulang dengan selamat. Tanpa `?.`, kurir akan mendobrak pintu rumah dan membunyikan alarm keras polisi (_Crash / TypeError_).
+
+JavaScript terus berevolusi setiap tahun melalui komite TC39. Fitur-fitur yang dirilis antara tahun 2020 hingga 2023 membawa perubahan besar pada cara developer menulis kode industri: lebih ringkas, aman dari error runtime, dan menganut prinsip _immutability_.
 
 ### 1. Optional Chaining (`?.`)
+
 Sebelum ES2020, jika kita mengakses properti dari objek yang nilainya `null` atau `undefined`, JavaScript akan mengalami crash fatal: `TypeError: Cannot read properties of undefined`.
 Dengan `?.`, JavaScript akan segera berhenti mengevaluasi dan mengembalikan `undefined` jika target bernilai `null` atau `undefined`.
-* Properti: `user?.profile?.address?.city`
-* Method: `user.logActivity?.()`
-* Array Index: `users?.[0]?.name`
+
+- Properti: `user?.profile?.address?.city`
+- Method: `user.logActivity?.()`
+- Array Index: `users?.[0]?.name`
 
 ### 2. Nullish Coalescing (`??`) vs Logical OR (`||`)
+
 Operator `||` menganggap nilai berikut sebagai falsy: `false`, `0`, `""` (string kosong), `NaN`, `null`, `undefined`.
 Seringkali nilai `0` atau `""` adalah nilai input yang valid (misal: skor 0 atau deskripsi kosong).
 Operator `??` **HANYA** akan mengambil nilai fallback jika sisi kiri bernilai `null` atau `undefined`.
 
 ### 3. Deep Copy Modern: `structuredClone()`
-Sebelumnya, menyalin objek bertingkat (*nested object*) sering menggunakan trik lambat `JSON.parse(JSON.stringify(obj))` yang gagal pada tipe data Date, Set, Map, atau circular reference. `structuredClone()` adalah fungsi standar bawaan browser dan Node.js modern.
+
+Sebelumnya, menyalin objek bertingkat (_nested object_) sering menggunakan trik lambat `JSON.parse(JSON.stringify(obj))` yang gagal pada tipe data Date, Set, Map, atau circular reference. `structuredClone()` adalah fungsi standar bawaan browser dan Node.js modern.
 
 ### 4. ES2023 Immutable Array Methods:
+
 Method array lama seperti `sort()`, `reverse()`, dan `splice()` **memutasikan** (mengubah) array asli secara langsung.
 ES2023 menambahkan metode immutable yang menghasilkan array baru:
-* `array.toSorted()`
-* `array.toReversed()`
-* `array.toSpliced()`
+
+- `array.toSorted()`
+- `array.toReversed()`
+- `array.toSpliced()`
 
 ---
 
 ## 3. 💻 Contoh Kode (`example.js`)
+
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
@@ -55,11 +65,11 @@ const responseAPI = {
     user: {
       id: 42,
       profile: {
-        name: 'Joko Santoso'
+        name: 'Joko Santoso',
         // address sengaja tidak ada
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 // Akses aman properti bersarang tanpa khawatir TypeError
@@ -72,9 +82,9 @@ console.log('Panggilan method opsional:', hitungBonus); // undefined
 
 console.log('\n--- 2. Nullish Coalescing (??) vs Logical OR (||) ---');
 const konfigurasiUser = {
-  volume: 0,            // User sengaja menyetel volume 0 (mute)
-  namaTampilan: '',     // User mengosongkan nama tampilan
-  delayDetik: null      // Belum dikonfigurasi
+  volume: 0, // User sengaja menyetel volume 0 (mute)
+  namaTampilan: '', // User mengosongkan nama tampilan
+  delayDetik: null, // Belum dikonfigurasi
 };
 
 // Masalah dengan Logical OR (||):
@@ -92,8 +102,8 @@ const masterProduk = {
   tags: new Set(['elektronik', 'gadget']),
   spesifikasi: {
     beratGram: 500,
-    dimensi: { panjang: 20, lebar: 15 }
-  }
+    dimensi: { panjang: 20, lebar: 15 },
+  },
 };
 
 // Deep copy independen
@@ -118,6 +128,7 @@ console.log('Hasil toReversed :', skorBalik);
 ---
 
 ## 4. 🖥️ Output yang Diharapkan
+
 ```text
 --- 1. Optional Chaining (?.) ---
 Kota pengguna: undefined
@@ -127,7 +138,7 @@ Panggilan method opsional: undefined
 Volume dengan || : 50
 Volume dengan ?? : 0
 Nama dengan ||   : Anonim
-Nama dengan ??   : 
+Nama dengan ??   :
 Delay dengan ??  : 5
 
 --- 3. Deep Clone dengan structuredClone() ---
@@ -144,24 +155,27 @@ Hasil toReversed : [ 60, 95, 78, 92, 85 ]
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
+
 1. **Konsumsi REST API / GraphQL**: Response dari server sering kali tidak memiliki field tertentu jika data belum lengkap di database (misal: user belum mengisi alamat rumah).
 2. **State Management di React/Vue/Redux**: Framework modern melarang keras mutasi langsung pada array/objek state. Penggunaan `toSorted()` dan `structuredClone()` menjadi solusi standar industri.
 3. **Form Setting Audio / Games**: Fitur game dengan volume suara `0` akan rusak jika menggunakan `volume || 100`, karena volume `0` akan otomatis ter-reset ke `100`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Salah Tempat Menggunakan `?.`**: Jangan gunakan `?.` pada variabel yang dideklarasikan dengan `let` atau `const` yang belum ada (contoh: `variabelGaib?.nama` tetap memicu *ReferenceError*). `?.` hanya melindungi properti dari objek yang bernilai `null` atau `undefined`.
-* **Menggunakan `structuredClone` untuk Function**: `structuredClone()` tidak dapat mengkloning function atau element DOM (akan melempar `DataCloneError`).
+
+- **Salah Tempat Menggunakan `?.`**: Jangan gunakan `?.` pada variabel yang dideklarasikan dengan `let` atau `const` yang belum ada (contoh: `variabelGaib?.nama` tetap memicu _ReferenceError_). `?.` hanya melindungi properti dari objek yang bernilai `null` atau `undefined`.
+- **Menggunakan `structuredClone` untuk Function**: `structuredClone()` tidak dapat mengkloning function atau element DOM (akan melempar `DataCloneError`).
 
 ### 🌟 Best Practice
-* Gabungkan `?.` dengan `??` untuk nilai default yang bersih dan elegan:
+
+- Gabungkan `?.` dengan `??` untuk nilai default yang bersih dan elegan:
   `const avatarUrl = user?.profile?.avatar ?? '/images/default-avatar.png';`
-* Gunakan `toSorted()` saat ingin menampilkan daftar yang terurut di frontend tanpa merusak urutan asli data di state.
+- Gunakan `toSorted()` saat ingin menampilkan daftar yang terurut di frontend tanpa merusak urutan asli data di state.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
+
 1. Diberikan objek pesanan:
    `const pesanan = { id: 12, pelanggan: { kontak: {} } };`
    Ambil nomor telepon pelanggan menggunakan `?.` dan berikan fallback string `"Nomor telepon belum diatur"` menggunakan `??`.
@@ -170,6 +184,7 @@ Hasil toReversed : [ 60, 95, 78, 92, 85 ]
 ---
 
 ## 7. 🧭 Navigasi
+
 - ⬅️ **Sebelumnya:** [01 - Web Storage API](../01-web-storage/README.md)
 - ➡️ **Selanjutnya:** [03 - URL dan FormData API](../03-url-and-formdata/README.md)
 - 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)

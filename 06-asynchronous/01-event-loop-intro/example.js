@@ -6,12 +6,16 @@ console.log('1. [Synchronous] Awal script dieksekusi di Call Stack');
 
 // Macrotask (Task Queue)
 setTimeout(() => {
-  console.log('4. [Macrotask - setTimeout] Dijalankan setelah antrean microtask kosong');
+  console.log(
+    '4. [Macrotask - setTimeout] Dijalankan setelah antrean microtask kosong'
+  );
 }, 0);
 
 // Microtask (Microtask Queue)
 Promise.resolve().then(() => {
-  console.log('3. [Microtask - Promise.then] Dijalankan SEBELUM setTimeout meski delay 0ms!');
+  console.log(
+    '3. [Microtask - Promise.then] Dijalankan SEBELUM setTimeout meski delay 0ms!'
+  );
 });
 
 console.log('2. [Synchronous] Akhir script sinkron selesai');

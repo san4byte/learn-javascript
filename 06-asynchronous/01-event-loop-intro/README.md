@@ -1,11 +1,13 @@
 # 01 - Asynchronous Intro & Event Loop Architecture
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami mengapa JavaScript adalah bahasa single-threaded non-blocking.
-> * **Kapan Digunakan**: Memahami arsitektur Event Loop: Call Stack, Web APIs, Callback/Task Queue, dan Microtask Queue.
-> * **Aturan Praktis**: Selalu letakkan kode sinkron yang cepat di Call Stack dan delegasikan tugas I/O (jaringan, file) ke API Asinkron.
+>
+> - **Fungsi Utama**: Memahami mengapa JavaScript adalah bahasa single-threaded non-blocking.
+> - **Kapan Digunakan**: Memahami arsitektur Event Loop: Call Stack, Web APIs, Callback/Task Queue, dan Microtask Queue.
+> - **Aturan Praktis**: Selalu letakkan kode sinkron yang cepat di Call Stack dan delegasikan tugas I/O (jaringan, file) ke API Asinkron.
 
 ## 1. 🎯 Tujuan Belajar
+
 - Memahami mengapa JavaScript adalah bahasa single-threaded non-blocking.
 - Memahami arsitektur Event Loop: Call Stack, Web APIs, Callback/Task Queue, dan Microtask Queue.
 - Mampu memprediksi urutan output pengeksekusian kode sinkron dan asinkron.
@@ -16,7 +18,8 @@
 ## 2. 📖 Penjelasan Konsep
 
 ### 🎭 Analogi Dunia Nyata
-> Bayangkan sebuah **Bank**: Call Stack adalah **Teller Bank** yang sedang melayani nasabah. Web API adalah **satpam yang memeriksa berkas di luar**. Saat berkas selesai, nasabah masuk antrean. **Microtask Queue** adalah nasabah dengan *Nomor Antrean Prioritas (VIP)*, sedangkan **Macrotask Queue** adalah nasabah dengan *Antrean Reguler*. Teller (Call Stack) akan selalu menghabiskan semua nasabah VIP sebelum memanggil satu pun nasabah reguler!
+
+> Bayangkan sebuah **Bank**: Call Stack adalah **Teller Bank** yang sedang melayani nasabah. Web API adalah **satpam yang memeriksa berkas di luar**. Saat berkas selesai, nasabah masuk antrean. **Microtask Queue** adalah nasabah dengan _Nomor Antrean Prioritas (VIP)_, sedangkan **Macrotask Queue** adalah nasabah dengan _Antrean Reguler_. Teller (Call Stack) akan selalu menghabiskan semua nasabah VIP sebelum memanggil satu pun nasabah reguler!
 
 JavaScript adalah bahasa **Single-Threaded**, yang berarti ia hanya memiliki **satu Call Stack** dan hanya dapat mengeksekusi satu instruksi dalam satu waktu.
 
@@ -62,6 +65,7 @@ Namun, JavaScript dapat menjalankan operasi yang memakan waktu lama (seperti req
 ```
 
 ### Urutan Prioritas Pengeksekusian:
+
 1. **Synchronous Code (Call Stack Utama)**: Langsung dieksekusi sampai selesai.
 2. **Microtask Queue**: Dieksekusi segera setelah Call Stack kosong (semua antrean microtask dihabiskan dulu).
 3. **Macrotask Queue**: Dieksekusi satu per satu setelah microtask selesai.
@@ -69,6 +73,7 @@ Namun, JavaScript dapat menjalankan operasi yang memakan waktu lama (seperti req
 ---
 
 ## 3. 💻 Contoh Kode (`example.js`)
+
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
@@ -78,12 +83,16 @@ console.log('1. [Synchronous] Awal script dieksekusi di Call Stack');
 
 // Macrotask (Task Queue)
 setTimeout(() => {
-  console.log('4. [Macrotask - setTimeout] Dijalankan setelah antrean microtask kosong');
+  console.log(
+    '4. [Macrotask - setTimeout] Dijalankan setelah antrean microtask kosong'
+  );
 }, 0);
 
 // Microtask (Microtask Queue)
 Promise.resolve().then(() => {
-  console.log('3. [Microtask - Promise.then] Dijalankan SEBELUM setTimeout meski delay 0ms!');
+  console.log(
+    '3. [Microtask - Promise.then] Dijalankan SEBELUM setTimeout meski delay 0ms!'
+  );
 });
 
 console.log('2. [Synchronous] Akhir script sinkron selesai');
@@ -103,6 +112,7 @@ Penjelasan Alur Eksekusi:
 ---
 
 ## 4. 🖥️ Output yang Diharapkan
+
 ```text
 --- Demonstrasi Urutan Eksekusi Event Loop ---
 1. [Synchronous] Awal script dieksekusi di Call Stack
@@ -115,22 +125,25 @@ Penjelasan Alur Eksekusi:
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
-1. **Menghindari UI Freeze**: Memecah kalkulasi data besar (misal pengolahan 500.000 data CSV) ke dalam microtask/setTimeout agar layar browser tidak macet (*not responding*).
+
+1. **Menghindari UI Freeze**: Memecah kalkulasi data besar (misal pengolahan 500.000 data CSV) ke dalam microtask/setTimeout agar layar browser tidak macet (_not responding_).
 2. **Pertanyaan Wajib Interview Kerja**: Urutan eksekusi `console.log`, `setTimeout`, dan `Promise.then` adalah soal nomor satu yang hampir selalu ditanyakan pada technical interview JavaScript/Node.js di semua level.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Infinite Microtask Loop**: Jika Anda membuat rekursif microtask (misal Promise `.then()` yang terus memanggil Promise `.then()` tanpa henti), Macrotask dan render tampilan browser tidak akan pernah dieksekusi sehingga browser mengalami freeze total.
-* **Mengira setTimeout(fn, 0) Langsung Jalan**: Waktu `0ms` bukan berarti dijalankan saat itu juga di baris itu, melainkan 'masukkan ke antrean sesegera mungkin setelah Call Stack kosong'.
+
+- **Infinite Microtask Loop**: Jika Anda membuat rekursif microtask (misal Promise `.then()` yang terus memanggil Promise `.then()` tanpa henti), Macrotask dan render tampilan browser tidak akan pernah dieksekusi sehingga browser mengalami freeze total.
+- **Mengira setTimeout(fn, 0) Langsung Jalan**: Waktu `0ms` bukan berarti dijalankan saat itu juga di baris itu, melainkan 'masukkan ke antrean sesegera mungkin setelah Call Stack kosong'.
 
 ### 🌟 Best Practice
-* Selalu letakkan kode sinkron yang cepat di Call Stack dan delegasikan tugas I/O (jaringan, file) ke API Asinkron.
-* Pahami bahwa `queueMicrotask()` dapat digunakan jika Anda butuh fungsi dijalankan asinkron sebelum browser melakukan repaint tampilan.
+
+- Selalu letakkan kode sinkron yang cepat di Call Stack dan delegasikan tugas I/O (jaringan, file) ke API Asinkron.
+- Pahami bahwa `queueMicrotask()` dapat digunakan jika Anda butuh fungsi dijalankan asinkron sebelum browser melakukan repaint tampilan.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
+
 1. Tanpa menjalankan kodenya terlebih dahulu, tebak urutan angka dari kode berikut:
    ```javascript
    console.log('A');
@@ -144,6 +157,7 @@ Penjelasan Alur Eksekusi:
 ---
 
 ## 7. 🧭 Navigasi
+
 - ⬅️ **Sebelumnya:** [05 - JavaScript DOM](../../05-dom/README.md)
 - ➡️ **Selanjutnya:** [02 - Timing Events (setTimeout & setInterval)](../02-timing-events/README.md)
 - 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)

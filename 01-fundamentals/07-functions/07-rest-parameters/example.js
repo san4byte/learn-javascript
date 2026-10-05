@@ -14,5 +14,11 @@ function catatLogAplikasi(level, modul, ...pesanDetail) {
   console.log(`[${level.toUpperCase()}] [${modul}] -> ${gabunganPesan}`);
 }
 
-catatLogAplikasi('info', 'AuthService', 'Pengguna berhasil login', 'ID: 42', 'IP: 192.168.1.1');
+catatLogAplikasi(
+  'info',
+  'AuthService',
+  'Pengguna berhasil login',
+  'ID: 42',
+  'IP: 192.168.1.1'
+);
 catatLogAplikasi('error', 'Database', 'Koneksi terputus ke server PostgreSQL');

@@ -1,15 +1,18 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
 // 1. Fallback Mock untuk lingkungan Node.js (di browser otomatis memakai window.localStorage)
-const storage = typeof localStorage !== 'undefined' ? localStorage : (() => {
-  const store = new Map();
-  return {
-    getItem: (key) => store.get(key) ?? null,
-    setItem: (key, val) => store.set(key, String(val)),
-    removeItem: (key) => store.delete(key),
-    clear: () => store.clear()
-  };
-})();
+const storage =
+  typeof localStorage !== 'undefined'
+    ? localStorage
+    : (() => {
+        const store = new Map();
+        return {
+          getItem: (key) => store.get(key) ?? null,
+          setItem: (key, val) => store.set(key, String(val)),
+          removeItem: (key) => store.delete(key),
+          clear: () => store.clear(),
+        };
+      })();
 
 console.log('--- 1. Menyimpan dan Membaca Data Tipe Primitif ---');
 storage.setItem('app_theme', 'dark');
@@ -18,7 +21,9 @@ storage.setItem('user_language', 'id-ID');
 const activeTheme = storage.getItem('app_theme');
 console.log('Tema saat ini:', activeTheme);
 
-console.log('\n--- 2. Menyimpan Objek Kompleks (JSON Serialize & Deserialize) ---');
+console.log(
+  '\n--- 2. Menyimpan Objek Kompleks (JSON Serialize & Deserialize) ---'
+);
 // Web Storage hanya mendukung string. Objek harus di-stringify terlebih dahulu!
 const userProfile = {
   id: 101,
@@ -26,8 +31,8 @@ const userProfile = {
   role: 'Software Engineer',
   preferences: {
     notifications: true,
-    newsletter: false
-  }
+    newsletter: false,
+  },
 };
 
 // Simpan ke storage dalam bentuk JSON String
@@ -49,7 +54,10 @@ class StorageHelper {
       storage.setItem(key, JSON.stringify(value));
       return true;
     } catch (error) {
-      console.error(`Gagal menyimpan data ke storage untuk key '${key}':`, error);
+      console.error(
+        `Gagal menyimpan data ke storage untuk key '${key}':`,
+        error
+      );
       return false;
     }
   }
@@ -72,10 +80,15 @@ class StorageHelper {
 // Simulasi Keranjang Belanja (Shopping Cart)
 StorageHelper.set('cart_items', [
   { id: 1, name: 'Mechanical Keyboard', qty: 1, price: 850000 },
-  { id: 2, name: 'Wireless Mouse', qty: 2, price: 250000 }
+  { id: 2, name: 'Wireless Mouse', qty: 2, price: 250000 },
 ]);
 
 const currentCart = StorageHelper.get('cart_items', []);
-const totalBelanja = currentCart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+const totalBelanja = currentCart.reduce(
+  (acc, item) => acc + item.price * item.qty,
+  0
+);
 console.log(`Jumlah jenis barang di cart: ${currentCart.length}`);
-console.log(`Total biaya keranjang: Rp ${totalBelanja.toLocaleString('id-ID')}`);
+console.log(
+  `Total biaya keranjang: Rp ${totalBelanja.toLocaleString('id-ID')}`
+);

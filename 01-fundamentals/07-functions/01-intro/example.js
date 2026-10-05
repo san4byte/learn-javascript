@@ -1,9 +1,13 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log('--- 1. Function Declaration (Contoh Kasus Nyata: Hitung Diskon) ---');
+console.log(
+  '--- 1. Function Declaration (Contoh Kasus Nyata: Hitung Diskon) ---'
+);
 // Dapat dipanggil sebelum deklarasi karena di-hoist oleh JavaScript
 const totalBelanja = hitungHargaDiskon(100000, 10);
-console.log(`Total setelah diskon 10%: Rp ${totalBelanja.toLocaleString('id-ID')}`);
+console.log(
+  `Total setelah diskon 10%: Rp ${totalBelanja.toLocaleString('id-ID')}`
+);
 
 function hitungHargaDiskon(hargaAwal, persentaseDiskon) {
   const nominalPotongan = (hargaAwal * persentaseDiskon) / 100;

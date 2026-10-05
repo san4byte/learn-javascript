@@ -54,7 +54,9 @@ Selamat datang di **Modul 01**! Modul ini adalah fondasi terlengkap untuk mengua
 ---
 
 ## 🛠️ Cara Menjalankan
+
 Hampir seluruh materi di bab ini dapat dijalankan langsung di terminal menggunakan Node.js:
+
 ```bash
 node 01-fundamentals/07-functions/01-intro/example.js
 node 01-fundamentals/11-data-types-and-operators/example.js
@@ -63,5 +65,6 @@ node 01-fundamentals/11-data-types-and-operators/example.js
 ---
 
 ## 🧭 Navigasi
+
 - ➡️ **Modul Selanjutnya:** [02 - JavaScript OOP](../02-oop/README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../README.md)

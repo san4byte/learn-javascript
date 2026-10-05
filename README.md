@@ -3,16 +3,19 @@
 Selamat datang di repositori dokumentasi belajar JavaScript lengkap! Repositori ini menyajikan kurikulum terstruktur dan mendalam dengan studi kasus proyek interaktif modern.
 
 Kurikulum disusun secara bertahap dalam **3 Fase Utama**:
-1. **Fase 1: Inti Bahasa JavaScript (*Core Language*)** — Fondasi sintaks, logika, OOP, Standard Library, dan Native ES Modules (berjalan di Node.js maupun browser).
-2. **Fase 2: Lingkungan Browser (*Browser Runtime*)** — Interaksi dokumen (DOM), proses asinkron jaringan (AJAX, Promise, Fetch, Async/Await), dan Web API modern.
-3. **Fase 3: Ekosistem Industri (*Tooling & Build System*)** — Bundler Webpack 5, kompilasi SCSS, pemisahan vendor, dan otomatisasi rilis produksi.
+
+1. **Fase 1: Inti Bahasa JavaScript (_Core Language_)** — Fondasi sintaks, logika, OOP, Standard Library, dan Native ES Modules (berjalan di Node.js maupun browser).
+2. **Fase 2: Lingkungan Browser (_Browser Runtime_)** — Interaksi dokumen (DOM), proses asinkron jaringan (AJAX, Promise, Fetch, Async/Await), dan Web API modern.
+3. **Fase 3: Ekosistem Industri (_Tooling & Build System_)** — Bundler Webpack 5, kompilasi SCSS, pemisahan vendor, dan otomatisasi rilis produksi.
 
 ---
 
 ## 📚 Daftar Isi dan Urutan Belajar
 
 ### 1. [01 - JavaScript Fundamentals & Modern ES6+](01-fundamentals/)
+
 Fondasi logika pemrograman, sintaks dasar, dan fitur modern ES6+:
+
 1. [01 - Popup Boxes (alert, prompt, confirm)](01-fundamentals/01-popup-boxes/README.md)
 2. [02 - Variables and Scope (var, let, const, Hoisting & TDZ)](01-fundamentals/02-variables-and-scope/README.md)
 3. [03 - Template Literals & String Interpolation](01-fundamentals/03-template-literals/README.md)
@@ -29,7 +32,9 @@ Fondasi logika pemrograman, sintaks dasar, dan fitur modern ES6+:
 ---
 
 ### 2. [02 - JavaScript OOP](02-oop/)
+
 Pemrograman Berorientasi Objek mendalam:
+
 1. [01 - Constructor Function](02-oop/01-constructor-function/README.md)
 2. [02 - Prototype Inheritance](02-oop/02-prototype/README.md)
 3. [03 - Class](02-oop/03-class/README.md)
@@ -50,7 +55,9 @@ Pemrograman Berorientasi Objek mendalam:
 ---
 
 ### 3. [03 - JavaScript Standard Library](03-standard-library/)
+
 Pustaka standar bawaan (Standard Library) JavaScript mencakup objek global dan tipe primitif modern:
+
 1. [01 - Number (Static Properties, Parsing & Validation)](03-standard-library/01-number/README.md)
 2. [02 - String (Instance Methods, Search, Transform & Padding)](03-standard-library/02-string/README.md)
 3. [03 - Array (Queue FIFO, Stack LIFO & Advanced Transform)](03-standard-library/03-array/README.md)
@@ -73,20 +80,24 @@ Pustaka standar bawaan (Standard Library) JavaScript mencakup objek global dan t
 ---
 
 ### 4. [04 - JavaScript Modules (Native ES Modules)](04-modules/)
+
 Modularitas resmi bahasa JavaScript murni di browser:
+
 1. [01 - Tanpa Module (Global Scope Collision)](04-modules/01-without-module/README.md)
 2. [02 - Export dan Import](04-modules/02-export-and-import/README.md)
 3. [03 - Variable dan Class di Module](04-modules/03-variables-and-classes/README.md)
 4. [04 - Alias (as)](04-modules/04-alias/README.md)
 5. [05 - Export Default](04-modules/05-export-default/README.md)
-6. [06 - Module Object (import * as)](04-modules/06-module-object/README.md)
+6. [06 - Module Object (import \* as)](04-modules/06-module-object/README.md)
 7. [07 - Aggregating Modules (Re-Export)](04-modules/07-aggregating-modules/README.md)
 8. [08 - Dynamic Module Loading (import() Promise)](04-modules/08-dynamic-module-loading/README.md)
 
 ---
 
 ### 5. [05 - JavaScript DOM (Document Object Model)](05-dom/)
+
 Interaksi JavaScript dengan dokumen web dan antarmuka HTML dinamis:
+
 1. [01 - Pengenalan DOM & DOM Tree](05-dom/01-intro/README.md)
 2. [02 - DOM Selection](05-dom/02-dom-selection/README.md)
 3. [03 - DOM Manipulasi Element](05-dom/03-element-manipulation/README.md)
@@ -102,7 +113,9 @@ Interaksi JavaScript dengan dokumen web dan antarmuka HTML dinamis:
 ---
 
 ### 6. [06 - Asynchronous JavaScript](06-asynchronous/)
+
 Pemrograman asinkron modern untuk menangani proses non-blocking:
+
 1. [01 - Asynchronous Intro & Event Loop Architecture](06-asynchronous/01-event-loop-intro/README.md)
 2. [02 - Timing Events (setTimeout & setInterval)](06-asynchronous/02-timing-events/README.md)
 3. [03 - Callbacks dan Masalah Callback Hell](06-asynchronous/03-callbacks/README.md)
@@ -116,7 +129,9 @@ Pemrograman asinkron modern untuk menangani proses non-blocking:
 ---
 
 ### 7. [07 - Modern Web API & Real-World JavaScript](07-modern-web-api/)
+
 Pola arsitektur, Web API browser modern, dan teknik optimasi performa industri:
+
 1. [01 - Web Storage API (localStorage, sessionStorage, Cookies)](07-modern-web-api/01-web-storage/README.md)
 2. [02 - Modern Syntax ES2020-ES2023](07-modern-web-api/02-modern-syntax-es2020/README.md)
 3. [03 - URL, URLSearchParams, dan FormData API](07-modern-web-api/03-url-and-formdata/README.md)
@@ -127,7 +142,9 @@ Pola arsitektur, Web API browser modern, dan teknik optimasi performa industri:
 ---
 
 ### 8. [08 - Build Tools & Webpack 5 (Capstone Project)](08-build-tools/)
+
 Pengembangan aplikasi skala industri menggunakan modul, bundler, dan build tools:
+
 - [Arsitektur Webpack 5, SCSS Loader, PurgeCSS, dan Code Splitting](08-build-tools/README.md)
 
 ---
@@ -135,7 +152,9 @@ Pengembangan aplikasi skala industri menggunakan modul, bundler, dan build tools
 ## 🛠️ Cara Menjalankan Kode
 
 ### 1. Menjalankan File JavaScript via Node.js
+
 Seluruh materi logika, algoritma, OOP, Standard Library, dan sintaks yang tidak memerlukan layar browser dapat langsung dijalankan di terminal:
+
 ```bash
 # Menjalankan materi fungsi
 node 01-fundamentals/07-functions/01-intro/example.js
@@ -151,9 +170,11 @@ node 06-asynchronous/06-promise-concurrency/example.js
 ```
 
 ### 2. Menjalankan Materi DOM, Modules & Web API di Browser
+
 Buka file `index.html` yang ada di setiap folder materi langsung di browser, atau gunakan ekstensi **Live Server** di VS Code.
 
 ### 3. Menjalankan Proyek Build Tools Webpack
+
 ```bash
 cd 08-build-tools
 npm install

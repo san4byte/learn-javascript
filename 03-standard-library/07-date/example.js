@@ -5,7 +5,11 @@ console.log('--- 1. Instansiasi Tanggal & Pembacaan Komponen (Getter) ---');
 const tanggalMulai = new Date(2026, 7, 17, 11);
 console.log('Objek Date Mulai             :', tanggalMulai.toISOString());
 console.log('Komponen Tahun (getFullYear) :', tanggalMulai.getFullYear());
-console.log('Komponen Bulan (getMonth 0-11):', tanggalMulai.getMonth(), '(7 = Agustus)');
+console.log(
+  'Komponen Bulan (getMonth 0-11):',
+  tanggalMulai.getMonth(),
+  '(7 = Agustus)'
+);
 console.log('Komponen Tanggal (getDate)   :', tanggalMulai.getDate());
 
 console.log('\n--- 2. Manipulasi Tanggal dengan Setter (Auto-Rollover) ---');
@@ -15,7 +19,10 @@ const tanggalKadaluarsa = new Date(tanggalMulai);
 tanggalKadaluarsa.setDate(tanggalKadaluarsa.getDate() + 30);
 
 console.log('Format ISO 8601              :', tanggalKadaluarsa.toISOString());
-console.log('Format Lokal Indonesia       :', tanggalKadaluarsa.toLocaleDateString('id-ID'));
+console.log(
+  'Format Lokal Indonesia       :',
+  tanggalKadaluarsa.toLocaleDateString('id-ID')
+);
 
 console.log('\n--- 3. Kalkulasi Selisih Waktu via Epoch Milidetik ---');
 const selisihMilidetik = tanggalKadaluarsa.getTime() - tanggalMulai.getTime();

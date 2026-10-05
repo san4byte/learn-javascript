@@ -14,7 +14,12 @@ console.log('Number.isInteger(42.5)             :', Number.isInteger(42.5)); // 
 console.log('\n--- 3. Studi Kasus Nyata: Fungsi formatHargaProduk() ---');
 function formatHargaProduk(harga) {
   // Validasi: tipe harus number, bukan NaN, bilangan bulat, dan tidak negatif
-  if (typeof harga !== 'number' || Number.isNaN(harga) || !Number.isInteger(harga) || harga < 0) {
+  if (
+    typeof harga !== 'number' ||
+    Number.isNaN(harga) ||
+    !Number.isInteger(harga) ||
+    harga < 0
+  ) {
     return 'Input harga tidak valid';
   }
 

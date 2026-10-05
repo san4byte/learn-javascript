@@ -1,7 +1,11 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
 console.log('--- 1. Default Parameter (Mencegah Nilai Undefined) ---');
-function buatPesananKopi(jenisKopi = 'Americano', ukuran = 'Regular', gula = false) {
+function buatPesananKopi(
+  jenisKopi = 'Americano',
+  ukuran = 'Regular',
+  gula = false
+) {
   return `Pesanan: Kopi ${jenisKopi} | Ukuran: ${ukuran} | Tambah Gula: ${gula ? 'Ya' : 'Tidak'}`;
 }
 

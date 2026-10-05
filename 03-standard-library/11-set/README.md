@@ -1,9 +1,10 @@
 # 11 - Set (Koleksi Nilai Unik dan Eliminasi Duplikasi)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami struktur data `Set` sebagai himpunan nilai unik tanpa duplikasi.
-> * **Kapan Digunakan**: Membedakan cara kerja dan karakteristik `Set` dibandingkan dengan `Array`.
-> * **Aturan Praktis**: Gunakan kombinasi `[...new Set(arr)]` sebagai cara tercepat dan paling elegan untuk membuang elemen duplikat primitif di JavaScript.
+>
+> - **Fungsi Utama**: Memahami struktur data `Set` sebagai himpunan nilai unik tanpa duplikasi.
+> - **Kapan Digunakan**: Membedakan cara kerja dan karakteristik `Set` dibandingkan dengan `Array`.
+> - **Aturan Praktis**: Gunakan kombinasi `[...new Set(arr)]` sebagai cara tercepat dan paling elegan untuk membuang elemen duplikat primitif di JavaScript.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -73,7 +74,14 @@ console.log("Setelah tag 'js' dihapus     :", daftarTag);
 console.log('Ukuran Set setelah dihapus   :', daftarTag.size); // 3
 
 console.log('\n--- 3. Trik Industri: Deduplikasi Array Instan ---');
-const kategoriMentah = ['frontend', 'backend', 'frontend', 'devops', 'backend', 'ui-ux'];
+const kategoriMentah = [
+  'frontend',
+  'backend',
+  'frontend',
+  'devops',
+  'backend',
+  'ui-ux',
+];
 console.log('Array Mentah (6 data)        :', kategoriMentah);
 
 // Mengubah Array -> Set (duplikat lenyap) -> Spread (...) kembali menjadi Array
@@ -104,7 +112,6 @@ Array Bersih (Bebas Duplikat): [ 'frontend', 'backend', 'devops', 'ui-ux' ]
 ---
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
-
 
 ### 🏢 Real-World Use Case
 

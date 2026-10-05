@@ -42,12 +42,19 @@ universalFetch('https://jsonplaceholder.typicode.com/posts/1')
 console.log('\\n--- 2. Mengirim Data via HTTP POST ---');
 async function kirimDataBaru() {
   try {
-    const payload = { title: 'Artikel Baru', body: 'Konten artikel berhasil dibuat', userId: 1 };
-    const res = await universalFetch('https://jsonplaceholder.typicode.com/posts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    const payload = {
+      title: 'Artikel Baru',
+      body: 'Konten artikel berhasil dibuat',
+      userId: 1,
+    };
+    const res = await universalFetch(
+      'https://jsonplaceholder.typicode.com/posts',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }
+    );
     const hasil = await res.json();
     console.log('Sukses menyimpan data ke server! Respons ID:', hasil.id);
   } catch (error) {

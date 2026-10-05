@@ -26,7 +26,9 @@ const kursValas = {
 
 // Iterasi praktis menggunakan destructuring [kunci, nilai]
 for (const [mataUang, nilaiRupiah] of Object.entries(kursValas)) {
-  console.log(`1 ${mataUang.padEnd(4)} = Rp ${nilaiRupiah.toLocaleString('id-ID')}`);
+  console.log(
+    `1 ${mataUang.padEnd(4)} = Rp ${nilaiRupiah.toLocaleString('id-ID')}`
+  );
 }
 
 console.log('\n--- 3. Analitik Data: Object.values() & Array.reduce() ---');

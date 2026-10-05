@@ -30,7 +30,7 @@ const kotakPesan = {
     this.daftarPenerima.forEach((nama) => {
       console.log(`-> Notifikasi '${this.judul}' terkirim ke ${nama}`);
     });
-  }
+  },
 };
 
 kotakPesan.kirimNotifikasi();

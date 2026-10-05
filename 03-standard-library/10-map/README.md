@@ -1,9 +1,10 @@
 # 10 - Map (Key-Value Collection Modern, Perbedaan Mendalam dengan Object)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami struktur data `Map` sebagai koleksi pasangan kunci-nilai modern di ES6.
-> * **Kapan Digunakan**: Menganalisis perbedaan fundamental dan keunggulan `Map` dibandingkan `Object` biasa.
-> * **Aturan Praktis**: Gunakan `Map` jika kunci tidak diketahui hingga runtime atau bertipe non-string.
+>
+> - **Fungsi Utama**: Memahami struktur data `Map` sebagai koleksi pasangan kunci-nilai modern di ES6.
+> - **Kapan Digunakan**: Menganalisis perbedaan fundamental dan keunggulan `Map` dibandingkan `Object` biasa.
+> - **Aturan Praktis**: Gunakan `Map` jika kunci tidak diketahui hingga runtime atau bertipe non-string.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -49,7 +50,8 @@ Sebelum ES6, developer JavaScript terpaksa menggunakan objek biasa `{}` sebagai 
 
 ### 3. Kunci Bertipe Objek: Value vs Reference (Kenapa Wajib Pakai Variabel?)
 
-Di JavaScript, objek disimpan berdasarkan **alamat referensi memori** (*pass-by-reference*), bukan berdasarkan nilai teks isinya:
+Di JavaScript, objek disimpan berdasarkan **alamat referensi memori** (_pass-by-reference_), bukan berdasarkan nilai teks isinya:
+
 - Dua objek literal `{ role: "admin" } === { role: "admin" }` bernilai **`false`** karena JavaScript memesan dua alamat memori yang berbeda setiap kali tanda `{}` ditulis.
 - **Jebakan Tanpa Variabel**:
   ```javascript
@@ -64,7 +66,7 @@ Di JavaScript, objek disimpan berdasarkan **alamat referensi memori** (*pass-by-
   map.set(kunciAdmin, 'Akses Penuh');
   console.log(map.get(kunciAdmin)); // "Akses Penuh" ✅
   ```
-- **Primitif vs Objek**: Nilai primitif (Number, String, Boolean) dibandingkan berdasarkan **nilai murni** (*by value*), sehingga `map.get(101)` atau `map.get("sessionId")` langsung ditemukan tanpa harus menggunakan variabel.
+- **Primitif vs Objek**: Nilai primitif (Number, String, Boolean) dibandingkan berdasarkan **nilai murni** (_by value_), sehingga `map.get(101)` atau `map.get("sessionId")` langsung ditemukan tanpa harus menggunakan variabel.
 
 ---
 
@@ -123,7 +125,6 @@ Ukuran Map setelah dihapus  : 2
 ---
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
-
 
 ### 🏢 Real-World Use Case
 

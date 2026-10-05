@@ -1,9 +1,10 @@
 # 02 - String (Instance Methods, Search, Transform, dan Padding)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami properti dan method instance bawaan objek `String` standar.
-> * **Kapan Digunakan**: Menguasai pencarian substring modern: `includes()`, `startsWith()`, `endsWith()`, `indexOf()`, dan `lastIndexOf()`.
-> * **Aturan Praktis**: Gunakan `includes()`, `startsWith()`, dan `endsWith()` untuk pengecekan kondisi teks daripada regex sederhana.
+>
+> - **Fungsi Utama**: Memahami properti dan method instance bawaan objek `String` standar.
+> - **Kapan Digunakan**: Menguasai pencarian substring modern: `includes()`, `startsWith()`, `endsWith()`, `indexOf()`, dan `lastIndexOf()`.
+> - **Aturan Praktis**: Gunakan `includes()`, `startsWith()`, dan `endsWith()` untuk pengecekan kondisi teks daripada regex sederhana.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -61,7 +62,9 @@ console.log("Apakah email memiliki '@'?          :", email.includes('@'));
 console.log("Apakah berawalan 'joko'?             :", email.startsWith('joko'));
 console.log("Apakah berakhiran '.co.id'?          :", email.endsWith('.co.id'));
 
-console.log('\n--- 2. Studi Kasus Nyata: Generator Kode Invoice (buatKodeInvoice) ---');
+console.log(
+  '\n--- 2. Studi Kasus Nyata: Generator Kode Invoice (buatKodeInvoice) ---'
+);
 function buatKodeInvoice(prefix, kategori, nomorUrut) {
   // 1. Bersihkan spasi di ujung dan ubah ke uppercase
   const kodePrefix = prefix.trim().toUpperCase();
@@ -83,7 +86,10 @@ console.log(
 );
 // Output: "INV-ALAT-KANTOR-00042"
 
-console.log("String Nomor Urut 1 Digit ('7')      :", buatKodeInvoice('trx ', 'gadget', '7'));
+console.log(
+  "String Nomor Urut 1 Digit ('7')      :",
+  buatKodeInvoice('trx ', 'gadget', '7')
+);
 // Output: "TRX-GADGET-00007"
 
 console.log(
@@ -113,7 +119,6 @@ Nomor Lebih dari 5 Digit             : INV-ELEKTRONIK-4279977
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
 
 1. **Validasi Domain Email**: Memeriksa ekstensi domain organisasi menggunakan `email.endsWith('@perusahaan.com')`.
@@ -123,12 +128,14 @@ Nomor Lebih dari 5 Digit             : INV-ELEKTRONIK-4279977
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
 - **Mengira `replace()` mengubah semua kemunculan string**: `str.replace('a', 'b')` hanya mengganti huruf 'a' yang pertama ditemukan. Gunakan `replaceAll()` jika ingin mengubah semuanya.
+
 * **Mencoba memutasi string via indeks**: `str[0] = 'B'` tidak akan melempar error di non-strict mode tetapi nilainya tidak akan pernah berubah (silent failure).
 * **Menggunakan `substring()` alih-alih `slice()`**: `substring()` tidak mendukung indeks negatif dan membalik parameter secara membingungkan jika `start > end`. Utamakan `slice()`.
 
 ### 🌟 Best Practice
 
 - Gunakan `includes()`, `startsWith()`, dan `endsWith()` untuk pengecekan kondisi teks daripada regex sederhana.
+
 * Gunakan `replaceAll()` untuk mengganti substring statis tanpa perlu membuat objek RegExp dengan flag global `/g`.
 * Selalu lakukan `.trim()` pada data input string dari user sebelum diproses atau disimpan ke database.
 

@@ -1,6 +1,6 @@
 # ⚡ Modul 06: Asynchronous JavaScript (Event Loop, AJAX, Promise, Fetch, Async/Await & Web Worker)
 
-Selamat datang di **Modul 06**! Pemrograman Asinkron (*Asynchronous Programming*) adalah salah satu pilar paling krusial dalam JavaScript modern. Modul ini mencakup konsep Event Loop, AJAX klasik, Promise Concurrency, hingga Web Worker multi-threading.
+Selamat datang di **Modul 06**! Pemrograman Asinkron (_Asynchronous Programming_) adalah salah satu pilar paling krusial dalam JavaScript modern. Modul ini mencakup konsep Event Loop, AJAX klasik, Promise Concurrency, hingga Web Worker multi-threading.
 
 ---
 
@@ -17,7 +17,7 @@ Selamat datang di **Modul 06**! Pemrograman Asinkron (*Asynchronous Programming*
 5. [05 - Promise (Pending, Fulfilled, Rejected)](05-promise/README.md)
    - Objek representasi masa depan, status settled, Promise chaining dengan `.then()`, `.catch()`, `.finally()`.
 6. [06 - Promise Concurrency (Promise.all, race, any, allSettled)](06-promise-concurrency/README.md)
-   - Menjalankan request paralel bersamaan dan menangani kondisi balapan (*race condition*).
+   - Menjalankan request paralel bersamaan dan menangani kondisi balapan (_race condition_).
 7. [07 - Fetch API (HTTP Request Modern)](07-fetch-api/README.md)
    - Melakukan HTTP GET/POST, parsing JSON data, dan penanganan HTTP status code yang tepat.
 8. [08 - Async dan Await](08-async-await/README.md)
@@ -28,6 +28,7 @@ Selamat datang di **Modul 06**! Pemrograman Asinkron (*Asynchronous Programming*
 ---
 
 ## 🛠️ Cara Menjalankan
+
 - Materi logika asinkron (Event loop, Promise, Concurrency, Async/Await) dapat langsung dijalankan dengan:
   ```bash
   node 06-asynchronous/06-promise-concurrency/example.js
@@ -37,6 +38,7 @@ Selamat datang di **Modul 06**! Pemrograman Asinkron (*Asynchronous Programming*
 ---
 
 ## 🧭 Navigasi
+
 - ⬅️ **Modul Sebelumnya:** [05 - JavaScript DOM](../05-dom/README.md)
 - ➡️ **Modul Selanjutnya:** [07 - Modern Web API & Real-World JS](../07-modern-web-api/README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../README.md)

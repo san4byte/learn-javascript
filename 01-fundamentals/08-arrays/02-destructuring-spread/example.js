@@ -5,9 +5,13 @@ const koordinatGPS = [-6.2088, 106.8456, 15]; // [latitude, longitude, altitude]
 
 // Membongkar elemen ke variabel mandiri
 const [latitude, longitude, altitude = 0] = koordinatGPS;
-console.log(`Latitude: ${latitude} | Longitude: ${longitude} | Ketinggian: ${altitude}m`);
+console.log(
+  `Latitude: ${latitude} | Longitude: ${longitude} | Ketinggian: ${altitude}m`
+);
 
-console.log('\n--- 2. Trik Variable Swap (Tukar Nilai Tanpa Variabel Temp) ---');
+console.log(
+  '\n--- 2. Trik Variable Swap (Tukar Nilai Tanpa Variabel Temp) ---'
+);
 let pemenang1 = 'Budi';
 let pemenang2 = 'Joko';
 
@@ -28,5 +32,5 @@ console.log('Gabungan Buah:', semuaBuah);
 const klonBuahLokal = [...buahLokal];
 klonBuahLokal.push('Durian');
 
-console.log('Buah lokal asli :', buahLokal);      // Tetap 2 item (tidak termutasi)
-console.log('Klon buah lokal :', klonBuahLokal);  // 3 item
+console.log('Buah lokal asli :', buahLokal); // Tetap 2 item (tidak termutasi)
+console.log('Klon buah lokal :', klonBuahLokal); // 3 item

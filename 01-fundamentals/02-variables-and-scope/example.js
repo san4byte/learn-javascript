@@ -27,7 +27,7 @@ console.log('\n--- 3. Mutabilitas const pada Objek & Array ---');
 // const mengunci referensi memori, BUKAN isi propertinya!
 const dataSiswa = {
   nama: 'Joko Santoso',
-  angkatan: 2024
+  angkatan: 2024,
 };
 
 // Mengubah isi properti DIPERBOLEHKAN:

@@ -4,11 +4,13 @@ console.log("--- 1. 'this' di dalam Method Objek ---");
 const akunPengguna = {
   nama: 'Joko Santoso',
   saldo: 1500000,
-  
+
   tampilkanInfo: function () {
     // 'this' menunjuk ke objek akunPengguna
-    console.log(`Pemilik: ${this.nama} | Saldo: Rp ${this.saldo.toLocaleString('id-ID')}`);
-  }
+    console.log(
+      `Pemilik: ${this.nama} | Saldo: Rp ${this.saldo.toLocaleString('id-ID')}`
+    );
+  },
 };
 
 akunPengguna.tampilkanInfo();

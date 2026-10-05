@@ -2,7 +2,9 @@
 
 if (typeof document === 'undefined') {
   console.log('--- 03. DOM Manipulasi Element ---');
-  console.log("Buka file 'index.html' di browser untuk melihat demonstrasi manipulasi teks dan style!");
+  console.log(
+    "Buka file 'index.html' di browser untuk melihat demonstrasi manipulasi teks dan style!"
+  );
 } else {
   console.log('--- 03. DOM Manipulasi Element (Browser) ---');
 
@@ -10,7 +12,8 @@ if (typeof document === 'undefined') {
 
   if (kotakAlert) {
     // 1. Mengubah teks secara aman dengan textContent
-    kotakAlert.textContent = 'Status Sistem: Berhasil Diperbarui Secara Real-Time!';
+    kotakAlert.textContent =
+      'Status Sistem: Berhasil Diperbarui Secara Real-Time!';
 
     // 2. Memanipulasi Atribut
     kotakAlert.setAttribute('data-status', 'success');
@@ -22,6 +25,9 @@ if (typeof document === 'undefined') {
 
     // Toggle class
     kotakAlert.classList.toggle('animasi-kedip');
-    console.log('Punya class animasi-kedip?', kotakAlert.classList.contains('animasi-kedip'));
+    console.log(
+      'Punya class animasi-kedip?',
+      kotakAlert.classList.contains('animasi-kedip')
+    );
   }
 }

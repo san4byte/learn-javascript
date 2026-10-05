@@ -13,7 +13,7 @@ function fungsiLuar() {
     console.log('Akses dari dalam:');
     console.log('- ' + variabelLokalDalam);
     console.log('- ' + variabelLokalLuar); // Scope chain ke fungsiLuar
-    console.log('- ' + variabelGlobal);     // Scope chain ke Global
+    console.log('- ' + variabelGlobal); // Scope chain ke Global
   }
 
   fungsiDalam();
@@ -22,7 +22,9 @@ function fungsiLuar() {
 
 fungsiLuar();
 
-console.log('\n--- 2. Variable Shadowing (Variabel Menutupi Variabel Luar) ---');
+console.log(
+  '\n--- 2. Variable Shadowing (Variabel Menutupi Variabel Luar) ---'
+);
 let mataUang = 'IDR';
 
 function konversi() {

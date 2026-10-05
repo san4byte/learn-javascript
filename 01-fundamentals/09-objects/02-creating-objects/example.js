@@ -4,7 +4,7 @@ console.log('--- 1. Object Literal (Satu Objek Spesifik) ---');
 const mhs1 = {
   nama: 'Joko Santoso',
   nim: '1012001',
-  jurusan: 'Informatika'
+  jurusan: 'Informatika',
 };
 console.log('Literal:', mhs1.nama);
 

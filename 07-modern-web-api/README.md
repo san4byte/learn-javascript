@@ -24,6 +24,7 @@ Topik-topik di modul ini adalah pola dan Web API yang **paling sering digunakan 
 ---
 
 ## 🛠️ Cara Menjalankan Kode
+
 - Materi non-visual dapat dijalankan di Node.js: `node 07-modern-web-api/02-modern-syntax-es2020/example.js`
 - Materi visual (Web Storage, Debounce, Observer) dibuka lewat file `index.html` di browser menggunakan Live Server.
 

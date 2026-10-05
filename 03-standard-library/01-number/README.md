@@ -1,9 +1,10 @@
 # 01 - Number (Static Properties, Methods, dan Number Parsing)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami wrapper object `Number` dan perbedaannya dengan tipe primitif number.
-> * **Kapan Digunakan**: Menguasai static properties penting: `Number.MAX_VALUE`, `Number.MIN_VALUE`, `Number.MAX_SAFE_INTEGER`, `Number.MIN_SAFE_INTEGER`, dan `Number.NaN`.
-> * **Aturan Praktis**: Selalu gunakan `Number.isNaN()` dan `Number.isFinite()` alih-alih fungsi bawaan global untuk menghindari bug implicit type coercion.
+>
+> - **Fungsi Utama**: Memahami wrapper object `Number` dan perbedaannya dengan tipe primitif number.
+> - **Kapan Digunakan**: Menguasai static properties penting: `Number.MAX_VALUE`, `Number.MIN_VALUE`, `Number.MAX_SAFE_INTEGER`, `Number.MIN_SAFE_INTEGER`, dan `Number.NaN`.
+> - **Aturan Praktis**: Selalu gunakan `Number.isNaN()` dan `Number.isFinite()` alih-alih fungsi bawaan global untuk menghindari bug implicit type coercion.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -65,7 +66,12 @@ console.log('Number.isInteger(42.5)             :', Number.isInteger(42.5)); // 
 console.log('\n--- 3. Studi Kasus Nyata: Fungsi formatHargaProduk() ---');
 function formatHargaProduk(harga) {
   // Validasi: tipe harus number, bukan NaN, bilangan bulat, dan tidak negatif
-  if (typeof harga !== 'number' || Number.isNaN(harga) || !Number.isInteger(harga) || harga < 0) {
+  if (
+    typeof harga !== 'number' ||
+    Number.isNaN(harga) ||
+    !Number.isInteger(harga) ||
+    harga < 0
+  ) {
     return 'Input harga tidak valid';
   }
 
@@ -115,7 +121,6 @@ Format NaN                         : Input harga tidak valid
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
 
 1. **Aplikasi Perbankan / Fintech**: Memformat saldo rekening pengguna ke format mata uang lokal (`toLocaleString('id-ID')`) tanpa perlu menulis fungsi regex pemisah ribuan manual.
@@ -125,12 +130,14 @@ Format NaN                         : Input harga tidak valid
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
 - **Salah mengira `Number.MIN_VALUE` sebagai angka negatif terkecil**: `Number.MIN_VALUE` adalah angka positif terkecil mendekati 0 (`5e-324`). Untuk batas negatif, gunakan `-Number.MAX_VALUE` atau `Number.MIN_SAFE_INTEGER`.
+
 * **Menggunakan `isNaN()` global lama**: `isNaN('bukan angka')` menghasilkan `true` karena 'bukan angka' dikonversi dulu ke angka. Selalu gunakan `Number.isNaN()` untuk pemeriksaan nilai `NaN` murni.
 * **Lupa bahwa angka di atas `MAX_SAFE_INTEGER` kehilangan presisi**: `9007199254740991 + 1 === 9007199254740991 + 2` bernilai `true`! Untuk angka yang lebih besar dari itu, gunakan tipe data `BigInt`.
 
 ### 🌟 Best Practice
 
 - Selalu gunakan `Number.isNaN()` dan `Number.isFinite()` alih-alih fungsi bawaan global untuk menghindari bug implicit type coercion.
+
 * Gunakan `Number.parseInt(str, 10)` dengan selalu menyertakan basis 10 secara eksplisit untuk mencegah ambiguitas basis pada string tertentu.
 * Gunakan `toLocaleString()` untuk menampilkan angka kepada user agar konsisten dengan standar lokal bahasa mereka.
 

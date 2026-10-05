@@ -19,7 +19,9 @@ class Manager extends Employee {
   }
 
   sayHello(name) {
-    console.log(`Halo ${name}, nama saya ${this.firstName} ${this.lastName} (Manager)`);
+    console.log(
+      `Halo ${name}, nama saya ${this.firstName} ${this.lastName} (Manager)`
+    );
   }
 }
 

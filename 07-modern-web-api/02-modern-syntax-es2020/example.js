@@ -7,11 +7,11 @@ const responseAPI = {
     user: {
       id: 42,
       profile: {
-        name: 'Joko Santoso'
+        name: 'Joko Santoso',
         // address sengaja tidak ada
-      }
-    }
-  }
+      },
+    },
+  },
 };
 
 // Akses aman properti bersarang tanpa khawatir TypeError
@@ -24,9 +24,9 @@ console.log('Panggilan method opsional:', hitungBonus); // undefined
 
 console.log('\n--- 2. Nullish Coalescing (??) vs Logical OR (||) ---');
 const konfigurasiUser = {
-  volume: 0,            // User sengaja menyetel volume 0 (mute)
-  namaTampilan: '',     // User mengosongkan nama tampilan
-  delayDetik: null      // Belum dikonfigurasi
+  volume: 0, // User sengaja menyetel volume 0 (mute)
+  namaTampilan: '', // User mengosongkan nama tampilan
+  delayDetik: null, // Belum dikonfigurasi
 };
 
 // Masalah dengan Logical OR (||):
@@ -44,8 +44,8 @@ const masterProduk = {
   tags: new Set(['elektronik', 'gadget']),
   spesifikasi: {
     beratGram: 500,
-    dimensi: { panjang: 20, lebar: 15 }
-  }
+    dimensi: { panjang: 20, lebar: 15 },
+  },
 };
 
 // Deep copy independen

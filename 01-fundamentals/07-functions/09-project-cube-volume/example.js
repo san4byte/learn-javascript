@@ -11,7 +11,7 @@ function hitungVolumeKubus(sisi) {
 function jumlahVolumeDuaKubus(sisiA, sisiB) {
   const volumeA = hitungVolumeKubus(sisiA);
   const volumeB = hitungVolumeKubus(sisiB);
-  
+
   return volumeA + volumeB;
 }
 
@@ -20,6 +20,10 @@ const sisiKubus2 = 3;
 
 const totalVolume = jumlahVolumeDuaKubus(sisiKubus1, sisiKubus2);
 
-console.log(`Kubus 1 (sisi ${sisiKubus1}) volume : ${hitungVolumeKubus(sisiKubus1)}`);
-console.log(`Kubus 2 (sisi ${sisiKubus2}) volume : ${hitungVolumeKubus(sisiKubus2)}`);
+console.log(
+  `Kubus 1 (sisi ${sisiKubus1}) volume : ${hitungVolumeKubus(sisiKubus1)}`
+);
+console.log(
+  `Kubus 2 (sisi ${sisiKubus2}) volume : ${hitungVolumeKubus(sisiKubus2)}`
+);
 console.log(`Total gabungan volume      : ${totalVolume}`);

@@ -2,7 +2,9 @@
 
 if (typeof document === 'undefined') {
   console.log('--- 06. DOM Traversal & Event Delegation ---');
-  console.log("Buka file 'index.html' di browser untuk melihat demonstrasi Event Delegation!");
+  console.log(
+    "Buka file 'index.html' di browser untuk melihat demonstrasi Event Delegation!"
+  );
 } else {
   console.log('--- 06. DOM Traversal & Event Delegation (Browser) ---');
 
@@ -17,7 +19,7 @@ if (typeof document === 'undefined') {
         // DOM Traversal: ambil elemen kartu induk dari tombol tersebut
         const kartuInduk = e.target.parentElement;
         console.log(`[HAPUS KARTU]: Menghapus kartu: ${kartuInduk.id}`);
-        
+
         // Hapus kartu dari tampilan
         kartuInduk.remove();
       }

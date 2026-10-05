@@ -1,13 +1,15 @@
 # 13 - Static Method
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Membuat method yang dapat dipanggil langsung dari class tanpa perlu membuat objek baru dengan `new`.
-> * **Kapan Digunakan**: Membuat fungsi utilitas pembantu (*helper*) yang tidak memerlukan data dari instance objek.
-> * **Aturan Praktis**: Tambahkan kata kunci `static` di depan nama method: `static hitungTotal(...)`.
+>
+> - **Fungsi Utama**: Membuat method yang dapat dipanggil langsung dari class tanpa perlu membuat objek baru dengan `new`.
+> - **Kapan Digunakan**: Membuat fungsi utilitas pembantu (_helper_) yang tidak memerlukan data dari instance objek.
+> - **Aturan Praktis**: Tambahkan kata kunci `static` di depan nama method: `static hitungTotal(...)`.
 
 ## 1. 🎯 Tujuan Belajar
+
 - Memahami konsep **Static Method** pada JavaScript Class.
-- Membuat fungsi-fungsi utilitas (*helper/utility functions*) yang terorganisir di dalam class.
+- Membuat fungsi-fungsi utilitas (_helper/utility functions_) yang terorganisir di dalam class.
 - Memahami mengapa method statis tidak membutuhkan instansiasi objek (`new`).
 
 ---
@@ -15,17 +17,20 @@
 ## 2. 📖 Penjelasan Konsep
 
 ### 🎭 Analogi Dunia Nyata
+
 > Seperti **pisau lipat swiss army atau kalkulator saku**: Anda tidak perlu membangun satu rumah atau memesan pabrik utuh hanya untuk meminjam gunting kecil. Fungsi utilitas matematika seperti `Math.floor()` atau `Number.parseInt()` bisa langsung dipakai kapan saja.
 
 Method statis adalah fungsi yang didefinisikan di dalam class menggunakan kata kunci **`static`**:
+
 1. Method ini tidak membutuhkan state internal dari instance objek.
 2. Tidak dapat mengakses `this` milik instance objek (di dalam static method, `this` merujuk ke Class itu sendiri).
-3. Sangat cocok dijadikan sebagai kumpulan fungsi utilitas murni (*pure helper functions*).
+3. Sangat cocok dijadikan sebagai kumpulan fungsi utilitas murni (_pure helper functions_).
 4. Contoh bawaan JavaScript: `Math.floor()`, `Math.random()`, `Array.from()`, `Object.keys()`.
 
 ---
 
 ## 3. 💻 Contoh Kode (`example.js`)
+
 ```javascript
 // Penjelasan lengkap dapat dibaca pada README.md
 // Static Method (Fungsi utility pembantu yang dipanggil langsung dari Class tanpa 'new')
@@ -51,6 +56,7 @@ console.info('Hasil MathUtils.sum:', total);
 ---
 
 ## 4. 🖥️ Output yang Diharapkan
+
 ```text
 Hasil MathUtils.sum: 15
 Hasil MathUtils.multiply: 50
@@ -59,25 +65,31 @@ Hasil MathUtils.multiply: 50
 ---
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
+
 ### 🏢 Real-World Use Case
-Fungsi utility matematika, parser format data seperti `Date.now()`, atau *factory method* seperti `User.createFromJSON(str)`.
+
+Fungsi utility matematika, parser format data seperti `Date.now()`, atau _factory method_ seperti `User.createFromJSON(str)`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Tidak Bisa Mengakses Properti Instance**: Kata kunci `this` di dalam static method merujuk pada Class itu sendiri, bukan pada objek instance, sehingga tidak bisa mengakses `this.nama` instance.
-* **Memanggil dari Instance**: Memanggil `user.staticMethod()` akan error `is not a function`.
+
+- **Tidak Bisa Mengakses Properti Instance**: Kata kunci `this` di dalam static method merujuk pada Class itu sendiri, bukan pada objek instance, sehingga tidak bisa mengakses `this.nama` instance.
+- **Memanggil dari Instance**: Memanggil `user.staticMethod()` akan error `is not a function`.
 
 ### 🌟 Best Practice
-* Jadikan suatu fungsi sebagai `static` jika logika komputasinya murni dan tidak bergantung pada state individual objek.
-* Menghemat alokasi memori karena tidak perlu membuat instance baru.
+
+- Jadikan suatu fungsi sebagai `static` jika logika komputasinya murni dan tidak bergantung pada state individual objek.
+- Menghemat alokasi memori karena tidak perlu membuat instance baru.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
+
 1. Buat class `DateFormatter` dengan static method `formatIndonesia(date)` yang mengembalikan string tanggal berformat `"DD Bulan YYYY"`.
 
 ---
 
 ## 7. 🧭 Navigasi
+
 - ⬅️ **Sebelumnya:** [12 - Static Field](../12-static-field/README.md)
 - ➡️ **Selanjutnya:** [14 - Error Handling Class](../14-error-handling-class/README.md)
 - 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)

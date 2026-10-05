@@ -1,34 +1,40 @@
 # 02 - Timing Events (setTimeout dan setInterval)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami cara menunda eksekusi kode menggunakan `setTimeout()`.
-> * **Kapan Digunakan**: Memahami cara menjalankan kode berulang secara periodik menggunakan `setInterval()`.
-> * **Aturan Praktis**: Selalu simpan timer ID ke dalam variabel dan bersihkan pada saat komponen di-unmount atau aksi dibatalkan.
+>
+> - **Fungsi Utama**: Memahami cara menunda eksekusi kode menggunakan `setTimeout()`.
+> - **Kapan Digunakan**: Memahami cara menjalankan kode berulang secara periodik menggunakan `setInterval()`.
+> - **Aturan Praktis**: Selalu simpan timer ID ke dalam variabel dan bersihkan pada saat komponen di-unmount atau aksi dibatalkan.
 
 ## 1. 🎯 Tujuan Belajar
+
 - Memahami cara menunda eksekusi kode menggunakan `setTimeout()`.
 - Memahami cara menjalankan kode berulang secara periodik menggunakan `setInterval()`.
 - Mampu menghentikan timer sebelum dieksekusi menggunakan `clearTimeout()` dan `clearInterval()`.
-- Mengetahui masalah ketepatan waktu (*timer drift*) pada JavaScript.
+- Mengetahui masalah ketepatan waktu (_timer drift_) pada JavaScript.
 
 ---
 
 ## 2. 📖 Penjelasan Konsep
 
 ### 🎭 Analogi Dunia Nyata
-> **setTimeout** seperti *alarm jam weker di pagi hari*: Anda menyetelnya untuk berdering 1 kali setelah 7 jam. Jika sebelum berdering Anda sudah bangun, Anda bisa menekan tombol cancel (**clearTimeout**). Sedangkan **setInterval** seperti *detak jarum jam dinding*: berbunyi 'tik-tok' secara teratur setiap 1 detik sampai baterainya dicabut (**clearInterval**).
 
-JavaScript menyediakan dua fungsi bawaan untuk mengatur pewaktuan (*scheduling*):
+> **setTimeout** seperti _alarm jam weker di pagi hari_: Anda menyetelnya untuk berdering 1 kali setelah 7 jam. Jika sebelum berdering Anda sudah bangun, Anda bisa menekan tombol cancel (**clearTimeout**). Sedangkan **setInterval** seperti _detak jarum jam dinding_: berbunyi 'tik-tok' secara teratur setiap 1 detik sampai baterainya dicabut (**clearInterval**).
+
+JavaScript menyediakan dua fungsi bawaan untuk mengatur pewaktuan (_scheduling_):
+
 1. **`setTimeout(callback, delayMs, ...args)`**: Menjalankan fungsi callback satu kali setelah jeda waktu tertentu.
 2. **`setInterval(callback, intervalMs, ...args)`**: Menjalankan fungsi callback berulang kali setiap selang waktu tertentu secara terus-menerus.
 
-Setiap pemanggilan fungsi ini mengembalikan sebuah identifier unik bertipe integer (*Timer ID*). Identifier ini digunakan untuk membatalkan timer:
-* `clearTimeout(timerId)`
-* `clearInterval(intervalId)`
+Setiap pemanggilan fungsi ini mengembalikan sebuah identifier unik bertipe integer (_Timer ID_). Identifier ini digunakan untuk membatalkan timer:
+
+- `clearTimeout(timerId)`
+- `clearInterval(intervalId)`
 
 ---
 
 ## 3. 💻 Contoh Kode (`example.js`)
+
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
@@ -58,6 +64,7 @@ const intervalId = setInterval(() => {
 ---
 
 ## 4. 🖥️ Output yang Diharapkan
+
 ```text
 --- 1. setTimeout & clearTimeout ---
 Timer berhasil dibatalkan sebelum sempat dieksekusi.
@@ -73,29 +80,33 @@ Hitung mundur: 1...
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
+
 1. **Pemberitahuan Toast / Notifikasi Melayang**: Menampilkan pop-up notifikasi 'Data Berhasil Disimpan', lalu menghilangkannya secara otomatis setelah 3 detik menggunakan `setTimeout`.
 2. **Fitur OTP Countdown**: Menampilkan timer 'Kirim Ulang Kode OTP dalam 60 detik' di halaman login/registrasi.
 3. **Session Timeout Warning**: Menampilkan dialog peringatan 'Sesi Anda akan berakhir dalam 1 menit karena tidak ada aktivitas'.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Lupa Memanggil `clearInterval` (Memory Leak)**: Jika Anda menggunakan `setInterval` pada aplikasi web satu halaman (Single Page App / React), berpindah halaman tanpa memanggil `clearInterval` akan membuat fungsi tersebut terus berjalan di background selamanya, menyedot memori dan CPU.
-* **Timer Tidak 100% Presisi**: Jika CPU komputer sedang sibuk atau tab browser sedang tidak aktif (*background tab*), browser akan menunda eksekusi timer demi menghemat baterai.
+
+- **Lupa Memanggil `clearInterval` (Memory Leak)**: Jika Anda menggunakan `setInterval` pada aplikasi web satu halaman (Single Page App / React), berpindah halaman tanpa memanggil `clearInterval` akan membuat fungsi tersebut terus berjalan di background selamanya, menyedot memori dan CPU.
+- **Timer Tidak 100% Presisi**: Jika CPU komputer sedang sibuk atau tab browser sedang tidak aktif (_background tab_), browser akan menunda eksekusi timer demi menghemat baterai.
 
 ### 🌟 Best Practice
-* Selalu simpan timer ID ke dalam variabel dan bersihkan pada saat komponen di-unmount atau aksi dibatalkan.
-* Gunakan rekursif `setTimeout` daripada `setInterval` jika durasi eksekusi dari fungsi di dalamnya memakan waktu tidak menentu (misal memanggil API).
+
+- Selalu simpan timer ID ke dalam variabel dan bersihkan pada saat komponen di-unmount atau aksi dibatalkan.
+- Gunakan rekursif `setTimeout` daripada `setInterval` jika durasi eksekusi dari fungsi di dalamnya memakan waktu tidak menentu (misal memanggil API).
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
+
 1. Buatlah sebuah fungsi `buatJamDigital()` menggunakan `setInterval` yang mencetak waktu saat ini (jam:menit:detik) setiap 1 detik.
 2. Hentikan jam tersebut secara otomatis setelah berjalan sebanyak 5 kali.
 
 ---
 
 ## 7. 🧭 Navigasi
+
 - ⬅️ **Sebelumnya:** [01 - Asynchronous Intro & Event Loop](../01-event-loop-intro/README.md)
 - ➡️ **Selanjutnya:** [03 - Callbacks dan Callback Hell](../03-callbacks/README.md)
 - 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)

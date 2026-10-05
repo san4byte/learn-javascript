@@ -73,8 +73,8 @@ setTimeout(() => {
 
   // Simulasi scroll cepat browser
   console.log('Simulasi scroll intensif dalam 300ms:');
-  scrollTerThrottle(10);  // Dipanggil (eksekusi pertama)
-  scrollTerThrottle(50);  // Diabaikan (terlalu cepat)
+  scrollTerThrottle(10); // Dipanggil (eksekusi pertama)
+  scrollTerThrottle(50); // Diabaikan (terlalu cepat)
   scrollTerThrottle(120); // Diabaikan
 
   setTimeout(() => scrollTerThrottle(250), 110); // Dipanggil (>100ms berlalu)

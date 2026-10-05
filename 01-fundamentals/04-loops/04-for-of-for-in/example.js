@@ -23,7 +23,7 @@ const profilLaptop = {
   merk: 'ThinkPad',
   ramGB: 16,
   ssdGB: 512,
-  os: 'Ubuntu Linux'
+  os: 'Ubuntu Linux',
 };
 
 for (const properti in profilLaptop) {

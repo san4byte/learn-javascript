@@ -11,7 +11,8 @@ console.log(`Apakah '${noHpSalah}' valid? :`, regexNoHp.test(noHpSalah)); // fal
 
 console.log('\n--- 2. Ekstraksi Data dengan str.match() ---');
 const regexInvoice = /INV-\d{4}-\d+/g;
-const pesan = 'Pesanan nomor INV-2026-001 dan INV-2026-002 telah berhasil dibayar.';
+const pesan =
+  'Pesanan nomor INV-2026-001 dan INV-2026-002 telah berhasil dibayar.';
 
 const daftarInvoice = pesan.match(regexInvoice);
 console.log('Nomor Invoice Ditemukan   :', daftarInvoice);

@@ -1,9 +1,10 @@
 # 08 - Math (Konstanta Matematika, Pembulatan, dan Operasi Angka)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami objek bawaan `Math` sebagai namespace utilitas matematika statis.
-> * **Kapan Digunakan**: Menguasai konstanta matematika fundamental: `Math.PI` dan `Math.E`.
-> * **Aturan Praktis**: Gunakan `Math.ceil()` untuk paginasi data agar elemen pecahan terakhir tidak hilang dari tampilan pengguna.
+>
+> - **Fungsi Utama**: Memahami objek bawaan `Math` sebagai namespace utilitas matematika statis.
+> - **Kapan Digunakan**: Menguasai konstanta matematika fundamental: `Math.PI` dan `Math.E`.
+> - **Aturan Praktis**: Gunakan `Math.ceil()` untuk paginasi data agar elemen pecahan terakhir tidak hilang dari tampilan pengguna.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -68,7 +69,10 @@ const produkPerHalaman = 10;
 
 // Pembulatan ke atas menjamin item sisa tetap memperoleh lembar halaman tersendiri
 const totalHalaman = Math.ceil(totalProduk / produkPerHalaman);
-console.log(`Total Halaman (${totalProduk} produk, ${produkPerHalaman}/hal) :`, totalHalaman);
+console.log(
+  `Total Halaman (${totalProduk} produk, ${produkPerHalaman}/hal) :`,
+  totalHalaman
+);
 
 console.log('\n--- 2. Pencarian Nilai Ekstrem (Math.min & Math.max) ---');
 const daftarHarga = [150000, 45000, 750000, 20000, 120000];
@@ -107,7 +111,6 @@ Voucher Diskon Acak (10% - 50%) : [Angka antara 10% sampai 50%]
 ---
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
-
 
 ### 🏢 Real-World Use Case
 

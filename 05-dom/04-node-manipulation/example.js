@@ -2,7 +2,9 @@
 
 if (typeof document === 'undefined') {
   console.log('--- 04. DOM Manipulasi Node ---');
-  console.log("Buka file 'index.html' di browser untuk melihat pembuatan elemen HTML baru!");
+  console.log(
+    "Buka file 'index.html' di browser untuk melihat pembuatan elemen HTML baru!"
+  );
 } else {
   console.log('--- 04. DOM Manipulasi Node (Browser) ---');
 

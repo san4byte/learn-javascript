@@ -1,11 +1,13 @@
 # 01 - Pengenalan DOM (Document Object Model) & DOM Tree
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami konsep dasar Document Object Model (DOM) sebagai representasi dokumen di memori.
-> * **Kapan Digunakan**: Memahami struktur hierarki pohon dokumen (DOM Tree).
-> * **Aturan Praktis**: Selalu letakkan tag `<script src="example.js"></script>` tepat sebelum penutup `</body>` agar HTML selesai dimuat terlebih dahulu oleh browser.
+>
+> - **Fungsi Utama**: Memahami konsep dasar Document Object Model (DOM) sebagai representasi dokumen di memori.
+> - **Kapan Digunakan**: Memahami struktur hierarki pohon dokumen (DOM Tree).
+> - **Aturan Praktis**: Selalu letakkan tag `<script src="example.js"></script>` tepat sebelum penutup `</body>` agar HTML selesai dimuat terlebih dahulu oleh browser.
 
 ## 1. 🎯 Tujuan Belajar
+
 - Memahami konsep dasar Document Object Model (DOM) sebagai representasi dokumen di memori.
 - Memahami struktur hierarki pohon dokumen (DOM Tree).
 - Mengenal 4 tipe Node fundamental: Document, Element, Attribute, dan Text Node.
@@ -16,14 +18,16 @@
 ## 2. 📖 Penjelasan Konsep
 
 ### 🎭 Analogi Dunia Nyata
+
 > HTML mentah seperti **sketsa cetak biru arsitektur rumah di atas kertas kertas**: sketsa itu hanya teks diam. DOM adalah **model maket miniatur 3D rumah** yang sudah terbangun di atas meja. Dengan kuas JavaScript, Anda bisa mengecat dinding miniatur tersebut, mengganti warna genteng, atau memindahkan miniatur pintu secara instan.
 
-**Document Object Model (DOM)** adalah antarmuka pemrograman (*Application Programming Interface*) standar W3C untuk dokumen HTML dan XML.
+**Document Object Model (DOM)** adalah antarmuka pemrograman (_Application Programming Interface_) standar W3C untuk dokumen HTML dan XML.
 
 Ketika browser memuat halaman web:
-1. Browser mengurai teks mentah HTML (*parsing*).
+
+1. Browser mengurai teks mentah HTML (_parsing_).
 2. Browser membuat pohon objek di dalam memori RAM yang disebut **DOM Tree**.
-3. JavaScript diberikan akses ke objek global **`document`** untuk membaca, menambah, mengubah, dan menghapus elemen maupun gaya CSS secara *real-time*.
+3. JavaScript diberikan akses ke objek global **`document`** untuk membaca, menambah, mengubah, dan menghapus elemen maupun gaya CSS secara _real-time_.
 
 ### 🌳 Diagram Hierarki DOM Tree
 
@@ -55,13 +59,16 @@ Ketika browser memuat halaman web:
 ---
 
 ## 3. 💻 Contoh Kode (`example.js`)
+
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
 if (typeof document === 'undefined') {
   console.log('--- 01. Pengenalan DOM (Document Object Model) ---');
   console.log('Status: Berjalan di runtime Node.js (lingkungan non-browser).');
-  console.log("DOM adalah API milik browser. Buka file 'index.html' di browser Anda untuk melihat objek 'document'.");
+  console.log(
+    "DOM adalah API milik browser. Buka file 'index.html' di browser Anda untuk melihat objek 'document'."
+  );
 } else {
   console.log('--- 01. Pengenalan DOM (Browser Environment) ---');
   console.log('Objek Document:', document);
@@ -73,6 +80,7 @@ if (typeof document === 'undefined') {
 ---
 
 ## 4. 🖥️ Output yang Diharapkan
+
 ```text
 --- 01. Pengenalan DOM (Browser Environment) ---
 Objek Document: #document
@@ -84,21 +92,24 @@ URL Halaman   : http://127.0.0.1:5500/05-dom/01-intro/index.html
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
+
 1. **Single Page Application (SPA)**: Framework modern (React, Vue, Svelte) bekerja dengan memanipulasi DOM di balik layar untuk memperbarui tampilan tanpa me-reload halaman.
-2. **Dynamic Theming**: Mengubah atribut class pada tag `<html>` atau `<body>` untuk beralih antara tema gelap (*Dark Mode*) dan terang (*Light Mode*).
+2. **Dynamic Theming**: Mengubah atribut class pada tag `<html>` atau `<body>` untuk beralih antara tema gelap (_Dark Mode_) dan terang (_Light Mode_).
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Mengeksekusi Skrip Sebelum DOM Selesai Di-parse**: Jika tag `<script>` diletakkan di dalam `<head>` tanpa atribut `defer`, JavaScript akan mencoba mengakses elemen HTML yang belum selesai dibuat browser, berujung pada error `TypeError: Cannot read properties of null`. Letakkan `<script>` di akhir `<body>` atau gunakan atribut `defer`.
+
+- **Mengeksekusi Skrip Sebelum DOM Selesai Di-parse**: Jika tag `<script>` diletakkan di dalam `<head>` tanpa atribut `defer`, JavaScript akan mencoba mengakses elemen HTML yang belum selesai dibuat browser, berujung pada error `TypeError: Cannot read properties of null`. Letakkan `<script>` di akhir `<body>` atau gunakan atribut `defer`.
 
 ### 🌟 Best Practice
-* Selalu letakkan tag `<script src="example.js"></script>` tepat sebelum penutup `</body>` agar HTML selesai dimuat terlebih dahulu oleh browser.
-* Pahami perbedaan antara representasi HTML teks statis dan objek DOM dinamis yang hidup di memori browser.
+
+- Selalu letakkan tag `<script src="example.js"></script>` tepat sebelum penutup `</body>` agar HTML selesai dimuat terlebih dahulu oleh browser.
+- Pahami perbedaan antara representasi HTML teks statis dan objek DOM dinamis yang hidup di memori browser.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
+
 1. Buka browser Anda pada file `index.html` ini, buka DevTools Console (`F12`), lalu ketik:
    `document.title = "Belajar DOM Itu Menyenangkan!";`
    Perhatikan perubahan teks pada tab judul browser Anda!
@@ -106,6 +117,7 @@ URL Halaman   : http://127.0.0.1:5500/05-dom/01-intro/index.html
 ---
 
 ## 7. 🧭 Navigasi
+
 - ⬅️ **Sebelumnya:** [04 - JavaScript Modules](../../04-modules/README.md)
 - ➡️ **Selanjutnya:** [02 - DOM Selection](../02-dom-selection/README.md)
 - 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)

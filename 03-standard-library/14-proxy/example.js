@@ -19,7 +19,9 @@ const handler = {
   set(target, property, value) {
     if (property === 'umur') {
       if (typeof value !== 'number' || value <= 0) {
-        throw new Error('Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif!');
+        throw new Error(
+          'Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif!'
+        );
       }
     }
 
@@ -46,4 +48,3 @@ try {
 } catch (err) {
   console.error('Gagal update umur:', err.message);
 }
-

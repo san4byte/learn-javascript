@@ -1,9 +1,10 @@
 # 03 - Array (Queue, Stack, Search, dan Advanced Transformations)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami implementasi struktur data Queue (FIFO) dan Stack (LIFO) menggunakan method array native.
-> * **Kapan Digunakan**: Menguasai method pencarian predikat modern: `find()`, `findIndex()`, `includes()`, `indexOf()`, dan `lastIndexOf()`.
-> * **Aturan Praktis**: Gunakan `find()` jika Anda hanya membutuhkan 1 objek pertama, bukan `filter()[0]` yang membuang waktu menyaring seluruh array.
+>
+> - **Fungsi Utama**: Memahami implementasi struktur data Queue (FIFO) dan Stack (LIFO) menggunakan method array native.
+> - **Kapan Digunakan**: Menguasai method pencarian predikat modern: `find()`, `findIndex()`, `includes()`, `indexOf()`, dan `lastIndexOf()`.
+> - **Aturan Praktis**: Gunakan `find()` jika Anda hanya membutuhkan 1 objek pertama, bukan `filter()[0]` yang membuang waktu menyaring seluruh array.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -119,7 +120,9 @@ const aksiDibatalkan = riwayatAksi.pop();
 console.log('Aksi di-undo (pop)            :', aksiDibatalkan);
 console.log('Sisa tumpukan aksi            :', riwayatAksi);
 
-console.log('\n--- 2. Studi Kasus Nyata: Antrean Pesanan (Queue FIFO, Search, & Reduce) ---');
+console.log(
+  '\n--- 2. Studi Kasus Nyata: Antrean Pesanan (Queue FIFO, Search, & Reduce) ---'
+);
 class AntreanPesanan {
   // Enkapsulasi data antrean menggunakan Private Field (#)
   #daftar = [];
@@ -209,7 +212,6 @@ Total Nilai Antrean: Rp 25.000
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
 
-
 ### 🏢 Real-World Use Case
 
 1. **Sistem Undo/Redo**: Fitur Undo di text editor menyimpan state riwayat aksi ke dalam struktur data Stack (`pop()` saat tombol Undo ditekan).
@@ -219,13 +221,15 @@ Total Nilai Antrean: Rp 25.000
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
 - **Performa `shift()` dan `unshift()`**: Operasi di awal array membutuhkan penggeseran indeks seluruh elemen ($O(n)$). Untuk antrean raksasa (puluhan ribu elemen), pertimbangkan struktur Linked List.
+
 * **Lupa `initialValue` pada `reduce`**: Jika initial value tidak diberikan pada array kosong, JavaScript akan melempar fatal error `TypeError: Reduce of empty array with no initial value`.
 * **Menghapus elemen di tengah perulangan `forEach`**: Melakukan mutasi ukuran array saat sedang di-loop akan menyebabkan elemen terlewatkan secara tidak terduga.
 
 ### 🌟 Best Practice
 
 - Gunakan `find()` jika Anda hanya membutuhkan 1 objek pertama, bukan `filter()[0]` yang membuang waktu menyaring seluruh array.
-* Selalu cantumkan nilai awal (*initial value*) saat memanggil `reduce()` atau `reduceRight()` demi keamanan kode.
+
+* Selalu cantumkan nilai awal (_initial value_) saat memanggil `reduce()` atau `reduceRight()` demi keamanan kode.
 * Pilih `push` + `pop` (Stack) untuk operasi berkecepatan tinggi ($O(1)$).
 
 ---

@@ -1,9 +1,10 @@
 # 14 - Proxy (Metaprogramming, Interceptor Handler, Get dan Set Traps)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami konsep **Metaprogramming** di JavaScript menggunakan objek `Proxy`.
-> * **Kapan Digunakan**: Mampu membuat Proxy dengan mengikat objek target dan objek handler (`new Proxy(target, handler)`).
-> * **Aturan Praktis**: Gunakan Proxy bersamaan dengan `Reflect` bawaan JavaScript agar penanganan operasi default berjalan mulus dan standar.
+>
+> - **Fungsi Utama**: Memahami konsep **Metaprogramming** di JavaScript menggunakan objek `Proxy`.
+> - **Kapan Digunakan**: Mampu membuat Proxy dengan mengikat objek target dan objek handler (`new Proxy(target, handler)`).
+> - **Aturan Praktis**: Gunakan Proxy bersamaan dengan `Reflect` bawaan JavaScript agar penanganan operasi default berjalan mulus dan standar.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -35,27 +36,28 @@ const proxy = new Proxy(target, handler);
 
 Di JavaScript (spesifikasi resmi ECMAScript), terdapat tepat **13 Traps bawaan** yang dapat dicegat oleh objek `handler`. Setiap trap bertugas mencegat satu operasi fundamental objek:
 
-| No | Nama Trap & Parameter | Operasi JS yang Dicegat (Trigger) | Tipe Return | Keterangan & Kegunaan |
-| :---: | :--- | :--- | :---: | :--- |
-| 1 | **`get(target, prop, receiver)`** | `proxy.prop` atau `proxy[prop]` | *Any* | Mencegat pembacaan nilai properti. |
-| 2 | **`set(target, prop, val, receiver)`** | `proxy.prop = val` | `boolean` | Mencegat penulisan properti. **Wajib return `true`** jika sukses. |
-| 3 | **`has(target, prop)`** | `'prop' in proxy` | `boolean` | Mencegat operator `in` (menyembunyikan properti rahasia). |
-| 4 | **`deleteProperty(target, prop)`** | `delete proxy.prop` | `boolean` | Mencegat penghapusan properti. Return `true` jika diizinkan. |
-| 5 | **`apply(target, thisArg, argList)`** | `proxyFunc(...args)` | *Any* | Mencegat pemanggilan fungsi (jika target berupa `function`). |
-| 6 | **`construct(target, argList, newTarget)`** | `new ProxyClass(...args)` | `object` | Mencegat instansiasi objek dengan keyword `new`. |
-| 7 | **`ownKeys(target)`** | `Object.keys()`, `for...in`, `Object.getOwnPropertyNames()` | `Array` | Mengatur daftar kunci properti yang boleh terlihat saat di-loop. |
-| 8 | **`getOwnPropertyDescriptor(target, prop)`** | `Object.getOwnPropertyDescriptor(proxy, prop)` | `Object` / `undefined` | Mengambil konfigurasi atribut properti (*enumerable, writable, configurable*). |
-| 9 | **`defineProperty(target, prop, descriptor)`** | `Object.defineProperty(proxy, prop, desc)` | `boolean` | Mencegat pendefinisian properti tingkat lanjut. |
-| 10 | **`getPrototypeOf(target)`** | `Object.getPrototypeOf(proxy)`, `proxy.__proto__`, `proxy instanceof Class` | `Object` / `null` | Mencegat pembacaan prototype objek. |
-| 11 | **`setPrototypeOf(target, prototype)`** | `Object.setPrototypeOf(proxy, prototype)` | `boolean` | Mencegat pengubahan prototype objek. |
-| 12 | **`isExtensible(target)`** | `Object.isExtensible(proxy)` | `boolean` | Mencegat pengecekan apakah objek boleh ditambah properti baru. |
-| 13 | **`preventExtensions(target)`** | `Object.preventExtensions(proxy)` | `boolean` | Mencegat pembekuan objek agar tidak bisa ditambah properti baru. |
+| No  | Nama Trap & Parameter                          | Operasi JS yang Dicegat (Trigger)                                           |      Tipe Return       | Keterangan & Kegunaan                                                          |
+| :-: | :--------------------------------------------- | :-------------------------------------------------------------------------- | :--------------------: | :----------------------------------------------------------------------------- |
+|  1  | **`get(target, prop, receiver)`**              | `proxy.prop` atau `proxy[prop]`                                             |         _Any_          | Mencegat pembacaan nilai properti.                                             |
+|  2  | **`set(target, prop, val, receiver)`**         | `proxy.prop = val`                                                          |       `boolean`        | Mencegat penulisan properti. **Wajib return `true`** jika sukses.              |
+|  3  | **`has(target, prop)`**                        | `'prop' in proxy`                                                           |       `boolean`        | Mencegat operator `in` (menyembunyikan properti rahasia).                      |
+|  4  | **`deleteProperty(target, prop)`**             | `delete proxy.prop`                                                         |       `boolean`        | Mencegat penghapusan properti. Return `true` jika diizinkan.                   |
+|  5  | **`apply(target, thisArg, argList)`**          | `proxyFunc(...args)`                                                        |         _Any_          | Mencegat pemanggilan fungsi (jika target berupa `function`).                   |
+|  6  | **`construct(target, argList, newTarget)`**    | `new ProxyClass(...args)`                                                   |        `object`        | Mencegat instansiasi objek dengan keyword `new`.                               |
+|  7  | **`ownKeys(target)`**                          | `Object.keys()`, `for...in`, `Object.getOwnPropertyNames()`                 |        `Array`         | Mengatur daftar kunci properti yang boleh terlihat saat di-loop.               |
+|  8  | **`getOwnPropertyDescriptor(target, prop)`**   | `Object.getOwnPropertyDescriptor(proxy, prop)`                              | `Object` / `undefined` | Mengambil konfigurasi atribut properti (_enumerable, writable, configurable_). |
+|  9  | **`defineProperty(target, prop, descriptor)`** | `Object.defineProperty(proxy, prop, desc)`                                  |       `boolean`        | Mencegat pendefinisian properti tingkat lanjut.                                |
+| 10  | **`getPrototypeOf(target)`**                   | `Object.getPrototypeOf(proxy)`, `proxy.__proto__`, `proxy instanceof Class` |   `Object` / `null`    | Mencegat pembacaan prototype objek.                                            |
+| 11  | **`setPrototypeOf(target, prototype)`**        | `Object.setPrototypeOf(proxy, prototype)`                                   |       `boolean`        | Mencegat pengubahan prototype objek.                                           |
+| 12  | **`isExtensible(target)`**                     | `Object.isExtensible(proxy)`                                                |       `boolean`        | Mencegat pengecekan apakah objek boleh ditambah properti baru.                 |
+| 13  | **`preventExtensions(target)`**                | `Object.preventExtensions(proxy)`                                           |       `boolean`        | Mencegat pembekuan objek agar tidak bisa ditambah properti baru.               |
 
 ---
 
 ### 3. Bedah Detail & Contoh Penggunaan Traps Populer
 
 #### A. Traps Properti Dasar (`get`, `set`, `has`, `deleteProperty`)
+
 Kelompok trap yang paling sering digunakan untuk pengamanan data, validasi, dan masking properti:
 
 ```javascript
@@ -90,15 +92,16 @@ const handlerDasar = {
     }
     delete target[prop];
     return true;
-  }
+  },
 };
 
 const proxyAkun = new Proxy(akun, handlerDasar);
-console.log('sandi' in proxyAkun);      // false (Disembunyikan!)
-delete proxyAkun.username;             // 💥 Error: Properti 'username' dilarang dihapus!
+console.log('sandi' in proxyAkun); // false (Disembunyikan!)
+delete proxyAkun.username; // 💥 Error: Properti 'username' dilarang dihapus!
 ```
 
 #### B. Traps Fungsi & Konstruktor (`apply`, `construct`)
+
 Digunakan jika objek target adalah sebuah **Function** atau **Class**:
 
 ```javascript
@@ -112,7 +115,7 @@ const handlerFungsi = {
     console.log(`[AUDIT]: Memanggil fungsi dengan argumen:`, argList);
     const hasil = target.apply(thisArg, argList);
     return hasil * 2; // Memodifikasi hasil output
-  }
+  },
 };
 
 const proxyKali = new Proxy(kali, handlerFungsi);
@@ -120,6 +123,7 @@ console.log(proxyKali(3, 4)); // [AUDIT] -> Output: 24 (hasil 12 x 2)
 ```
 
 #### C. Trap Kunci Properti (`ownKeys`)
+
 Mencegah properti sensitif bocor saat objek di-loop dengan `Object.keys()` atau `for...in`:
 
 ```javascript
@@ -128,8 +132,10 @@ const userRahasia = { nama: 'Joko', token: 'xyz-999', pin: 1234 };
 const handlerKeys = {
   ownKeys(target) {
     // Hanya tampilkan kunci yang BUKAN 'token' dan 'pin'
-    return Object.keys(target).filter(key => key !== 'token' && key !== 'pin');
-  }
+    return Object.keys(target).filter(
+      (key) => key !== 'token' && key !== 'pin'
+    );
+  },
 };
 
 const proxyRahasia = new Proxy(userRahasia, handlerKeys);
@@ -140,7 +146,7 @@ console.log(Object.keys(proxyRahasia)); // [ 'nama' ] (token & pin aman tersembu
 
 ### 4. Fitur Khusus: `Proxy.revocable(target, handler)`
 
-Menghasilkan objek `{ proxy, revoke }` di mana akses Proxy dapat **dicabut total kapan saja** dengan memanggil fungsi `revoke()`. 
+Menghasilkan objek `{ proxy, revoke }` di mana akses Proxy dapat **dicabut total kapan saja** dengan memanggil fungsi `revoke()`.
 
 Setelah `revoke()` dipanggil, setiap interaksi lanjutan ke proxy akan langsung melempar `TypeError: Cannot perform 'get' on a proxy that has been revoked`. Sangat berguna untuk memberikan izin akses data sementara yang dapat dimatikan seketika demi keamanan.
 
@@ -170,7 +176,9 @@ const handler = {
   set(target, property, value) {
     if (property === 'umur') {
       if (typeof value !== 'number' || value <= 0) {
-        throw new Error('Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif!');
+        throw new Error(
+          'Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif!'
+        );
       }
     }
 
@@ -216,7 +224,6 @@ Gagal update umur: Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif
 ---
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
-
 
 ### 🏢 Real-World Use Case
 

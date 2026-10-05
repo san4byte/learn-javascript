@@ -1,9 +1,10 @@
 # 07 - Date (Epoch Timestamp, ISO 8601, Parsing, Getter dan Setter)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami representasi waktu dan penanggalan berbasis **Unix Epoch Timestamp** (1 Januari 1970 UTC).
-> * **Kapan Digunakan**: Mampu menginstansiasi objek `Date` menggunakan 4 cara konstruktor yang berbeda.
-> * **Aturan Praktis**: Simpan dan kirim data tanggal di API backend selalu dalam format standar string ISO 8601 (`toISOString()`) atau Unix Epoch milidetik.
+>
+> - **Fungsi Utama**: Memahami representasi waktu dan penanggalan berbasis **Unix Epoch Timestamp** (1 Januari 1970 UTC).
+> - **Kapan Digunakan**: Mampu menginstansiasi objek `Date` menggunakan 4 cara konstruktor yang berbeda.
+> - **Aturan Praktis**: Simpan dan kirim data tanggal di API backend selalu dalam format standar string ISO 8601 (`toISOString()`) atau Unix Epoch milidetik.
 
 ## 1. 🎯 Tujuan Belajar
 
@@ -72,7 +73,11 @@ console.log('--- 1. Instansiasi Tanggal & Pembacaan Komponen (Getter) ---');
 const tanggalMulai = new Date(2026, 7, 17, 11);
 console.log('Objek Date Mulai             :', tanggalMulai.toISOString());
 console.log('Komponen Tahun (getFullYear) :', tanggalMulai.getFullYear());
-console.log('Komponen Bulan (getMonth 0-11):', tanggalMulai.getMonth(), '(7 = Agustus)');
+console.log(
+  'Komponen Bulan (getMonth 0-11):',
+  tanggalMulai.getMonth(),
+  '(7 = Agustus)'
+);
 console.log('Komponen Tanggal (getDate)   :', tanggalMulai.getDate());
 
 console.log('\n--- 2. Manipulasi Tanggal dengan Setter (Auto-Rollover) ---');
@@ -82,7 +87,10 @@ const tanggalKadaluarsa = new Date(tanggalMulai);
 tanggalKadaluarsa.setDate(tanggalKadaluarsa.getDate() + 30);
 
 console.log('Format ISO 8601              :', tanggalKadaluarsa.toISOString());
-console.log('Format Lokal Indonesia       :', tanggalKadaluarsa.toLocaleDateString('id-ID'));
+console.log(
+  'Format Lokal Indonesia       :',
+  tanggalKadaluarsa.toLocaleDateString('id-ID')
+);
 
 console.log('\n--- 3. Kalkulasi Selisih Waktu via Epoch Milidetik ---');
 const selisihMilidetik = tanggalKadaluarsa.getTime() - tanggalMulai.getTime();
@@ -113,7 +121,6 @@ Selisih Waktu                : 30 hari
 ---
 
 ## 5. 💡 Panduan Praktis & Studi Kasus
-
 
 ### 🏢 Real-World Use Case
 

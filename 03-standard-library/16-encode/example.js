@@ -18,12 +18,14 @@ const kategori = 'IT / Programming';
 const urlLengkap = `${baseUrl}?q=${encodeURIComponent(kataKunci)}&kategori=${encodeURIComponent(kategori)}`;
 console.log('URL Lengkap Siap Pakai:\n' + urlLengkap);
 
-console.log('\n--- 3. Mengembalikan Nilai dengan decodeURI & decodeURIComponent ---');
-const parameterServer = 'React%20%26%20Node.js%3A%20Panduan%20Pemula%20100%25%20Bagus!';
+console.log(
+  '\n--- 3. Mengembalikan Nilai dengan decodeURI & decodeURIComponent ---'
+);
+const parameterServer =
+  'React%20%26%20Node.js%3A%20Panduan%20Pemula%20100%25%20Bagus!';
 
 // decodeURI: tidak memulihkan karakter reserved (%26, %3A tetap persen)
 console.log('decodeURI            :', decodeURI(parameterServer));
 
 // decodeURIComponent: memulihkan seluruh karakter kembali ke teks asli
 console.log('decodeURIComponent   :', decodeURIComponent(parameterServer));
-
