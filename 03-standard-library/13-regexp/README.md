@@ -1,5 +1,10 @@
 # 13 - RegExp (Pola Regex, Modifiers, Assertions, Character Classes, dan String Match)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami regular expression melalui objek bawaan `RegExp` di JavaScript.
+> * **Kapan Digunakan**: Membedakan cara deklarasi literal (`/.../`) dan konstruktor (`new RegExp()`).
+> * **Aturan Praktis**: Gunakan literal `/pola/` jika pola bersifat statis agar browser mengompilasi regex di awal dengan performa maksimal.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami regular expression melalui objek bawaan `RegExp` di JavaScript.
@@ -11,6 +16,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep & Referensi Lengkap
+
+### 🎭 Analogi Dunia Nyata
+
+> `RegExp` seperti **anjing pelacak kepolisian yang telah dilatih mencium aroma spesifik**: ia tidak peduli apakah target yang Anda cari berwarna biru atau merah; ia hanya mencocokkan jejak pola bentuk yang Anda berikan (misalnya: pola 3 huruf diikuti 4 angka) di antara ribuan tumpukan dokumen.
 
 **Regular Expression (RegExp)** adalah serangkaian karakter yang membentuk pola pencarian (*search pattern*). RegExp digunakan untuk validasi format teks (email, username, nomor HP), pencarian substring tingkat lanjut, serta pembersihan atau penggantian pola teks.
 
@@ -249,11 +258,8 @@ Komentar Disensor         : Website ini lambat dan *** sekali, desainnya ***.
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> `RegExp` seperti **anjing pelacak kepolisian yang telah dilatih mencium aroma spesifik**: ia tidak peduli apakah target yang Anda cari berwarna biru atau merah; ia hanya mencocokkan jejak pola bentuk yang Anda berikan (misalnya: pola 3 huruf diikuti 4 angka) di antara ribuan tumpukan dokumen.
 
 ### 🏢 Real-World Use Case
 
@@ -286,5 +292,5 @@ Komentar Disensor         : Website ini lambat dan *** sekali, desainnya ***.
 
 - ⬅️ **Sebelumnya:** [12 - Symbol](../12-symbol/README.md)
 - ➡️ **Selanjutnya:** [14 - Proxy](../14-proxy/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

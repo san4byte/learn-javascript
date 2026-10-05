@@ -1,5 +1,10 @@
 # 07.9 - Project Perhitungan Volume Dua Kubus
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Menerapkan prinsip Modular Programming dan Dekomposisi Fungsi.
+> * **Kapan Digunakan**: Membuat fungsi pembantu (*helper function*) yang dapat digunakan kembali.
+> * **Aturan Praktis**: Berikan nama parameter yang jelas dan terstandarisasi.
+
 ## 1. 🎯 Tujuan Belajar
 - Menerapkan prinsip Modular Programming dan Dekomposisi Fungsi.
 - Membuat fungsi pembantu (*helper function*) yang dapat digunakan kembali.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Modular programming seperti **merakit balok LEGO**: Daripada mencetak satu patung istana utuh yang kaku, kita membuat balok-balok kecil (fungsi pembantu) yang bisa dirakit menjadi istana, rumah, atau mobil kapan pun kita butuhkan.
+
 Proyek **Perhitungan Volume Dua Kubus** adalah studi kasus klasik untuk memahami bagaimana memecah masalah besar menjadi fungsi-fungsi kecil yang rapi:
 
 ### Alur Masalah:
@@ -59,10 +68,8 @@ Total gabungan volume      : 539
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Modular programming seperti **merakit balok LEGO**: Daripada mencetak satu patung istana utuh yang kaku, kita membuat balok-balok kecil (fungsi pembantu) yang bisa dirakit menjadi istana, rumah, atau mobil kapan pun kita butuhkan.
 
 ### 🏢 Real-World Use Case
 1. **Sistem Perhitungan Pajak E-Commerce**: Fungsi `hitungPajak(nominal)` dipanggil berulang kali saat menghitung pajak barang, pajak ongkos kirim, dan biaya layanan admin.

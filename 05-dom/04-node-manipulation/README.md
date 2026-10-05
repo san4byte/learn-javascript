@@ -1,5 +1,10 @@
 # 04 - DOM Manipulasi Node (Membuat & Menyisipkan Elemen)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami cara membuat elemen HTML baru di memori menggunakan `document.createElement()`.
+> * **Kapan Digunakan**: Mampu menyisipkan elemen baru ke dalam DOM Tree menggunakan `appendChild()` dan `prepend()`.
+> * **Aturan Praktis**: Manfaatkan `DocumentFragment` saat menyisipkan banyak node sekaligus.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami cara membuat elemen HTML baru di memori menggunakan `document.createElement()`.
 - Mampu menyisipkan elemen baru ke dalam DOM Tree menggunakan `appendChild()` dan `prepend()`.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Membuat node baru seperti **merakit bingkai foto baru di gudang**: `createElement` adalah memotong kayu bingkainya di memori. `textContent` adalah memasang foto ke dalam bingkai. Dan `appendChild` adalah menancapkan paku dan menggantungkan bingkai foto tersebut ke dinding ruang tamu (menghubungkan ke DOM Tree).
+
 Selain memodifikasi elemen yang sudah ada di HTML, kita sering kali perlu **membuat elemen baru dari nol secara dinamis** (misal: menambahkan baris baru ke tabel keranjang belanja atau menampilkan postingan baru).
 
 ### Alur 3 Langkah Membuat Node Baru:
@@ -69,10 +78,8 @@ Berhasil menambahkan item prioritas di awal.
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Membuat node baru seperti **merakit bingkai foto baru di gudang**: `createElement` adalah memotong kayu bingkainya di memori. `textContent` adalah memasang foto ke dalam bingkai. Dan `appendChild` adalah menancapkan paku dan menggantungkan bingkai foto tersebut ke dinding ruang tamu (menghubungkan ke DOM Tree).
 
 ### 🏢 Real-World Use Case
 1. **Aplikasi To-Do List**: Membuat elemen `<li>` baru beserta tombol checklist dan tombol hapus setiap kali pengguna menekan tombol 'Tambah Tugas'.
@@ -95,5 +102,5 @@ Berhasil menambahkan item prioritas di awal.
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [03 - DOM Manipulasi Element](../03-element-manipulation/README.md)
 - ➡️ **Selanjutnya:** [05 - DOM Events](../05-dom-events/README.md)
-- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

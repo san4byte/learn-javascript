@@ -1,5 +1,10 @@
 # 07.4 - Closures dan Lexical Scope
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami fase Execution Context: Creation Phase dan Execution Phase.
+> * **Kapan Digunakan**: Memahami konsep Lexical Scope dan definisi mutlak Closure.
+> * **Aturan Praktis**: Manfaatkan Closure untuk melindungi data sensitif agar tidak bisa diubah sembarangan dari luar tanpa melalui fungsi validasi (*setter/getter*).
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami fase Execution Context: Creation Phase dan Execution Phase.
 - Memahami konsep Lexical Scope dan definisi mutlak Closure.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Closure seperti **membawa ransel bekal tamasya saat meninggalkan rumah**: Meskipun Anda sudah berjalan jauh meninggalkan rumah Anda (fungsi luar selesai dieksekusi), Anda tetap membawa dan bisa memakan bekal yang disiapkan dari rumah tersebut di mana pun Anda berada (fungsi dalam mengingat variabel fungsi luar).
+
 **Closure** adalah kombinasi antara sebuah fungsi dan lingkungan leksikal (*lexical environment*) di mana fungsi tersebut dideklarasikan.
 
 Closure terjadi ketika:
@@ -109,10 +118,8 @@ Saldo resmi via cekSaldo()          : Rp 600.000
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Closure seperti **membawa ransel bekal tamasya saat meninggalkan rumah**: Meskipun Anda sudah berjalan jauh meninggalkan rumah Anda (fungsi luar selesai dieksekusi), Anda tetap membawa dan bisa memakan bekal yang disiapkan dari rumah tersebut di mana pun Anda berada (fungsi dalam mengingat variabel fungsi luar).
 
 ### 🏢 Real-World Use Case
 1. **Hook `useState` di React**: Bagaimana React mengingat nilai state komponen antar siklus render diimplementasikan sepenuhnya menggunakan konsep Closure.

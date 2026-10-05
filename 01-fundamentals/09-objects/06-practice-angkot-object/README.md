@@ -1,5 +1,10 @@
 # 09.6 - Latihan Pengelolaan Angkot Berbasis Objek
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Mengintegrasikan Constructor Function, Method, Array, dan Pengkondisian.
+> * **Kapan Digunakan**: Merepresentasikan Angkot nyata menjadi Objek Utuh (Sopir, Trayek, Kas/Pendapatan, Penumpang).
+> * **Aturan Praktis**: Kelompokkan data dan method yang saling terkait ke dalam satu objek utuh (*High Cohesion*).
+
 ## 1. 🎯 Tujuan Belajar
 - Mengintegrasikan Constructor Function, Method, Array, dan Pengkondisian.
 - Merepresentasikan Angkot nyata menjadi Objek Utuh (Sopir, Trayek, Kas/Pendapatan, Penumpang).
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Objek Angkot seperti **sebuah mobil angkot fisik nyata lengkap dengan buku catatan kas sopirnya**: di dalamnya ada sopir di balik kemudi, daftar bangku penumpang di belakang, dan kotak kayu tempat menyimpan uang kembalian dan setoran.
+
 Latihan **Angkot Berbasis Objek** adalah puncak dari pemahaman objek dan logika dasar.
 
 Daripada menyimpan data sopir, penumpang, dan kas dalam variabel-variabel terpisah yang rawan berantakan, kita membungkus seluruh karakteristik angkot ke dalam satu **Constructor Function `Angkot`**:
@@ -97,10 +106,8 @@ Total Kas Akhir: 10000
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Objek Angkot seperti **sebuah mobil angkot fisik nyata lengkap dengan buku catatan kas sopirnya**: di dalamnya ada sopir di balik kemudi, daftar bangku penumpang di belakang, dan kotak kayu tempat menyimpan uang kembalian dan setoran.
 
 ### 🏢 Real-World Use Case
 1. **Sistem Akuntansi Taksi Online (Grab/Gojek)**: Setiap trip perjalanan memiliki status driver, rute penjemputan-tujuan, dan wallet saldo yang bertambah setelah pembayaran transaksi selesai.

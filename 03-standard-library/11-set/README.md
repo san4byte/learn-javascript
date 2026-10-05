@@ -1,5 +1,10 @@
 # 11 - Set (Koleksi Nilai Unik dan Eliminasi Duplikasi)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami struktur data `Set` sebagai himpunan nilai unik tanpa duplikasi.
+> * **Kapan Digunakan**: Membedakan cara kerja dan karakteristik `Set` dibandingkan dengan `Array`.
+> * **Aturan Praktis**: Gunakan kombinasi `[...new Set(arr)]` sebagai cara tercepat dan paling elegan untuk membuang elemen duplikat primitif di JavaScript.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami struktur data `Set` sebagai himpunan nilai unik tanpa duplikasi.
@@ -10,6 +15,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> `Set` seperti **daftar tamu undangan VIP pesta eksklusif**: nama setiap tamu hanya boleh tercatat satu kali di buku tamu. Jika seorang tamu mencoba mendaftar untuk kedua kalinya, panitia akan melihat namanya sudah ada dan menolak pencatatan ganda.
 
 **`Set`** adalah struktur data bawaan ES6 yang merepresentasikan himpunan kumpulan nilai di mana **setiap nilai di dalamnya harus bersifat unik**. Jika Anda mencoba memasukkan nilai yang sudah ada di dalam Set, nilai duplikat tersebut akan diabaikan secara otomatis.
 
@@ -94,11 +103,8 @@ Array Bersih (Bebas Duplikat): [ 'frontend', 'backend', 'devops', 'ui-ux' ]
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> `Set` seperti **daftar tamu undangan VIP pesta eksklusif**: nama setiap tamu hanya boleh tercatat satu kali di buku tamu. Jika seorang tamu mencoba mendaftar untuk kedua kalinya, panitia akan melihat namanya sudah ada dan menolak pencatatan ganda.
 
 ### 🏢 Real-World Use Case
 
@@ -131,5 +137,5 @@ Array Bersih (Bebas Duplikat): [ 'frontend', 'backend', 'devops', 'ui-ux' ]
 
 - ⬅️ **Sebelumnya:** [10 - Map](../10-map/README.md)
 - ➡️ **Selanjutnya:** [12 - Symbol](../12-symbol/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

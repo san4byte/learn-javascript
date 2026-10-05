@@ -1,5 +1,10 @@
 # 02 - Timing Events (setTimeout dan setInterval)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami cara menunda eksekusi kode menggunakan `setTimeout()`.
+> * **Kapan Digunakan**: Memahami cara menjalankan kode berulang secara periodik menggunakan `setInterval()`.
+> * **Aturan Praktis**: Selalu simpan timer ID ke dalam variabel dan bersihkan pada saat komponen di-unmount atau aksi dibatalkan.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami cara menunda eksekusi kode menggunakan `setTimeout()`.
 - Memahami cara menjalankan kode berulang secara periodik menggunakan `setInterval()`.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> **setTimeout** seperti *alarm jam weker di pagi hari*: Anda menyetelnya untuk berdering 1 kali setelah 7 jam. Jika sebelum berdering Anda sudah bangun, Anda bisa menekan tombol cancel (**clearTimeout**). Sedangkan **setInterval** seperti *detak jarum jam dinding*: berbunyi 'tik-tok' secara teratur setiap 1 detik sampai baterainya dicabut (**clearInterval**).
+
 JavaScript menyediakan dua fungsi bawaan untuk mengatur pewaktuan (*scheduling*):
 1. **`setTimeout(callback, delayMs, ...args)`**: Menjalankan fungsi callback satu kali setelah jeda waktu tertentu.
 2. **`setInterval(callback, intervalMs, ...args)`**: Menjalankan fungsi callback berulang kali setiap selang waktu tertentu secara terus-menerus.
@@ -62,10 +71,8 @@ Hitung mundur: 1...
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> **setTimeout** seperti *alarm jam weker di pagi hari*: Anda menyetelnya untuk berdering 1 kali setelah 7 jam. Jika sebelum berdering Anda sudah bangun, Anda bisa menekan tombol cancel (**clearTimeout**). Sedangkan **setInterval** seperti *detak jarum jam dinding*: berbunyi 'tik-tok' secara teratur setiap 1 detik sampai baterainya dicabut (**clearInterval**).
 
 ### 🏢 Real-World Use Case
 1. **Pemberitahuan Toast / Notifikasi Melayang**: Menampilkan pop-up notifikasi 'Data Berhasil Disimpan', lalu menghilangkannya secara otomatis setelah 3 detik menggunakan `setTimeout`.
@@ -91,5 +98,5 @@ Hitung mundur: 1...
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [01 - Asynchronous Intro & Event Loop](../01-event-loop-intro/README.md)
 - ➡️ **Selanjutnya:** [03 - Callbacks dan Callback Hell](../03-callbacks/README.md)
-- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -1,5 +1,10 @@
 # 16 - URL Encoding (encodeURI, encodeURIComponent, decodeURI, dan decodeURIComponent)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep URL Encoding (*Percent-Encoding*) untuk transmisi data aman di internet.
+> * **Kapan Digunakan**: Membedakan fungsi dan peruntukan antara `encodeURI()` dan `encodeURIComponent()`.
+> * **Aturan Praktis**: Gunakan `encodeURIComponent()` untuk setiap nilai parameter query string secara individual.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep URL Encoding (*Percent-Encoding*) untuk transmisi data aman di internet.
 - Membedakan fungsi dan peruntukan antara `encodeURI()` dan `encodeURIComponent()`.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> `encodeURI` seperti **memberi perangko pos resmi pada amplop surat lengkap**: stempel jalan raya, nama kota, dan kode pos (`https://`, `/`, `?`) tidak boleh dicoret karena kurir butuh melihat struktur alamatnya. Sedangkan `encodeURIComponent` seperti **membungkus dokumen rahasia di dalam amplop dengan bubble wrap tebal**: semua isi di dalamnya diikat rapat agar tidak bocor dan tidak mengganggu proses pengiriman surat.
+
 Saat mengirim data melalui URL (alamat web), karakter tertentu seperti spasi, tanda pagar `#`, tanda tanya `?`, atau huruf non-Latin memiliki arti khusus (*reserved characters*) atau tidak didukung oleh protokol HTTP standar. Karakter-karakter tersebut wajib dikonversi menjadi format **Percent-Encoding** (contoh: spasi menjadi `%20`).
 
 JavaScript menyediakan dua pasang fungsi global untuk menangani encoding dan decoding URL:
@@ -83,10 +92,8 @@ decodeURIComponent   : React & Node.js: Panduan Pemula 100% Bagus!
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> `encodeURI` seperti **memberi perangko pos resmi pada amplop surat lengkap**: stempel jalan raya, nama kota, dan kode pos (`https://`, `/`, `?`) tidak boleh dicoret karena kurir butuh melihat struktur alamatnya. Sedangkan `encodeURIComponent` seperti **membungkus dokumen rahasia di dalam amplop dengan bubble wrap tebal**: semua isi di dalamnya diikat rapat agar tidak bocor dan tidak mengganggu proses pengiriman surat.
 
 ### 🏢 Real-World Use Case
 1. **Kueri Pencarian Web (Search Bar)**: Mengamankan kata kunci pencarian yang dimasukkan user yang memuat karakter simbol seperti `&`, `?`, `=`, atau `#`.
@@ -114,5 +121,5 @@ decodeURIComponent   : React & Node.js: Panduan Pemula 100% Bagus!
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [15 - Reflect](../15-reflect/README.md)
 - ➡️ **Selanjutnya:** [17 - Base64](../17-base64/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

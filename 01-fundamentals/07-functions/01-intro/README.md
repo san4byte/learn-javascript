@@ -1,5 +1,10 @@
 # 07.1 - Pengenalan Function (Deklarasi, Pemanggilan & Return)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami fungsi sebagai blok kode mandiri yang dapat digunakan berulang kali (*reusable*).
+> * **Kapan Digunakan**: Mengenal struktur deklarasi fungsi: keyword `function`, nama fungsi, parameter, body, dan `return`.
+> * **Aturan Praktis**: Satu fungsi sebaiknya hanya memiliki **satu tanggung jawab tunggal** (*Single Responsibility Principle*).
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami fungsi sebagai blok kode mandiri yang dapat digunakan berulang kali (*reusable*).
 - Mengenal struktur deklarasi fungsi: keyword `function`, nama fungsi, parameter, body, dan `return`.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Fungsi seperti **mesin pembuat kopi (*coffee maker*)**: Anda memasukkan biji kopi dan air (parameter input), mesin memprosesnya di dalam wadah tertutup (body fungsi), lalu mengeluarkan secangkir kopi hangat ke cangkir Anda (nilai `return`).
+
 **Fungsi (Function)** adalah sub-program berisi kumpulan instruksi logika yang dibungkus dalam satu blok nama untuk menyelesaikan tugas spesifik.
 
 ### Dua Cara Utama Mendefinisikan Fungsi:
@@ -82,10 +91,8 @@ Nilai kembalian fungsi: undefined
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Fungsi seperti **mesin pembuat kopi (*coffee maker*)**: Anda memasukkan biji kopi dan air (parameter input), mesin memprosesnya di dalam wadah tertutup (body fungsi), lalu mengeluarkan secangkir kopi hangat ke cangkir Anda (nilai `return`).
 
 ### 🏢 Real-World Use Case
 1. **Kalkulator Tagihan / Kasir POS**: Fungsi yang menghitung total belanjaan, pajak PPN 11%, dan potongan voucher diskon.

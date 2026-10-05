@@ -1,5 +1,10 @@
 # 01 - Asynchronous Intro & Event Loop Architecture
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami mengapa JavaScript adalah bahasa single-threaded non-blocking.
+> * **Kapan Digunakan**: Memahami arsitektur Event Loop: Call Stack, Web APIs, Callback/Task Queue, dan Microtask Queue.
+> * **Aturan Praktis**: Selalu letakkan kode sinkron yang cepat di Call Stack dan delegasikan tugas I/O (jaringan, file) ke API Asinkron.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami mengapa JavaScript adalah bahasa single-threaded non-blocking.
 - Memahami arsitektur Event Loop: Call Stack, Web APIs, Callback/Task Queue, dan Microtask Queue.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Bayangkan sebuah **Bank**: Call Stack adalah **Teller Bank** yang sedang melayani nasabah. Web API adalah **satpam yang memeriksa berkas di luar**. Saat berkas selesai, nasabah masuk antrean. **Microtask Queue** adalah nasabah dengan *Nomor Antrean Prioritas (VIP)*, sedangkan **Macrotask Queue** adalah nasabah dengan *Antrean Reguler*. Teller (Call Stack) akan selalu menghabiskan semua nasabah VIP sebelum memanggil satu pun nasabah reguler!
+
 JavaScript adalah bahasa **Single-Threaded**, yang berarti ia hanya memiliki **satu Call Stack** dan hanya dapat mengeksekusi satu instruksi dalam satu waktu.
 
 Namun, JavaScript dapat menjalankan operasi yang memakan waktu lama (seperti request HTTP jaringan, membaca timer, atau query database) secara **Asynchronous** (tanpa membekukan antarmuka pengguna). Hal ini dimungkinkan berkat arsitektur **Event Loop**.
@@ -104,10 +113,8 @@ Penjelasan Alur Eksekusi:
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Bayangkan sebuah **Bank**: Call Stack adalah **Teller Bank** yang sedang melayani nasabah. Web API adalah **satpam yang memeriksa berkas di luar**. Saat berkas selesai, nasabah masuk antrean. **Microtask Queue** adalah nasabah dengan *Nomor Antrean Prioritas (VIP)*, sedangkan **Macrotask Queue** adalah nasabah dengan *Antrean Reguler*. Teller (Call Stack) akan selalu menghabiskan semua nasabah VIP sebelum memanggil satu pun nasabah reguler!
 
 ### 🏢 Real-World Use Case
 1. **Menghindari UI Freeze**: Memecah kalkulasi data besar (misal pengolahan 500.000 data CSV) ke dalam microtask/setTimeout agar layar browser tidak macet (*not responding*).
@@ -137,6 +144,7 @@ Penjelasan Alur Eksekusi:
 ---
 
 ## 7. 🧭 Navigasi
+- ⬅️ **Sebelumnya:** [05 - JavaScript DOM](../../05-dom/README.md)
 - ➡️ **Selanjutnya:** [02 - Timing Events (setTimeout & setInterval)](../02-timing-events/README.md)
-- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

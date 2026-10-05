@@ -1,5 +1,10 @@
 # 09.5 - Object Lanjutan: Prototype Inheritance dan Object.create
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep Prototype Inheritance di balik layar JavaScript.
+> * **Kapan Digunakan**: Memahami efisiensi memori dari meletakkan method di dalam Prototype daripada Constructor.
+> * **Aturan Praktis**: Selalu tempatkan method di dalam prototype (atau di dalam tubuh `class`) alih-alih di dalam constructor untuk menghemat memori.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep Prototype Inheritance di balik layar JavaScript.
 - Memahami efisiensi memori dari meletakkan method di dalam Prototype daripada Constructor.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Prototype seperti **cetak biru rancangan pabrik umum**: pabrik menyimpan satu lembar cetak biru petunjuk penggunaan mobil di arsip pusat. Setiap mobil yang dijual ke konsumen tidak perlu membawa pabriknya, melainkan hanya membawa buku referensi yang menunjuk ke cetak biru pusat tersebut.
+
 JavaScript adalah bahasa berbasis **Prototype-based Inheritance** (Pewarisan Berbasis Prototipe).
 
 Setiap objek di JavaScript memiliki properti tersembunyi bernama `[[Prototype]]` (dapat diakses via `__proto__` atau `Object.getPrototypeOf()`) yang menunjuk ke objek prototipe induknya.
@@ -84,10 +93,8 @@ Halo dari MiniBot
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Prototype seperti **cetak biru rancangan pabrik umum**: pabrik menyimpan satu lembar cetak biru petunjuk penggunaan mobil di arsip pusat. Setiap mobil yang dijual ke konsumen tidak perlu membawa pabriknya, melainkan hanya membawa buku referensi yang menunjuk ke cetak biru pusat tersebut.
 
 ### 🏢 Real-World Use Case
 1. **Method Bawaan Array & String**: Kenapa semua array memiliki method `.map()`, `.filter()`, `.push()`? Karena method tersebut disimpan di `Array.prototype`!

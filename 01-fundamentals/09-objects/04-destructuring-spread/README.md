@@ -1,5 +1,10 @@
 # 09.4 - Destructuring Object dan Object Spread Operator
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami sintaks Destructuring Assignment pada Object.
+> * **Kapan Digunakan**: Mampu memberikan nilai default dan mengganti nama variabel (*aliasing*).
+> * **Aturan Praktis**: Gunakan Destructuring pada parameter fungsi untuk menghindari pemanggilan `props.nama`, `props.email` yang berulang-ulang.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami sintaks Destructuring Assignment pada Object.
 - Mampu memberikan nilai default dan mengganti nama variabel (*aliasing*).
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Destructuring object seperti **mengambil barang pesanan online dari dalam kardus paket**: daripada membawa kardus besarnya ke mana-mana, Anda cukup mengambil barang yang Anda butuhkan (buku dan kacamata) dan menyimpannya di saku Anda.
+
 Dua fitur ES6 yang paling sering digunakan dalam pengolahan data Object di industri modern adalah:
 
 ### 1. Destructuring Object
@@ -92,10 +101,8 @@ Pengaturan Kustom : { tema: 'dark', notifikasi: true, bahasa: 'id' }
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Destructuring object seperti **mengambil barang pesanan online dari dalam kardus paket**: daripada membawa kardus besarnya ke mana-mana, Anda cukup mengambil barang yang Anda butuhkan (buku dan kacamata) dan menyimpannya di saku Anda.
 
 ### 🏢 Real-World Use Case
 1. **Props Komponen React**: Hampir 100% komponen fungsi di React menerima input props melalui destructuring: `function Tombol({ label, onClick, variant = 'primary' })`.

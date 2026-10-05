@@ -1,5 +1,10 @@
 # 08.3 - Project Pengelolaan Kursi Penumpang Angkot
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Menerapkan konsep manipulasi Array dalam skenario studi kasus nyata.
+> * **Kapan Digunakan**: Mengimplementasikan fungsi penambahan penumpang (`tambahPenumpang`).
+> * **Aturan Praktis**: Kembalikan array kursi di akhir fungsi (`return kursi`) agar fungsi bersifat prediktif dan konsisten.
+
 ## 1. 🎯 Tujuan Belajar
 - Menerapkan konsep manipulasi Array dalam skenario studi kasus nyata.
 - Mengimplementasikan fungsi penambahan penumpang (`tambahPenumpang`).
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Sistem ini seperti **manajemen loker gym**: saat loker nomor 2 dikosongkan oleh anggota yang pulang, anggota baru yang datang diprioritaskan mengisi loker nomor 2 yang kosong tersebut sebelum manajemen membuka baris loker baru di belakang.
+
 Proyek **Pengelolaan Kursi Penumpang** adalah implementasi studi kasus algoritma dunia nyata:
 
 ### Aturan Bisnis:
@@ -112,10 +121,8 @@ Status Kursi: [ 'Joko', 'Ahmad', 'Siti' ]
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Sistem ini seperti **manajemen loker gym**: saat loker nomor 2 dikosongkan oleh anggota yang pulang, anggota baru yang datang diprioritaskan mengisi loker nomor 2 yang kosong tersebut sebelum manajemen membuka baris loker baru di belakang.
 
 ### 🏢 Real-World Use Case
 1. **Sistem Pemesanan Kursi Bioskop / Kereta Api**: Mengelola status ketersediaan kursi (`Tersedia`, `Terisi`, `Dibatalkan`) secara dinamis.

@@ -1,12 +1,24 @@
 # 02 - String (Instance Methods, Search, Transform, dan Padding)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami properti dan method instance bawaan objek `String` standar.
+> * **Kapan Digunakan**: Menguasai pencarian substring modern: `includes()`, `startsWith()`, `endsWith()`, `indexOf()`, dan `lastIndexOf()`.
+> * **Aturan Praktis**: Gunakan `includes()`, `startsWith()`, dan `endsWith()` untuk pengecekan kondisi teks daripada regex sederhana.
+
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami properti dan method instance bawaan objek `String` standar.\n- Menguasai pencarian substring modern: `includes()`, `startsWith()`, `endsWith()`, `indexOf()`, dan `lastIndexOf()`.\n- Menguasai manipulasi teks: `trim()`, `trimStart()`, `trimEnd()`, `slice()`, `substring()`, `repeat()`, serta `padStart()` / `padEnd()`.\n- Memahami transformasi dan pemecahan teks dengan `replace()`, `replaceAll()`, dan `split()`.
+- Memahami properti dan method instance bawaan objek `String` standar.
+- Menguasai pencarian substring modern: `includes()`, `startsWith()`, `endsWith()`, `indexOf()`, dan `lastIndexOf()`.
+- Menguasai manipulasi teks: `trim()`, `trimStart()`, `trimEnd()`, `slice()`, `substring()`, `repeat()`, serta `padStart()` / `padEnd()`.
+- Memahami transformasi dan pemecahan teks dengan `replace()`, `replaceAll()`, dan `split()`.
 
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> String di JavaScript seperti balok kayu berukir: Anda tidak bisa mengubah satu huruf langsung di balok tersebut (`str[0] = 'X'` tidak akan mengubah apa pun). Jika ingin balok dengan tulisan berbeda, Anda harus memotong atau memahat balok kayu baru.
 
 Tipe data primitif string di JavaScript dibungkus secara otomatis oleh objek bawaan **`String`** (_auto-boxing_) saat kita memanggil method atau propertinya. Seluruh string di JavaScript bersifat **immutable** (tidak dapat diubah langsung di memori; setiap manipulasi menghasilkan string baru).
 
@@ -99,32 +111,39 @@ Nomor Lebih dari 5 Digit             : INV-ELEKTRONIK-4279977
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> String di JavaScript seperti balok kayu berukir: Anda tidak bisa mengubah satu huruf langsung di balok tersebut (`str[0] = 'X'` tidak akan mengubah apa pun). Jika ingin balok dengan tulisan berbeda, Anda harus memotong atau memahat balok kayu baru.
 
 ### 🏢 Real-World Use Case
 
-1. **Validasi Domain Email**: Memeriksa ekstensi domain organisasi menggunakan `email.endsWith('@perusahaan.com')`.\n2. **Penomoran Faktur / ID Unik**: Menghasilkan ID serial terformat rapi seperti `USER-00001` dengan `id.padStart(5, '0')`.\n3. **Sanitasi Input Pengguna**: Menghapus spasi tidak disengaja sebelum data form dikirimkan ke server database menggunakan `trim()`.
+1. **Validasi Domain Email**: Memeriksa ekstensi domain organisasi menggunakan `email.endsWith('@perusahaan.com')`.
+2. **Penomoran Faktur / ID Unik**: Menghasilkan ID serial terformat rapi seperti `USER-00001` dengan `id.padStart(5, '0')`.
+3. **Sanitasi Input Pengguna**: Menghapus spasi tidak disengaja sebelum data form dikirimkan ke server database menggunakan `trim()`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Mengira `replace()` mengubah semua kemunculan string**: `str.replace('a', 'b')` hanya mengganti huruf 'a' yang pertama ditemukan. Gunakan `replaceAll()` jika ingin mengubah semuanya.\n* **Mencoba memutasi string via indeks**: `str[0] = 'B'` tidak akan melempar error di non-strict mode tetapi nilainya tidak akan pernah berubah (silent failure).\n* **Menggunakan `substring()` alih-alih `slice()`**: `substring()` tidak mendukung indeks negatif dan membalik parameter secara membingungkan jika `start > end`. Utamakan `slice()`.
+- **Mengira `replace()` mengubah semua kemunculan string**: `str.replace('a', 'b')` hanya mengganti huruf 'a' yang pertama ditemukan. Gunakan `replaceAll()` jika ingin mengubah semuanya.
+* **Mencoba memutasi string via indeks**: `str[0] = 'B'` tidak akan melempar error di non-strict mode tetapi nilainya tidak akan pernah berubah (silent failure).
+* **Menggunakan `substring()` alih-alih `slice()`**: `substring()` tidak mendukung indeks negatif dan membalik parameter secara membingungkan jika `start > end`. Utamakan `slice()`.
 
 ### 🌟 Best Practice
 
-- Gunakan `includes()`, `startsWith()`, dan `endsWith()` untuk pengecekan kondisi teks daripada regex sederhana.\n* Gunakan `replaceAll()` untuk mengganti substring statis tanpa perlu membuat objek RegExp dengan flag global `/g`.\n* Selalu lakukan `.trim()` pada data input string dari user sebelum diproses atau disimpan ke database.
+- Gunakan `includes()`, `startsWith()`, dan `endsWith()` untuk pengecekan kondisi teks daripada regex sederhana.
+* Gunakan `replaceAll()` untuk mengganti substring statis tanpa perlu membuat objek RegExp dengan flag global `/g`.
+* Selalu lakukan `.trim()` pada data input string dari user sebelum diproses atau disimpan ke database.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
 
-1. Buat fungsi `sensorKataKasar(kalimat, kataKasar)` yang mengganti setiap kemunculan kata kasar di dalam kalimat menjadi `***` menggunakan `replaceAll()`.\n2. Buat fungsi `formatWaktu(jam, menit, detik)` yang menerima 3 integer dan mengembalikan format waktu digital `HH:MM:SS` menggunakan `padStart(2, '0')`.
+1. Buat fungsi `sensorKataKasar(kalimat, kataKasar)` yang mengganti setiap kemunculan kata kasar di dalam kalimat menjadi `***` menggunakan `replaceAll()`.
+2. Buat fungsi `formatWaktu(jam, menit, detik)` yang menerima 3 integer dan mengembalikan format waktu digital `HH:MM:SS` menggunakan `padStart(2, '0')`.
 
 ---
 
 ## 7. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [01 - Number](../01-number/README.md)\n- ➡️ **Selanjutnya:** [03 - Array](../03-array/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [01 - Number](../01-number/README.md)
+- ➡️ **Selanjutnya:** [03 - Array](../03-array/README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

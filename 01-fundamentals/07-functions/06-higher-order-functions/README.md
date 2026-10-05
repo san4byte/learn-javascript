@@ -1,5 +1,10 @@
 # 07.6 - Higher-Order Functions: Filter, Map, dan Reduce
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami definisi Higher-Order Function (fungsi yang menerima atau mengembalikan fungsi).
+> * **Kapan Digunakan**: Menguasai `filter()` untuk menyaring data array.
+> * **Aturan Praktis**: Gunakan gaya *Functional Programming* (`filter`, `map`, `reduce`) alih-alih perulangan for konvensional untuk kode yang lebih mudah dibaca dan bebas mutasi (*immutable*).
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami definisi Higher-Order Function (fungsi yang menerima atau mengembalikan fungsi).
 - Menguasai `filter()` untuk menyaring data array.
@@ -10,6 +15,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Bayangkan sebuah **pabrik pengolahan buah**: `filter()` adalah **mesin penyortir** yang membuang buah busuk dan meloloskan buah segar. `map()` adalah **mesin pengupas** yang mengubah setiap buah utuh menjadi buah potong. Dan `reduce()` adalah **mesin blender** yang menyatukan semua potongan buah menjadi segelas jus sari buah tunggal.
+
 **Higher-Order Function (HOF)** adalah fungsi yang beroperasi pada fungsi lain, baik dengan cara **menerima fungsi sebagai argumen** maupun **mengembalikan fungsi sebagai hasilnya**.
 
 Di JavaScript modern, tiga Higher-Order Function bawaan Array yang paling sering digunakan adalah:
@@ -86,10 +95,8 @@ Total Belanja Elektronik: Rp 15.300.000
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Bayangkan sebuah **pabrik pengolahan buah**: `filter()` adalah **mesin penyortir** yang membuang buah busuk dan meloloskan buah segar. `map()` adalah **mesin pengupas** yang mengubah setiap buah utuh menjadi buah potong. Dan `reduce()` adalah **mesin blender** yang menyatukan semua potongan buah menjadi segelas jus sari buah tunggal.
 
 ### 🏢 Real-World Use Case
 1. **Menghitung Total Belanja di Keranjang (E-Commerce)**: Menjumlahkan `harga * qty` seluruh item di cart menggunakan `reduce()`.

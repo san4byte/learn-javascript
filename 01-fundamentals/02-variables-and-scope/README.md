@@ -1,5 +1,10 @@
 # 02 - Variabel dan Scope (var, let, const, Hoisting & TDZ)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami perbedaan fundamental antara deklarasi `var`, `let`, dan `const`.
+> * **Kapan Digunakan**: Memahami konsep Hoisting dan Temporal Dead Zone (TDZ).
+> * **Aturan Praktis**: Gunakan prinsip default: **Gunakan `const` untuk semua variabel secara default**.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami perbedaan fundamental antara deklarasi `var`, `let`, dan `const`.
 - Memahami konsep Hoisting dan Temporal Dead Zone (TDZ).
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> `var` seperti **rumah tanpa pagar**: siapapun di luar ruangan bisa melihat dan mengubah perabot di dalamnya secara tidak sengaja. Sedangkan `let` dan `const` seperti **kamar tidur pribadi terkunci**: apapun yang Anda taruh di dalam kamar hanya bisa diakses oleh orang di dalam kamar tersebut.
+
 Variabel adalah wadah penyimpanan nilai di dalam memori komputer. Di JavaScript modern, kita memiliki tiga cara mendeklarasikannya:
 
 ### Perbandingan 3 Deklarasi:
@@ -105,10 +114,8 @@ Array setelah dimutasi : [ 80, 90, 95 ]
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> `var` seperti **rumah tanpa pagar**: siapapun di luar ruangan bisa melihat dan mengubah perabot di dalamnya secara tidak sengaja. Sedangkan `let` dan `const` seperti **kamar tidur pribadi terkunci**: apapun yang Anda taruh di dalam kamar hanya bisa diakses oleh orang di dalam kamar tersebut.
 
 ### 🏢 Real-World Use Case
 1. **Looping Asinkron**: Menggunakan `for (let i = 0; i < 5; i++)` memastikan nilai `i` terisolasi di setiap putaran loop, mencegah bug klasik di mana `setTimeout` di dalam loop selalu mencetak angka 5 jika memakai `var`.

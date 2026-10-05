@@ -1,11 +1,23 @@
 # 04 - Asynchronous Paralel (Promise.all/allSettled) dan AbortController
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami perbedaan eksekusi asinkron Sekuensial (satu per satu) vs Paralel (bersamaan).
+> * **Kapan Digunakan**: Mampu menggunakan `Promise.all` dan `Promise.allSettled` sesuai kebutuhan skenario proyek.
+> * **Aturan Praktis**: Selalu sediakan timeout otomatis menggunakan `AbortSignal.timeout(5000)` agar request tidak menggantung selamanya saat jaringan internet user lambat.
+
 ## 1. 🎯 Tujuan Belajar
-- Memahami perbedaan eksekusi asinkron Sekuensial (satu per satu) vs Paralel (bersamaan).\n- Mampu menggunakan `Promise.all` dan `Promise.allSettled` sesuai kebutuhan skenario proyek.\n- Memahami bahaya Race Condition pada input pencarian live (Search Autocomplete).\n- Menguasai `AbortController` untuk membatalkan request HTTP `fetch` yang sudah tidak dibutuhkan.
+- Memahami perbedaan eksekusi asinkron Sekuensial (satu per satu) vs Paralel (bersamaan).
+- Mampu menggunakan `Promise.all` dan `Promise.allSettled` sesuai kebutuhan skenario proyek.
+- Memahami bahaya Race Condition pada input pencarian live (Search Autocomplete).
+- Menguasai `AbortController` untuk membatalkan request HTTP `fetch` yang sudah tidak dibutuhkan.
 
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> **Eksekusi Sekuensial** seperti Anda memesan burger di kasir, menunggu burger matang, baru kemudian memesan es teh (lama). **Promise.all** seperti memesan burger dan es teh sekaligus ke dua pelayan berbeda. Sedangkan **AbortController** seperti tombol 'Batalkan Pesanan' di aplikasi ojek online ketika driver belum berangkat.
+
 Dalam pengembangan aplikasi web skala produksi, hampir semua halaman membutuhkan pengambilan data dari lebih dari satu endpoint API (misalnya: data profil user, data notifikasi, dan data daftar pesanan).
 
 ### 1. Masalah Eksekusi Sekuensial (Sequential Await)
@@ -161,10 +173,8 @@ Request berhasil dibatalkan secara aman tanpa membocorkan memori.
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> **Eksekusi Sekuensial** seperti Anda memesan burger di kasir, menunggu burger matang, baru kemudian memesan es teh (lama). **Promise.all** seperti memesan burger dan es teh sekaligus ke dua pelayan berbeda. Sedangkan **AbortController** seperti tombol 'Batalkan Pesanan' di aplikasi ojek online ketika driver belum berangkat.
 
 ### 🏢 Real-World Use Case
 1. **Halaman Dashboard**: Memuat data profil user, grafik penjualan, dan saldo rekening secara paralel menggunakan `Promise.all`.
@@ -188,4 +198,7 @@ Request berhasil dibatalkan secara aman tanpa membocorkan memori.
 ---
 
 ## 7. 🧭 Navigasi
-- ⬅️ **Sebelumnya:** [03 - URL dan FormData API](../03-url-and-formdata/README.md)\n- ➡️ **Selanjutnya:** [05 - Debounce dan Throttle Optimization](../05-debounce-and-throttle/README.md)\n- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [03 - URL dan FormData API](../03-url-and-formdata/README.md)
+- ➡️ **Selanjutnya:** [05 - Debounce dan Throttle Optimization](../05-debounce-and-throttle/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

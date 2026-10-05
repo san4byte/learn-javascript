@@ -1,5 +1,10 @@
 # 05.2 - Pengkondisian Lanjutan: Else If dan Switch Case
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Mampu menangani percabangan dengan lebih dari dua kondisi menggunakan `else if`.
+> * **Kapan Digunakan**: Memahami struktur pengkondisian `switch...case`.
+> * **Aturan Praktis**: Gunakan `else if` jika kondisi berupa rentang (range), relasional (`>`, `<`), atau gabungan logika kompleks (`&&`, `||`).
+
 ## 1. 🎯 Tujuan Belajar
 - Mampu menangani percabangan dengan lebih dari dua kondisi menggunakan `else if`.
 - Memahami struktur pengkondisian `switch...case`.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> `else if` seperti **pengukur tinggi badan di wahana bermain**: petugas mengecek apakah tinggi Anda di atas 150cm, jika tidak dicek apakah di atas 120cm, dst. Sedangkan `switch case` seperti **tombol lift di gedung perkantoran**: Anda menekan tombol lantai 3, lift langsung meluncur ke lantai 3.
+
 Ketika sebuah keputusan membutuhkan evaluasi lebih dari dua pilihan kemungkinan, kita dapat menggunakan **`else if`** atau **`switch...case`**.
 
 ### 1. `else if`
@@ -77,10 +86,8 @@ Kode Menu: B02 -> Pesanan: Paket Ayam Bakar Madu
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> `else if` seperti **pengukur tinggi badan di wahana bermain**: petugas mengecek apakah tinggi Anda di atas 150cm, jika tidak dicek apakah di atas 120cm, dst. Sedangkan `switch case` seperti **tombol lift di gedung perkantoran**: Anda menekan tombol lantai 3, lift langsung meluncur ke lantai 3.
 
 ### 🏢 Real-World Use Case
 1. **Penanganan HTTP Status Code**:

@@ -1,18 +1,31 @@
 # 01 - Constructor Function
 
-## Tujuan Belajar
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Membuat cetak biru (*blueprint*) objek sebelum adanya sintaks ES6 `class`.
+> * **Kapan Digunakan**: Saat perlu membuat banyak instance objek dengan struktur properti dan method yang seragam.
+> * **Aturan Praktis**: Gunakan PascalCase untuk nama fungsi dan selalu panggil menggunakan keyword `new`.
+
+## 1. 🎯 Tujuan Belajar
 - Memahami konsep dasar Object-Oriented Programming (OOP) di JavaScript.
 - Membuat objek menggunakan Constructor Function (standar sebelum ES6 Class).
 - Menggunakan keyword `new` untuk instansiasi objek.
 - Mengetahui cara mendefinisikan properti dan method di dalam Constructor Function.
 
-## Penjelasan Konsep
+---
+
+## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Constructor Function seperti **cetakan kue martabak**: Cetakannya sama (`Person`), tetapi tiap adonan kue yang dicetak (`new Person(...)`) memiliki topping atau rasa yang berbeda (Joko, Samsul).
+
 Sebelum ES6 memperkenalkan kata kunci `class`, JavaScript menggunakan **Constructor Function** untuk membuat cetak biru (*blueprint*) objek:
 1. **Penamaan**: Konvensi standar nama fungsi diawali huruf kapital (*PascalCase*), contoh: `Person`, `Mahasiswa`.
 2. **Keyword `this`**: Menunjuk ke instance objek baru yang sedang dibuat.
 3. **Keyword `new`**: Wajib digunakan saat memanggil constructor function. Jika dipanggil tanpa `new`, fungsi tidak mengembalikan objek baru melainkan mengubah variabel global/window.
 
-## Contoh Kode
+---
+
+## 3. 💻 Contoh Kode (`example.js`)
 ```javascript
 // Penjelasan lengkap dapat dibaca pada README.md
 // Pengenalan Constructor Function (Cara membuat cetak biru objek sebelum ES6 Class)
@@ -36,7 +49,9 @@ console.log(samsul);
 samsul.sayHello("Budi");
 ```
 
-### Output
+---
+
+## 4. 🖥️ Output yang Diharapkan
 ```text
 Person { firstName: 'Joko', lastName: 'Santoso', sayHello: [Function] }
 Halo Budi, nama saya Joko Santoso
@@ -44,22 +59,29 @@ Person { firstName: 'Samsul', lastName: 'Arifin', sayHello: [Function] }
 Halo Budi, nama saya Samsul Arifin
 ```
 
-## Penjelasan Tambahan
-- **Analogi Kehidupan Sehari-hari**:
-  Constructor Function seperti cetakan kue martabak. Cetakannya sama (`Person`), tetapi tiap adonan kue yang dicetak (`new Person(...)`) memiliki topping atau rasa yang berbeda (Joko, Samsul).
-- **Kelemahan Method di dalam Constructor Function**:
-  Jika kita membuat method langsung di dalam `this.sayHello = function()`, setiap kali kita membuat objek baru dengan `new`, fungsi tersebut akan disalin ulang ke memori. Jika ada 10.000 objek, maka ada 10.000 salinan fungsi yang sama di RAM! Masalah ini diselesaikan oleh **Prototype** pada materi berikutnya.
-- **Kesalahan Umum Pemula**:
-  Lupa menulis kata kunci `new` (`const joko = Person("Joko", "Santoso")`). Akibatnya nilai kembaliannya adalah `undefined` dan `this` mencemari variabel global window.
+---
 
-## Latihan
+## 5. 💡 Panduan Praktis & Studi Kasus
+### 🏢 Real-World Use Case
+Menstandarkan format data model entity pengguna/produk sebelum sistem class modern populer.
+
+### ⚠️ Common Pitfalls (Jebakan Umum)
+* **Lupa Menulis Keyword `new`**: Jika dipanggil tanpa `new` (`const u = Person()`), fungsi mengembalikan `undefined` dan kata kunci `this` mencemari variabel global `window`.
+* **Duplikasi Method di RAM**: Menaruh method di dalam `this.methodName = function(){}` membuat fungsi diduplikasi di memori setiap kali `new` dipanggil. Masalah ini dipecahkan oleh Prototype.
+
+### 🌟 Best Practice
+* Gunakan PascalCase (huruf kapital di awal) untuk membedakan constructor function dari fungsi biasa.
+* Pindahkan method ke `Person.prototype` atau gunakan sintaks ES6 `class` untuk efisiensi memori.
+
+---
+
+## 6. ✍️ Latihan Mandiri
 1. Buat Constructor Function `Product(name, price)` dengan method `formatRupiah()` yang mencetak harga dalam format mata uang IDR.
 2. Buat Constructor Function `Mobil(merek, warna)` dan buat 2 objek mobil yang berbeda menggunakan keyword `new`.
 
-## Ringkasan Poin Penting
-- Constructor Function adalah cetak biru objek klasik di JavaScript.
-- Gunakan PascalCase untuk penamaan constructor function.
-- Wajib menggunakan kata kunci `new` untuk membuat instance objek baru.
-
 ---
-[Materi Selanjutnya: 02 - Prototype ➡️](../02-prototype/README.md)
+
+## 7. 🧭 Navigasi
+- ➡️ **Selanjutnya:** [02 - Prototype Inheritance](../02-prototype/README.md)
+- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

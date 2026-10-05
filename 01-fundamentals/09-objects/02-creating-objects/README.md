@@ -1,5 +1,10 @@
 # 09.2 - Tiga Cara Membuat Object (Literal, Function, Constructor)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami pembuatan objek menggunakan Object Literal.
+> * **Kapan Digunakan**: Memahami pola Function Declaration / Factory Function.
+> * **Aturan Praktis**: Gunakan huruf kapital di awal (*PascalCase*) untuk nama Constructor Function agar Anda dan tim selalu ingat untuk menambahkan `new`.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami pembuatan objek menggunakan Object Literal.
 - Memahami pola Function Declaration / Factory Function.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Object Literal seperti **membuat kue manual dari nol di dapur untuk dimakan sendiri**. Factory Function seperti **alat cetakan kue martabak**: adonan dimasukkan, kue dicetak dan disajikan. Constructor Function seperti **pabrik cetak massal otomatis berlisensi**: setiap produk yang keluar dari pabrik dijamin memiliki stempel resmi (*instanceof*).
+
 Di JavaScript, terdapat 3 pendekatan klasik untuk membuat objek:
 
 ### 1. Object Literal `{}`
@@ -87,10 +96,8 @@ Apakah mhs3 instance dari Mahasiswa? true
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Object Literal seperti **membuat kue manual dari nol di dapur untuk dimakan sendiri**. Factory Function seperti **alat cetakan kue martabak**: adonan dimasukkan, kue dicetak dan disajikan. Constructor Function seperti **pabrik cetak massal otomatis berlisensi**: setiap produk yang keluar dari pabrik dijamin memiliki stempel resmi (*instanceof*).
 
 ### 🏢 Real-World Use Case
 1. **Library & Framework Lama**: Sebelum ES6 Class, hampir seluruh library besar (seperti jQuery, Express, Three.js) dibangun menggunakan Constructor Function.

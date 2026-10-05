@@ -1,5 +1,10 @@
 # 02 - DOM Selection (Querying Elements)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami cara menyeleksi elemen HTML dari DOM menggunakan 5 method seleksi utama.
+> * **Kapan Digunakan**: Memahami perbedaan return value: Single Element vs HTMLCollection vs NodeList.
+> * **Aturan Praktis**: Standar industri modern merekomendasikan penggunaan **`querySelector()`** dan **`querySelectorAll()`** karena fleksibel mendukung sintaks CSS Selector lengkap (`#id`, `.class`, `div > p`, `[data-status="active"]`).
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami cara menyeleksi elemen HTML dari DOM menggunakan 5 method seleksi utama.
 - Memahami perbedaan return value: Single Element vs HTMLCollection vs NodeList.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> DOM Selection seperti **sistem pencarian buku di perpustakaan**: `getElementById` seperti mencari buku berdasarkan nomor barcode unik (pasti dapat 1 buku). `querySelector` seperti mencari buku pertama yang bersampul biru. Sedangkan `querySelectorAll` seperti mengambil seluruh buku di rak nomor 3 ke dalam satu keranjang belanja.
+
 Sebelum kita bisa mengubah teks, warna, atau menambahkan aksi klik pada sebuah elemen HTML, kita harus **menyeleksi** (*query*) elemen tersebut terlebih dahulu.
 
 ### 5 Method DOM Selection:
@@ -75,10 +84,8 @@ Ditemukan 3 item daftar:
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> DOM Selection seperti **sistem pencarian buku di perpustakaan**: `getElementById` seperti mencari buku berdasarkan nomor barcode unik (pasti dapat 1 buku). `querySelector` seperti mencari buku pertama yang bersampul biru. Sedangkan `querySelectorAll` seperti mengambil seluruh buku di rak nomor 3 ke dalam satu keranjang belanja.
 
 ### 🏢 Real-World Use Case
 1. **Validasi Form Input**: Menyeleksi input email dan password: `const emailInput = document.querySelector('#input-email')`.
@@ -102,5 +109,5 @@ Ditemukan 3 item daftar:
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [01 - Pengenalan DOM](../01-intro/README.md)
 - ➡️ **Selanjutnya:** [03 - DOM Manipulasi Element](../03-element-manipulation/README.md)
-- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

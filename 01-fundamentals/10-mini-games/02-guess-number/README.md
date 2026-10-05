@@ -1,5 +1,10 @@
 # 10.2 - Game Interaktif: Tebak Angka (1 sampai 10)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Membangun logika permainan tebak angka acak dengan petunjuk 'Terlalu Tinggi' atau 'Terlalu Rendah'.
+> * **Kapan Digunakan**: Mengelola batasan jumlah kesempatan tebakan (kuota tebakan).
+> * **Aturan Praktis**: Pastikan angka acak integer dihasilkan dengan formula standar: `Math.floor(Math.random() * 10) + 1`.
+
 ## 1. 🎯 Tujuan Belajar
 - Membangun logika permainan tebak angka acak dengan petunjuk 'Terlalu Tinggi' atau 'Terlalu Rendah'.
 - Mengelola batasan jumlah kesempatan tebakan (kuota tebakan).
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Permainan ini melatih konsep **Binary Search**: strategi terbaik adalah selalu menebak angka tengah (misal angka 5). Jika terlalu rendah, pemain tahu pasti angka rahasia ada di rentang 6-10, sehingga separuh kemungkinan langsung tereliminasi.
+
 Permainan **Tebak Angka** adalah mini-game di mana komputer memikirkan satu angka rahasia antara 1 sampai 10.
 
 Pemain diberikan kesempatan terbatas (misal 3 kali kesempatan) untuk menebak angka tersebut:
@@ -77,10 +86,8 @@ Anda memiliki 3 kali kesempatan tebakan.
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Permainan ini melatih konsep **Binary Search**: strategi terbaik adalah selalu menebak angka tengah (misal angka 5). Jika terlalu rendah, pemain tahu pasti angka rahasia ada di rentang 6-10, sehingga separuh kemungkinan langsung tereliminasi.
 
 ### 🏢 Real-World Use Case
 1. **Verifikasi Keamanan Captcha / Percobaan PIN**: Sistem membatasi percobaan login PIN maksimal 3 kali sebelum akun dibekukan sementara.

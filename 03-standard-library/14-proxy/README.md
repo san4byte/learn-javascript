@@ -1,5 +1,10 @@
 # 14 - Proxy (Metaprogramming, Interceptor Handler, Get dan Set Traps)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep **Metaprogramming** di JavaScript menggunakan objek `Proxy`.
+> * **Kapan Digunakan**: Mampu membuat Proxy dengan mengikat objek target dan objek handler (`new Proxy(target, handler)`).
+> * **Aturan Praktis**: Gunakan Proxy bersamaan dengan `Reflect` bawaan JavaScript agar penanganan operasi default berjalan mulus dan standar.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami konsep **Metaprogramming** di JavaScript menggunakan objek `Proxy`.
@@ -10,6 +15,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> `Proxy` seperti **resepsionis atau satpam di lobi kantor gedung direksi**: orang luar tidak boleh langsung masuk menyelonong ke meja direktur (objek target). Tamu harus lewat satpam terlebih dahulu; satpam akan memeriksa identitas tamu, memeriksa apakah barang yang dibawa aman (validasi `set`), dan jika tamu mencari ruangan yang tidak ada, satpam memberikan petunjuk sopan (default fallback `get`).
 
 **`Proxy`** adalah fitur tingkat lanjut di JavaScript (ES6) yang memungkinkan kita membungkus (_wrap_) suatu objek target dan mencegat (_intercept_) operasi mendasar objek tersebut, seperti pembacaan properti (_get_), penulisan properti (_set_), penghapusan properti (_delete_), hingga pemanggilan fungsi (_apply_).
 
@@ -206,11 +215,8 @@ Gagal update umur: Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> `Proxy` seperti **resepsionis atau satpam di lobi kantor gedung direksi**: orang luar tidak boleh langsung masuk menyelonong ke meja direktur (objek target). Tamu harus lewat satpam terlebih dahulu; satpam akan memeriksa identitas tamu, memeriksa apakah barang yang dibawa aman (validasi `set`), dan jika tamu mencari ruangan yang tidak ada, satpam memberikan petunjuk sopan (default fallback `get`).
 
 ### 🏢 Real-World Use Case
 
@@ -244,5 +250,5 @@ Gagal update umur: Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif
 
 - ⬅️ **Sebelumnya:** [13 - RegExp](../13-regexp/README.md)
 - ➡️ **Selanjutnya:** [15 - Reflect](../15-reflect/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

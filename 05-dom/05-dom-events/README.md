@@ -1,5 +1,10 @@
 # 05 - DOM Events (Merespon Aksi Pengguna)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep Event sebagai sinyal bahwa suatu aksi telah terjadi di halaman web.
+> * **Kapan Digunakan**: Memahami 3 cara menangani event: Inline Attribute, DOM Property, dan `addEventListener()`.
+> * **Aturan Praktis**: Selalu gunakan **`addEventListener()`** untuk mendaftarkan event di aplikasi modern.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami konsep Event sebagai sinyal bahwa suatu aksi telah terjadi di halaman web.
@@ -10,6 +15,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> Event seperti **bel pintu rumah**: tombol bel dipasang di luar pagar (_listener_). Ketika tamu menekan tombol bel (_event 'click'_), lonceng berdering di ruang tengah dan pemilik rumah keluar membukakan pintu (_fungsi callback_).
 
 **Event** adalah peristiwa atau interaksi yang terjadi pada halaman web (baik dipicu oleh pengguna seperti klik mouse, ketikan keyboard, maupun oleh browser seperti selesai memuat halaman).
 
@@ -95,11 +104,8 @@ if (typeof document === 'undefined') {
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> Event seperti **bel pintu rumah**: tombol bel dipasang di luar pagar (_listener_). Ketika tamu menekan tombol bel (_event 'click'_), lonceng berdering di ruang tengah dan pemilik rumah keluar membukakan pintu (_fungsi callback_).
 
 ### 🏢 Real-World Use Case
 
@@ -127,5 +133,5 @@ if (typeof document === 'undefined') {
 
 - ⬅️ **Sebelumnya:** [04 - DOM Manipulasi Node](../04-node-manipulation/README.md)
 - ➡️ **Selanjutnya:** [06 - DOM Traversal & Event Bubbling](../06-dom-traversal/README.md)
-- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

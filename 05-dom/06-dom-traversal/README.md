@@ -1,5 +1,10 @@
 # 06 - DOM Traversal dan Teknik Event Delegation
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep penelusuran elemen silsilah keluarga DOM (*DOM Traversal*).
+> * **Kapan Digunakan**: Mengenal navigasi: `parentElement`, `nextElementSibling`, `previousElementSibling`, `children`.
+> * **Aturan Praktis**: Selalu gunakan teknik **Event Delegation** jika Anda mengelola daftar elemen yang jumlahnya banyak atau elemennya dapat bertambah/berkurang secara dinamis.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep penelusuran elemen silsilah keluarga DOM (*DOM Traversal*).
 - Mengenal navigasi: `parentElement`, `nextElementSibling`, `previousElementSibling`, `children`.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Event Bubbling seperti **gelembung udara di dalam air aquarium**: gelembung muncul dari dasar air (elemen anak) dan terus bergerak naik ke permukaan air (elemen induk/document). Event Delegation seperti **satpam di pintu gerbang utama perumahan**: daripada menaruh 1 satpam di setiap pintu 100 rumah, cukup taruh 1 satpam di gerbang utama untuk memeriksa seluruh orang yang masuk.
+
 **DOM Traversal** adalah proses berpindah atau menelusuri node-node lain berdasarkan hubungan kekerabatan (*silsilah*) dari elemen yang sedang kita pilih saat ini:
 * **Induk**: `element.parentElement`
 * **Anak**: `element.children` (hanya element node)
@@ -65,10 +74,8 @@ if (typeof document === 'undefined') {
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Event Bubbling seperti **gelembung udara di dalam air aquarium**: gelembung muncul dari dasar air (elemen anak) dan terus bergerak naik ke permukaan air (elemen induk/document). Event Delegation seperti **satpam di pintu gerbang utama perumahan**: daripada menaruh 1 satpam di setiap pintu 100 rumah, cukup taruh 1 satpam di gerbang utama untuk memeriksa seluruh orang yang masuk.
 
 ### 🏢 Real-World Use Case
 1. **Daftar Pesan Chat / Feed Dinamis**: Pesan chat baru yang masuk secara real-time via WebSocket tidak perlu dipasangi event listener manual satu per satu karena sudah tertangani oleh Event Delegation di kontainer chat.
@@ -90,5 +97,5 @@ if (typeof document === 'undefined') {
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [05 - DOM Events](../05-dom-events/README.md)
 - ➡️ **Selanjutnya:** [07 - Latihan Ubah Warna](../09-practice-color-picker/README.md)
-- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

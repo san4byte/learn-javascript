@@ -1,5 +1,10 @@
 # 05.1 - Pengkondisian: If Else dan Ternary Operator
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep percabangan logika if dan else.
+> * **Kapan Digunakan**: Memahami evaluasi Truthy dan Falsy di JavaScript.
+> * **Aturan Praktis**: Selalu gunakan `===` (triple equals) daripada `==` (double equals) untuk menghindari konversi tipe data implisit (*type coercion*).
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep percabangan logika if dan else.
 - Memahami evaluasi Truthy dan Falsy di JavaScript.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> If-Else seperti **rambu lampu lalu lintas**: jika lampu berwarna hijau (`if`), kendaraan maju; jika tidak hijau (`else`), kendaraan wajib berhenti.
+
 **Pengkondisian (Conditional Flow)** memungkinkan program kita mengambil keputusan dan mengeksekusi blok kode yang berbeda berdasarkan nilai kebenaran suatu kondisi (*Boolean expression*).
 
 ### Struktur Dasar:
@@ -68,10 +77,8 @@ Nilai Siswa: 82 -> Hasil: LULUS DENGAN BAIK
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> If-Else seperti **rambu lampu lalu lintas**: jika lampu berwarna hijau (`if`), kendaraan maju; jika tidak hijau (`else`), kendaraan wajib berhenti.
 
 ### 🏢 Real-World Use Case
 1. **Proteksi Autentikasi Pengguna**: Mengecek `if (user.isLoggedIn)` untuk mengizinkan akses ke halaman profil, atau `else` mengarahkan ke form login.

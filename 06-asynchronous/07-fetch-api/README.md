@@ -1,5 +1,10 @@
 # 05 - Fetch API (HTTP Request Modern)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep HTTP Request: Method (GET, POST), Headers, Status Code, dan Payload.
+> * **Kapan Digunakan**: Menguasai penggunaan `fetch()` bawaan browser & Node.js 18+.
+> * **Aturan Praktis**: Selalu periksa `if (!response.ok)` sebelum memanggil `response.json()`.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep HTTP Request: Method (GET, POST), Headers, Status Code, dan Payload.
 - Menguasai penggunaan `fetch()` bawaan browser & Node.js 18+.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> `fetch()` seperti **pelayan restoran yang membawa buku menu**: Anda meminta makanan ke pelayan (mengirim HTTP request). Pelayan pergi ke dapur (server) dan kembali membawa nampan tertutup (`Response`). Untuk memakannya, Anda harus membuka tutup nampannya terlebih dahulu (**`response.json()`**). Jika koki kehabisan bahan (Error 404), pelayan tetap datang membawa nampan berisi catatan kosong (Promise fulfilled, tapi `response.ok === false`).
+
 `fetch()` adalah Web API modern standar untuk melakukan pertukaran data melalui jaringan internet (*HTTP Request*) dari JavaScript ke server backend.
 
 `fetch()` menggantikan teknologi kuno `XMLHttpRequest` (XHR) dan library luar seperti jQuery Ajax.
@@ -96,10 +105,8 @@ Sukses menyimpan data ke server! Respons ID: 101
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> `fetch()` seperti **pelayan restoran yang membawa buku menu**: Anda meminta makanan ke pelayan (mengirim HTTP request). Pelayan pergi ke dapur (server) dan kembali membawa nampan tertutup (`Response`). Untuk memakannya, Anda harus membuka tutup nampannya terlebih dahulu (**`response.json()`**). Jika koki kehabisan bahan (Error 404), pelayan tetap datang membawa nampan berisi catatan kosong (Promise fulfilled, tapi `response.ok === false`).
 
 ### 🏢 Real-World Use Case
 1. **Menampilkan Katalog Produk E-Commerce**: Mengambil data daftar barang dari server database backend saat halaman pertama dibuka.
@@ -125,5 +132,5 @@ Sukses menyimpan data ke server! Respons ID: 101
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [04 - Promise](../06-promise-concurrency/README.md)
 - ➡️ **Selanjutnya:** [06 - Async dan Await](../08-async-await/README.md)
-- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

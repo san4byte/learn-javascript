@@ -1,5 +1,10 @@
 # 04 - Object (Static Methods: Freeze, Seal, Assign, Values, Keys, Entries)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami kumpulan Static Methods esensial pada fungsi global `Object`.
+> * **Kapan Digunakan**: Menguasai proteksi integritas objek: perbedaan mendalam `Object.freeze()` vs `Object.seal()`.
+> * **Aturan Praktis**: Gunakan `Object.freeze()` untuk seluruh objek konfigurasi global dan enum agar tidak mengalami mutasi tak terduga (_accidental mutation_).
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami kumpulan Static Methods esensial pada fungsi global `Object`.
@@ -10,6 +15,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> `Object.seal()` seperti **dokumen formulir dengan kotak isian yang sudah dikunci**: Anda tidak bisa menambah kolom baru atau merobek kolom yang ada, tetapi Anda masih bisa mengubah isi tulisan di dalam kotak. Sedangkan `Object.freeze()` seperti **batu prasasti yang sudah dipahat semen**: tidak bisa ditambah, tidak bisa dihapus, dan tulisan yang ada tidak bisa diubah sama sekali.
 
 Di samping pembuatan objek menggunakan _object literal_ `{}` atau `new Object()`, JavaScript menyediakan kumpulan **Static Methods** langsung di namespace objek `Object` untuk inspeksi, modifikasi, dan pengamanan struktur data.
 
@@ -122,32 +131,39 @@ Rata-rata Nilai Kurs: Rp 11.401,25
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> `Object.seal()` seperti **dokumen formulir dengan kotak isian yang sudah dikunci**: Anda tidak bisa menambah kolom baru atau merobek kolom yang ada, tetapi Anda masih bisa mengubah isi tulisan di dalam kotak. Sedangkan `Object.freeze()` seperti **batu prasasti yang sudah dipahat semen**: tidak bisa ditambah, tidak bisa dihapus, dan tulisan yang ada tidak bisa diubah sama sekali.
 
 ### 🏢 Real-World Use Case
 
-1. **Konstanta Aplikasi & Enum**: Membekukan kamus status pesanan (`const STATUS = Object.freeze({ PENDING: 'PENDING', SUCCESS: 'SUCCESS' })`) agar nilainya tidak bisa sengaja ditimpa oleh developer lain.\n2. **Integrasi Object ke Map**: Menggunakan `Object.entries(obj)` untuk mengonversi konfigurasi objek lama menjadi struktur `Map` modern.\n3. **Inspeksi Properti Dinamis**: Mengambil seluruh kunci objek API untuk digenerasikan secara otomatis menjadi header tabel di dashboard web.
+1. **Konstanta Aplikasi & Enum**: Membekukan kamus status pesanan (`const STATUS = Object.freeze({ PENDING: 'PENDING', SUCCESS: 'SUCCESS' })`) agar nilainya tidak bisa sengaja ditimpa oleh developer lain.
+2. **Integrasi Object ke Map**: Menggunakan `Object.entries(obj)` untuk mengonversi konfigurasi objek lama menjadi struktur `Map` modern.
+3. **Inspeksi Properti Dinamis**: Mengambil seluruh kunci objek API untuk digenerasikan secara otomatis menjadi header tabel di dashboard web.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Freeze bersifat Shallow**: Jika objek memiliki properti objek anak (`user.alamat.kota`), memanggil `Object.freeze(user)` tidak otomatis membekukan `user.alamat`. Properti `kota` masih bisa diubah!\n* **Nama method lama**: Jangan gunakan istilah non-standar seperti `Object.getPropertyNames()`, nama standar ECMAScript adalah `Object.getOwnPropertyNames()`.\n* **Kegagalan tersembunyi tanpa Strict Mode**: Di lingkungan non-strict, memodifikasi properti yang dibekukan tidak memunculkan error melainkan gagal secara diam-diam (_fail silently_).
+- **Freeze bersifat Shallow**: Jika objek memiliki properti objek anak (`user.alamat.kota`), memanggil `Object.freeze(user)` tidak otomatis membekukan `user.alamat`. Properti `kota` masih bisa diubah!
+* **Nama method lama**: Jangan gunakan istilah non-standar seperti `Object.getPropertyNames()`, nama standar ECMAScript adalah `Object.getOwnPropertyNames()`.
+* **Kegagalan tersembunyi tanpa Strict Mode**: Di lingkungan non-strict, memodifikasi properti yang dibekukan tidak memunculkan error melainkan gagal secara diam-diam (_fail silently_).
 
 ### 🌟 Best Practice
 
-- Gunakan `Object.freeze()` untuk seluruh objek konfigurasi global dan enum agar tidak mengalami mutasi tak terduga (_accidental mutation_).\n* Gunakan `Object.entries()` dikombinasikan dengan perulangan `for (const [kunci, nilai] of Object.entries(obj))` untuk iterasi objek yang sangat bersih.\n* Periksa status proteksi objek menggunakan `Object.isFrozen(obj)` atau `Object.isSealed(obj)` jika diperlukan.
+- Gunakan `Object.freeze()` untuk seluruh objek konfigurasi global dan enum agar tidak mengalami mutasi tak terduga (_accidental mutation_).
+* Gunakan `Object.entries()` dikombinasikan dengan perulangan `for (const [kunci, nilai] of Object.entries(obj))` untuk iterasi objek yang sangat bersih.
+* Periksa status proteksi objek menggunakan `Object.isFrozen(obj)` atau `Object.isSealed(obj)` jika diperlukan.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
 
-1. Buat fungsi `deepFreeze(obj)` rekursif yang dapat membekukan objek beserta seluruh objek bersarang (_nested object_) di dalamnya.\n2. Buat fungsi `hitungRataRataNilai(objNilai)` yang menerima objek `{ matematika: 80, bahasa: 90, ipa: 85 }` dan menghitung rata-rata nilai menggunakan `Object.values()` dan `reduce()`.
+1. Buat fungsi `deepFreeze(obj)` rekursif yang dapat membekukan objek beserta seluruh objek bersarang (_nested object_) di dalamnya.
+2. Buat fungsi `hitungRataRataNilai(objNilai)` yang menerima objek `{ matematika: 80, bahasa: 90, ipa: 85 }` dan menghitung rata-rata nilai menggunakan `Object.values()` dan `reduce()`.
 
 ---
 
 ## 7. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [03 - Array](../03-array/README.md)\n- ➡️ **Selanjutnya:** [05 - JSON](../05-json/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [03 - Array](../03-array/README.md)
+- ➡️ **Selanjutnya:** [05 - JSON](../05-json/README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

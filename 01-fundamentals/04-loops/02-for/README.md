@@ -1,5 +1,10 @@
 # 04.2 - Pengulangan: For Loop
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami sintaks ringkas perulangan `for`.
+> * **Kapan Digunakan**: Mampu menggunakan perulangan `for` untuk iterasi data dengan rentang angka pasti.
+> * **Aturan Praktis**: Gunakan `for` saat jumlah langkah pengulangan sudah diketahui secara pasti.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami sintaks ringkas perulangan `for`.
 - Mampu menggunakan perulangan `for` untuk iterasi data dengan rentang angka pasti.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Perulangan `for` seperti **jadwal minum obat**: Dokter memberi instruksi yang jelas: mulai dari hari ke-1, minum 1 butir setiap hari, sampai hari ke-5. Anda sudah tahu persis sejak awal bahwa aksi ini dilakukan 5 kali.
+
 Perulangan `for` adalah bentuk perulangan yang paling populer saat kita **sudah mengetahui secara pasti berapa kali perulangan akan dilakukan**.
 
 Ketiga komponen perulangan (inisialisasi, kondisi, inkremen) ditulis dalam satu baris header:
@@ -69,10 +78,8 @@ Melayani nasabah nomor 4
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Perulangan `for` seperti **jadwal minum obat**: Dokter memberi instruksi yang jelas: mulai dari hari ke-1, minum 1 butir setiap hari, sampai hari ke-5. Anda sudah tahu persis sejak awal bahwa aksi ini dilakukan 5 kali.
 
 ### 🏢 Real-World Use Case
 1. **Menghitung Nilai Rata-rata**: Melakukan iterasi indeks array angka dari 0 sampai panjang array untuk menjumlahkan total nilai ujian.

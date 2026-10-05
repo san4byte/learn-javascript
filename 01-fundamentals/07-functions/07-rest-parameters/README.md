@@ -1,5 +1,10 @@
 # 07.7 - Rest Parameter (...args)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep Rest Parameter (`...args`) pada fungsi modern.
+> * **Kapan Digunakan**: Memahami perbedaan mutlak antara Rest Parameter dan Spread Operator.
+> * **Aturan Praktis**: Gunakan Rest Parameter untuk menggantikan seluruh penggunaan objek lama `arguments`.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep Rest Parameter (`...args`) pada fungsi modern.
 - Memahami perbedaan mutlak antara Rest Parameter dan Spread Operator.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Rest Parameter seperti **kantong 'serbaguna' di koper pakaian Anda**: 2 slot utama di koper sudah khusus untuk laptop dan dompet (parameter tetap). Semua barang bawaan tambahan lainnya (baju, celana, charger) dimasukkan semuanya ke dalam kantong serbaguna tersebut (Rest parameter).
+
 **Rest Parameter** (diperkenalkan pada ES6) memungkinkan kita untuk merepresentasikan jumlah argumen yang tidak terbatas ke dalam **sebuah Array sungguhan**.
 
 Sintaksnya diawali dengan tiga titik: `...namaArray`.
@@ -56,10 +65,8 @@ Hasil penjumlahan: 100
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Rest Parameter seperti **kantong 'serbaguna' di koper pakaian Anda**: 2 slot utama di koper sudah khusus untuk laptop dan dompet (parameter tetap). Semua barang bawaan tambahan lainnya (baju, celana, charger) dimasukkan semuanya ke dalam kantong serbaguna tersebut (Rest parameter).
 
 ### 🏢 Real-World Use Case
 1. **Fungsi Logger / Pelacak Error**: Mengizinkan pengembang mengirimkan berapapun jumlah pesan debug tambahan.

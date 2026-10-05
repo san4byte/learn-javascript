@@ -1,5 +1,10 @@
 # 07.2 - Parameter, Argumen, Default Parameter & Arguments Object
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami perbedaan konsep antara Parameter (definisi) dan Argumen (nilai riil).
+> * **Kapan Digunakan**: Menggunakan Default Parameter (ES6) untuk mencegah nilai `undefined`.
+> * **Aturan Praktis**: Gunakan Default Parameter daripada menulis logika manual `nama = nama || 'Default'`.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami perbedaan konsep antara Parameter (definisi) dan Argumen (nilai riil).
 - Menggunakan Default Parameter (ES6) untuk mencegah nilai `undefined`.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Parameter seperti **slot lubang koin di mesin vending**: mesin dirancang memiliki slot koin ukuran 500 dan 1000. Argumen adalah **koin fisik uang rupiah** yang dimasukkan oleh pembeli ke dalam slot tersebut.
+
 Seringkali istilah parameter dan argumen dianggap sama, padahal keduanya memiliki perbedaan konseptual:
 * **Parameter**: Variabel penampung yang dituliskan di dalam tanda kurung saat fungsi **didefinisikan**.
 * **Argumen**: Nilai data nyata yang dikirimkan saat fungsi **dipanggil**.
@@ -65,10 +74,8 @@ Jumlah 5 angka : 75
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Parameter seperti **slot lubang koin di mesin vending**: mesin dirancang memiliki slot koin ukuran 500 dan 1000. Argumen adalah **koin fisik uang rupiah** yang dimasukkan oleh pembeli ke dalam slot tersebut.
 
 ### 🏢 Real-World Use Case
 1. **Konfigurasi API Client**: Fungsi `fetchData(endpoint, options = { method: 'GET' })` menyetel method default ke 'GET' jika user tidak mengisinya.

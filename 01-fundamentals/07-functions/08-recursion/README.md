@@ -1,5 +1,10 @@
 # 07.8 - Fungsi Rekursif (Recursive Function)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep fungsi rekursif (fungsi yang memanggil dirinya sendiri).
+> * **Kapan Digunakan**: Memahami komponen wajib Base Case untuk menghentikan rekursi.
+> * **Aturan Praktis**: Selalu tuliskan kondisi **Base Case di baris paling pertama** di dalam fungsi rekursif.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep fungsi rekursif (fungsi yang memanggil dirinya sendiri).
 - Memahami komponen wajib Base Case untuk menghentikan rekursi.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Fungsi rekursif seperti **boneka kayu bertingkat Rusia (*Matryoshka*)**: Saat Anda membuka boneka terluar, Anda menemukan boneka serupa di dalamnya yang lebih kecil. Anda terus membukanya sampai menemukan boneka terkecil padat yang tidak bisa dibuka lagi (Base Case).
+
 **Fungsi Rekursif** adalah fungsi yang **memanggil dirinya sendiri** di dalam tubuh fungsinya hingga mencapai kondisi berhenti tertentu.
 
 ### 2 Komponen Wajib Fungsi Rekursif:
@@ -90,10 +99,8 @@ Selesai!
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Fungsi rekursif seperti **boneka kayu bertingkat Rusia (*Matryoshka*)**: Saat Anda membuka boneka terluar, Anda menemukan boneka serupa di dalamnya yang lebih kecil. Anda terus membukanya sampai menemukan boneka terkecil padat yang tidak bisa dibuka lagi (Base Case).
 
 ### 🏢 Real-World Use Case
 1. **Navigasi Struktur File & Direktori**: Membaca folder di dalam komputer yang kedalamannya tidak menentu.

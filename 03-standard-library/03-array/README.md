@@ -1,12 +1,24 @@
 # 03 - Array (Queue, Stack, Search, dan Advanced Transformations)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami implementasi struktur data Queue (FIFO) dan Stack (LIFO) menggunakan method array native.
+> * **Kapan Digunakan**: Menguasai method pencarian predikat modern: `find()`, `findIndex()`, `includes()`, `indexOf()`, dan `lastIndexOf()`.
+> * **Aturan Praktis**: Gunakan `find()` jika Anda hanya membutuhkan 1 objek pertama, bukan `filter()[0]` yang membuang waktu menyaring seluruh array.
+
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami implementasi struktur data Queue (FIFO) dan Stack (LIFO) menggunakan method array native.\n- Menguasai method pencarian predikat modern: `find()`, `findIndex()`, `includes()`, `indexOf()`, dan `lastIndexOf()`.\n- Menguasai transformasi data mendalam: `map()`, `reduce()`, dan `reduceRight()`.\n- Memahami perbedaan semantik komprehensif antara `forEach()` dan transformasi array.
+- Memahami implementasi struktur data Queue (FIFO) dan Stack (LIFO) menggunakan method array native.
+- Menguasai method pencarian predikat modern: `find()`, `findIndex()`, `includes()`, `indexOf()`, dan `lastIndexOf()`.
+- Menguasai transformasi data mendalam: `map()`, `reduce()`, dan `reduceRight()`.
+- Memahami perbedaan semantik komprehensif antara `forEach()` dan transformasi array.
 
 ---
 
 ## 2. 📖 Penjelasan Konsep & Referensi Method Lengkap
+
+### 🎭 Analogi Dunia Nyata
+
+> Queue seperti **antrean loket bioskop** (siapa yang datang duluan membeli tiket dan masuk lebih dulu). Stack seperti **tumpukan piring kotor di tempat cuci** (piring yang ditaruh paling terakhir di atas tumpukan justru yang pertama kali diambil dan dicuci).
 
 Array di JavaScript bukan sekadar penampung data berurutan, melainkan fondasi bagi berbagai struktur data algoritma klasik dan pemrosesan fungsional. Berikut adalah referensi lengkap method bawaan yang wajib dikuasai:
 
@@ -195,32 +207,39 @@ Total Nilai Antrean: Rp 25.000
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> Queue seperti **antrean loket bioskop** (siapa yang datang duluan membeli tiket dan masuk lebih dulu). Stack seperti **tumpukan piring kotor di tempat cuci** (piring yang ditaruh paling terakhir di atas tumpukan justru yang pertama kali diambil dan dicuci).
 
 ### 🏢 Real-World Use Case
 
-1. **Sistem Undo/Redo**: Fitur Undo di text editor menyimpan state riwayat aksi ke dalam struktur data Stack (`pop()` saat tombol Undo ditekan).\n2. **Background Job Runner**: Antrean download file atau pemrosesan email yang dieksekusi berurutan menggunakan pola Queue (`push` dan `shift`).\n3. **Pencarian ID Produk di E-Commerce**: Mencari item keranjang tertentu dengan cepat menggunakan `cart.find(item => item.id === targetId)`.
+1. **Sistem Undo/Redo**: Fitur Undo di text editor menyimpan state riwayat aksi ke dalam struktur data Stack (`pop()` saat tombol Undo ditekan).
+2. **Background Job Runner**: Antrean download file atau pemrosesan email yang dieksekusi berurutan menggunakan pola Queue (`push` dan `shift`).
+3. **Pencarian ID Produk di E-Commerce**: Mencari item keranjang tertentu dengan cepat menggunakan `cart.find(item => item.id === targetId)`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Performa `shift()` dan `unshift()`**: Operasi di awal array membutuhkan penggeseran indeks seluruh elemen ($O(n)$). Untuk antrean raksasa (puluhan ribu elemen), pertimbangkan struktur Linked List.\n* **Lupa `initialValue` pada `reduce`**: Jika initial value tidak diberikan pada array kosong, JavaScript akan melempar fatal error `TypeError: Reduce of empty array with no initial value`.\n* **Menghapus elemen di tengah perulangan `forEach`**: Melakukan mutasi ukuran array saat sedang di-loop akan menyebabkan elemen terlewatkan secara tidak terduga.
+- **Performa `shift()` dan `unshift()`**: Operasi di awal array membutuhkan penggeseran indeks seluruh elemen ($O(n)$). Untuk antrean raksasa (puluhan ribu elemen), pertimbangkan struktur Linked List.
+* **Lupa `initialValue` pada `reduce`**: Jika initial value tidak diberikan pada array kosong, JavaScript akan melempar fatal error `TypeError: Reduce of empty array with no initial value`.
+* **Menghapus elemen di tengah perulangan `forEach`**: Melakukan mutasi ukuran array saat sedang di-loop akan menyebabkan elemen terlewatkan secara tidak terduga.
 
 ### 🌟 Best Practice
 
-- Gunakan `find()` jika Anda hanya membutuhkan 1 objek pertama, bukan `filter()[0]` yang membuang waktu menyaring seluruh array.\n* Selalu cantumkan nilai awal (*initial value*) saat memanggil `reduce()` atau `reduceRight()` demi keamanan kode.\n* Pilih `push` + `pop` (Stack) untuk operasi berkecepatan tinggi ($O(1)$).
+- Gunakan `find()` jika Anda hanya membutuhkan 1 objek pertama, bukan `filter()[0]` yang membuang waktu menyaring seluruh array.
+* Selalu cantumkan nilai awal (*initial value*) saat memanggil `reduce()` atau `reduceRight()` demi keamanan kode.
+* Pilih `push` + `pop` (Stack) untuk operasi berkecepatan tinggi ($O(1)$).
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
 
-1. Buat class sederhana `AntreanKlinik` dengan method `masuk(namaPasien)` dan `panggil()` yang bekerja dengan prinsip FIFO Queue.\n2. Diberikan array objek transaksi `[{ id: 1, tipe: 'debit', nominal: 50000 }, { id: 2, tipe: 'kredit', nominal: 20000 }]`. Hitung saldo akhir dengan `reduce()` di mana debit menambah saldo dan kredit mengurangi saldo.
+1. Buat class sederhana `AntreanKlinik` dengan method `masuk(namaPasien)` dan `panggil()` yang bekerja dengan prinsip FIFO Queue.
+2. Diberikan array objek transaksi `[{ id: 1, tipe: 'debit', nominal: 50000 }, { id: 2, tipe: 'kredit', nominal: 20000 }]`. Hitung saldo akhir dengan `reduce()` di mana debit menambah saldo dan kredit mengurangi saldo.
 
 ---
 
 ## 7. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [02 - String](../02-string/README.md)\n- ➡️ **Selanjutnya:** [04 - Object](../04-object/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [02 - String](../02-string/README.md)
+- ➡️ **Selanjutnya:** [04 - Object](../04-object/README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

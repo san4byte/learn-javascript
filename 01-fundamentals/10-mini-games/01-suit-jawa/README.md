@@ -1,5 +1,10 @@
 # 10.1 - Game Interaktif: Suit Jawa (Gajah, Semut, Orang)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Membangun logika permainan Suit Jawa berbasis kecerdasan acak komputer (`Math.random()`).
+> * **Kapan Digunakan**: Mengombinasikan pengkondisian `if...else` dengan logika aturan permainan.
+> * **Aturan Praktis**: Selalu ubah input pemain menjadi huruf kecil (`pilihan.toLowerCase()`) agar tidak terjadi kesalahan akibat variasi huruf kapital (misal: 'Gajah' vs 'gajah').
+
 ## 1. 🎯 Tujuan Belajar
 - Membangun logika permainan Suit Jawa berbasis kecerdasan acak komputer (`Math.random()`).
 - Mengombinasikan pengkondisian `if...else` dengan logika aturan permainan.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Permainan ini seperti **batu-gunting-kertas internasional**: sebuah sistem siklus tertutup di mana tidak ada satu entitas pun yang memiliki kekuasaan mutlak atas semua entitas lain.
+
 Permainan **Suit Jawa** adalah mini-game tradisional Indonesia dengan aturan:
 * **Gajah** menang melawan **Orang** (Gajah menginjak Orang).
 * **Orang** menang melawan **Semut** (Orang menginjak Semut).
@@ -79,10 +88,8 @@ Hasil    : KALAH! (Semut diinjak Orang)
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Permainan ini seperti **batu-gunting-kertas internasional**: sebuah sistem siklus tertutup di mana tidak ada satu entitas pun yang memiliki kekuasaan mutlak atas semua entitas lain.
 
 ### 🏢 Real-World Use Case
 1. **Mekanika Batu-Gunting-Kertas di Game RPG**: Tipe elemen pertarungan: Api mengalahkan Tumbuhan, Tumbuhan mengalahkan Air, Air mengalahkan Api.

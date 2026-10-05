@@ -1,5 +1,10 @@
 # 06 - BigInt (Arbitrary-Precision Integers dan Batasan Operasi)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami tipe data primitif `BigInt` untuk menangani bilangan bulat berukuran sangat besar.
+> * **Kapan Digunakan**: Mengetahui cara deklarasi BigInt menggunakan literal berakhiran huruf `n` atau fungsi global `BigInt()`.
+> * **Aturan Praktis**: Gunakan BigInt hanya jika data Anda benar-benar berpotensi melebihi $2^{53} - 1$. Untuk angka transaksi biasa di bawah 9 triliun, gunakan tipe `Number` standar.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami tipe data primitif `BigInt` untuk menangani bilangan bulat berukuran sangat besar.
@@ -10,6 +15,9 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep & Referensi Lengkap
+
+### 🎭 Analogi Dunia Nyata
+> `Number` seperti timbangan dapur kue yang hanya akurat hingga 5 kilogram (angka di atas itu jarumnya meleset). Sedangkan `BigInt` seperti timbangan jembatan truk tronton di jalan tol: mampu menimbang bobot sebesar apa pun tanpa batasan kapasitas selama ada ruang memori di komputer Anda.
 
 Tipe data bawaan `Number` di JavaScript menggunakan representasi *64-bit floating point* (IEEE 754), yang memiliki batas bilangan bulat aman maksimal sebesar **$2^{53} - 1$** atau `9007199254740991` (`Number.MAX_SAFE_INTEGER`). Jika kita melakukan operasi angka di atas angka ini, hasil kalkulasi akan menjadi tidak akurat (*precision loss*).
 
@@ -95,10 +103,8 @@ Apakah identik BigInt?  : true
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> `Number` seperti timbangan dapur kue yang hanya akurat hingga 5 kilogram (angka di atas itu jarumnya meleset). Sedangkan `BigInt` seperti timbangan jembatan truk tronton di jalan tol: mampu menimbang bobot sebesar apa pun tanpa batasan kapasitas selama ada ruang memori di komputer Anda.
 
 ### 🏢 Real-World Use Case
 1. **Twitter / Discord ID (Snowflake)**: ID unik tweet, user, dan message di Discord menggunakan format 64-bit integer yang melebihi batas `Number.MAX_SAFE_INTEGER` sehingga wajib diolah sebagai BigInt atau string.
@@ -126,5 +132,5 @@ Apakah identik BigInt?  : true
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [05 - JSON](../05-json/README.md)
 - ➡️ **Selanjutnya:** [07 - Date](../07-date/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

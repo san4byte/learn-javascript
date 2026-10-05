@@ -1,5 +1,10 @@
 # 08 - Math (Konstanta Matematika, Pembulatan, dan Operasi Angka)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami objek bawaan `Math` sebagai namespace utilitas matematika statis.
+> * **Kapan Digunakan**: Menguasai konstanta matematika fundamental: `Math.PI` dan `Math.E`.
+> * **Aturan Praktis**: Gunakan `Math.ceil()` untuk paginasi data agar elemen pecahan terakhir tidak hilang dari tampilan pengguna.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami objek bawaan `Math` sebagai namespace utilitas matematika statis.
@@ -11,6 +16,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> `Math` seperti **kalkulator ilmiah saku**: Anda tidak perlu merakit atau membeli kalkulator baru setiap kali ingin berhitung (`new Math()` tidak diperlukan); cukup tekan tombol fungsi yang tersedia langsung di badannya (`Math.sqrt`, `Math.PI`). Namun kalkulator ini hanya mengerti sistem angka biasa dan akan error jika Anda memasukkan format chip khusus raksasa (BigInt).
 
 Objek **`Math`** adalah objek built-in statis di JavaScript yang menyediakan properti konstanta matematika dan fungsi-fungsi kalkulasi numerik. Objek ini **bukan sebuah konstruktor** (`new Math()` akan menghasilkan error).
 
@@ -97,11 +106,8 @@ Voucher Diskon Acak (10% - 50%) : [Angka antara 10% sampai 50%]
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> `Math` seperti **kalkulator ilmiah saku**: Anda tidak perlu merakit atau membeli kalkulator baru setiap kali ingin berhitung (`new Math()` tidak diperlukan); cukup tekan tombol fungsi yang tersedia langsung di badannya (`Math.sqrt`, `Math.PI`). Namun kalkulator ini hanya mengerti sistem angka biasa dan akan error jika Anda memasukkan format chip khusus raksasa (BigInt).
 
 ### 🏢 Real-World Use Case
 
@@ -134,5 +140,5 @@ Voucher Diskon Acak (10% - 50%) : [Angka antara 10% sampai 50%]
 
 - ⬅️ **Sebelumnya:** [07 - Date](../07-date/README.md)
 - ➡️ **Selanjutnya:** [09 - Boolean](../09-boolean/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

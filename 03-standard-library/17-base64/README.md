@@ -1,5 +1,10 @@
 # 17 - Base64 (btoa, atob, dan Penanganan Teks UTF-8 Unicode)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep encoding **Base64** sebagai representasi data biner dalam 64 karakter ASCII yang aman.
+> * **Kapan Digunakan**: Menguasai fungsi bawaan `btoa()` (binary to ASCII) dan `atob()` (ASCII to binary).
+> * **Aturan Praktis**: Gunakan helper berbasis `TextEncoder` dan `TextDecoder` untuk menjamin keamanan konversi string beraksen dan emoji.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep encoding **Base64** sebagai representasi data biner dalam 64 karakter ASCII yang aman.
 - Menguasai fungsi bawaan `btoa()` (binary to ASCII) dan `atob()` (ASCII to binary).
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> `Base64` seperti **layanan telegram diplomatik zaman dahulu**: jaringan telegraf radio hanya mendukung alfabet teks huruf Latin standar. Jika Anda ingin mengirim lukisan sketsa atau gambar dokumen biner rahasia, Anda harus menerjemahkan titik-titik piksel gambar tersebut menjadi deretan kombinasi karakter teks biasa (`btoa`) agar bisa dikirim lewat kabel radio telegraf tanpa mengalami distorsi.
+
 **Base64** adalah skema encoding biner-ke-teks yang merepresentasikan data biner dalam format string ASCII berbasis 64 karakter (`A-Z`, `a-z`, `0-9`, `+`, `/`, dengan `=` sebagai padding).
 
 ### 1. Fungsi Bawaan Browser & Node.js Modern
@@ -102,10 +111,8 @@ Hasil Decode Sempurna    : Halo Dunia! 🌟 Selamat Belajar JavaScript 🚀
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> `Base64` seperti **layanan telegram diplomatik zaman dahulu**: jaringan telegraf radio hanya mendukung alfabet teks huruf Latin standar. Jika Anda ingin mengirim lukisan sketsa atau gambar dokumen biner rahasia, Anda harus menerjemahkan titik-titik piksel gambar tersebut menjadi deretan kombinasi karakter teks biasa (`btoa`) agar bisa dikirim lewat kabel radio telegraf tanpa mengalami distorsi.
 
 ### 🏢 Real-World Use Case
 1. **Data URL Gambar Inline**: Menyematkan gambar ikon kecil langsung di dalam CSS atau HTML (`<img src='data:image/png;base64,iVBORw0KGgo...' />`) tanpa perlu request HTTP terpisah.
@@ -133,5 +140,5 @@ Hasil Decode Sempurna    : Halo Dunia! 🌟 Selamat Belajar JavaScript 🚀
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [16 - Encode](../16-encode/README.md)
 - ➡️ **Selanjutnya:** [18 - Eval](../18-eval/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

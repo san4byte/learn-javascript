@@ -1,5 +1,10 @@
 # 03 - Callbacks dan Masalah Callback Hell
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep Callback sebagai fungsi yang dijadikan argumen fungsi lain.
+> * **Kapan Digunakan**: Memahami perbedaan Synchronous Callback dan Asynchronous Callback.
+> * **Aturan Praktis**: Hindari menulis callback bersarang lebih dari 2 tingkat.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep Callback sebagai fungsi yang dijadikan argumen fungsi lain.
 - Memahami perbedaan Synchronous Callback dan Asynchronous Callback.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Callback seperti **meninggalkan nomor telepon Anda di resepsionis restoran**: Anda tidak perlu berdiri mematung di depan pintu (non-blocking). Begitu meja kosong tersedia, resepsionis akan menelepon Anda kembali (*calling back*). Sedangkan **Callback Hell** seperti Anda harus menelepon resepsionis restoran, yang kemudian menyuruh Anda menelepon koki, yang menyuruh Anda menelepon tukang pasar, saling bersarang tanpa henti.
+
 **Callback** adalah fungsi yang dilewatkan (*passed*) sebagai argumen ke dalam fungsi lain, untuk kemudian dipanggil (*called back*) pada waktu tertentu.
 
 ### Dua Jenis Callback:
@@ -80,10 +89,8 @@ Berhasil ambil user: Joko Santoso
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Callback seperti **meninggalkan nomor telepon Anda di resepsionis restoran**: Anda tidak perlu berdiri mematung di depan pintu (non-blocking). Begitu meja kosong tersedia, resepsionis akan menelepon Anda kembali (*calling back*). Sedangkan **Callback Hell** seperti Anda harus menelepon resepsionis restoran, yang kemudian menyuruh Anda menelepon koki, yang menyuruh Anda menelepon tukang pasar, saling bersarang tanpa henti.
 
 ### 🏢 Real-World Use Case
 1. **Node.js Legacy APIs**: Banyak library lama Node.js (seperti modul `fs.readFile(path, (err, data) => {})`) menggunakan pola *error-first callback*.
@@ -108,5 +115,5 @@ Berhasil ambil user: Joko Santoso
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [02 - Timing Events](../02-timing-events/README.md)
 - ➡️ **Selanjutnya:** [04 - Promise (Konsep Pending, Fulfilled, Rejected)](../04-ajax-xmlhttprequest/README.md)
-- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

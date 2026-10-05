@@ -1,5 +1,10 @@
 # 10 - Map (Key-Value Collection Modern, Perbedaan Mendalam dengan Object)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami struktur data `Map` sebagai koleksi pasangan kunci-nilai modern di ES6.
+> * **Kapan Digunakan**: Menganalisis perbedaan fundamental dan keunggulan `Map` dibandingkan `Object` biasa.
+> * **Aturan Praktis**: Gunakan `Map` jika kunci tidak diketahui hingga runtime atau bertipe non-string.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami struktur data `Map` sebagai koleksi pasangan kunci-nilai modern di ES6.
@@ -10,6 +15,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> `Object` biasa seperti lemari loker kayu tua di mana setiap kotak loker hanya bisa diberi label stiker kertas bertuliskan huruf (string). Sedangkan `Map` seperti loker pintar berteknologi sensor RFID: kuncinya tidak harus berupa teks, Anda bisa menggunakan kartu magnetik, sidik jari, atau token objek apa pun sebagai kuncinya.
 
 Sebelum ES6, developer JavaScript terpaksa menggunakan objek biasa `{}` sebagai struktur data kamus (_dictionary / hash map_). Namun, objek memiliki banyak kelemahan untuk fungsi ini. ES6 memperkenalkan **`Map`**, struktur data yang dirancang khusus untuk memetakan pasangan kunci (_key_) dan nilai (_value_).
 
@@ -113,11 +122,8 @@ Ukuran Map setelah dihapus  : 2
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> `Object` biasa seperti lemari loker kayu tua di mana setiap kotak loker hanya bisa diberi label stiker kertas bertuliskan huruf (string). Sedangkan `Map` seperti loker pintar berteknologi sensor RFID: kuncinya tidak harus berupa teks, Anda bisa menggunakan kartu magnetik, sidik jari, atau token objek apa pun sebagai kuncinya.
 
 ### 🏢 Real-World Use Case
 
@@ -150,5 +156,5 @@ Ukuran Map setelah dihapus  : 2
 
 - ⬅️ **Sebelumnya:** [09 - Boolean](../09-boolean/README.md)
 - ➡️ **Selanjutnya:** [11 - Set](../11-set/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

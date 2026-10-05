@@ -1,5 +1,10 @@
 # 03 - Template Literals & String Interpolation
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami keunggulan Template Literals (backtick `` ` ``) dibanding string biasa.
+> * **Kapan Digunakan**: Menguasai String Interpolation menggunakan sintaks `${ekspresi}`.
+> * **Aturan Praktis**: Gunakan Template Literals untuk semua penggabungan teks dinamis dan teks multi-baris.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami keunggulan Template Literals (backtick `` ` ``) dibanding string biasa.
 - Menguasai String Interpolation menggunakan sintaks `${ekspresi}`.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> String konvensional seperti **menyusun puzzle huruf dari potongan koran**: Anda harus menempelkan lem tanda `+` di antara setiap kata. Template Literals seperti **surat undangan resmi dengan kolom kosong**: Anda cukup mencetak kerangka suratnya dan mengisi variabel nama di bagian `${...}`.
+
 **Template Literals** (diperkenalkan pada ES6) adalah cara modern dalam merakit dan memanipulasi string di JavaScript menggunakan karakter backtick (`` ` ``) alih-alih tanda kutip tunggal (`'`) atau ganda (`"`).
 
 ### 3 Keunggulan Utama Template Literals:
@@ -81,10 +90,8 @@ Halo [**Joko**], peran Anda saat ini adalah [**Super Admin**].
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> String konvensional seperti **menyusun puzzle huruf dari potongan koran**: Anda harus menempelkan lem tanda `+` di antara setiap kata. Template Literals seperti **surat undangan resmi dengan kolom kosong**: Anda cukup mencetak kerangka suratnya dan mengisi variabel nama di bagian `${...}`.
 
 ### 🏢 Real-World Use Case
 1. **Merakit Elemen HTML Dinamis**: Membuat komponen tampilan tabel atau kartu katalog di DOM murni atau framework tanpa build tool yang rumit.

@@ -1,5 +1,10 @@
 # 12 - Symbol (Primitive Unik dan Global Symbol Registry)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami `Symbol` sebagai tipe data primitif ke-7 yang menjamin keunikan identitas 100%.
+> * **Kapan Digunakan**: Mampu membuat Symbol lokal dengan deskripsi opsional menggunakan fungsi `Symbol()`.
+> * **Aturan Praktis**: Gunakan Symbol ketika membuat properti metadata internal pada objek yang tidak boleh tercampur dalam serialisasi JSON atau iterasi umum.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami `Symbol` sebagai tipe data primitif ke-7 yang menjamin keunikan identitas 100%.
@@ -10,6 +15,9 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep & Referensi Lengkap
+
+### 🎭 Analogi Dunia Nyata
+> `Symbol()` lokal seperti **sidik jari biometrik manusia**: meskipun ada dua orang bernama sama persis 'Joko Santoso', sidik jari keduanya dijamin 100% berbeda dan unik. Sementara `Symbol.for()` seperti **nomor induk registrasi kependudukan (NIK) terpusat di kantor Dukcapil**: siapapun instansi yang meminta NIK atas kode tersebut akan selalu mendapatkan satu identitas yang sama.
 
 **`Symbol`** adalah tipe data primitif yang diperkenalkan pada ES6. Karakteristik utama dari Symbol adalah **setiap nilai Symbol yang dibuat selalu bersifat unik dan tidak dapat diubah (*immutable*)**, bahkan jika dua Symbol dibuat dengan deskripsi teks yang persis sama.
 
@@ -115,10 +123,8 @@ keyFor pada Symbol lokal  : undefined
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> `Symbol()` lokal seperti **sidik jari biometrik manusia**: meskipun ada dua orang bernama sama persis 'Joko Santoso', sidik jari keduanya dijamin 100% berbeda dan unik. Sementara `Symbol.for()` seperti **nomor induk registrasi kependudukan (NIK) terpusat di kantor Dukcapil**: siapapun instansi yang meminta NIK atas kode tersebut akan selalu mendapatkan satu identitas yang sama.
 
 ### 🏢 Real-World Use Case
 1. **Mencegah Tabrakan Nama Properti (Property Collision)**: Saat membuat plugin atau library open-source yang menyematkan metadata ke objek milik developer lain tanpa risiko merusak properti aslinya.
@@ -146,5 +152,5 @@ keyFor pada Symbol lokal  : undefined
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [11 - Set](../11-set/README.md)
 - ➡️ **Selanjutnya:** [13 - RegExp](../13-regexp/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -1,5 +1,10 @@
 # 04.1 - Pengulangan: While Loop & Do-While
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami struktur dasar pengulangan while: nilai awal, kondisi terminasi, dan inkremen/dekremen.
+> * **Kapan Digunakan**: Mampu menghindari jebakan Infinite Loop (perulangan tanpa henti).
+> * **Aturan Praktis**: Selalu pastikan ada jaminan bahwa kondisi terminasi akan tercapai.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami struktur dasar pengulangan while: nilai awal, kondisi terminasi, dan inkremen/dekremen.
 - Mampu menghindari jebakan Infinite Loop (perulangan tanpa henti).
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Perulangan `while` seperti **naik bus trans umum berbayar di gerbang**: kondektur memeriksa tiket Anda di pintu masuk bus. Jika tidak punya tiket, Anda langsung dilarang masuk (0 kali jalan). Sedangkan `do...while` seperti **makan di restoran prasmanan**: Anda boleh mengambil dan mencicipi makanan dulu 1 piring, baru kemudian kasir memeriksa tagihan Anda di pintu keluar.
+
 Perulangan `while` digunakan ketika kita ingin mengeksekusi suatu blok kode secara berulang-ulang **selama suatu kondisi bernilai `true`**.
 
 ### 3 Komponen Wajib Pengulangan:
@@ -60,10 +69,8 @@ Nilai dalam do-while: 10 (dieksekusi minimal 1x)
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Perulangan `while` seperti **naik bus trans umum berbayar di gerbang**: kondektur memeriksa tiket Anda di pintu masuk bus. Jika tidak punya tiket, Anda langsung dilarang masuk (0 kali jalan). Sedangkan `do...while` seperti **makan di restoran prasmanan**: Anda boleh mengambil dan mencicipi makanan dulu 1 piring, baru kemudian kasir memeriksa tagihan Anda di pintu keluar.
 
 ### 🏢 Real-World Use Case
 1. **Membaca Stream Data Jaringan**: Membaca paket data yang masuk dari koneksi socket selama stream belum ditutup (`while (stream.hasData())`).

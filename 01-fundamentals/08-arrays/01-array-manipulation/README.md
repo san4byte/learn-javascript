@@ -1,5 +1,10 @@
 # 08.1 - Manipulasi Array (Method Mutator & Accessor)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami struktur Array sebagai kumpulan elemen berindeks terurut.
+> * **Kapan Digunakan**: Menguasai method mutator: `push()`, `pop()`, `shift()`, `unshift()`, `splice()`.
+> * **Aturan Praktis**: Gunakan `push()` dan `pop()` jika butuh performa tercepat ($O(1)$).
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami struktur Array sebagai kumpulan elemen berindeks terurut.
 - Menguasai method mutator: `push()`, `pop()`, `shift()`, `unshift()`, `splice()`.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Array seperti **gerbong kereta api penumpang**: setiap gerbong memiliki nomor urut $(0, 1, 2...)$. Menambah gerbong di belakang (**push**) sangat cepat dan mudah. Sedangkan menambah gerbong di paling depan (**unshift**) memaksa seluruh nomor gerbong di belakangnya harus digeser dan dinomori ulang satu per satu.
+
 **Array** adalah tipe data bertipe objek yang digunakan untuk menyimpan kumpulan elemen nilai secara terurut berdasarkan nomor indeks (dimulai dari `0`).
 
 ### Method Utama Manipulasi Array:
@@ -80,10 +89,8 @@ Format Teks Rapi (join)  : Jakarta -> Bandung -> Semarang -> Yogyakarta
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Array seperti **gerbong kereta api penumpang**: setiap gerbong memiliki nomor urut $(0, 1, 2...)$. Menambah gerbong di belakang (**push**) sangat cepat dan mudah. Sedangkan menambah gerbong di paling depan (**unshift**) memaksa seluruh nomor gerbong di belakangnya harus digeser dan dinomori ulang satu per satu.
 
 ### 🏢 Real-World Use Case
 1. **Manajemen Antrean Tiket / Notifikasi**: Struktur data *Queue* (antrean FIFO: First-In First-Out) diimplementasikan dengan `push()` untuk masuk antrean dan `shift()` saat dilayani.

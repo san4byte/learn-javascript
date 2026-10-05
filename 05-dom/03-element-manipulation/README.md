@@ -1,5 +1,10 @@
 # 03 - DOM Manipulasi Element (Teks, Atribut, dan Style)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami perbedaan mendasar antara `innerHTML`, `textContent`, dan `innerText`.
+> * **Kapan Digunakan**: Memahami bahaya celah keamanan XSS (Cross-Site Scripting) pada `innerHTML`.
+> * **Aturan Praktis**: Gunakan **`textContent`** sebagai pilihan utama untuk menyetel teks.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami perbedaan mendasar antara `innerHTML`, `textContent`, dan `innerText`.
@@ -10,6 +15,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> `textContent` seperti **menulis teks dengan spidol di papan tulis** (hanya teks polos). `innerHTML` seperti **menempelkan poster yang bisa berisi proyektor mini**: jika poster yang ditempel mengandung jebakan bom skrip (_malicious script_), sistem keamanan ruangan bisa jebol.
 
 Setelah berhasil menyeleksi sebuah elemen DOM, langkah berikutnya adalah memanipulasi konten teks, atribut, maupun gaya visualnya.
 
@@ -86,11 +95,8 @@ Punya class animasi-kedip? true
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> `textContent` seperti **menulis teks dengan spidol di papan tulis** (hanya teks polos). `innerHTML` seperti **menempelkan poster yang bisa berisi proyektor mini**: jika poster yang ditempel mengandung jebakan bom skrip (_malicious script_), sistem keamanan ruangan bisa jebol.
 
 ### 🏢 Real-World Use Case
 
@@ -118,5 +124,5 @@ Punya class animasi-kedip? true
 
 - ⬅️ **Sebelumnya:** [02 - DOM Selection](../02-dom-selection/README.md)
 - ➡️ **Selanjutnya:** [04 - DOM Manipulasi Node](../04-node-manipulation/README.md)
-- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

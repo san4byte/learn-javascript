@@ -1,11 +1,23 @@
 # 06 - Intersection Observer API (Lazy Loading dan Infinite Scroll Modern)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami kekurangan fatal dari memantau posisi scroll menggunakan `window.addEventListener('scroll')`.
+> * **Kapan Digunakan**: Memahami konsep kerja `IntersectionObserver` dan terminologi `threshold` serta `rootMargin`.
+> * **Aturan Praktis**: Selalu berikan placeholder gambar dengan ukuran aspect ratio yang tepat (misal dengan CSS `aspect-ratio: 16/9`) agar layout halaman tidak melompat (*Cumulative Layout Shift / CLS*).
+
 ## 1. 🎯 Tujuan Belajar
-- Memahami kekurangan fatal dari memantau posisi scroll menggunakan `window.addEventListener('scroll')`.\n- Memahami konsep kerja `IntersectionObserver` dan terminologi `threshold` serta `rootMargin`.\n- Mampu membuat fitur Lazy Loading gambar untuk mempercepat loading halaman web.\n- Mampu mengimplementasikan Infinite Scroll modern berbasis Sentinel Element.
+- Memahami kekurangan fatal dari memantau posisi scroll menggunakan `window.addEventListener('scroll')`.
+- Memahami konsep kerja `IntersectionObserver` dan terminologi `threshold` serta `rootMargin`.
+- Mampu membuat fitur Lazy Loading gambar untuk mempercepat loading halaman web.
+- Mampu mengimplementasikan Infinite Scroll modern berbasis Sentinel Element.
 
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Memantau posisi scroll dengan event listener biasa seperti seorang **satpam yang setiap detik bolak-balik menengok ke gerbang** untuk mengecek apakah ada tamu datang (sangat melelahkan dan boros tenaga). Sedangkan **IntersectionObserver** seperti **sensor inframerah laser di gerbang**: satpam bisa tidur tenang di pos, alarm baru berbunyi secara otomatis ketika tamu melangkah melewati batas gerbang.
+
 Secara historis, untuk mengetahui apakah sebuah elemen (seperti gambar produk atau tombol 'Load More') sudah terlihat di layar pengguna, developer menggunakan:
 ```javascript
 window.addEventListener('scroll', () => {
@@ -150,10 +162,8 @@ Elemen terlihat di layar! Rasio visibilitas: 0.75
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Memantau posisi scroll dengan event listener biasa seperti seorang **satpam yang setiap detik bolak-balik menengok ke gerbang** untuk mengecek apakah ada tamu datang (sangat melelahkan dan boros tenaga). Sedangkan **IntersectionObserver** seperti **sensor inframerah laser di gerbang**: satpam bisa tidur tenang di pos, alarm baru berbunyi secara otomatis ketika tamu melangkah melewati batas gerbang.
 
 ### 🏢 Real-World Use Case
 1. **Lazy Loading Media (Gambar & Video Iframe)**: Menghemat kuota internet pengguna ponsel dengan hanya memuat gambar saat gambar tersebut digulir mendekati layar.
@@ -177,4 +187,6 @@ Elemen terlihat di layar! Rasio visibilitas: 0.75
 ---
 
 ## 7. 🧭 Navigasi
-- ⬅️ **Sebelumnya:** [05 - Debounce dan Throttle Optimization](../05-debounce-and-throttle/README.md)\n- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [05 - Debounce dan Throttle Optimization](../05-debounce-and-throttle/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

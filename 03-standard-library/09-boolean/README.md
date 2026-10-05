@@ -1,5 +1,10 @@
 # 09 - Boolean (Boolean Wrapper, toString, dan valueOf)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami tipe primitif `boolean` dan objek wrapper bawaan `Boolean`.
+> * **Kapan Digunakan**: Mengetahui jebakan fatal penggunaan `new Boolean()` dan mengapa konstruktor objek ini dihindari di industri.
+> * **Aturan Praktis**: Gunakan fungsi `Boolean(x)` atau operator double negation `!!x` untuk mengonversi data menjadi boolean primitif murni.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami tipe primitif `boolean` dan objek wrapper bawaan `Boolean`.
@@ -10,6 +15,9 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep & Referensi Lengkap
+
+### 🎭 Analogi Dunia Nyata
+> Tipe primitif `boolean` seperti **saklar lampu dinding**: hanya bisa berada di posisi Nyala (`true`) atau Mati (`false`). Menggunakan `new Boolean(false)` seperti **membungkus saklar mati tersebut ke dalam kardus paket pos**: kardus paketnya berwujud nyata ada di depan mata Anda (bertipe objek / truthy), meskipun saklar di dalamnya mati.
 
 Tipe data primitif **`boolean`** hanya memiliki dua nilai: `true` dan `false`. Di JavaScript, terdapat juga fungsi dan objek pembungkus bawaan bernama **`Boolean`**.
 
@@ -94,10 +102,8 @@ Data Bersih (Hanya Truthy): [ 'Joko', 'Admin', 'Aktif' ]
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Tipe primitif `boolean` seperti **saklar lampu dinding**: hanya bisa berada di posisi Nyala (`true`) atau Mati (`false`). Menggunakan `new Boolean(false)` seperti **membungkus saklar mati tersebut ke dalam kardus paket pos**: kardus paketnya berwujud nyata ada di depan mata Anda (bertipe objek / truthy), meskipun saklar di dalamnya mati.
 
 ### 🏢 Real-World Use Case
 1. **Validasi Keberadaan Input**: Memastikan string pencarian tidak kosong menggunakan `Boolean(searchQuery.trim())` atau `!!searchQuery`.
@@ -125,5 +131,5 @@ Data Bersih (Hanya Truthy): [ 'Joko', 'Admin', 'Aktif' ]
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [08 - Math](../08-math/README.md)
 - ➡️ **Selanjutnya:** [10 - Map](../10-map/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -1,5 +1,10 @@
 # 15 - Reflect (Refleksi Objek Modern dan Pasangan Ideal Proxy)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami `Reflect` sebagai objek statis bawaan ES6 untuk operasi intersepsi dan refleksi JavaScript.
+> * **Kapan Digunakan**: Mengetahui method-method utama Reflect: `Reflect.get()`, `Reflect.set()`, `Reflect.has()`, dan `Reflect.deleteProperty()`.
+> * **Aturan Praktis**: Selalu gunakan `Reflect` di dalam trap `Proxy` untuk meneruskan operasi default daripada melakukan manipulasi langsung ke `target`.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami `Reflect` sebagai objek statis bawaan ES6 untuk operasi intersepsi dan refleksi JavaScript.
@@ -10,6 +15,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> `Reflect` seperti **buku panduan manual operator resmi dari pabrik mobil**: setiap tuas, tombol, dan pedal rem pada mobil yang sebelumnya dioperasikan dengan cara manual yang berlainan (sebagian ditarik, sebagian diinjak, sebagian diputar), kini diberi antarmuka tombol konsol seragam berstandar internasional yang jelas status responnya.
 
 **`Reflect`** adalah objek built-in statis di JavaScript (mirip dengan `Math`) yang menyediakan kumpulan method untuk melakukan operasi refleksi terhadap objek. `Reflect` bukan konstruktor (`new Reflect()` akan error).
 
@@ -126,11 +135,8 @@ Gagal update harga          : Harga tidak boleh negatif!
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> `Reflect` seperti **buku panduan manual operator resmi dari pabrik mobil**: setiap tuas, tombol, dan pedal rem pada mobil yang sebelumnya dioperasikan dengan cara manual yang berlainan (sebagian ditarik, sebagian diinjak, sebagian diputar), kini diberi antarmuka tombol konsol seragam berstandar internasional yang jelas status responnya.
 
 ### 🏢 Real-World Use Case
 
@@ -163,5 +169,5 @@ Gagal update harga          : Harga tidak boleh negatif!
 
 - ⬅️ **Sebelumnya:** [14 - Proxy](../14-proxy/README.md)
 - ➡️ **Selanjutnya:** [16 - Encode](../16-encode/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

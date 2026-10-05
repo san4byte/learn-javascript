@@ -1,5 +1,10 @@
 # 04.4 - Perulangan Modern: For..of dan For..in
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami perbedaan mutlak antara perulangan `for..of` dan `for..in`.
+> * **Kapan Digunakan**: Menggunakan `for..of` untuk mengiterasi nilai dari Iterable (Array, String, arguments).
+> * **Aturan Praktis**: Gunakan **`for...of`** untuk Array, Set, Map, dan String.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami perbedaan mutlak antara perulangan `for..of` dan `for..in`.
 - Menggunakan `for..of` untuk mengiterasi nilai dari Iterable (Array, String, arguments).
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> `for...of` seperti **membuka kotak kado satu per satu dan mengeluarkan mainan di dalamnya** (mengambil isi/nilai). Sedangkan `for...in` seperti **membaca daftar label stiker yang ditempel di luar lemari** (membaca nama kunci/properti).
+
 ES6 memperkenalkan dua sintaks perulangan modern yang sangat bersih dan mudah dibaca:
 
 ### Perbedaan Mendasar:
@@ -85,10 +94,8 @@ Karakter: E
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> `for...of` seperti **membuka kotak kado satu per satu dan mengeluarkan mainan di dalamnya** (mengambil isi/nilai). Sedangkan `for...in` seperti **membaca daftar label stiker yang ditempel di luar lemari** (membaca nama kunci/properti).
 
 ### 🏢 Real-World Use Case
 1. **Iterasi NodeList DOM**: Mengambil seluruh tombol di halaman web menggunakan `document.querySelectorAll('button')` lalu melakukan looping dengan `for (const btn of buttons)`.

@@ -1,5 +1,10 @@
 # 09.3 - Konsep Keyword This pada Berbagai Konteks
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami peran keyword `this` sebagai penunjuk konteks objek yang sedang aktif.
+> * **Kapan Digunakan**: Memahami nilai `this` saat dipanggil secara global, di dalam method objek, dan di dalam constructor.
+> * **Aturan Praktis**: Gunakan Arrow Function di dalam callback internal method jika ingin mempertahankan konteks `this` dari method pembungkusnya (*lexical this*).
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami peran keyword `this` sebagai penunjuk konteks objek yang sedang aktif.
 - Memahami nilai `this` saat dipanggil secara global, di dalam method objek, dan di dalam constructor.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Keyword `this` seperti kata ganti orang **'Saya'**: Jika Joko yang berbicara di depan umum, kata 'Saya' merujuk ke Joko. Jika Budi yang berbicara, kata 'Saya' merujuk ke Budi. Arti kata 'Saya' (*this*) selalu bergantung pada siapa yang sedang memegang mikrofon (siapa yang memanggil fungsi).
+
 Keyword **`this`** adalah kata kunci spesial di JavaScript yang merepresentasikan **objek pemilik yang sedang mengeksekusi kode saat ini**.
 
 Nilai dari `this` **bersifat dinamis** dan ditentukan sepenuhnya oleh **bagaimana cara fungsi tersebut dipanggil**:
@@ -78,10 +87,8 @@ Pemilik: Joko Santoso | Saldo: Rp 1.500.000
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Keyword `this` seperti kata ganti orang **'Saya'**: Jika Joko yang berbicara di depan umum, kata 'Saya' merujuk ke Joko. Jika Budi yang berbicara, kata 'Saya' merujuk ke Budi. Arti kata 'Saya' (*this*) selalu bergantung pada siapa yang sedang memegang mikrofon (siapa yang memanggil fungsi).
 
 ### 🏢 Real-World Use Case
 1. **Komponen UI Berbasis Class / Prototype**: Method `this.render()`, `this.setState()` di arsitektur komponen.

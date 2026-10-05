@@ -1,5 +1,10 @@
 # 06 - Async dan Await (Sintaks Asinkron Modern)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep `async` dan `await` sebagai syntactic sugar di atas Promise.
+> * **Kapan Digunakan**: Mampu menulis kode asinkron dengan gaya penulisan yang terbaca bersih seperti kode sinkron.
+> * **Aturan Praktis**: Selalu bungkus blok `await` di dalam `try...catch` agar tidak terjadi error unhandled rejection.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep `async` dan `await` sebagai syntactic sugar di atas Promise.
 - Mampu menulis kode asinkron dengan gaya penulisan yang terbaca bersih seperti kode sinkron.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> **Async/Await** seperti **membeli tiket kereta cepat melalui mesin tiket otomatis**: Anda menekan tombol (memanggil `await`), mesin memproses beberapa detik sementara Anda berdiri menunggu hasilnya langsung keluar ke tangan Anda. Anda tidak perlu lagi mondar-mandir mendaftarkan nomor telepon ke loket lain (`.then`). Kodenya mengalir rapi dari atas ke bawah!
+
 Sintaks **`async / await`** diperkenalkan di ES2017 (ES8) untuk mempermudah penulisan dan pembacaan kode berbasis Promise.
 
 Dengan `async / await`, kita dapat menulis kode asinkron yang terlihat dan berperilaku mirip seperti kode sinkron linier biasa, tanpa perlu rantai `.then()` yang panjang (*Promise Chaining*).
@@ -89,10 +98,8 @@ Proses tampilkanProfilSiswa selesai.
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> **Async/Await** seperti **membeli tiket kereta cepat melalui mesin tiket otomatis**: Anda menekan tombol (memanggil `await`), mesin memproses beberapa detik sementara Anda berdiri menunggu hasilnya langsung keluar ke tangan Anda. Anda tidak perlu lagi mondar-mandir mendaftarkan nomor telepon ke loket lain (`.then`). Kodenya mengalir rapi dari atas ke bawah!
 
 ### 🏢 Real-World Use Case
 1. **Standar Industri Saat Ini**: 99% aplikasi web modern (React, Next.js, Express, Nest.js) menggunakan sintaks `async/await` daripada `.then()`.
@@ -122,5 +129,5 @@ Proses tampilkanProfilSiswa selesai.
 
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [05 - Fetch API](../07-fetch-api/README.md)
-- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

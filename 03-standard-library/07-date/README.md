@@ -1,5 +1,10 @@
 # 07 - Date (Epoch Timestamp, ISO 8601, Parsing, Getter dan Setter)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami representasi waktu dan penanggalan berbasis **Unix Epoch Timestamp** (1 Januari 1970 UTC).
+> * **Kapan Digunakan**: Mampu menginstansiasi objek `Date` menggunakan 4 cara konstruktor yang berbeda.
+> * **Aturan Praktis**: Simpan dan kirim data tanggal di API backend selalu dalam format standar string ISO 8601 (`toISOString()`) atau Unix Epoch milidetik.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami representasi waktu dan penanggalan berbasis **Unix Epoch Timestamp** (1 Januari 1970 UTC).
@@ -11,6 +16,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> Objek `Date` seperti **arloji stopwatch digital yang menghitung detik sejak dini hari 1 Januari 1970**: Angka internalnya hanya satu (jumlah milidetik), namun dial jam tersebut bisa menerjemahkan angka itu ke dalam jarum jam, penanggalan kalender, atau zona waktu kota yang berbeda-beda.
 
 Objek **`Date`** di JavaScript digunakan untuk mengelola tanggal dan waktu. Di balik layar, objek Date menyimpan satu nilai tunggal berupa angka integer milidetik yang telah berlalu sejak **Unix Epoch**, yaitu tanggal **1 Januari 1970 pukul 00:00:00 UTC**.
 
@@ -103,11 +112,8 @@ Selisih Waktu                : 30 hari
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> Objek `Date` seperti **arloji stopwatch digital yang menghitung detik sejak dini hari 1 Januari 1970**: Angka internalnya hanya satu (jumlah milidetik), namun dial jam tersebut bisa menerjemahkan angka itu ke dalam jarum jam, penanggalan kalender, atau zona waktu kota yang berbeda-beda.
 
 ### 🏢 Real-World Use Case
 
@@ -140,5 +146,5 @@ Selisih Waktu                : 30 hari
 
 - ⬅️ **Sebelumnya:** [06 - BigInt](../06-bigint/README.md)
 - ➡️ **Selanjutnya:** [08 - Math](../08-math/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -1,11 +1,23 @@
 # 01 - Web Storage API (localStorage, sessionStorage, dan Cookies)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami perbedaan mendasar antara localStorage, sessionStorage, dan Cookies.
+> * **Kapan Digunakan**: Mampu menyimpan, membaca, dan menghapus data tipe string maupun objek kompleks menggunakan JSON.
+> * **Aturan Praktis**: Selalu bungkus operasi `getItem` dan `setItem` dengan helper `try...catch` dan `JSON.parse`.
+
 ## 1. 🎯 Tujuan Belajar
-- Memahami perbedaan mendasar antara localStorage, sessionStorage, dan Cookies.\n- Mampu menyimpan, membaca, dan menghapus data tipe string maupun objek kompleks menggunakan JSON.\n- Memahami use case nyata di industri seperti penyimpanan Auth Token (JWT) dan preferensi Dark/Light Mode.\n- Mengetahui batasan keamanan (XSS vs HttpOnly Cookie) dan batasan kuota storage.
+- Memahami perbedaan mendasar antara localStorage, sessionStorage, dan Cookies.
+- Mampu menyimpan, membaca, dan menghapus data tipe string maupun objek kompleks menggunakan JSON.
+- Memahami use case nyata di industri seperti penyimpanan Auth Token (JWT) dan preferensi Dark/Light Mode.
+- Mengetahui batasan keamanan (XSS vs HttpOnly Cookie) dan batasan kuota storage.
 
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Bayangkan **localStorage** seperti *buku catatan permanen di meja kerja kantor Anda* (besok Anda datang, catatannya tetap ada). Sedangkan **sessionStorage** seperti *papan tulis temporary di ruang meeting* (segera dihapus bersih saat meeting selesai dan ruangan ditutup). Sementara **Cookies** seperti *tiket gelang bioskop di tangan Anda* (harus selalu Anda tunjukkan ke petugas tiket setiap kali lewat pintu bioskop / request HTTP).
+
 Di era web modern, browser menyediakan mekanisme penyimpanan data di sisi klien (*Client-Side Storage*) agar aplikasi web dapat mempertahankan state pengguna tanpa harus selalu meminta ke server setiap saat.
 
 ### Perbandingan 3 Metode Penyimpanan Utama:
@@ -132,10 +144,8 @@ Total biaya keranjang: Rp 1.350.000
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Bayangkan **localStorage** seperti *buku catatan permanen di meja kerja kantor Anda* (besok Anda datang, catatannya tetap ada). Sedangkan **sessionStorage** seperti *papan tulis temporary di ruang meeting* (segera dihapus bersih saat meeting selesai dan ruangan ditutup). Sementara **Cookies** seperti *tiket gelang bioskop di tangan Anda* (harus selalu Anda tunjukkan ke petugas tiket setiap kali lewat pintu bioskop / request HTTP).
 
 ### 🏢 Real-World Use Case
 1. **Dark Mode & UI Customization**: Membaca tema dari `localStorage` sebelum halaman selesai di-render agar layar tidak berkedip (*flash of unstyled content*).
@@ -162,4 +172,6 @@ Total biaya keranjang: Rp 1.350.000
 ---
 
 ## 7. 🧭 Navigasi
-- ➡️ **Selanjutnya:** [02 - Modern Syntax ES2020-ES2023](../02-modern-syntax-es2020/README.md)\n- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ➡️ **Selanjutnya:** [02 - Modern Syntax ES2020-ES2023](../02-modern-syntax-es2020/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

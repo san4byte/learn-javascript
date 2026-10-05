@@ -1,12 +1,24 @@
 # 01 - Number (Static Properties, Methods, dan Number Parsing)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami wrapper object `Number` dan perbedaannya dengan tipe primitif number.
+> * **Kapan Digunakan**: Menguasai static properties penting: `Number.MAX_VALUE`, `Number.MIN_VALUE`, `Number.MAX_SAFE_INTEGER`, `Number.MIN_SAFE_INTEGER`, dan `Number.NaN`.
+> * **Aturan Praktis**: Selalu gunakan `Number.isNaN()` dan `Number.isFinite()` alih-alih fungsi bawaan global untuk menghindari bug implicit type coercion.
+
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami wrapper object `Number` dan perbedaannya dengan tipe primitif number.\n- Menguasai static properties penting: `Number.MAX_VALUE`, `Number.MIN_VALUE`, `Number.MAX_SAFE_INTEGER`, `Number.MIN_SAFE_INTEGER`, dan `Number.NaN`.\n- Memahami static methods validasi modern: `Number.isNaN()` vs `isNaN()` global, serta `Number.isInteger()`.\n- Menguasai formatting angka tingkat lanjut: `toLocaleString()` untuk lokalisasi mata uang dan `toString(radix)` untuk konversi basis bilangan (biner, oktal, heksadesimal).
+- Memahami wrapper object `Number` dan perbedaannya dengan tipe primitif number.
+- Menguasai static properties penting: `Number.MAX_VALUE`, `Number.MIN_VALUE`, `Number.MAX_SAFE_INTEGER`, `Number.MIN_SAFE_INTEGER`, dan `Number.NaN`.
+- Memahami static methods validasi modern: `Number.isNaN()` vs `isNaN()` global, serta `Number.isInteger()`.
+- Menguasai formatting angka tingkat lanjut: `toLocaleString()` untuk lokalisasi mata uang dan `toString(radix)` untuk konversi basis bilangan (biner, oktal, heksadesimal).
 
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> Objek `Number` seperti penggaris presisi tukang arsitek: ia memiliki batas rentang terkecil dan terbesar yang bisa diukur dengan presisi (`MIN_SAFE_INTEGER` hingga `MAX_SAFE_INTEGER`). Jika Anda mencoba mengukur benda di luar kemampuan penggaris tersebut, angka yang dicatat akan mengalami penyimpangan.
 
 Objek **`Number`** adalah wrapper object bawaan JavaScript yang merepresentasikan angka numerik, baik bilangan bulat (_integer_) maupun bilangan pecahan (_floating point 64-bit IEEE 754_).
 
@@ -101,32 +113,38 @@ Format NaN                         : Input harga tidak valid
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> Objek `Number` seperti penggaris presisi tukang arsitek: ia memiliki batas rentang terkecil dan terbesar yang bisa diukur dengan presisi (`MIN_SAFE_INTEGER` hingga `MAX_SAFE_INTEGER`). Jika Anda mencoba mengukur benda di luar kemampuan penggaris tersebut, angka yang dicatat akan mengalami penyimpangan.
 
 ### 🏢 Real-World Use Case
 
-1. **Aplikasi Perbankan / Fintech**: Memformat saldo rekening pengguna ke format mata uang lokal (`toLocaleString('id-ID')`) tanpa perlu menulis fungsi regex pemisah ribuan manual.\n2. **Validasi Input Form Angka**: Memastikan input umur atau jumlah kuantitas belanja benar-benar integer menggunakan `Number.isInteger()`.\n3. **Sistem Jaringan & Hardware**: Mengonversi alamat IP atau byte data warna (0-255) ke representasi heksadesimal menggunakan `num.toString(16)`.
+1. **Aplikasi Perbankan / Fintech**: Memformat saldo rekening pengguna ke format mata uang lokal (`toLocaleString('id-ID')`) tanpa perlu menulis fungsi regex pemisah ribuan manual.
+2. **Validasi Input Form Angka**: Memastikan input umur atau jumlah kuantitas belanja benar-benar integer menggunakan `Number.isInteger()`.
+3. **Sistem Jaringan & Hardware**: Mengonversi alamat IP atau byte data warna (0-255) ke representasi heksadesimal menggunakan `num.toString(16)`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Salah mengira `Number.MIN_VALUE` sebagai angka negatif terkecil**: `Number.MIN_VALUE` adalah angka positif terkecil mendekati 0 (`5e-324`). Untuk batas negatif, gunakan `-Number.MAX_VALUE` atau `Number.MIN_SAFE_INTEGER`.\n* **Menggunakan `isNaN()` global lama**: `isNaN('bukan angka')` menghasilkan `true` karena 'bukan angka' dikonversi dulu ke angka. Selalu gunakan `Number.isNaN()` untuk pemeriksaan nilai `NaN` murni.\n* **Lupa bahwa angka di atas `MAX_SAFE_INTEGER` kehilangan presisi**: `9007199254740991 + 1 === 9007199254740991 + 2` bernilai `true`! Untuk angka yang lebih besar dari itu, gunakan tipe data `BigInt`.
+- **Salah mengira `Number.MIN_VALUE` sebagai angka negatif terkecil**: `Number.MIN_VALUE` adalah angka positif terkecil mendekati 0 (`5e-324`). Untuk batas negatif, gunakan `-Number.MAX_VALUE` atau `Number.MIN_SAFE_INTEGER`.
+* **Menggunakan `isNaN()` global lama**: `isNaN('bukan angka')` menghasilkan `true` karena 'bukan angka' dikonversi dulu ke angka. Selalu gunakan `Number.isNaN()` untuk pemeriksaan nilai `NaN` murni.
+* **Lupa bahwa angka di atas `MAX_SAFE_INTEGER` kehilangan presisi**: `9007199254740991 + 1 === 9007199254740991 + 2` bernilai `true`! Untuk angka yang lebih besar dari itu, gunakan tipe data `BigInt`.
 
 ### 🌟 Best Practice
 
-- Selalu gunakan `Number.isNaN()` dan `Number.isFinite()` alih-alih fungsi bawaan global untuk menghindari bug implicit type coercion.\n* Gunakan `Number.parseInt(str, 10)` dengan selalu menyertakan basis 10 secara eksplisit untuk mencegah ambiguitas basis pada string tertentu.\n* Gunakan `toLocaleString()` untuk menampilkan angka kepada user agar konsisten dengan standar lokal bahasa mereka.
+- Selalu gunakan `Number.isNaN()` dan `Number.isFinite()` alih-alih fungsi bawaan global untuk menghindari bug implicit type coercion.
+* Gunakan `Number.parseInt(str, 10)` dengan selalu menyertakan basis 10 secara eksplisit untuk mencegah ambiguitas basis pada string tertentu.
+* Gunakan `toLocaleString()` untuk menampilkan angka kepada user agar konsisten dengan standar lokal bahasa mereka.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
 
-1. Buatlah fungsi `formatRupiah(angka)` yang menerima angka dan mengembalikan format string mata uang Rupiah Indonesia (contoh: `Rp 500.000`).\n2. Buatlah fungsi `konversiWarnaRGBkeHex(r, g, b)` yang menerima tiga angka (0-255) dan mengembalikan kode warna heksadesimal dengan format `#RRGGBB` menggunakan method `toString(16)` dan `padStart(2, '0')`.
+1. Buatlah fungsi `formatRupiah(angka)` yang menerima angka dan mengembalikan format string mata uang Rupiah Indonesia (contoh: `Rp 500.000`).
+2. Buatlah fungsi `konversiWarnaRGBkeHex(r, g, b)` yang menerima tiga angka (0-255) dan mengembalikan kode warna heksadesimal dengan format `#RRGGBB` menggunakan method `toString(16)` dan `padStart(2, '0')`.
 
 ---
 
 ## 7. 🧭 Navigasi
 
-- ➡️ **Selanjutnya:** [02 - String](../02-string/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ➡️ **Selanjutnya:** [02 - String](../02-string/README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

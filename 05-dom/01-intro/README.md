@@ -1,5 +1,10 @@
 # 01 - Pengenalan DOM (Document Object Model) & DOM Tree
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep dasar Document Object Model (DOM) sebagai representasi dokumen di memori.
+> * **Kapan Digunakan**: Memahami struktur hierarki pohon dokumen (DOM Tree).
+> * **Aturan Praktis**: Selalu letakkan tag `<script src="example.js"></script>` tepat sebelum penutup `</body>` agar HTML selesai dimuat terlebih dahulu oleh browser.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep dasar Document Object Model (DOM) sebagai representasi dokumen di memori.
 - Memahami struktur hierarki pohon dokumen (DOM Tree).
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> HTML mentah seperti **sketsa cetak biru arsitektur rumah di atas kertas kertas**: sketsa itu hanya teks diam. DOM adalah **model maket miniatur 3D rumah** yang sudah terbangun di atas meja. Dengan kuas JavaScript, Anda bisa mengecat dinding miniatur tersebut, mengganti warna genteng, atau memindahkan miniatur pintu secara instan.
+
 **Document Object Model (DOM)** adalah antarmuka pemrograman (*Application Programming Interface*) standar W3C untuk dokumen HTML dan XML.
 
 Ketika browser memuat halaman web:
@@ -68,15 +77,13 @@ if (typeof document === 'undefined') {
 --- 01. Pengenalan DOM (Browser Environment) ---
 Objek Document: #document
 Judul Halaman : 01 - Pengenalan DOM
-URL Halaman   : http://127.0.0.1:5500/02-dom/01-intro/index.html
+URL Halaman   : http://127.0.0.1:5500/05-dom/01-intro/index.html
 ```
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> HTML mentah seperti **sketsa cetak biru arsitektur rumah di atas kertas kertas**: sketsa itu hanya teks diam. DOM adalah **model maket miniatur 3D rumah** yang sudah terbangun di atas meja. Dengan kuas JavaScript, Anda bisa mengecat dinding miniatur tersebut, mengganti warna genteng, atau memindahkan miniatur pintu secara instan.
 
 ### 🏢 Real-World Use Case
 1. **Single Page Application (SPA)**: Framework modern (React, Vue, Svelte) bekerja dengan memanipulasi DOM di balik layar untuk memperbarui tampilan tanpa me-reload halaman.
@@ -99,7 +106,7 @@ URL Halaman   : http://127.0.0.1:5500/02-dom/01-intro/index.html
 ---
 
 ## 7. 🧭 Navigasi
-- ⬅️ **Sebelumnya:** [01-Dasar: 10.2 - Game Tebak Angka](../../01-fundamentals/10-mini-games/02-guess-number/README.md)
+- ⬅️ **Sebelumnya:** [04 - JavaScript Modules](../../04-modules/README.md)
 - ➡️ **Selanjutnya:** [02 - DOM Selection](../02-dom-selection/README.md)
-- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -1,5 +1,10 @@
 # 06 - Project Simulasi Pengelolaan Angkot
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Mengintegrasikan konsep Perulangan (for & while) dengan Pengkondisian (if, else if, else).
+> * **Kapan Digunakan**: Mampu menyelesaikan masalah logika bisnis dunia nyata bertahap dari kasus Angkot 1 sampai Angkot 6.
+> * **Aturan Praktis**: Gunakan konstanta konfigurasi (`const totalAngkot = 10`) daripada menuliskan *magic number* secara langsung di dalam kode perulangan.
+
 ## 1. 🎯 Tujuan Belajar
 - Mengintegrasikan konsep Perulangan (for & while) dengan Pengkondisian (if, else if, else).
 - Mampu menyelesaikan masalah logika bisnis dunia nyata bertahap dari kasus Angkot 1 sampai Angkot 6.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Simulasi ini seperti **papan monitor dispatcher bandara**: setiap pesawat diperiksa nomor penerbangannya secara berurutan. Pesawat reguler dinyatakan 'On Schedule', pesawat perbaikan dinyatakan 'Maintenance', dan beberapa penerbangan carter khusus dinyatakan 'Overtime Service'.
+
 Proyek **Simulasi Angkot** adalah latihan logika klasik yang sangat ampuh untuk melatih kombinasi perulangan dan percabangan kondisi logika secara bertahap:
 
 ### Alur Masalah Bisnis:
@@ -60,10 +69,8 @@ Angkot No. 10 sedang lembur.
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Simulasi ini seperti **papan monitor dispatcher bandara**: setiap pesawat diperiksa nomor penerbangannya secara berurutan. Pesawat reguler dinyatakan 'On Schedule', pesawat perbaikan dinyatakan 'Maintenance', dan beberapa penerbangan carter khusus dinyatakan 'Overtime Service'.
 
 ### 🏢 Real-World Use Case
 1. **Penjadwalan Armada Kendaraan Logistik (Fleet Management)**: Menentukan armada truk kurir mana yang aktif mengirim paket hari ini, mana yang sedang servis rutin di bengkel, dan mana yang lembur pengiriman malam.

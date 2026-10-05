@@ -1,5 +1,10 @@
 # 07 - Latihan Mandiri: Manipulasi Warna Background (DOM Event & Math)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Menerapkan event click dan input untuk memanipulasi style CSS secara dinamis.
+> * **Kapan Digunakan**: Membuat pengubah warna acak berbasis formula RGB (`Math.random()`).
+> * **Aturan Praktis**: Selalu pastikan rentang angka acak dibulatkan menjadi integer dengan `Math.round()` agar format RGB valid.
+
 ## 1. 🎯 Tujuan Belajar
 - Menerapkan event click dan input untuk memanipulasi style CSS secara dinamis.
 - Membuat pengubah warna acak berbasis formula RGB (`Math.random()`).
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Aplikasi ini seperti **palet cat digital seorang seniman**: Anda bisa menekan tombol warna acak untuk membiarkan komputer mencampur cat, atau menggeser tuas tabung cat merah, hijau, dan biru untuk menghasilkan warna eksak yang Anda inginkan.
+
 Proyek **Manipulasi Warna Background** adalah latihan interaktif DOM klasik:
 1. **Fitur 1 (Tombol Toggle)**: Mengubah warna background body menjadi warna tertentu atau toggle class.
 2. **Fitur 2 (Tombol Acak)**: Menghasilkan angka acak antara 0 sampai 255 untuk $R$, $G$, dan $B$, lalu menerapkannya ke `document.body.style.backgroundColor = 'rgb(r, g, b)'`.
@@ -52,10 +61,8 @@ Warna background diubah ke: rgb(210, 85, 90)
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Aplikasi ini seperti **palet cat digital seorang seniman**: Anda bisa menekan tombol warna acak untuk membiarkan komputer mencampur cat, atau menggeser tuas tabung cat merah, hijau, dan biru untuk menghasilkan warna eksak yang Anda inginkan.
 
 ### 🏢 Real-World Use Case
 1. **Color Picker Komponen**: Fitur pemilihan warna tema kustom di aplikasi desain seperti Figma atau Canva.
@@ -77,5 +84,5 @@ Warna background diubah ke: rgb(210, 85, 90)
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [06 - DOM Traversal](../06-dom-traversal/README.md)
 - ➡️ **Selanjutnya:** [08 - Latihan Game Suit Jawa GUI](../10-practice-suit-jawa-gui/README.md)
-- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -1,5 +1,10 @@
 # 08 - Latihan Mandiri: Game Suit Jawa GUI Interaktif
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Mengembangkan logika Suit Jawa di modul 01 menjadi antarmuka grafis (GUI) interaktif.
+> * **Kapan Digunakan**: Membuat efek animasi putar gambar sebelum komputer menentukan pilihan.
+> * **Aturan Praktis**: Matikan interaksi klik sementara (*disable pointer-events*) selama animasi komputer berputar, lalu aktifkan kembali setelah hasil keluar.
+
 ## 1. 🎯 Tujuan Belajar
 - Mengembangkan logika Suit Jawa di modul 01 menjadi antarmuka grafis (GUI) interaktif.
 - Membuat efek animasi putar gambar sebelum komputer menentukan pilihan.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Game ini seperti **mesin slot kasino mini**: Anda menarik tuas (mengklik gambar Anda), roda angka berputar cepat beberapa putaran (animasi timing interval), lalu roda terkunci di hasil akhir.
+
 Pada modul dasar, game Suit Jawa hanya berjalan menggunakan dialog teks. Pada modul ini, kita mengubahnya menjadi **Game GUI Penuh**:
 1. Pemain mengklik ikon gambar (Gajah, Orang, atau Semut).
 2. Gambar komputer berputar cepat selama 1 detik (animasi simulasi memikir).
@@ -53,10 +62,8 @@ Mesin game Suit Jawa siap merespon klik gambar.
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Game ini seperti **mesin slot kasino mini**: Anda menarik tuas (mengklik gambar Anda), roda angka berputar cepat beberapa putaran (animasi timing interval), lalu roda terkunci di hasil akhir.
 
 ### 🏢 Real-World Use Case
 1. **Gamifikasi Web E-Commerce**: Fitur Lucky Spin atau Lucky Draw berhadiah voucher belanja saat promo tanggal kembar.
@@ -78,5 +85,5 @@ Mesin game Suit Jawa siap merespon klik gambar.
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [07 - Latihan Ubah Warna](../09-practice-color-picker/README.md)
 - ➡️ **Selanjutnya:** [09 - Latihan Galeri Gambar](../11-practice-image-gallery/README.md)
-- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

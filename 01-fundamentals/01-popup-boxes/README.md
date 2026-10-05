@@ -1,5 +1,10 @@
 # 01 - Popup Box (alert, prompt, dan confirm)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami fungsi dialog bawaan browser: alert(), prompt(), dan confirm().
+> * **Kapan Digunakan**: Mengetahui nilai balik (return value) dari masing-masing fungsi dialog.
+> * **Aturan Praktis**: Selalu gunakan helper guard jika ingin script Anda kompatibel di terminal maupun browser.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami fungsi dialog bawaan browser: alert(), prompt(), dan confirm().
 - Mengetahui nilai balik (return value) dari masing-masing fungsi dialog.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Popup box seperti **penjaga pintu palang kereta api**: saat palang turun (popup muncul), semua kendaraan di jalan raya berhenti total (blocking). Kendaraan baru boleh jalan kembali setelah palang diangkat (pengguna menekan tombol).
+
 JavaScript di browser menyediakan 3 fungsi dialog interaktif modal sederhana:
 1. **`alert(pesan)`**: Menampilkan pesan informasi kepada pengguna dengan tombol OK. Mengembalikan nilai `undefined`.
 2. **`prompt(pesan, defaultValue)`**: Menampilkan input teks yang meminta pengguna mengetikkan sesuatu. Mengembalikan nilai bertipe `String` jika pengguna menekan OK, atau `null` jika pengguna menekan Batal (*Cancel*).
@@ -56,10 +65,8 @@ universalAlert("Terima kasih telah berkunjung!");
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Popup box seperti **penjaga pintu palang kereta api**: saat palang turun (popup muncul), semua kendaraan di jalan raya berhenti total (blocking). Kendaraan baru boleh jalan kembali setelah palang diangkat (pengguna menekan tombol).
 
 ### 🏢 Real-World Use Case
 1. **Konfirmasi Penghapusan Data Sensitif**: Menampilkan `confirm('Apakah Anda yakin ingin menghapus data ini secara permanen?')` sebelum memicu request delete ke database.

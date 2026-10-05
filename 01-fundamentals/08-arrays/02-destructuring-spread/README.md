@@ -1,5 +1,10 @@
 # 08.2 - Destructuring Array dan Spread Operator
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami sintaks Destructuring Assignment pada Array.
+> * **Kapan Digunakan**: Mampu menukar nilai dua variabel (*variable swap*) tanpa variabel sementara.
+> * **Aturan Praktis**: Gunakan Spread Operator untuk penggabungan array alih-alih `array.concat()`.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami sintaks Destructuring Assignment pada Array.
 - Mampu menukar nilai dua variabel (*variable swap*) tanpa variabel sementara.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Destructuring seperti **membongkar paket parsel lebaran**: daripada membawa keranjang parselnya ke mana-mana, Anda langsung mengambil kaleng biskuit dan sirupnya ke tangan Anda. Spread operator seperti **menumpahkan isi kantong kelereng ke atas lantai**: seluruh butir kelereng tersebar bebas satu per satu.
+
 ES6 memperkenalkan dua fitur yang menyederhanakan penanganan data Array:
 
 ### 1. Destructuring Array
@@ -81,10 +90,8 @@ Klon buah lokal : [ 'Pisang', 'Mangga', 'Durian' ]
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Destructuring seperti **membongkar paket parsel lebaran**: daripada membawa keranjang parselnya ke mana-mana, Anda langsung mengambil kaleng biskuit dan sirupnya ke tangan Anda. Spread operator seperti **menumpahkan isi kantong kelereng ke atas lantai**: seluruh butir kelereng tersebar bebas satu per satu.
 
 ### 🏢 Real-World Use Case
 1. **Return Value Majemuk dari Function**: Fungsi yang mengembalikan beberapa nilai sekaligus dalam format tuple (seperti `const [data, setData] = useState()` di React).

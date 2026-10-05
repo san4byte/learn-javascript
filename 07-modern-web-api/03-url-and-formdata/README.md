@@ -1,11 +1,23 @@
 # 03 - URL, URLSearchParams, dan FormData API
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami manipulasi query string URL secara dinamis menggunakan `URLSearchParams`.
+> * **Kapan Digunakan**: Mampu membuat fitur sinkronisasi filter dan search e-commerce ke URL browser.
+> * **Aturan Praktis**: Manfaatkan `window.history.pushState({}, '', urlKatalog)` di browser agar URL di address bar browser berubah saat filter diganti tanpa me-reload seluruh halaman.
+
 ## 1. 🎯 Tujuan Belajar
-- Memahami manipulasi query string URL secara dinamis menggunakan `URLSearchParams`.\n- Mampu membuat fitur sinkronisasi filter dan search e-commerce ke URL browser.\n- Menguasai penggunaan `FormData` untuk membaca input formulir HTML secara otomatis.\n- Mengetahui cara mengirim file upload (gambar/dokumen) ke backend via `fetch` secara aman.
+- Memahami manipulasi query string URL secara dinamis menggunakan `URLSearchParams`.
+- Mampu membuat fitur sinkronisasi filter dan search e-commerce ke URL browser.
+- Menguasai penggunaan `FormData` untuk membaca input formulir HTML secara otomatis.
+- Mengetahui cara mengirim file upload (gambar/dokumen) ke backend via `fetch` secara aman.
 
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> **URLSearchParams** seperti formulir pesanan yang ditempel di kaca mobil truk ekspedisi (semua orang di jalan raya bisa melihat pesanan Anda di alamat URL). Sedangkan **FormData** seperti kardus paket bersegel tertutup rapat yang dikirim oleh kurir (dapat menampung barang padat/file fisik maupun surat dokumen, tertutup rapi di dalam payload HTTP request).
+
 Dua aspek fundamental dari komunikasi data di aplikasi web adalah:
 1. **Navigasi & Filter berbasis URL**: Menyimpan state filter (kategori, harga, halaman) di URL agar link bisa dibagikan (*shareable link*).
 2. **Pengiriman Formulir & Berkas (Form & File Upload)**: Mengambil data input user dan berkas fisik (file) untuk dikirim ke server.
@@ -117,10 +129,8 @@ Nama file yang diunggah      : avatar-joko.png
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> **URLSearchParams** seperti formulir pesanan yang ditempel di kaca mobil truk ekspedisi (semua orang di jalan raya bisa melihat pesanan Anda di alamat URL). Sedangkan **FormData** seperti kardus paket bersegel tertutup rapat yang dikirim oleh kurir (dapat menampung barang padat/file fisik maupun surat dokumen, tertutup rapi di dalam payload HTTP request).
 
 ### 🏢 Real-World Use Case
 1. **E-Commerce Shareable Filter**: Ketika user menyortir sepatu berdasarkan harga, URL otomatis diperbarui ke `?kategori=sepatu&sort=termurah`. Link ini bisa di-copy dan dikirim ke teman, dan teman akan melihat halaman dengan filter yang persis sama.
@@ -145,4 +155,7 @@ Nama file yang diunggah      : avatar-joko.png
 ---
 
 ## 7. 🧭 Navigasi
-- ⬅️ **Sebelumnya:** [02 - Modern Syntax ES2020-ES2023](../02-modern-syntax-es2020/README.md)\n- ➡️ **Selanjutnya:** [04 - Async Paralel dan AbortController](../04-async-parallel-abort/README.md)\n- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [02 - Modern Syntax ES2020-ES2023](../02-modern-syntax-es2020/README.md)
+- ➡️ **Selanjutnya:** [04 - Async Paralel dan AbortController](../04-async-parallel-abort/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

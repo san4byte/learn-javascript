@@ -1,11 +1,23 @@
 # 02 - Modern Syntax ES2020-ES2023 (Optional Chaining, Nullish Coalescing, Immutability)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Menguasai sintaks Optional Chaining (`?.`) untuk mengakses nested object tanpa memicu TypeError.
+> * **Kapan Digunakan**: Memahami perbedaan krusial antara Nullish Coalescing (`??`) dan Logical OR (`||`).
+> * **Aturan Praktis**: Gabungkan `?.` dengan `??` untuk nilai default yang bersih dan elegan:
+
 ## 1. 🎯 Tujuan Belajar
-- Menguasai sintaks Optional Chaining (`?.`) untuk mengakses nested object tanpa memicu TypeError.\n- Memahami perbedaan krusial antara Nullish Coalescing (`??`) dan Logical OR (`||`).\n- Mampu menduplikasi objek bertingkat secara mendalam menggunakan `structuredClone()`.\n- Memahami method Array baru ES2023 (`toSorted()`, `toReversed()`, `toSpliced()`) untuk prinsip Immutability.
+- Menguasai sintaks Optional Chaining (`?.`) untuk mengakses nested object tanpa memicu TypeError.
+- Memahami perbedaan krusial antara Nullish Coalescing (`??`) dan Logical OR (`||`).
+- Mampu menduplikasi objek bertingkat secara mendalam menggunakan `structuredClone()`.
+- Memahami method Array baru ES2023 (`toSorted()`, `toReversed()`, `toSpliced()`) untuk prinsip Immutability.
 
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> **Optional Chaining (`?.`)** dianalogikan seperti kurir pengantar paket: kurir mengetuk pagar rumah Anda; jika rumah kosong/pagar terkunci, kurir mencatat 'penerima tidak ditemukan' (`undefined`) dan langsung pulang dengan selamat. Tanpa `?.`, kurir akan mendobrak pintu rumah dan membunyikan alarm keras polisi (*Crash / TypeError*).
+
 JavaScript terus berevolusi setiap tahun melalui komite TC39. Fitur-fitur yang dirilis antara tahun 2020 hingga 2023 membawa perubahan besar pada cara developer menulis kode industri: lebih ringkas, aman dari error runtime, dan menganut prinsip *immutability*.
 
 ### 1. Optional Chaining (`?.`)
@@ -130,10 +142,8 @@ Hasil toReversed : [ 60, 95, 78, 92, 85 ]
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> **Optional Chaining (`?.`)** dianalogikan seperti kurir pengantar paket: kurir mengetuk pagar rumah Anda; jika rumah kosong/pagar terkunci, kurir mencatat 'penerima tidak ditemukan' (`undefined`) dan langsung pulang dengan selamat. Tanpa `?.`, kurir akan mendobrak pintu rumah dan membunyikan alarm keras polisi (*Crash / TypeError*).
 
 ### 🏢 Real-World Use Case
 1. **Konsumsi REST API / GraphQL**: Response dari server sering kali tidak memiliki field tertentu jika data belum lengkap di database (misal: user belum mengisi alamat rumah).
@@ -160,4 +170,7 @@ Hasil toReversed : [ 60, 95, 78, 92, 85 ]
 ---
 
 ## 7. 🧭 Navigasi
-- ⬅️ **Sebelumnya:** [01 - Web Storage API](../01-web-storage/README.md)\n- ➡️ **Selanjutnya:** [03 - URL dan FormData API](../03-url-and-formdata/README.md)\n- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [01 - Web Storage API](../01-web-storage/README.md)
+- ➡️ **Selanjutnya:** [03 - URL dan FormData API](../03-url-and-formdata/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -1,5 +1,10 @@
 # 04.3 - Pengulangan Bersarang (Nested Loops)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami cara kerja loop di dalam loop (*Nested Loops*).
+> * **Kapan Digunakan**: Mampu membuat pola visual berbasis baris dan kolom (pola bintang, matriks).
+> * **Aturan Praktis**: Hindari nesting loop lebih dari 2 tingkat jika tidak benar-benar dibutuhkan.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami cara kerja loop di dalam loop (*Nested Loops*).
 - Mampu membuat pola visual berbasis baris dan kolom (pola bintang, matriks).
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Nested loop seperti **jarum jam dinding**: jarum jam (loop luar) baru bergeser 1 angka setelah jarum menit (loop dalam) menyelesaikan putaran penuh 60 menit.
+
 **Pengulangan Bersarang (Nested Loop)** adalah perulangan yang diletakkan di dalam perulangan lainnya.
 
 Konsep umumnya adalah:
@@ -67,10 +76,8 @@ console.log(hasilSegitiga.trim());
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Nested loop seperti **jarum jam dinding**: jarum jam (loop luar) baru bergeser 1 angka setelah jarum menit (loop dalam) menyelesaikan putaran penuh 60 menit.
 
 ### 🏢 Real-World Use Case
 1. **Pemrosesan Gambar (Pixel 2D)**: Membaca warna setiap pixel pada gambar digital berbasis koordinat $(x, y)$ (baris dan kolom pixel).

@@ -1,11 +1,23 @@
 # 05 - Optimasi Performa Event: Debounce dan Throttle
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami masalah performa (event flooding) pada event browser seperti input, scroll, dan resize.
+> * **Kapan Digunakan**: Memahami konsep, cara kerja, dan implementasi teknik Debounce.
+> * **Aturan Praktis**: Untuk delay input pencarian, rentang waktu debounce ideal adalah antara `250ms` hingga `400ms` (cukup responsif bagi manusia, namun sangat menghemat request server).
+
 ## 1. 🎯 Tujuan Belajar
-- Memahami masalah performa (event flooding) pada event browser seperti input, scroll, dan resize.\n- Memahami konsep, cara kerja, dan implementasi teknik Debounce.\n- Memahami konsep, cara kerja, dan implementasi teknik Throttle.\n- Mampu menentukan kapan harus menggunakan Debounce dan kapan harus menggunakan Throttle di aplikasi nyata.
+- Memahami masalah performa (event flooding) pada event browser seperti input, scroll, dan resize.
+- Memahami konsep, cara kerja, dan implementasi teknik Debounce.
+- Memahami konsep, cara kerja, dan implementasi teknik Throttle.
+- Mampu menentukan kapan harus menggunakan Debounce dan kapan harus menggunakan Throttle di aplikasi nyata.
 
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> **Debounce** seperti *pintu lift otomatis*: pintu lift tidak akan pernah menutup selama masih ada orang yang melangkah masuk. Pintu baru menutup setelah 3 detik tidak ada satupun orang yang masuk. **Throttle** seperti *keran dispenser air otomatis*: saat Anda menekan tombolnya berulang kali secara histeris, air hanya akan keluar 1 cangkir setiap 5 detik.
+
 Event tertentu di browser seperti `keyup` / `input` pada form pencarian, `scroll`, dan `resize` dapat terpicu hingga puluhan bahkan ratusan kali dalam satu detik.
 
 Jika pada setiap event tersebut kita menjalankan operasi berat (seperti melakukan kalkulasi DOM atau menembak request HTTP ke server), aplikasi web akan mengalami:
@@ -135,10 +147,8 @@ Simulasi scroll intensif dalam 300ms:
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> **Debounce** seperti *pintu lift otomatis*: pintu lift tidak akan pernah menutup selama masih ada orang yang melangkah masuk. Pintu baru menutup setelah 3 detik tidak ada satupun orang yang masuk. **Throttle** seperti *keran dispenser air otomatis*: saat Anda menekan tombolnya berulang kali secara histeris, air hanya akan keluar 1 cangkir setiap 5 detik.
 
 ### 🏢 Real-World Use Case
 1. **Auto-save Formulir / Artikel Blog**: Menyimpan draft tulisan otomatis ke server 1 detik setelah user berhenti mengetik.
@@ -163,4 +173,7 @@ Simulasi scroll intensif dalam 300ms:
 ---
 
 ## 7. 🧭 Navigasi
-- ⬅️ **Sebelumnya:** [04 - Async Paralel dan AbortController](../04-async-parallel-abort/README.md)\n- ➡️ **Selanjutnya:** [06 - Intersection Observer API](../06-intersection-observer/README.md)\n- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [04 - Async Paralel dan AbortController](../04-async-parallel-abort/README.md)
+- ➡️ **Selanjutnya:** [06 - Intersection Observer API](../06-intersection-observer/README.md)
+- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

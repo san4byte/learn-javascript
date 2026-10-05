@@ -1,5 +1,10 @@
 # 09 - Latihan Mandiri: Galeri Gambar Interaktif (Image Gallery)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Membangun galeri foto interaktif dengan gambar utama (Hero Image) dan thumbnail.
+> * **Kapan Digunakan**: Menerapkan Event Delegation pada kontainer thumbnail foto.
+> * **Aturan Praktis**: Selalu manfaatkan Event Delegation pada kontainer pembungkus thumbnail agar kode lebih hemat memori dan mendukung penambahan thumbnail baru secara dinamis.
+
 ## 1. 🎯 Tujuan Belajar
 - Membangun galeri foto interaktif dengan gambar utama (Hero Image) dan thumbnail.
 - Menerapkan Event Delegation pada kontainer thumbnail foto.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Galeri gambar seperti **proyektor slide foto**: Anda memilih satu slide kecil dari rak penyimpanan (thumbnail), memasukkannya ke slot proyektor, dan gambar besar langsung terpancar di layar utama bioskop.
+
 Proyek **Galeri Gambar** adalah komponen antarmuka yang paling sering kita temui di halaman detail produk toko online (seperti Tokopedia, Shopee, Amazon):
 * Ada satu gambar berukuran besar di bagian tengah (**Jumbo / Hero Image**).
 * Di bagian bawah terdapat deretan gambar-gambar kecil (**Thumbnails**).
@@ -49,15 +58,13 @@ if (typeof document === 'undefined') {
 ## 4. 🖥️ Output yang Diharapkan
 ```text
 --- 09. Image Gallery (Browser) ---
-Gambar aktif diubah ke: http://127.0.0.1:5500/02-dom/11-practice-image-gallery/img/1.jpg
+Gambar aktif diubah ke: http://127.0.0.1:5500/05-dom/11-practice-image-gallery/img/1.jpg
 ```
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Galeri gambar seperti **proyektor slide foto**: Anda memilih satu slide kecil dari rak penyimpanan (thumbnail), memasukkannya ke slot proyektor, dan gambar besar langsung terpancar di layar utama bioskop.
 
 ### 🏢 Real-World Use Case
 1. **Halaman Detail Produk Toko Online**: Pengguna melihat foto sepatu dari berbagai sudut (depan, samping, belakang, sol).
@@ -79,5 +86,5 @@ Gambar aktif diubah ke: http://127.0.0.1:5500/02-dom/11-practice-image-gallery/i
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [08 - Latihan Game Suit Jawa GUI](../10-practice-suit-jawa-gui/README.md)
 - ➡️ **Selanjutnya:** [Modul 03 - Asynchronous JavaScript](../../06-asynchronous/README.md)
-- 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
+- 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

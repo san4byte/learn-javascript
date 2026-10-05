@@ -1,5 +1,10 @@
 # 05 - JSON (JavaScript Object Notation: Serialize, Deserialize, Replacer, dan Reviver)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami format pertukaran data standar industri: JSON (JavaScript Object Notation).
+> * **Kapan Digunakan**: Menguasai serialisasi objek JavaScript menjadi string JSON dengan `JSON.stringify()`.
+> * **Aturan Praktis**: Selalu bungkus pemanggilan `JSON.parse()` di dalam blok `try...catch` untuk mengantisipasi data string yang rusak atau korup dari server/storage.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami format pertukaran data standar industri: JSON (JavaScript Object Notation).
@@ -11,6 +16,9 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep & Referensi Lengkap
+
+### 🎭 Analogi Dunia Nyata
+> JSON seperti **kontainer kargo kapal laut**: barang-barang mewah di rumah Anda (objek JS lengkap dengan fungsi dan memorinya) harus dibongkar dan dikemas ke dalam kotak kardus datar tersegel (teks JSON string) agar bisa dikirim menyeberangi samudra internet. Saat sampai di tujuan, pihak penerima membuka segel kardus dan merakitnya kembali menjadi perabot fisik (`JSON.parse`).
 
 **JSON (JavaScript Object Notation)** adalah format pertukaran data berbasis teks standar terbuka yang ringan, independen dari bahasa pemrograman, dan mudah dibaca manusia maupun mesin. Di JavaScript, objek global bawaan **`JSON`** menyediakan API esensial untuk transformasi data:
 
@@ -116,26 +124,34 @@ Format tanggal lokal      : 2/10/2026
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> JSON seperti **kontainer kargo kapal laut**: barang-barang mewah di rumah Anda (objek JS lengkap dengan fungsi dan memorinya) harus dibongkar dan dikemas ke dalam kotak kardus datar tersegel (teks JSON string) agar bisa dikirim menyeberangi samudra internet. Saat sampai di tujuan, pihak penerima membuka segel kardus dan merakitnya kembali menjadi perabot fisik (`JSON.parse`).
 
 ### 🏢 Real-World Use Case
-1. **Komunikasi REST API**: Format standar pengiriman payload request (`fetch('/api/user', { body: JSON.stringify(data) })`) dan penerimaan respons JSON.\n2. **Penyimpanan Web Storage**: Menyimpan objek array ke `localStorage` yang hanya mendukung format string.\n3. **File Konfigurasi**: Standar file konfigurasi modern seperti `package.json` dan `tsconfig.json`.
+1. **Komunikasi REST API**: Format standar pengiriman payload request (`fetch('/api/user', { body: JSON.stringify(data) })`) dan penerimaan respons JSON.
+2. **Penyimpanan Web Storage**: Menyimpan objek array ke `localStorage` yang hanya mendukung format string.
+3. **File Konfigurasi**: Standar file konfigurasi modern seperti `package.json` dan `tsconfig.json`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Sintaks JSON tidak valid**: Key di dalam JSON **wajib** menggunakan tanda kutip ganda `"key"`. Menggunakan kutip tunggal `'key'` atau trailing comma di akhir objek akan menyebabkan `SyntaxError: Unexpected token` saat di-parse.\n* **Data tanggal menjadi string**: Saat objek memuat instance `Date`, `JSON.stringify` mengubahnya menjadi string ISO. Saat di-parse kembali dengan `JSON.parse()`, ia tetap berupa string biasa, bukan objek `Date`, kecuali Anda menggunakan fungsi *Reviver*.\n* **Data fungsi dan undefined hilang**: Properti bernilai `undefined` atau fungsi tidak akan ikut disimpan di dalam JSON.
+* **Sintaks JSON tidak valid**: Key di dalam JSON **wajib** menggunakan tanda kutip ganda `"key"`. Menggunakan kutip tunggal `'key'` atau trailing comma di akhir objek akan menyebabkan `SyntaxError: Unexpected token` saat di-parse.
+* **Data tanggal menjadi string**: Saat objek memuat instance `Date`, `JSON.stringify` mengubahnya menjadi string ISO. Saat di-parse kembali dengan `JSON.parse()`, ia tetap berupa string biasa, bukan objek `Date`, kecuali Anda menggunakan fungsi *Reviver*.
+* **Data fungsi dan undefined hilang**: Properti bernilai `undefined` atau fungsi tidak akan ikut disimpan di dalam JSON.
 
 ### 🌟 Best Practice
-* Selalu bungkus pemanggilan `JSON.parse()` di dalam blok `try...catch` untuk mengantisipasi data string yang rusak atau korup dari server/storage.\n* Manfaatkan parameter ketiga `space` pada `JSON.stringify(data, null, 2)` saat mencetak log debugging agar mudah dibaca di konsol.\n* Gunakan parameter *replacer* untuk menyembunyikan properti sensitif seperti password sebelum objek diserialisasi.
+* Selalu bungkus pemanggilan `JSON.parse()` di dalam blok `try...catch` untuk mengantisipasi data string yang rusak atau korup dari server/storage.
+* Manfaatkan parameter ketiga `space` pada `JSON.stringify(data, null, 2)` saat mencetak log debugging agar mudah dibaca di konsol.
+* Gunakan parameter *replacer* untuk menyembunyikan properti sensitif seperti password sebelum objek diserialisasi.
 
 ---
 
 ## 6. ✍️ Latihan Mandiri
-1. Buat fungsi `sensorDataSensitif(userObj)` yang mengubah objek pengguna menjadi string JSON rapi, namun otomatis menghapus properti `password` dan `pin` menggunakan fungsi *Replacer*.\n2. Tulis fungsi `parseAman(jsonString, fallbackValue)` yang mencoba mem-parse string JSON dengan `try...catch`. Jika gagal, fungsi tidak melempar error melainkan mengembalikan nilai default `fallbackValue`.
+1. Buat fungsi `sensorDataSensitif(userObj)` yang mengubah objek pengguna menjadi string JSON rapi, namun otomatis menghapus properti `password` dan `pin` menggunakan fungsi *Replacer*.
+2. Tulis fungsi `parseAman(jsonString, fallbackValue)` yang mencoba mem-parse string JSON dengan `try...catch`. Jika gagal, fungsi tidak melempar error melainkan mengembalikan nilai default `fallbackValue`.
 
 ---
 
 ## 7. 🧭 Navigasi
-- ⬅️ **Sebelumnya:** [04 - Object](../04-object/README.md)\n- ➡️ **Selanjutnya:** [06 - BigInt](../06-bigint/README.md)\n- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)\n- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
+- ⬅️ **Sebelumnya:** [04 - Object](../04-object/README.md)
+- ➡️ **Selanjutnya:** [06 - BigInt](../06-bigint/README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

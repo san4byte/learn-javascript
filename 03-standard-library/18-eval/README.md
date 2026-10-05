@@ -1,5 +1,10 @@
 # 18 - Eval (Eksekusi Dinamis, Analisis Risiko Keamanan, dan Alternatif Aman)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami fungsi bawaan `eval()` sebagai parser dan eksekutor ekspresi string kode JavaScript dinamis.
+> * **Kapan Digunakan**: Memahami mengapa `eval()` **sangat berbahaya dan dijuluki 'eval is evil'** di industri software.
+> * **Aturan Praktis**: Pegang prinsip emas: **'Never use eval()!'**.
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami fungsi bawaan `eval()` sebagai parser dan eksekutor ekspresi string kode JavaScript dinamis.
 - Memahami mengapa `eval()` **sangat berbahaya dan dijuluki 'eval is evil'** di industri software.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> `eval()` seperti **memberikan kunci brankas master bank dan hak otorisasi penuh kepada sembarang orang asing yang datang lewat loket**: Anda berharap orang tersebut hanya ingin menukar uang koin, namun karena Anda memberinya wewenang mutlak, ia bisa menguras brankas atau membakar kantor bank Anda.
+
 Fungsi **`eval(stringKode)`** adalah fungsi bawaan JavaScript yang mengevaluasi atau mengeksekusi string teks yang diterimanya seolah-olah teks tersebut adalah kode JavaScript asli yang diketik langsung oleh programmer.
 
 ### 1. Cara Kerja `eval()`
@@ -108,10 +117,8 @@ Hasil parse JSON aman: sukses
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> `eval()` seperti **memberikan kunci brankas master bank dan hak otorisasi penuh kepada sembarang orang asing yang datang lewat loket**: Anda berharap orang tersebut hanya ingin menukar uang koin, namun karena Anda memberinya wewenang mutlak, ia bisa menguras brankas atau membakar kantor bank Anda.
 
 ### 🏢 Real-World Use Case
 1. **Taman Bermain Kode Online (REPL / Code Playground)**: Tool seperti DevTools Console atau CodePen membutuhkan eksekusi string dinamis (namun selalu dijalankan di lingkungan Sandbox web worker yang sangat terisolasi).
@@ -138,5 +145,5 @@ Hasil parse JSON aman: sukses
 
 ## 7. 🧭 Navigasi
 - ⬅️ **Sebelumnya:** [17 - Base64](../17-base64/README.md)
-- 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
+- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

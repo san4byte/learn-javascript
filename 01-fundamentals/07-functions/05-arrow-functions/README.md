@@ -1,5 +1,10 @@
 # 07.5 - Arrow Function dan Konteks Keyword This
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Menguasai sintaks ringkas Arrow Function (`=>`).
+> * **Kapan Digunakan**: Memahami fitur Implicit Return pada Arrow Function satu baris.
+> * **Aturan Praktis**: Gunakan Arrow Function untuk callback anonim pendek pada method array (`map`, `filter`, `reduce`) dan operasi promise.
+
 ## 1. 🎯 Tujuan Belajar
 - Menguasai sintaks ringkas Arrow Function (`=>`).
 - Memahami fitur Implicit Return pada Arrow Function satu baris.
@@ -9,6 +14,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Regular function seperti **turis yang menyewa mobil di setiap kota yang disinggahi**: setir mobilnya (*this*) berganti-ganti tergantung siapa yang menyewanya. Arrow function seperti **wisatawan yang selalu membawa sepeda pribadinya sendiri dari rumah**: sepedanya (*this*) selalu sama di manapun ia berada.
+
 **Arrow Function** (diperkenalkan pada ES6) memberikan sintaks penulisan fungsi yang jauh lebih ringkas menggunakan simbol panah (`=>`).
 
 ### 1. Perbedaan Sintaks:
@@ -79,10 +88,8 @@ Mengirim: Pemberitahuan Sistem
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Regular function seperti **turis yang menyewa mobil di setiap kota yang disinggahi**: setir mobilnya (*this*) berganti-ganti tergantung siapa yang menyewanya. Arrow function seperti **wisatawan yang selalu membawa sepeda pribadinya sendiri dari rumah**: sepedanya (*this*) selalu sama di manapun ia berada.
 
 ### 🏢 Real-World Use Case
 1. **Callback Higher-Order Functions**: Menulis ekspresi callback yang sangat ringkas: `angka.filter(n => n % 2 === 0).map(n => n * 2)`.

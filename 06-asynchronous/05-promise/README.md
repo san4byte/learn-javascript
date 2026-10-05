@@ -1,5 +1,10 @@
 # 04 - Promise (Konsep Pending, Fulfilled, Rejected)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep Promise sebagai objek representasi nilai masa depan.
+> * **Kapan Digunakan**: Memahami 3 status utama Promise: `pending`, `fulfilled`, dan `rejected`.
+> * **Aturan Praktis**: Selalu letakkan satu buah `.catch()` di bagian paling akhir dari rantai `.then()` untuk menangkap seluruh kemungkinan error di tingkatan mana pun.
+
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami konsep Promise sebagai objek representasi nilai masa depan.
@@ -10,6 +15,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+
+> Promise seperti **struk nomor pesanan di gerai cepat saji (KFC/McDonalds)**: Saat Anda memesan burger di kasir, kasir memberikan struk nomor (Promise) dalam keadaan _pending_. Sambil menunggu pesanan disiapkan, Anda bisa duduk santai di meja. Jika burger siap (_fulfilled_), nomor Anda dipanggil dan Anda menikmati makanan (`.then`). Jika persediaan burger habis (_rejected_), kasir memanggil Anda untuk meminta maaf (`.catch`). Apapun hasilnya, Anda mengembalikan nampan ke tempat sampah (`.finally`).
 
 **Promise** adalah objek yang merepresentasikan keberhasilan atau kegagalan dari suatu operasi asynchronous di masa depan. Promise diciptakan di ES6 untuk menyelesaikan masalah _Callback Hell_.
 
@@ -100,11 +109,8 @@ Sedang memverifikasi rekening di sistem pusat...
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-
-> Promise seperti **struk nomor pesanan di gerai cepat saji (KFC/McDonalds)**: Saat Anda memesan burger di kasir, kasir memberikan struk nomor (Promise) dalam keadaan _pending_. Sambil menunggu pesanan disiapkan, Anda bisa duduk santai di meja. Jika burger siap (_fulfilled_), nomor Anda dipanggil dan Anda menikmati makanan (`.then`). Jika persediaan burger habis (_rejected_), kasir memanggil Anda untuk meminta maaf (`.catch`). Apapun hasilnya, Anda mengembalikan nampan ke tempat sampah (`.finally`).
 
 ### 🏢 Real-World Use Case
 
@@ -135,5 +141,5 @@ Sedang memverifikasi rekening di sistem pusat...
 
 - ⬅️ **Sebelumnya:** [03 - Callbacks dan Callback Hell](../03-callbacks/README.md)
 - ➡️ **Selanjutnya:** [05 - Fetch API](../06-promise-concurrency/README.md)
-- 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
+- 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

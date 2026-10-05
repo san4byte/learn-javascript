@@ -1,5 +1,10 @@
 # 09.1 - Dasar Object (Properti dan Method)
 
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+> * **Fungsi Utama**: Memahami konsep Object sebagai kumpulan pasangan kunci-nilai (key-value pairs).
+> * **Kapan Digunakan**: Mampu mengakses dan mengubah nilai properti menggunakan Dot Notation dan Bracket Notation.
+> * **Aturan Praktis**: Utamakan penulisan method menggunakan sintaks *Method Shorthand* ES6 (`sapa() {}` alih-alih `sapa: function() {}`).
+
 ## 1. 🎯 Tujuan Belajar
 - Memahami konsep Object sebagai kumpulan pasangan kunci-nilai (key-value pairs).
 - Mampu mengakses dan mengubah nilai properti menggunakan Dot Notation dan Bracket Notation.
@@ -8,6 +13,10 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
+
+### 🎭 Analogi Dunia Nyata
+> Objek seperti **KTP (Kartu Tanda Penduduk)** fisik seseorang: memiliki label-label tetap seperti NIK, Nama, Tanggal Lahir, dan Alamat (properti). Dan orang yang memiliki KTP tersebut bisa melakukan aksi seperti tanda tangan atau berbicara (method).
+
 **Object** adalah tipe data fundamental di JavaScript yang digunakan untuk menyimpan kumpulan data terstruktur dalam format pasangan **kunci dan nilai (*key-value pairs*)**.
 
 ### Komponen Objek:
@@ -82,10 +91,8 @@ Objek setelah diupdate: { umur: 25, isAktif: false }
 
 ---
 
-## 5. 💡 Penjelasan Tambahan
+## 5. 💡 Panduan Praktis & Studi Kasus
 
-### 🎭 Analogi Dunia Nyata
-> Objek seperti **KTP (Kartu Tanda Penduduk)** fisik seseorang: memiliki label-label tetap seperti NIK, Nama, Tanggal Lahir, dan Alamat (properti). Dan orang yang memiliki KTP tersebut bisa melakukan aksi seperti tanda tangan atau berbicara (method).
 
 ### 🏢 Real-World Use Case
 1. **JSON Response REST API**: Hampir semua payload pertukaran data backend-frontend berformat JSON yang merupakan turunan langsung dari Object JavaScript.
