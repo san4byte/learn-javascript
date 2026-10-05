@@ -1,4 +1,4 @@
-# 04 - JavaScript Modules (Native ES Modules - PZN)
+# 04 - JavaScript Modules (Native ES Modules)
 
 ## Tujuan Belajar
 - Memahami konsep modularitas native di JavaScript standar ES6.

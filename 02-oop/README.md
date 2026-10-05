@@ -1,6 +1,6 @@
-# ☕ Modul 02: JavaScript Object-Oriented Programming (PZN)
+# ☕ Modul 02: JavaScript Object-Oriented Programming
 
-Selamat datang di **Modul 02**! Pemrograman Berorientasi Objek (_Object-Oriented Programming / OOP_) adalah paradigma pemrograman yang menyusun arsitektur perangkat lunak berbasis objek yang memuat data (_properties/fields_) dan perilaku (_methods_). Modul ini mengikuti silabus mendalam Programmer Zaman Now (PZN).
+Selamat datang di **Modul 02**! Pemrograman Berorientasi Objek (_Object-Oriented Programming / OOP_) adalah paradigma pemrograman yang menyusun arsitektur perangkat lunak berbasis objek yang memuat data (_properties/fields_) dan perilaku (_methods_). Modul ini menyajikan materi konsep dan praktik OOP secara mendalam dan terstruktur.
 
 ---
 

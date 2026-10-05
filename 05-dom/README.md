@@ -1,6 +1,6 @@
 # 🎨 Modul 05: JavaScript DOM (Document Object Model)
 
-Selamat datang di **Modul 05**! Document Object Model (DOM) adalah jembatan yang menghubungkan kode JavaScript dengan dokumen HTML di browser. Modul ini menggabungkan studi kasus interaktif Web Programming Unpas (WPU) dengan penjelasan hierarki elemen dari Programmer Zaman Now (PZN).
+Selamat datang di **Modul 05**! Document Object Model (DOM) adalah jembatan yang menghubungkan kode JavaScript dengan dokumen HTML di browser. Modul ini menyajikan hierarki elemen hingga studi kasus interaktif antarmuka web modern.
 
 ---
 
@@ -18,15 +18,15 @@ Selamat datang di **Modul 05**! Document Object Model (DOM) adalah jembatan yang
    - Merespon aksi klik dan keyboard pengguna menggunakan `addEventListener()` dan event object `e`.
 6. [06 - DOM Traversal dan Event Delegation](06-dom-traversal/README.md)
    - Menelusuri silsilah elemen, fenomena event bubbling, dan teknik optimasi performa *Event Delegation*.
-7. [07 - HTML Form Elements (PZN)](07-html-form-elements/README.md)
+7. [07 - HTML Form Elements](07-html-form-elements/README.md)
    - Mengambil nilai input (`input.value`), validasi form, dan mencegah refresh browser via `event.preventDefault()`.
-8. [08 - HTML Table Elements (PZN)](08-html-table-elements/README.md)
+8. [08 - HTML Table Elements](08-html-table-elements/README.md)
    - Manipulasi baris dan sel tabel secara terstruktur dengan method bawaan `insertRow()` dan `insertCell()`.
-9. [09 - Latihan Mandiri: Manipulasi Warna Background (WPU)](09-practice-color-picker/README.md)
+9. [09 - Latihan Mandiri: Manipulasi Warna Background](09-practice-color-picker/README.md)
    - Mengubah warna latar belakang menggunakan angka acak RGB dan slider range interaktif.
-10. [10 - Latihan Mandiri: Game Suit Jawa GUI Interaktif (WPU)](10-practice-suit-jawa-gui/README.md)
+10. [10 - Latihan Mandiri: Game Suit Jawa GUI Interaktif](10-practice-suit-jawa-gui/README.md)
     - Membangun antarmuka visual game Suit Jawa dengan animasi putar gambar komputer.
-11. [11 - Latihan Mandiri: Galeri Gambar Interaktif (WPU)](11-practice-image-gallery/README.md)
+11. [11 - Latihan Mandiri: Galeri Gambar Interaktif](11-practice-image-gallery/README.md)
     - Komponen thumbnail gambar e-commerce modern dengan efek transisi fade-in.
 
 ---

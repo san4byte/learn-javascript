@@ -1,8 +1,8 @@
 // Penjelasan lengkap dapat dibaca pada README.md
-// Iterable dan Iterator Protocol (PZN Implementation + Real World Project Example)
+// Iterable dan Iterator Protocol (Implementation + Real World Project Example)
 
 // ====================================================================
-// 1. IMPLEMENTASI DASAR ITERABLE PROTOCOL (Sesuai Silabus PZN)
+// 1. IMPLEMENTASI DASAR ITERABLE PROTOCOL
 // ====================================================================
 
 // Objek hasil kontrak Iterator
@@ -45,7 +45,7 @@ class Counter {
   }
 }
 
-console.info("--- 1. Loop Counter Iterable (PZN) ---");
+console.info("--- 1. Loop Counter Iterable ---");
 const counter = new Counter(1, 5);
 
 // Karena mematuhi kontrak Iterable, objek counter bisa langsung di-loop dengan for..of!

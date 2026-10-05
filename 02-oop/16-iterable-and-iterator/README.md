@@ -70,7 +70,7 @@ while (!result.done) {
 ## Contoh Kode
 ```javascript
 // Penjelasan lengkap dapat dibaca pada README.md
-// Iterable dan Iterator Protocol (PZN Implementation + Real World Project Example)
+// Iterable dan Iterator Protocol (Implementation + Real World Project Example)
 
 // 1. Objek hasil (Iterator Result)
 class CounterIteratorResult {
@@ -121,7 +121,7 @@ for (const val of counter) {
 
 ### Output
 ```text
---- 1. Loop Counter Iterable (PZN) ---
+--- 1. Loop Counter Iterable ---
 Nilai counter: 1
 Nilai counter: 2
 Nilai counter: 3
@@ -176,7 +176,8 @@ const daftarBarang = [...cart]; // Otomatis bisa di-spread!
 
 #### B. Lazy Evaluation & Hemat Memori (Mengolah Data Raksasa)
 Bayangkan Anda butuh deret 10 juta angka atau membaca file log server sebesar 10 GB:
-- **Jika pakai Array biasa**: JavaScript akan mencoba memuat 10 juta angka sekaligus ke dalam RAM $ightarrow$ **Browser / Server langsung Out of Memory (Crash)**.
+- **Jika pakai Array biasa**: JavaScript akan mencoba memuat 10 juta angka sekaligus ke dalam RAM $
+ightarrow$ **Browser / Server langsung Out of Memory (Crash)**.
 - **Dengan Iterator (Lazy Evaluation)**: Angka berikutnya **baru dihitung di memori saat method `next()` dipanggil**! Memori yang terpakai tetap sangat kecil (hanya 1 angka yang disimpan di RAM pada satu waktu).
 
 #### C. Infinite Scroll & Stream Paginasi

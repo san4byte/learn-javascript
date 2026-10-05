@@ -8,7 +8,7 @@
 ---
 
 ## 2. 📖 Penjelasan Konsep
-Proyek **Simulasi Angkot** adalah latihan logika klasik dari kurikulum WPU (Pak Sandhika Galih) yang sangat ampuh untuk melatih kombinasi perulangan dan percabangan kondisi logika secara bertahap:
+Proyek **Simulasi Angkot** adalah latihan logika klasik yang sangat ampuh untuk melatih kombinasi perulangan dan percabangan kondisi logika secara bertahap:
 
 ### Alur Masalah Bisnis:
 1. **Total Armada**: Ada 10 angkot (Nomor 1 sampai 10).

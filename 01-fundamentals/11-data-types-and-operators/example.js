@@ -1,4 +1,4 @@
-// PZN: Tipe Data Khusus, Operator Typeof, In, dan Truthy/Falsy
+// Tipe Data Khusus, Operator Typeof, In, dan Truthy/Falsy
 
 // 1. Undefined vs Null
 let belumDiisi;

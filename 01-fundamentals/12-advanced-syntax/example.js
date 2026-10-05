@@ -1,4 +1,4 @@
-// PZN: Nullish Coalescing, Optional Chaining, Strict Mode & Debugger
+// Nullish Coalescing, Optional Chaining, Strict Mode & Debugger
 "use strict"; // Mengaktifkan strict mode untuk mencegah penulisan kode sembarangan
 
 // 1. Optional Chaining (?.)

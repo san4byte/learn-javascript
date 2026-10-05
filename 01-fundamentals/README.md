@@ -1,6 +1,6 @@
 # 📘 Modul 01: JavaScript Fundamentals & Modern ES6+
 
-Selamat datang di **Modul 01**! Modul ini adalah fondasi terlengkap untuk menguasai logika pemrograman dan sintaks modern JavaScript. Di modul ini, materi dasar dikombinasikan dengan fitur modern ES6+ dan konsep esensial dari kurikulum Programmer Zaman Now (PZN) dan Web Programming Unpas (WPU).
+Selamat datang di **Modul 01**! Modul ini adalah fondasi terlengkap untuk menguasai logika pemrograman dan sintaks modern JavaScript. Di modul ini, materi dasar dikombinasikan dengan fitur modern ES6+ dan konsep-konsep esensial tingkat lanjut.
 
 ---
 
@@ -46,9 +46,9 @@ Selamat datang di **Modul 01**! Modul ini adalah fondasi terlengkap untuk mengua
 10. [10 - Mini Games Interaktif](10-mini-games/)
     - [10.1 - Game Suit Jawa](10-mini-games/01-suit-jawa/README.md)
     - [10.2 - Game Tebak Angka](10-mini-games/02-guess-number/README.md)
-11. [11 - Tipe Data Lanjutan, Operator in, typeof, dan Falsy Truthy (PZN)](11-data-types-and-operators/README.md)
+11. [11 - Tipe Data Lanjutan, Operator in, typeof, dan Falsy Truthy](11-data-types-and-operators/README.md)
     - Perbedaan `null` vs `undefined`, operator `typeof`, operator `in`, dan evaluasi boolean.
-12. [12 - Sintaks Modern ES Lanjutan (PZN)](12-advanced-syntax/README.md)
+12. [12 - Sintaks Modern ES Lanjutan](12-advanced-syntax/README.md)
     - Optional Chaining (`?.`), Nullish Coalescing (`??`), Strict Mode, dan Debugger statement.
 
 ---

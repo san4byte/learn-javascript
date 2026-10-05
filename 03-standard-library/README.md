@@ -1,6 +1,6 @@
-# 📚 Modul 03: JavaScript Standard Library (PZN)
+# 📚 Modul 03: JavaScript Standard Library
 
-Selamat datang di **Modul 03**! JavaScript Standard Library mencakup objek bawaan global (_built-in standard objects_), tipe primitif modern, penanganan data waktu, koleksi modern, dan kemampuan metaprogramming tingkat lanjut. Modul ini disusun berdasarkan kurikulum komprehensif Programmer Zaman Now (PZN).
+Selamat datang di **Modul 03**! JavaScript Standard Library mencakup objek bawaan global (_built-in standard objects_), tipe primitif modern, penanganan data waktu, koleksi modern, dan kemampuan metaprogramming tingkat lanjut. Modul ini disusun secara komprehensif dan mendalam.
 
 ---
 

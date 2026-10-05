@@ -1,4 +1,4 @@
-// PZN: AJAX Klasik menggunakan XMLHttpRequest (XHR)
+// AJAX Klasik menggunakan XMLHttpRequest (XHR)
 const btn = document.getElementById("btn-request");
 const output = document.getElementById("output");
 

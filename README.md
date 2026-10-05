@@ -1,6 +1,6 @@
 # 🚀 Panduan Belajar JavaScript Lengkap (Learn JavaScript)
 
-Selamat datang di repositori dokumentasi belajar JavaScript lengkap! Repositori ini menggabungkan alur kurikulum formal **Programmer Zaman Now (PZN)** dengan studi kasus proyek interaktif dari **Web Programming Unpas (WPU)**.
+Selamat datang di repositori dokumentasi belajar JavaScript lengkap! Repositori ini menyajikan kurikulum terstruktur dan mendalam dengan studi kasus proyek interaktif modern.
 
 Kurikulum disusun secara bertahap dalam **3 Fase Utama**:
 1. **Fase 1: Inti Bahasa JavaScript (*Core Language*)** — Fondasi sintaks, logika, OOP, Standard Library, dan Native ES Modules (berjalan di Node.js maupun browser).
@@ -23,13 +23,13 @@ Fondasi logika pemrograman, sintaks dasar, dan fitur modern ES6+:
 8. [08 - Arrays (Manipulasi, Destructuring, Spread, Project Penumpang)](01-fundamentals/08-arrays/01-array-manipulation/README.md)
 9. [09 - Objects (Literal, This, Destructuring, Prototype, Project Object)](01-fundamentals/09-objects/01-object-basics/README.md)
 10. [10 - Mini Games Interaktif (Suit Jawa, Tebak Angka)](01-fundamentals/10-mini-games/01-suit-jawa/README.md)
-11. [11 - Tipe Data Lanjutan, Operator in, typeof, Falsy Truthy (PZN)](01-fundamentals/11-data-types-and-operators/README.md)
-12. [12 - Sintaks Modern ES Lanjutan (Optional Chaining, Nullish Coalescing, Strict Mode) (PZN)](01-fundamentals/12-advanced-syntax/README.md)
+11. [11 - Tipe Data Lanjutan, Operator in, typeof, Falsy Truthy](01-fundamentals/11-data-types-and-operators/README.md)
+12. [12 - Sintaks Modern ES Lanjutan (Optional Chaining, Nullish Coalescing, Strict Mode)](01-fundamentals/12-advanced-syntax/README.md)
 
 ---
 
-### 2. [02 - JavaScript OOP (Programmer Zaman Now)](02-oop/)
-Pemrograman Berorientasi Objek mendalam mengikuti silabus Programmer Zaman Now (PZN):
+### 2. [02 - JavaScript OOP](02-oop/)
+Pemrograman Berorientasi Objek mendalam:
 1. [01 - Constructor Function](02-oop/01-constructor-function/README.md)
 2. [02 - Prototype Inheritance](02-oop/02-prototype/README.md)
 3. [03 - Class](02-oop/03-class/README.md)
@@ -49,7 +49,7 @@ Pemrograman Berorientasi Objek mendalam mengikuti silabus Programmer Zaman Now (
 
 ---
 
-### 3. [03 - JavaScript Standard Library (Programmer Zaman Now)](03-standard-library/)
+### 3. [03 - JavaScript Standard Library](03-standard-library/)
 Pustaka standar bawaan (Standard Library) JavaScript mencakup objek global dan tipe primitif modern:
 1. [01 - Number (Static Properties, Parsing & Validation)](03-standard-library/01-number/README.md)
 2. [02 - String (Instance Methods, Search, Transform & Padding)](03-standard-library/02-string/README.md)
@@ -72,7 +72,7 @@ Pustaka standar bawaan (Standard Library) JavaScript mencakup objek global dan t
 
 ---
 
-### 4. [04 - JavaScript Modules (Native ES Modules - PZN)](04-modules/)
+### 4. [04 - JavaScript Modules (Native ES Modules)](04-modules/)
 Modularitas resmi bahasa JavaScript murni di browser:
 1. [01 - Tanpa Module (Global Scope Collision)](04-modules/01-without-module/README.md)
 2. [02 - Export dan Import](04-modules/02-export-and-import/README.md)
@@ -93,11 +93,11 @@ Interaksi JavaScript dengan dokumen web dan antarmuka HTML dinamis:
 4. [04 - DOM Manipulasi Node](05-dom/04-node-manipulation/README.md)
 5. [05 - DOM Events](05-dom/05-dom-events/README.md)
 6. [06 - DOM Traversal dan Event Delegation](05-dom/06-dom-traversal/README.md)
-7. [07 - HTML Form Elements (Form, Input, submit event) (PZN)](05-dom/07-html-form-elements/README.md)
-8. [08 - HTML Table Elements (insertRow & insertCell) (PZN)](05-dom/08-html-table-elements/README.md)
-9. [09 - Latihan Mandiri: Manipulasi Warna Background (WPU)](05-dom/09-practice-color-picker/README.md)
-10. [10 - Latihan Mandiri: Game Suit Jawa GUI Interaktif (WPU)](05-dom/10-practice-suit-jawa-gui/README.md)
-11. [11 - Latihan Mandiri: Galeri Gambar Interaktif (WPU)](05-dom/11-practice-image-gallery/README.md)
+7. [07 - HTML Form Elements (Form, Input, submit event)](05-dom/07-html-form-elements/README.md)
+8. [08 - HTML Table Elements (insertRow & insertCell)](05-dom/08-html-table-elements/README.md)
+9. [09 - Latihan Mandiri: Manipulasi Warna Background](05-dom/09-practice-color-picker/README.md)
+10. [10 - Latihan Mandiri: Game Suit Jawa GUI Interaktif](05-dom/10-practice-suit-jawa-gui/README.md)
+11. [11 - Latihan Mandiri: Galeri Gambar Interaktif](05-dom/11-practice-image-gallery/README.md)
 
 ---
 
@@ -106,12 +106,12 @@ Pemrograman asinkron modern untuk menangani proses non-blocking:
 1. [01 - Asynchronous Intro & Event Loop Architecture](06-asynchronous/01-event-loop-intro/README.md)
 2. [02 - Timing Events (setTimeout & setInterval)](06-asynchronous/02-timing-events/README.md)
 3. [03 - Callbacks dan Masalah Callback Hell](06-asynchronous/03-callbacks/README.md)
-4. [04 - AJAX (XMLHttpRequest) (PZN)](06-asynchronous/04-ajax-xmlhttprequest/README.md)
+4. [04 - AJAX (XMLHttpRequest)](06-asynchronous/04-ajax-xmlhttprequest/README.md)
 5. [05 - Promise (Pending, Fulfilled, Rejected)](06-asynchronous/05-promise/README.md)
-6. [06 - Promise Concurrency (Promise.all, race, any, allSettled) (PZN)](06-asynchronous/06-promise-concurrency/README.md)
+6. [06 - Promise Concurrency (Promise.all, race, any, allSettled)](06-asynchronous/06-promise-concurrency/README.md)
 7. [07 - Fetch API (HTTP Request Modern)](06-asynchronous/07-fetch-api/README.md)
 8. [08 - Async dan Await](06-asynchronous/08-async-await/README.md)
-9. [09 - Web Workers (Multi-Threading di Browser) (PZN)](06-asynchronous/09-web-workers/README.md)
+9. [09 - Web Workers (Multi-Threading di Browser)](06-asynchronous/09-web-workers/README.md)
 
 ---
 

@@ -1,4 +1,4 @@
-// PZN Async: Concurrency Promise (all, race, any, allSettled)
+// Async: Concurrency Promise (all, race, any, allSettled)
 
 const createPromise = (name, delayMs, succeed = true) => {
   return new Promise((resolve, reject) => {

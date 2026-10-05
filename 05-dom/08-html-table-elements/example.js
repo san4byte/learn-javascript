@@ -1,4 +1,4 @@
-// PZN DOM: Menggunakan insertRow() dan insertCell() pada HTMLTableElement
+// DOM: Menggunakan insertRow() dan insertCell() pada HTMLTableElement
 const btnTambah = document.getElementById("btn-tambah");
 const tableBody = document.getElementById("tabel-body");
 

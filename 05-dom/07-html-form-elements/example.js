@@ -1,4 +1,4 @@
-// PZN DOM: Mengelola form, value, dan submit event
+// DOM: Mengelola form, value, dan submit event
 const form = document.getElementById("comment-form");
 const outputDiv = document.getElementById("output");
 
