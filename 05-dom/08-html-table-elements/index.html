@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>08 - HTML Table Elements</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #cbd5e1; padding: 0.75rem; text-align: left; }
+    th { background: #f8fafc; }
+    button { padding: 0.5rem 1rem; background: #059669; color: white; border: none; cursor: pointer; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>PZN: Manipulasi HTML Table Elements</h1>
+  <button id="btn-tambah">Tambah Baris Siswa</button>
+
+  <table id="tabel-siswa">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Nama Siswa</th>
+        <th>Nilai</th>
+      </tr>
+    </thead>
+    <tbody id="tabel-body">
+      <tr>
+        <td>1</td>
+        <td>Budi Santoso</td>
+        <td>90</td>
+      </tr>
+    </tbody>
+  </table>
+  <script src="example.js"></script>
+</body>
+</html>

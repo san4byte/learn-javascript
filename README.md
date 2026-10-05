@@ -1,182 +1,161 @@
-# 🚀 Panduan Belajar JavaScript (Learn JS)
+# 🚀 Panduan Belajar JavaScript Lengkap (Learn JavaScript)
 
-Selamat datang di repositori dokumentasi belajar JavaScript lengkap! Repositori ini dirancang dengan alur pembelajaran yang terstruktur, rapi, dan mudah dipahami, mulai dari fondasi dasar logika pemrograman & sintaks modern ES6+, manipulasi DOM di browser, pemrograman asinkron berbasis Event Loop & Promise, build tools modular industri, Pemrograman Berorientasi Objek (OOP), hingga Web API esensial standar industri.
+Selamat datang di repositori dokumentasi belajar JavaScript lengkap! Repositori ini menggabungkan alur kurikulum formal **Programmer Zaman Now (PZN)** dengan studi kasus proyek interaktif dari **Web Programming Unpas (WPU)**.
 
-Setiap topik materi dilengkapi dengan file dokumentasi terstandarisasi (`README.md`) dengan **7 bagian pembelajaran** (Tujuan Belajar, Penjelasan Konsep Mendalam, Contoh Kode, Output yang Diharapkan, Analogi Nyata + Use Case + Common Pitfalls + Best Practice, Latihan Mandiri, dan Navigasi 4 Arah), contoh kode bersih dan universal (`contoh.js`), serta file antarmuka browser (`index.html`).
+Kurikulum disusun secara bertahap dalam **3 Fase Utama**:
+1. **Fase 1: Inti Bahasa JavaScript (*Core Language*)** — Fondasi sintaks, logika, OOP, Standard Library, dan Native ES Modules (berjalan di Node.js maupun browser).
+2. **Fase 2: Lingkungan Browser (*Browser Runtime*)** — Interaksi dokumen (DOM), proses asinkron jaringan (AJAX, Promise, Fetch, Async/Await), dan Web API modern.
+3. **Fase 3: Ekosistem Industri (*Tooling & Build System*)** — Bundler Webpack 5, kompilasi SCSS, pemisahan vendor, dan otomatisasi rilis produksi.
 
 ---
 
 ## 📚 Daftar Isi dan Urutan Belajar
 
-### 1. [01 - JavaScript Dasar & Modern ES6+](01-dasar/)
-
-Fondasi logika pemrograman, sintaks dasar, dan fitur modern ES6+ yang terintegrasi:
-
-1. [01 - Popup Box (alert, prompt, confirm)](01-dasar/01-popup-box/README.md)
-2. [02 - Variabel dan Scope (var, let, const, Hoisting & TDZ)](01-dasar/02-variabel-dan-scope/README.md)
-3. [03 - Template Literals & String Interpolation](01-dasar/03-template-literals/README.md)
-4. [04 - Pengulangan (Looping)](01-dasar/04-pengulangan/)
-   - [04.1 - While Loop & Do-While](01-dasar/04-pengulangan/01-while/README.md)
-   - [04.2 - For Loop](01-dasar/04-pengulangan/02-for/README.md)
-   - [04.3 - Pengulangan Bersarang (Nested Loops)](01-dasar/04-pengulangan/03-pengulangan-bersarang/README.md)
-   - [04.4 - Perulangan Modern: For..of dan For..in](01-dasar/04-pengulangan/04-for-of-for-in/README.md)
-5. [05 - Pengkondisian (Conditional Flow)](01-dasar/05-pengkondisian/)
-   - [05.1 - If Else dan Ternary Operator](01-dasar/05-pengkondisian/01-if-else/README.md)
-   - [05.2 - Else If dan Switch Case](01-dasar/05-pengkondisian/02-else-if-switch/README.md)
-6. [06 - Project Simulasi Pengelolaan Angkot](01-dasar/06-project-angkot/README.md)
-7. [07 - Function](01-dasar/07-function/)
-   - [07.1 - Pengenalan Function](01-dasar/07-function/01-intro/README.md)
-   - [07.2 - Parameter, Argumen & Default Parameter](01-dasar/07-function/02-parameter-argumen/README.md)
-   - [07.3 - Variable Scope dan Scope Chain](01-dasar/07-function/03-scope/README.md)
-   - [07.4 - Closures dan Lexical Scope](01-dasar/07-function/04-closures/README.md)
-   - [07.5 - Arrow Function & Konteks Keyword This](01-dasar/07-function/05-arrow-function/README.md)
-   - [07.6 - Higher-Order Functions (Filter, Map, Reduce)](01-dasar/07-function/06-higher-order-functions/README.md)
-   - [07.7 - Rest Parameter (...args)](01-dasar/07-function/07-rest-parameter/README.md)
-   - [07.8 - Fungsi Rekursif](01-dasar/07-function/08-rekursif/README.md)
-   - [07.9 - Project Perhitungan Volume Dua Kubus](01-dasar/07-function/09-project-volume-kubus/README.md)
-8. [08 - Array](01-dasar/08-array/)
-   - [08.1 - Manipulasi Array](01-dasar/08-array/01-manipulasi-array/README.md)
-   - [08.2 - Destructuring Array dan Spread Operator](01-dasar/08-array/02-destructuring-spread/README.md)
-   - [08.3 - Project Pengelolaan Kursi Penumpang Angkot](01-dasar/08-array/03-project-kelola-penumpang/README.md)
-9. [09 - Object](01-dasar/09-object/)
-   - [09.1 - Dasar Object (Properti dan Method)](01-dasar/09-object/01-dasar-object/README.md)
-   - [09.2 - Tiga Cara Membuat Object](01-dasar/09-object/02-membuat-object/README.md)
-   - [09.3 - Konsep Keyword This](01-dasar/09-object/03-keyword-this/README.md)
-   - [09.4 - Destructuring Object dan Object Spread](01-dasar/09-object/04-destructuring-spread/README.md)
-   - [09.5 - Object Lanjutan: Prototype Inheritance](01-dasar/09-object/05-object-lanjutan/README.md)
-   - [09.6 - Latihan Pengelolaan Angkot Berbasis Objek](01-dasar/09-object/06-latihan-angkot-object/README.md)
-10. [10 - Project Game Interaktif](01-dasar/10-project-game/)
-    - [10.1 - Game Suit Jawa](01-dasar/10-project-game/01-suit-jawa/README.md)
-    - [10.2 - Game Tebak Angka](01-dasar/10-project-game/02-tebak-angka/README.md)
+### 1. [01 - JavaScript Fundamentals & Modern ES6+](01-fundamentals/)
+Fondasi logika pemrograman, sintaks dasar, dan fitur modern ES6+:
+1. [01 - Popup Boxes (alert, prompt, confirm)](01-fundamentals/01-popup-boxes/README.md)
+2. [02 - Variables and Scope (var, let, const, Hoisting & TDZ)](01-fundamentals/02-variables-and-scope/README.md)
+3. [03 - Template Literals & String Interpolation](01-fundamentals/03-template-literals/README.md)
+4. [04 - Loops (While, For, Nested Loops, For..of, For..in)](01-fundamentals/04-loops/01-while/README.md)
+5. [05 - Conditionals (If Else, Switch Case, Ternary)](01-fundamentals/05-conditionals/01-if-else/README.md)
+6. [06 - Project Simulasi Pengelolaan Angkot](01-fundamentals/06-project-angkot/README.md)
+7. [07 - Functions (Params, Scope, Closures, Arrow, HOF, Rest, Recursion)](01-fundamentals/07-functions/01-intro/README.md)
+8. [08 - Arrays (Manipulasi, Destructuring, Spread, Project Penumpang)](01-fundamentals/08-arrays/01-array-manipulation/README.md)
+9. [09 - Objects (Literal, This, Destructuring, Prototype, Project Object)](01-fundamentals/09-objects/01-object-basics/README.md)
+10. [10 - Mini Games Interaktif (Suit Jawa, Tebak Angka)](01-fundamentals/10-mini-games/01-suit-jawa/README.md)
+11. [11 - Tipe Data Lanjutan, Operator in, typeof, Falsy Truthy (PZN)](01-fundamentals/11-data-types-and-operators/README.md)
+12. [12 - Sintaks Modern ES Lanjutan (Optional Chaining, Nullish Coalescing, Strict Mode) (PZN)](01-fundamentals/12-advanced-syntax/README.md)
 
 ---
 
-### 2. [02 - JavaScript DOM (Document Object Model)](02-dom/)
-
-Interaksi JavaScript dengan dokumen web dan antarmuka HTML dinamis:
-
-1. [01 - Pengenalan DOM & DOM Tree](02-dom/01-intro/README.md)
-2. [02 - DOM Selection](02-dom/02-dom-selection/README.md)
-3. [03 - DOM Manipulasi Element](02-dom/03-dom-manipulasi-element/README.md)
-4. [04 - DOM Manipulasi Node](02-dom/04-dom-manipulasi-node/README.md)
-5. [05 - DOM Events](02-dom/05-dom-events/README.md)
-6. [06 - DOM Traversal dan Event Delegation](02-dom/06-dom-traversal/README.md)
-7. [07 - Latihan Mandiri: Manipulasi Warna Background](02-dom/07-latihan-ubah-warna/README.md)
-8. [08 - Latihan Mandiri: Game Suit Jawa GUI Interaktif](02-dom/08-latihan-suit-jawa-v2/README.md)
-9. [09 - Latihan Mandiri: Galeri Gambar Interaktif](02-dom/09-latihan-image-gallery/README.md)
-
----
-
-### 3. [03 - Asynchronous JavaScript (Event Loop, Promise, Fetch & Async/Await)](03-asynchronous/)
-
-Pemrograman asinkron modern untuk menangani proses non-blocking dan request jaringan internet:
-
-1. [01 - Asynchronous Intro & Event Loop Architecture](03-asynchronous/01-event-loop-intro/README.md)
-2. [02 - Timing Events (setTimeout & setInterval)](03-asynchronous/02-timing-events/README.md)
-3. [03 - Callbacks dan Masalah Callback Hell](03-asynchronous/03-callbacks/README.md)
-4. [04 - Promise (Pending, Fulfilled, Rejected)](03-asynchronous/04-promise/README.md)
-5. [05 - Fetch API (HTTP Request Modern)](03-asynchronous/05-fetch/README.md)
-6. [06 - Async dan Await](03-asynchronous/06-async-await/README.md)
-
----
-
-### 4. [04 - JavaScript Modular (Webpack & Tooling)](04-modular/)
-
-Pengembangan aplikasi skala industri menggunakan modul dan bundler:
-
-- [Arsitektur Webpack 5, SCSS Loader, dan Code Splitting](04-modular/README.md)
-
----
-
-### 5. [05 - JavaScript OOP (Programmer Zaman Now)](05-oop/)
-
+### 2. [02 - JavaScript OOP (Programmer Zaman Now)](02-oop/)
 Pemrograman Berorientasi Objek mendalam mengikuti silabus Programmer Zaman Now (PZN):
-
-1. [01 - Constructor Function](05-oop/01-constructor-function/README.md)
-2. [02 - Prototype Inheritance](05-oop/02-prototype/README.md)
-3. [03 - Class](05-oop/03-class/README.md)
-4. [04 - Class Inheritance (extends)](05-oop/04-class-inheritance/README.md)
-5. [05 - Super Constructor](05-oop/05-super-constructor/README.md)
-6. [06 - Super Method (Method Overriding)](05-oop/06-super-method/README.md)
-7. [07 - Getter dan Setter](05-oop/07-getter-setter/README.md)
-8. [08 - Public Class Field](05-oop/08-public-class-field/README.md)
-9. [09 - Private Class Field (#)](05-oop/09-private-class-field/README.md)
-10. [10 - Private Method (#)](05-oop/10-private-method/README.md)
-11. [11 - Operator instanceof](05-oop/11-operator-instanceof/README.md)
-12. [12 - Static Field](05-oop/12-static-field/README.md)
-13. [13 - Static Method](05-oop/13-static-method/README.md)
-14. [14 - Error Handling Class](05-oop/14-error-handling-class/README.md)
-15. [15 - Custom Error Class](05-oop/15-custom-error/README.md)
-16. [16 - Iterable dan Iterator](05-oop/16-iterable-iterator/README.md)
-
----
-
-### 6. [06 - Modern Web API & Real-World JavaScript](06-modern-web-api/)
-
-Pola arsitektur, Web API browser modern, dan teknik optimasi performa yang digunakan sehari-hari di industri:
-
-1. [01 - Web Storage API (localStorage, sessionStorage, Cookies)](06-modern-web-api/01-web-storage/README.md)
-2. [02 - Modern Syntax ES2020-ES2023 (Optional Chaining, Nullish Coalescing, Immutability)](06-modern-web-api/02-modern-syntax-es2020/README.md)
-3. [03 - URL, URLSearchParams, dan FormData API](06-modern-web-api/03-url-and-formdata/README.md)
-4. [04 - Asynchronous Paralel & AbortController](06-modern-web-api/04-async-parallel-abort/README.md)
-5. [05 - Optimasi Performa Event (Debounce dan Throttle)](06-modern-web-api/05-debounce-throttle/README.md)
-6. [06 - Intersection Observer API (Lazy Loading & Infinite Scroll)](06-modern-web-api/06-intersection-observer/README.md)
+1. [01 - Constructor Function](02-oop/01-constructor-function/README.md)
+2. [02 - Prototype Inheritance](02-oop/02-prototype/README.md)
+3. [03 - Class](02-oop/03-class/README.md)
+4. [04 - Class Inheritance (extends)](02-oop/04-class-inheritance/README.md)
+5. [05 - Super Constructor](02-oop/05-super-constructor/README.md)
+6. [06 - Super Method (Method Overriding)](02-oop/06-super-method/README.md)
+7. [07 - Getter dan Setter](02-oop/07-getter-setter/README.md)
+8. [08 - Public Class Field](02-oop/08-public-class-field/README.md)
+9. [09 - Private Class Field (#)](02-oop/09-private-class-field/README.md)
+10. [10 - Private Method (#)](02-oop/10-private-method/README.md)
+11. [11 - Operator instanceof](02-oop/11-instanceof-operator/README.md)
+12. [12 - Static Field](02-oop/12-static-field/README.md)
+13. [13 - Static Method](02-oop/13-static-method/README.md)
+14. [14 - Error Handling Class](02-oop/14-error-handling-class/README.md)
+15. [15 - Custom Error Class](02-oop/15-custom-error/README.md)
+16. [16 - Iterable dan Iterator](02-oop/16-iterable-and-iterator/README.md)
 
 ---
 
-### 7. [07 - JavaScript Standard Library (Programmer Zaman Now)](07-standard-library/)
+### 3. [03 - JavaScript Standard Library (Programmer Zaman Now)](03-standard-library/)
+Pustaka standar bawaan (Standard Library) JavaScript mencakup objek global dan tipe primitif modern:
+1. [01 - Number (Static Properties, Parsing & Validation)](03-standard-library/01-number/README.md)
+2. [02 - String (Instance Methods, Search, Transform & Padding)](03-standard-library/02-string/README.md)
+3. [03 - Array (Queue FIFO, Stack LIFO & Advanced Transform)](03-standard-library/03-array/README.md)
+4. [04 - Object (Freeze, Seal, Assign, Values, Keys, Entries)](03-standard-library/04-object/README.md)
+5. [05 - JSON (Serialization, Deserialization, Replacer & Reviver)](03-standard-library/05-json/README.md)
+6. [06 - BigInt (Arbitrary-Precision Integers)](03-standard-library/06-bigint/README.md)
+7. [07 - Date (Epoch Timestamp, ISO 8601, Getter & Setter)](03-standard-library/07-date/README.md)
+8. [08 - Math (Konstanta & Operasi Matematika)](03-standard-library/08-math/README.md)
+9. [09 - Boolean (Boolean Wrapper, valueOf)](03-standard-library/09-boolean/README.md)
+10. [10 - Map (Key-Value Collection Modern)](03-standard-library/10-map/README.md)
+11. [11 - Set (Koleksi Nilai Unik)](03-standard-library/11-set/README.md)
+12. [12 - Symbol (Primitive Unik & Symbol Registry)](03-standard-library/12-symbol/README.md)
+13. [13 - RegExp (Pola Regex, Modifiers & Assertions)](03-standard-library/13-regexp/README.md)
+14. [14 - Proxy (Metaprogramming & Interceptor Traps)](03-standard-library/14-proxy/README.md)
+15. [15 - Reflect (Refleksi Objek Modern)](03-standard-library/15-reflect/README.md)
+16. [16 - URL Encoding (encodeURI & encodeURIComponent)](03-standard-library/16-encode/README.md)
+17. [17 - Base64 (btoa, atob & Penanganan UTF-8)](03-standard-library/17-base64/README.md)
+18. [18 - Eval (Eksekusi Dinamis & Analisis Risiko Keamanan)](03-standard-library/18-eval/README.md)
 
-Pustaka standar bawaan (Standard Library) JavaScript mencakup objek global, tipe primitif modern, penanganan data waktu, koleksi modern, dan metaprogramming:
+---
 
-1. [01 - Number (Static Properties, Methods, dan Number Parsing)](07-standard-library/01-number/README.md)
-2. [02 - String (Instance Methods, Search, Transform, dan Padding)](07-standard-library/02-string/README.md)
-3. [03 - Array (Queue FIFO, Stack LIFO, Search, dan Advanced Transform)](07-standard-library/03-array/README.md)
-4. [04 - Object (Static Methods: Freeze, Seal, Assign, Values, Keys, Entries)](07-standard-library/04-object/README.md)
-5. [05 - JSON (Serialization, Deserialization, Replacer, dan Reviver)](07-standard-library/05-json/README.md)
-6. [06 - BigInt (Arbitrary-Precision Integers dan Batasan Operasi)](07-standard-library/06-bigint/README.md)
-7. [07 - Date (Epoch Timestamp, ISO 8601, Parsing, Getter dan Setter)](07-standard-library/07-date/README.md)
-8. [08 - Math (Konstanta Matematika, Pembulatan, dan Operasi Angka)](07-standard-library/08-math/README.md)
-9. [09 - Boolean (Boolean Wrapper, toString, dan valueOf)](07-standard-library/09-boolean/README.md)
-10. [10 - Map (Key-Value Collection Modern, Perbedaan dengan Object)](07-standard-library/10-map/README.md)
-11. [11 - Set (Koleksi Nilai Unik dan Eliminasi Duplikasi)](07-standard-library/11-set/README.md)
-12. [12 - Symbol (Primitive Unik dan Global Symbol Registry)](07-standard-library/12-symbol/README.md)
-13. [13 - RegExp (Pola Regex, Modifiers, Assertions, dan String Match)](07-standard-library/13-regexp/README.md)
-14. [14 - Proxy (Metaprogramming, Interceptor Handler, Get dan Set Traps)](07-standard-library/14-proxy/README.md)
-15. [15 - Reflect (Refleksi Objek Modern dan Pasangan Ideal Proxy)](07-standard-library/15-reflect/README.md)
-16. [16 - URL Encoding (encodeURI, encodeURIComponent, dan Decode)](07-standard-library/16-encode/README.md)
-17. [17 - Base64 (btoa, atob, dan Penanganan Teks UTF-8 Unicode)](07-standard-library/17-base64/README.md)
-18. [18 - Eval (Eksekusi Dinamis, Analisis Risiko Keamanan, dan Alternatif)](07-standard-library/18-eval/README.md)
+### 4. [04 - JavaScript Modules (Native ES Modules - PZN)](04-modules/)
+Modularitas resmi bahasa JavaScript murni di browser:
+1. [01 - Tanpa Module (Global Scope Collision)](04-modules/01-without-module/README.md)
+2. [02 - Export dan Import](04-modules/02-export-and-import/README.md)
+3. [03 - Variable dan Class di Module](04-modules/03-variables-and-classes/README.md)
+4. [04 - Alias (as)](04-modules/04-alias/README.md)
+5. [05 - Export Default](04-modules/05-export-default/README.md)
+6. [06 - Module Object (import * as)](04-modules/06-module-object/README.md)
+7. [07 - Aggregating Modules (Re-Export)](04-modules/07-aggregating-modules/README.md)
+8. [08 - Dynamic Module Loading (import() Promise)](04-modules/08-dynamic-module-loading/README.md)
+
+---
+
+### 5. [05 - JavaScript DOM (Document Object Model)](05-dom/)
+Interaksi JavaScript dengan dokumen web dan antarmuka HTML dinamis:
+1. [01 - Pengenalan DOM & DOM Tree](05-dom/01-intro/README.md)
+2. [02 - DOM Selection](05-dom/02-dom-selection/README.md)
+3. [03 - DOM Manipulasi Element](05-dom/03-element-manipulation/README.md)
+4. [04 - DOM Manipulasi Node](05-dom/04-node-manipulation/README.md)
+5. [05 - DOM Events](05-dom/05-dom-events/README.md)
+6. [06 - DOM Traversal dan Event Delegation](05-dom/06-dom-traversal/README.md)
+7. [07 - HTML Form Elements (Form, Input, submit event) (PZN)](05-dom/07-html-form-elements/README.md)
+8. [08 - HTML Table Elements (insertRow & insertCell) (PZN)](05-dom/08-html-table-elements/README.md)
+9. [09 - Latihan Mandiri: Manipulasi Warna Background (WPU)](05-dom/09-practice-color-picker/README.md)
+10. [10 - Latihan Mandiri: Game Suit Jawa GUI Interaktif (WPU)](05-dom/10-practice-suit-jawa-gui/README.md)
+11. [11 - Latihan Mandiri: Galeri Gambar Interaktif (WPU)](05-dom/11-practice-image-gallery/README.md)
+
+---
+
+### 6. [06 - Asynchronous JavaScript](06-asynchronous/)
+Pemrograman asinkron modern untuk menangani proses non-blocking:
+1. [01 - Asynchronous Intro & Event Loop Architecture](06-asynchronous/01-event-loop-intro/README.md)
+2. [02 - Timing Events (setTimeout & setInterval)](06-asynchronous/02-timing-events/README.md)
+3. [03 - Callbacks dan Masalah Callback Hell](06-asynchronous/03-callbacks/README.md)
+4. [04 - AJAX (XMLHttpRequest) (PZN)](06-asynchronous/04-ajax-xmlhttprequest/README.md)
+5. [05 - Promise (Pending, Fulfilled, Rejected)](06-asynchronous/05-promise/README.md)
+6. [06 - Promise Concurrency (Promise.all, race, any, allSettled) (PZN)](06-asynchronous/06-promise-concurrency/README.md)
+7. [07 - Fetch API (HTTP Request Modern)](06-asynchronous/07-fetch-api/README.md)
+8. [08 - Async dan Await](06-asynchronous/08-async-await/README.md)
+9. [09 - Web Workers (Multi-Threading di Browser) (PZN)](06-asynchronous/09-web-workers/README.md)
+
+---
+
+### 7. [07 - Modern Web API & Real-World JavaScript](07-modern-web-api/)
+Pola arsitektur, Web API browser modern, dan teknik optimasi performa industri:
+1. [01 - Web Storage API (localStorage, sessionStorage, Cookies)](07-modern-web-api/01-web-storage/README.md)
+2. [02 - Modern Syntax ES2020-ES2023](07-modern-web-api/02-modern-syntax-es2020/README.md)
+3. [03 - URL, URLSearchParams, dan FormData API](07-modern-web-api/03-url-and-formdata/README.md)
+4. [04 - Asynchronous Paralel & AbortController](07-modern-web-api/04-async-parallel-abort/README.md)
+5. [05 - Optimasi Performa Event (Debounce dan Throttle)](07-modern-web-api/05-debounce-and-throttle/README.md)
+6. [06 - Intersection Observer API (Lazy Loading & Infinite Scroll)](07-modern-web-api/06-intersection-observer/README.md)
+
+---
+
+### 8. [08 - Build Tools & Webpack 5 (Capstone Project)](08-build-tools/)
+Pengembangan aplikasi skala industri menggunakan modul, bundler, dan build tools:
+- [Arsitektur Webpack 5, SCSS Loader, PurgeCSS, dan Code Splitting](08-build-tools/README.md)
 
 ---
 
 ## 🛠️ Cara Menjalankan Kode
 
 ### 1. Menjalankan File JavaScript via Node.js
-
-Seluruh materi logika, algoritma, OOP, dan Web API yang tidak mewajibkan interaksi layar dapat langsung dijalankan di terminal menggunakan Node.js:
-
+Seluruh materi logika, algoritma, OOP, Standard Library, dan sintaks yang tidak memerlukan layar browser dapat langsung dijalankan di terminal:
 ```bash
 # Menjalankan materi fungsi
-node 01-dasar/07-function/01-intro/contoh.js
-
-# Menjalankan materi Promise
-node 03-asynchronous/04-promise/contoh.js
+node 01-fundamentals/07-functions/01-intro/example.js
 
 # Menjalankan materi OOP
-node 05-oop/16-iterable-iterator/contoh.js
+node 02-oop/03-class/example.js
 
 # Menjalankan materi Standard Library
-node 07-standard-library/01-number/contoh.js
+node 03-standard-library/01-number/example.js
+
+# Menjalankan materi Promise Concurrency
+node 06-asynchronous/06-promise-concurrency/example.js
 ```
 
-### 2. Menjalankan Materi DOM & Browser di Browser
+### 2. Menjalankan Materi DOM, Modules & Web API di Browser
+Buka file `index.html` yang ada di setiap folder materi langsung di browser, atau gunakan ekstensi **Live Server** di VS Code.
 
-Untuk materi yang melibatkan DOM atau event visual, cukup buka file `index.html` yang ada di setiap folder materi langsung di browser Anda, atau gunakan ekstensi seperti **Live Server** di VS Code.
-
-### 3. Menjalankan Proyek Modular Webpack
-
+### 3. Menjalankan Proyek Build Tools Webpack
 ```bash
-cd 04-modular
+cd 08-build-tools
 npm install
 npm run serve    # Mode dev server interaktif
 npm run build    # Membangun bundle produksi
