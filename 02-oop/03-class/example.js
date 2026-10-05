@@ -11,11 +11,11 @@ class Person {
   }
 }
 
-const joko = new Person("Joko Santoso");
+const joko = new Person('Joko Santoso');
 console.log(joko);
 console.log(joko.name);
-joko.sayHello("Budi");
+joko.sayHello('Budi');
 
-const samsul = new Person("Samsul");
+const samsul = new Person('Samsul');
 console.log(samsul);
-samsul.sayHello("Eko");
+samsul.sayHello('Eko');

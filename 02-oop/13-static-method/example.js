@@ -17,7 +17,7 @@ class MathUtils {
 
 // Dipanggil langsung dari nama Class tanpa perlu instansiasi 'new MathUtils()'
 const total = MathUtils.sum(1, 2, 3, 4, 5);
-console.info("Hasil MathUtils.sum:", total);
+console.info('Hasil MathUtils.sum:', total);
 
 const hasilKali = MathUtils.multiply(10, 5);
-console.info("Hasil MathUtils.multiply:", hasilKali);
+console.info('Hasil MathUtils.multiply:', hasilKali);

@@ -17,7 +17,7 @@ function encodeBase64Unicode(str) {
   // 1. Bongkar string/emoji menjadi deretan byte UTF-8 (Uint8Array: angka 0-255)
   const bytes = new TextEncoder().encode(str);
   // 2. Ubah tiap angka byte menjadi karakter Latin-1 (0-255) agar muat di btoa
-  const binString = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("");
+  const binString = Array.from(bytes, (byte) => String.fromCharCode(byte)).join('');
   // 3. Masukkan ke btoa yang hanya menerima karakter rentang 0-255
   return btoa(binString);
 }

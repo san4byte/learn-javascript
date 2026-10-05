@@ -39,7 +39,7 @@ Dengan menaruhnya di **`Mahasiswa.prototype.makan`**, fungsi tersebut hanya ada 
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Prototype Inheritance Klasik ---");
+console.log('--- 1. Prototype Inheritance Klasik ---');
 function Robot(nama, energi) {
   this.nama = nama;
   this.energi = energi;
@@ -56,16 +56,16 @@ Robot.prototype.isiUlang = function (tambah) {
   console.log(`${this.nama} mengisi ulang baterai. Energi saat ini: ${this.energi}%`);
 };
 
-const optimus = new Robot("Optimus Prime", 100);
-const bumblebee = new Robot("Bumblebee", 80);
+const optimus = new Robot('Optimus Prime', 100);
+const bumblebee = new Robot('Bumblebee', 80);
 
 optimus.bekerja(3);
 bumblebee.isiUlang(15);
 
 // Membuktikan kedua objek berbagi method yang sama:
-console.log("Apakah berbagi method prototype yang sama?", optimus.bekerja === bumblebee.bekerja); // true
+console.log('Apakah berbagi method prototype yang sama?', optimus.bekerja === bumblebee.bekerja); // true
 
-console.log("\n--- 2. Pewarisan dengan Object.create() ---");
+console.log('\n--- 2. Pewarisan dengan Object.create() ---');
 const cetakanInduk = {
   sapa() {
     return `Halo dari ${this.nama}`;
@@ -74,7 +74,7 @@ const cetakanInduk = {
 
 // Membuat objek baru yang mewarisi langsung dari cetakanInduk
 const anakRobot = Object.create(cetakanInduk);
-anakRobot.nama = "MiniBot";
+anakRobot.nama = 'MiniBot';
 console.log(anakRobot.sapa());
 ```
 

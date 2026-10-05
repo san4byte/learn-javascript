@@ -72,21 +72,21 @@ Namun, JavaScript dapat menjalankan operasi yang memakan waktu lama (seperti req
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- Demonstrasi Urutan Eksekusi Event Loop ---");
+console.log('--- Demonstrasi Urutan Eksekusi Event Loop ---');
 
-console.log("1. [Synchronous] Awal script dieksekusi di Call Stack");
+console.log('1. [Synchronous] Awal script dieksekusi di Call Stack');
 
 // Macrotask (Task Queue)
 setTimeout(() => {
-  console.log("4. [Macrotask - setTimeout] Dijalankan setelah antrean microtask kosong");
+  console.log('4. [Macrotask - setTimeout] Dijalankan setelah antrean microtask kosong');
 }, 0);
 
 // Microtask (Microtask Queue)
 Promise.resolve().then(() => {
-  console.log("3. [Microtask - Promise.then] Dijalankan SEBELUM setTimeout meski delay 0ms!");
+  console.log('3. [Microtask - Promise.then] Dijalankan SEBELUM setTimeout meski delay 0ms!');
 });
 
-console.log("2. [Synchronous] Akhir script sinkron selesai");
+console.log('2. [Synchronous] Akhir script sinkron selesai');
 
 /*
 Penjelasan Alur Eksekusi:
@@ -133,11 +133,11 @@ Penjelasan Alur Eksekusi:
 ## 6. ✍️ Latihan Mandiri
 1. Tanpa menjalankan kodenya terlebih dahulu, tebak urutan angka dari kode berikut:
    ```javascript
-   console.log("A");
-   setTimeout(() => console.log("B"), 10);
-   setTimeout(() => console.log("C"), 0);
-   Promise.resolve().then(() => console.log("D"));
-   console.log("E");
+   console.log('A');
+   setTimeout(() => console.log('B'), 10);
+   setTimeout(() => console.log('C'), 0);
+   Promise.resolve().then(() => console.log('D'));
+   console.log('E');
    ```
 2. Jalankan kode tersebut di Node.js atau DevTools browser dan bandingkan dengan tebakan Anda.
 

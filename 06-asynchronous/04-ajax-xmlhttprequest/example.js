@@ -1,13 +1,13 @@
 // AJAX Klasik menggunakan XMLHttpRequest (XHR)
-const btn = document.getElementById("btn-request");
-const output = document.getElementById("output");
+const btn = document.getElementById('btn-request');
+const output = document.getElementById('output');
 
-btn?.addEventListener("click", () => {
+btn?.addEventListener('click', () => {
   const xhr = new XMLHttpRequest();
-  const url = "https://jsonplaceholder.typicode.com/posts/1";
+  const url = 'https://jsonplaceholder.typicode.com/posts/1';
 
   // Membuka koneksi HTTP GET secara asynchronous (true)
-  xhr.open("GET", url, true);
+  xhr.open('GET', url, true);
 
   // Event listener saat status koneksi berubah
   xhr.onreadystatechange = function () {
@@ -16,9 +16,9 @@ btn?.addEventListener("click", () => {
       if (xhr.status === 200) {
         const responseData = JSON.parse(xhr.responseText);
         output.textContent = JSON.stringify(responseData, null, 2);
-        console.log("AJAX Sukses:", responseData);
+        console.log('AJAX Sukses:', responseData);
       } else {
-        console.error("AJAX Gagal:", xhr.statusText);
+        console.error('AJAX Gagal:', xhr.statusText);
       }
     }
   };

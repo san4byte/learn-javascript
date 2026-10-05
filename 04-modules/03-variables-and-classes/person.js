@@ -1,4 +1,4 @@
-export const DEFAULT_ROLE = "Software Engineer";
+export const DEFAULT_ROLE = 'Software Engineer';
 
 export class Person {
   constructor(name, role = DEFAULT_ROLE) {

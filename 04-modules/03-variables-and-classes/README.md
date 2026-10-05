@@ -28,7 +28,7 @@ Modul ES6 tidak terbatas hanya untuk fungsi biasa:
 ## 3. 💻 Contoh Kode (`example.js`)
 ```javascript
 // person.js
-export const DEFAULT_ROLE = "Software Engineer";
+export const DEFAULT_ROLE = 'Software Engineer';
 
 export class Person {
   constructor(name, role = DEFAULT_ROLE) {
@@ -42,9 +42,9 @@ export class Person {
 }
 
 // example.js
-import { Person, DEFAULT_ROLE } from "./person.js";
+import { Person, DEFAULT_ROLE } from './person.js';
 
-const programmer = new Person("Joko Santoso");
+const programmer = new Person('Joko Santoso');
 console.log(programmer.getInfo());
 console.log(`Default role: ${DEFAULT_ROLE}`);
 ```

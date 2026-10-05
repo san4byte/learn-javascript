@@ -1,11 +1,11 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Perulangan For Standar ---");
+console.log('--- 1. Perulangan For Standar ---');
 for (let i = 1; i <= 5; i++) {
   console.log(`Tiket antrean ke-${i}`);
 }
 
-console.log("\n--- 2. Penggunaan continue dan break ---");
+console.log('\n--- 2. Penggunaan continue dan break ---');
 for (let i = 1; i <= 6; i++) {
   if (i === 3) {
     console.log(`[LEWATI]: Antrean ${i} tidak hadir (continue)`);

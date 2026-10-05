@@ -22,7 +22,7 @@
 ### 1. Masalah yang Diselesaikan
 Di JavaScript, kita bisa dengan mudah melakukan perulangan `for...of` atau *spread operator* `[...]` pada data bawaan seperti **Array**, **String**, **Set**, dan **Map**:
 ```javascript
-const fruits = ["Apel", "Jeruk"];
+const fruits = ['Apel', 'Jeruk'];
 for (const f of fruits) { ... } // Berhasil!
 ```
 Namun, jika kita membuat **Class atau Objek buatan kita sendiri**:
@@ -125,7 +125,7 @@ class Counter {
 // Pemanggilan dengan for..of
 const counter = new Counter(1, 5);
 for (const val of counter) {
-  console.info("Nilai counter:", val);
+  console.info('Nilai counter:', val);
 }
 ```
 
@@ -182,7 +182,7 @@ Di proyek nyata, menulis class Iterator manual terasa panjang. JavaScript modern
 ```javascript
 class BookShelf {
   constructor() {
-    this.books = ["Clean Code", "Refactoring"];
+    this.books = ['Clean Code', 'Refactoring'];
   }
 
   *[Symbol.iterator]() {

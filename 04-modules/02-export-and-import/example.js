@@ -1,5 +1,5 @@
-import { sayHello, author } from "./say.js";
+import { sayHello, author } from './say.js';
 
-const greeting = sayHello("Joko Santoso");
+const greeting = sayHello('Joko Santoso');
 console.log(greeting);
 console.log(`Penulis materi: ${author}`);

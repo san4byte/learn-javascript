@@ -26,7 +26,7 @@ joko.increment();
 joko.increment();
 joko.decrement();
 
-console.info("Nilai Counter:", joko.get()); // 4
+console.info('Nilai Counter:', joko.get()); // 4
 
 // Mencoba mengakses langsung dari luar akan ERROR:
 // console.info(joko.#counter); // SyntaxError: Private field '#counter' must be declared in an enclosing class

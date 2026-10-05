@@ -1,13 +1,13 @@
 // DOM: Menggunakan insertRow() dan insertCell() pada HTMLTableElement
-const btnTambah = document.getElementById("btn-tambah");
-const tableBody = document.getElementById("tabel-body");
+const btnTambah = document.getElementById('btn-tambah');
+const tableBody = document.getElementById('tabel-body');
 
 let nomor = 2;
-const daftarNama = ["Siti Rahma", "Ahmad Fauzi", "Dewi Lestari", "Rian Hidayat"];
+const daftarNama = ['Siti Rahma', 'Ahmad Fauzi', 'Dewi Lestari', 'Rian Hidayat'];
 
-btnTambah.addEventListener("click", () => {
+btnTambah.addEventListener('click', () => {
   if (daftarNama.length === 0) {
-    alert("Semua data siswa contoh telah ditambahkan!");
+    alert('Semua data siswa contoh telah ditambahkan!');
     return;
   }
 

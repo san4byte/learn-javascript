@@ -31,7 +31,7 @@ Daripada menuliskan rumus perhitungan pangkat tiga secara berulang-ulang di bany
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- Project Perhitungan Volume Dua Kubus ---");
+console.log('--- Project Perhitungan Volume Dua Kubus ---');
 
 // Fungsi pembantu independen (Modular Helper)
 function hitungVolumeKubus(sisi) {

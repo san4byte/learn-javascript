@@ -22,7 +22,7 @@
 ### 1. Membaca Nilai Input (`input.value`)
 Setiap elemen input di halaman web menyimpan teks yang diketikkan pengguna di dalam properti `.value`. Properti ini selalu bertipe data `String`:
 ```javascript
-const nama = document.getElementById("nama").value;
+const nama = document.getElementById('nama').value;
 ```
 
 ### 2. Mengapa Wajib `event.preventDefault()`?
@@ -36,19 +36,19 @@ Setelah data berhasil dikirimkan atau diproses, memanggil `form.reset()` akan me
 ## 3. 💻 Contoh Kode (`example.js`)
 ```javascript
 // DOM: Mengelola form, value, dan submit event
-const form = document.getElementById("comment-form");
-const outputDiv = document.getElementById("output");
+const form = document.getElementById('comment-form');
+const outputDiv = document.getElementById('output');
 
-form.addEventListener("submit", function (event) {
+form.addEventListener('submit', function (event) {
   // 1. Mencegah perilaku default browser (page reload)
   event.preventDefault();
 
   // 2. Mengakses nilai input form
-  const inputNama = document.getElementById("nama").value;
-  const inputPesan = document.getElementById("pesan").value;
+  const inputNama = document.getElementById('nama').value;
+  const inputPesan = document.getElementById('pesan').value;
 
   // 3. Menampilkan hasil ke layar
-  outputDiv.style.display = "block";
+  outputDiv.style.display = 'block';
   outputDiv.innerHTML = `<strong>Komentar Berhasil Terkirim:</strong><br>
                          Pengirim: <em>${inputNama}</em><br>
                          Pesan: <em>${inputPesan}</em>`;

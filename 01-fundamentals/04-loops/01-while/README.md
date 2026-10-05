@@ -34,7 +34,7 @@ Perulangan `while` digunakan ketika kita ingin mengeksekusi suatu blok kode seca
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Perulangan While Standar ---");
+console.log('--- 1. Perulangan While Standar ---');
 let nilaiAwal = 1;
 
 while (nilaiAwal <= 5) {
@@ -42,7 +42,7 @@ while (nilaiAwal <= 5) {
   nilaiAwal++; // Wajib: agar loop tidak berjalan selamanya (infinite loop)
 }
 
-console.log("\n--- 2. Perbedaan dengan Do-While ---");
+console.log('\n--- 2. Perbedaan dengan Do-While ---');
 let angkaUji = 10;
 
 // Meskipun angkaUji sudah > 5 sejak awal, do-while tetap jalan 1 kali:

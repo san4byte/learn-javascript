@@ -45,12 +45,12 @@ class Counter {
   }
 }
 
-console.info("--- 1. Loop Counter Iterable ---");
+console.info('--- 1. Loop Counter Iterable ---');
 const counter = new Counter(1, 5);
 
 // Karena mematuhi kontrak Iterable, objek counter bisa langsung di-loop dengan for..of!
 for (const val of counter) {
-  console.info("Nilai counter:", val);
+  console.info('Nilai counter:', val);
 }
 
 
@@ -87,11 +87,11 @@ class ProductCatalog {
   }
 }
 
-console.info("\n--- 2. Real Project: E-Commerce Product Catalog ---");
+console.info('\n--- 2. Real Project: E-Commerce Product Catalog ---');
 const catalog = new ProductCatalog();
-catalog.addProduct("Laptop Gaming", 15000000);
-catalog.addProduct("Mouse Wireless", 250000);
-catalog.addProduct("Mechanical Keyboard", 800000);
+catalog.addProduct('Laptop Gaming', 15000000);
+catalog.addProduct('Mouse Wireless', 250000);
+catalog.addProduct('Mechanical Keyboard', 800000);
 
 // Bisa langsung di-for..of secara elegan:
 for (const product of catalog) {
@@ -100,7 +100,7 @@ for (const product of catalog) {
 
 // Bisa langsung dibongkar dengan Spread Operator:
 const allItems = [...catalog];
-console.info("Total item katalog via spread:", allItems.length);
+console.info('Total item katalog via spread:', allItems.length);
 
 
 // ====================================================================
@@ -112,7 +112,7 @@ console.info("Total item katalog via spread:", allItems.length);
 
 class BookShelf {
   constructor() {
-    this.books = ["Clean Code", "JavaScript: The Good Parts", "Refactoring"];
+    this.books = ['Clean Code', 'JavaScript: The Good Parts', 'Refactoring'];
   }
 
   // Generator method otomatis menjadi [Symbol.iterator]
@@ -123,8 +123,8 @@ class BookShelf {
   }
 }
 
-console.info("\n--- 3. Modern Real-World: Generator Function* di Class ---");
+console.info('\n--- 3. Modern Real-World: Generator Function* di Class ---');
 const shelf = new BookShelf();
 for (const book of shelf) {
-  console.info("Buku di rak:", book);
+  console.info('Buku di rak:', book);
 }

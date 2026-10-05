@@ -14,17 +14,17 @@ class Person {
 
   // Setter: memvalidasi dan mengubah properti saat diberi nilai baru
   set fullName(value) {
-    const parts = value.split(" ");
+    const parts = value.split(' ');
     this.firstName = parts[0];
-    this.lastName = parts.slice(1).join(" ");
+    this.lastName = parts.slice(1).join(' ');
   }
 }
 
-const joko = new Person("Joko", "Santoso");
+const joko = new Person('Joko', 'Santoso');
 console.log(joko.fullName); // Memanggil getter (tanpa tanda kurung ())
 
 // Mengubah nilai menggunakan setter
-joko.fullName = "Eko Kurniawan Khannedy";
+joko.fullName = 'Eko Kurniawan Khannedy';
 console.log(joko.fullName);
 console.log(joko.firstName);
 console.log(joko.lastName);

@@ -1,5 +1,5 @@
 // Menimpa variabel di global scope yang dideklarasikan oleh first.js!
-var name = "Budi";
+var name = 'Budi';
 
 function sayHello() {
   console.log(`Halo, nama saya ${name} dari second.js`);

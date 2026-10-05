@@ -30,7 +30,7 @@
 
 class Shape {
   paint() {
-    console.log("Menggambar bentuk Shape dasar");
+    console.log('Menggambar bentuk Shape dasar');
   }
 }
 
@@ -39,7 +39,7 @@ class Circle extends Shape {
     // Memanggil method paint milik parent class (Shape)
     super.paint();
     // Menambahkan aksi khusus milik Circle
-    console.log("Menggambar lingkaran Circle");
+    console.log('Menggambar lingkaran Circle');
   }
 }
 

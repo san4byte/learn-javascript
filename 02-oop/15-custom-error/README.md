@@ -34,7 +34,7 @@ Di aplikasi nyata, kita sering membutuhkan informasi error yang lebih spesifik. 
 class ValidationError extends Error {
   constructor(message, field) {
     super(message);
-    this.name = "ValidationError";
+    this.name = 'ValidationError';
     this.field = field;
   }
 }
@@ -42,13 +42,13 @@ class ValidationError extends Error {
 class MathUtils {
   static sum(...numbers) {
     if (numbers.length === 0) {
-      throw new ValidationError("Daftar angka tidak boleh kosong!", "numbers");
+      throw new ValidationError('Daftar angka tidak boleh kosong!', 'numbers');
     }
 
     let total = 0;
     for (const number of numbers) {
-      if (typeof number !== "number") {
-        throw new ValidationError(`Nilai '${number}' harus berupa number!`, "element");
+      if (typeof number !== 'number') {
+        throw new ValidationError(`Nilai '${number}' harus berupa number!`, 'element');
       }
       total += number;
     }
@@ -57,7 +57,7 @@ class MathUtils {
 }
 
 try {
-  MathUtils.sum("bukan angka");
+  MathUtils.sum('bukan angka');
 } catch (error) {
   if (error instanceof ValidationError) {
     console.error(`[VALIDASI GAGAL] Pada field '${error.field}': ${error.message}`);

@@ -12,7 +12,7 @@ class Person {
 
   // Method privat: fungsi pembantu internal yang tidak boleh dipanggil dari luar
   #sayWithoutName() {
-    console.info("Hello");
+    console.info('Hello');
   }
 
   #sayWithName(name) {
@@ -21,7 +21,7 @@ class Person {
 }
 
 const joko = new Person();
-joko.say("Joko Santoso");
+joko.say('Joko Santoso');
 joko.say();
 
 // Mencoba memanggil method privat dari luar akan ERROR:

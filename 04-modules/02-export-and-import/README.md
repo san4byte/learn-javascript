@@ -32,12 +32,12 @@ export function sayHello(name) {
   return `Halo, ${name}! Selamat datang di ES Modules.`;
 }
 
-export const author = "JavaScript Developer";
+export const author = 'JavaScript Developer';
 
 // example.js
-import { sayHello, author } from "./say.js";
+import { sayHello, author } from './say.js';
 
-const greeting = sayHello("Joko Santoso");
+const greeting = sayHello('Joko Santoso');
 console.log(greeting);
 console.log(`Penulis materi: ${author}`);
 ```

@@ -1,8 +1,8 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Pembuatan Proxy & Interceptor Trap get ---");
+console.log('--- 1. Pembuatan Proxy & Interceptor Trap get ---');
 const user = {
-  nama: "Joko",
+  nama: 'Joko',
   umur: 25,
 };
 
@@ -17,9 +17,9 @@ const handler = {
   },
 
   set(target, property, value) {
-    if (property === "umur") {
-      if (typeof value !== "number" || value <= 0) {
-        throw new Error("Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif!");
+    if (property === 'umur') {
+      if (typeof value !== 'number' || value <= 0) {
+        throw new Error('Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif!');
       }
     }
 
@@ -32,18 +32,18 @@ const handler = {
 const proxyUser = new Proxy(user, handler);
 
 // Uji coba pembacaan properti:
-console.log("Akses properti ada   :", proxyUser.nama);
-console.log("Akses properti gaib  :", proxyUser.alamat);
+console.log('Akses properti ada   :', proxyUser.nama);
+console.log('Akses properti gaib  :', proxyUser.alamat);
 
-console.log("\n--- 2. Validasi Penulisan Data dengan Trap set ---");
+console.log('\n--- 2. Validasi Penulisan Data dengan Trap set ---');
 try {
   // Uji coba nilai yang benar:
   proxyUser.umur = 2;
-  console.log("Berhasil update umur menjadi:", proxyUser.umur);
+  console.log('Berhasil update umur menjadi:', proxyUser.umur);
 
   // Uji coba nilai yang salah (memicu error):
   proxyUser.umur = -5;
 } catch (err) {
-  console.error("Gagal update umur:", err.message);
+  console.error('Gagal update umur:', err.message);
 }
 

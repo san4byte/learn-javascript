@@ -46,10 +46,10 @@ class Customer {
   }
 }
 
-const joko = new Customer("Joko", "Santoso", 100000);
+const joko = new Customer('Joko', 'Santoso', 100000);
 console.info(joko);
-console.info("Saldo Joko:", joko.balance);
-joko.sayHello("Budi");
+console.info('Saldo Joko:', joko.balance);
+joko.sayHello('Budi');
 
 const anonim = new Customer();
 console.info(anonim);

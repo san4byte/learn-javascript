@@ -1,6 +1,6 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Implementasi Fungsi Helper Debounce ---");
+console.log('--- 1. Implementasi Fungsi Helper Debounce ---');
 /**
  * Debounce: Menunda eksekusi fungsi sampai tidak ada aktivitas lagi selama delayMs.
  */
@@ -26,30 +26,30 @@ function lakukanPencarianAPI(query) {
 // Bungkus fungsi pencarian dengan debounce (delay 200ms)
 const pencarianTerDebounce = debounce(lakukanPencarianAPI, 200);
 
-console.log("Simulasi user mengetik cepat di keyboard:");
+console.log('Simulasi user mengetik cepat di keyboard:');
 console.log("- User mengetik 'j'");
-pencarianTerDebounce("j");
+pencarianTerDebounce('j');
 
 setTimeout(() => {
   console.log("- User mengetik 'ja' (setelah 50ms)");
-  pencarianTerDebounce("ja");
+  pencarianTerDebounce('ja');
 }, 50);
 
 setTimeout(() => {
   console.log("- User mengetik 'jav' (setelah 100ms)");
-  pencarianTerDebounce("jav");
+  pencarianTerDebounce('jav');
 }, 100);
 
 setTimeout(() => {
   console.log("- User berhenti mengetik di kata 'javascript' (setelah 150ms)");
-  pencarianTerDebounce("javascript");
+  pencarianTerDebounce('javascript');
 }, 150);
 
 // Hasil: Dari 4 kali pengetikan, fungsi lakukanPencarianAPI hanya dipanggil 1 KALI saja!
 
 // Tunggu sampai simulasi debounce selesai (400ms) sebelum memulai throttle
 setTimeout(() => {
-  console.log("\n--- 2. Implementasi Fungsi Helper Throttle ---");
+  console.log('\n--- 2. Implementasi Fungsi Helper Throttle ---');
   /**
    * Throttle: Membatasi eksekusi fungsi maksimal 1 kali setiap intervalMs.
    */
@@ -72,7 +72,7 @@ setTimeout(() => {
   const scrollTerThrottle = throttle(rekamPosisiScroll, 100);
 
   // Simulasi scroll cepat browser
-  console.log("Simulasi scroll intensif dalam 300ms:");
+  console.log('Simulasi scroll intensif dalam 300ms:');
   scrollTerThrottle(10);  // Dipanggil (eksekusi pertama)
   scrollTerThrottle(50);  // Diabaikan (terlalu cepat)
   scrollTerThrottle(120); // Diabaikan

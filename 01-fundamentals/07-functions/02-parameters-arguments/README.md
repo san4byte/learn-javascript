@@ -24,7 +24,7 @@ Seringkali istilah parameter dan argumen dianggap sama, padahal keduanya memilik
 ### Fitur Parameter Modern:
 1. **Default Parameter (ES6)**: Menentukan nilai bawaan jika argumen tidak diberikan atau bernilai `undefined`.
    ```javascript
-   function salam(nama = "Tamu") { ... }
+   function salam(nama = 'Tamu') { ... }
    ```
 2. **Objek `arguments` (ES5 Legacy)**: Variabel lokal di dalam fungsi biasa (*bukan arrow function*) yang menampung seluruh argumen yang dikirim dalam bentuk *array-like object*.
 
@@ -34,16 +34,16 @@ Seringkali istilah parameter dan argumen dianggap sama, padahal keduanya memilik
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Default Parameter (Mencegah Nilai Undefined) ---");
-function buatPesananKopi(jenisKopi = "Americano", ukuran = "Regular", gula = false) {
-  return `Pesanan: Kopi ${jenisKopi} | Ukuran: ${ukuran} | Tambah Gula: ${gula ? "Ya" : "Tidak"}`;
+console.log('--- 1. Default Parameter (Mencegah Nilai Undefined) ---');
+function buatPesananKopi(jenisKopi = 'Americano', ukuran = 'Regular', gula = false) {
+  return `Pesanan: Kopi ${jenisKopi} | Ukuran: ${ukuran} | Tambah Gula: ${gula ? 'Ya' : 'Tidak'}`;
 }
 
 // Memanggil tanpa argumen (menggunakan default penuh)
 console.log(buatPesananKopi());
 
 // Memanggil dengan argumen spesifik
-console.log(buatPesananKopi("Latte", "Large", true));
+console.log(buatPesananKopi('Latte', 'Large', true));
 
 console.log("\n--- 2. Objek 'arguments' (Argumen Dinamis Tradisional) ---");
 function jumlahkanSemuaAngka() {
@@ -55,8 +55,8 @@ function jumlahkanSemuaAngka() {
   return total;
 }
 
-console.log("Jumlah 2 angka :", jumlahkanSemuaAngka(10, 20));
-console.log("Jumlah 5 angka :", jumlahkanSemuaAngka(5, 10, 15, 20, 25));
+console.log('Jumlah 2 angka :', jumlahkanSemuaAngka(10, 20));
+console.log('Jumlah 5 angka :', jumlahkanSemuaAngka(5, 10, 15, 20, 25));
 ```
 
 ---

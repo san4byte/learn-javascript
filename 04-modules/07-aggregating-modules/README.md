@@ -30,18 +30,18 @@ Dalam aplikasi berskala besar, kode dipecah ke dalam banyak file kecil:
 ## 3. 💻 Contoh Kode (`example.js`)
 ```javascript
 // user.js
-export const user = "Joko Santoso";
+export const user = 'Joko Santoso';
 
 // auth.js
 export const isAuthenticated = true;
 
 // index.js (Pintu Masuk Agregasi / Barrel File)
-export { user } from "./user.js";
-export { isAuthenticated } from "./auth.js";
+export { user } from './user.js';
+export { isAuthenticated } from './auth.js';
 
 // example.js
 // Konsumen cukup mengimpor dari satu file pintu masuk index.js
-import { user, isAuthenticated } from "./index.js";
+import { user, isAuthenticated } from './index.js';
 
 console.log(`User: ${user}, Logged In: ${isAuthenticated}`);
 ```

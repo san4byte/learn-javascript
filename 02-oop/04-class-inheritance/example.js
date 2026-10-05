@@ -14,7 +14,7 @@ class Manager extends Employee {
 }
 
 const budi = new Employee();
-budi.sayHello("Joko");
+budi.sayHello('Joko');
 
 const eko = new Manager();
-eko.sayHello("Joko");
+eko.sayHello('Joko');

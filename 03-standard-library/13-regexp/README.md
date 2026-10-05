@@ -108,11 +108,11 @@ JavaScript menyediakan dua cara untuk membuat objek RegExp:
 const regexStatis = /^[a-z]+$/i;
 
 // 2. Konstruktor (Dinamis dari variabel pengguna)
-const kataKunci = "javascript";
-const regexDinamis = new RegExp(kataKunci, "gi");
+const kataKunci = 'javascript';
+const regexDinamis = new RegExp(kataKunci, 'gi');
 
 // Catatan penting: Pada konstruktor string, gunakan double-backslash:
-const regexAngka = new RegExp("\\d{4}", "g"); // Sama dengan /\d{4}/g
+const regexAngka = new RegExp('\\d{4}', 'g'); // Sama dengan /\d{4}/g
 ```
 
 ---

@@ -40,14 +40,14 @@ Web Worker menginstansiasi thread sistem operasi baru di latar belakang:
 ## 3. 💻 Contoh Kode (`example.js` & `worker.js`)
 ```javascript
 // Main UI Thread (example.js)
-const btnCalculate = document.getElementById("btn-hitung");
-const resultEl = document.getElementById("hasil");
+const btnCalculate = document.getElementById('btn-hitung');
+const resultEl = document.getElementById('hasil');
 
 // 1. Menginisialisasi Web Worker dari berkas terpisah
-const worker = new Worker("worker.js");
+const worker = new Worker('worker.js');
 
-btnCalculate.addEventListener("click", () => {
-  resultEl.textContent = "Sedang menghitung di background...";
+btnCalculate.addEventListener('click', () => {
+  resultEl.textContent = 'Sedang menghitung di background...';
   
   // 2. Mengirim tugas komputasi berat ke worker
   worker.postMessage(100000000);
@@ -56,7 +56,7 @@ btnCalculate.addEventListener("click", () => {
 // 3. Menerima hasil komputasi dari background worker
 worker.onmessage = function (event) {
   resultEl.textContent = `Hasil Perhitungan: ${event.data}`;
-  console.log("[MAIN THREAD]: Hasil diterima:", event.data);
+  console.log('[MAIN THREAD]: Hasil diterima:', event.data);
 };
 ```
 
@@ -64,7 +64,7 @@ worker.onmessage = function (event) {
 // Worker Thread (worker.js)
 self.onmessage = function (event) {
   const number = event.data;
-  console.log("[WORKER]: Menerima tugas komputasi berat untuk angka:", number);
+  console.log('[WORKER]: Menerima tugas komputasi berat untuk angka:', number);
 
   // Komputasi intensif CPU berjalan di thread terpisah tanpa membekukan layar
   let total = 0;

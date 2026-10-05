@@ -34,15 +34,15 @@
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Mengambil Data via HTTP GET ---");
+console.log('--- 1. Mengambil Data via HTTP GET ---');
 // Simulasi URL API Publik (JSONPlaceholder)
-const API_URL = "https://jsonplaceholder.typicode.com/posts/1";
+const API_URL = 'https://jsonplaceholder.typicode.com/posts/1';
 
 // Mock fetch jika offline / diuji di lingkungan tanpa koneksi internet
 const universalFetch = typeof fetch !== 'undefined' ? fetch : async () => ({
   ok: true,
   status: 200,
-  json: async () => ({ id: 1, title: "Belajar JavaScript Asynchronous", body: "Materi Fetch API modern" })
+  json: async () => ({ id: 1, title: 'Belajar JavaScript Asynchronous', body: 'Materi Fetch API modern' })
 });
 
 universalFetch(API_URL)
@@ -55,35 +55,35 @@ universalFetch(API_URL)
     return response.json();
   })
   .then((data) => {
-    console.log("Data berhasil diambil dari server:");
-    console.log("- ID Post    :", data.id);
-    console.log("- Judul Post :", data.title);
+    console.log('Data berhasil diambil dari server:');
+    console.log('- ID Post    :', data.id);
+    console.log('- Judul Post :', data.title);
   })
   .catch((err) => {
-    console.error("Gagal melakukan fetch:", err.message);
+    console.error('Gagal melakukan fetch:', err.message);
   });
 
-console.log("\n--- 2. Mengirim Data via HTTP POST ---");
+console.log('\n--- 2. Mengirim Data via HTTP POST ---');
 async function kirimDataBaru() {
   try {
     const payload = {
-      title: "Artikel Baru",
-      body: "Konten artikel berhasil dibuat via POST",
+      title: 'Artikel Baru',
+      body: 'Konten artikel berhasil dibuat via POST',
       userId: 1
     };
 
-    const res = await universalFetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
+    const res = await universalFetch('https://jsonplaceholder.typicode.com/posts', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(payload)
     });
 
     const hasil = await res.json();
-    console.log("Sukses menyimpan data ke server! Respons ID:", hasil.id || 101);
+    console.log('Sukses menyimpan data ke server! Respons ID:', hasil.id || 101);
   } catch (error) {
-    console.error("Error kirim data:", error.message);
+    console.error('Error kirim data:', error.message);
   }
 }
 

@@ -34,12 +34,12 @@ Di JavaScript, error direpresentasikan sebagai objek turunan dari class bawaan *
 class MathUtils {
   static sum(...numbers) {
     if (numbers.length === 0) {
-      throw new Error("Parameter numbers harus diisi, tidak boleh kosong!");
+      throw new Error('Parameter numbers harus diisi, tidak boleh kosong!');
     }
 
     let total = 0;
     for (const number of numbers) {
-      if (typeof number !== "number") {
+      if (typeof number !== 'number') {
         throw new Error(`Parameter '${number}' bukan tipe number!`);
       }
       total += number;
@@ -49,16 +49,16 @@ class MathUtils {
 }
 
 try {
-  console.info("1. Memulai eksekusi di blok try");
+  console.info('1. Memulai eksekusi di blok try');
   const hasil = MathUtils.sum(); // Error dilempar di sini
-  console.info("2. Hasil:", hasil);
+  console.info('2. Hasil:', hasil);
 } catch (error) {
-  console.error("3. Terjadi Error:", error.message);
+  console.error('3. Terjadi Error:', error.message);
 } finally {
-  console.info("4. Blok finally selesai dijalankan.");
+  console.info('4. Blok finally selesai dijalankan.');
 }
 
-console.info("5. Aplikasi tetap berjalan normal tanpa crash!");
+console.info('5. Aplikasi tetap berjalan normal tanpa crash!');
 ```
 
 ---

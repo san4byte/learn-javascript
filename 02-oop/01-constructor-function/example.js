@@ -10,11 +10,11 @@ function Person(firstName, lastName) {
   };
 }
 
-const joko = new Person("Joko", "Santoso");
-const samsul = new Person("Samsul", "Arifin");
+const joko = new Person('Joko', 'Santoso');
+const samsul = new Person('Samsul', 'Arifin');
 
 console.log(joko);
-joko.sayHello("Budi");
+joko.sayHello('Budi');
 
 console.log(samsul);
-samsul.sayHello("Budi");
+samsul.sayHello('Budi');

@@ -30,16 +30,16 @@ Kata kunci **`static`** sebelum nama field menandakan bahwa field tersebut menja
 // Static Field (Properti milik Class, bukan milik instance objek)
 
 class Configuration {
-  static name = "Centinela";
+  static name = 'Centinela';
   static version = 1.0;
-  static author = "Joko Santoso";
+  static author = 'Joko Santoso';
 }
 
 const config = new Configuration();
 console.info(config.name); // undefined
 
 console.info(Configuration.name); // Centinela
-Configuration.name = "Rekap Uang";
+Configuration.name = 'Rekap Uang';
 console.info(Configuration.name); // Rekap Uang
 ```
 

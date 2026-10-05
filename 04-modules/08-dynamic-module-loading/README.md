@@ -28,17 +28,17 @@ Import statis (`import ... from '...'`) wajib ditulis di baris paling atas dan d
 ```javascript
 // heavy-module.js
 export function renderChart() {
-  console.log("Grafik berhasil dirender dari modul yang dimuat secara dinamis!");
+  console.log('Grafik berhasil dirender dari modul yang dimuat secara dinamis!');
 }
 
 // example.js
-const loadButton = document.getElementById("load-btn");
+const loadButton = document.getElementById('load-btn');
 
-loadButton.addEventListener("click", async () => {
-  console.log("Sedang memuat modul...");
+loadButton.addEventListener('click', async () => {
+  console.log('Sedang memuat modul...');
   
   // Modul heavy-module.js baru didownload saat tombol diklik!
-  const { renderChart } = await import("./heavy-module.js");
+  const { renderChart } = await import('./heavy-module.js');
   renderChart();
 });
 ```

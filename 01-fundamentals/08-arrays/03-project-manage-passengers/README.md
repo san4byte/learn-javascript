@@ -38,7 +38,7 @@ Proyek **Pengelolaan Kursi Penumpang** adalah implementasi studi kasus algoritma
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- Project Sistem Kursi Penumpang Angkot ---");
+console.log('--- Project Sistem Kursi Penumpang Angkot ---');
 
 const daftarKursi = [];
 
@@ -73,7 +73,7 @@ function tambahPenumpang(nama, kursi) {
 
 function turunkanPenumpang(nama, kursi) {
   if (kursi.length === 0) {
-    console.log("[PERINGATAN]: Angkot masih kosong, tidak ada penumpang yang bisa turun.");
+    console.log('[PERINGATAN]: Angkot masih kosong, tidak ada penumpang yang bisa turun.');
     return kursi;
   }
 
@@ -90,18 +90,18 @@ function turunkanPenumpang(nama, kursi) {
 }
 
 // Simulasi Alur Penumpang:
-tambahPenumpang("Joko", daftarKursi);
-tambahPenumpang("Budi", daftarKursi);
-tambahPenumpang("Siti", daftarKursi);
-console.log("Status Kursi:", daftarKursi);
+tambahPenumpang('Joko', daftarKursi);
+tambahPenumpang('Budi', daftarKursi);
+tambahPenumpang('Siti', daftarKursi);
+console.log('Status Kursi:', daftarKursi);
 
 // Budi turun di perjalanan
-turunkanPenumpang("Budi", daftarKursi);
-console.log("Status Kursi:", daftarKursi);
+turunkanPenumpang('Budi', daftarKursi);
+console.log('Status Kursi:', daftarKursi);
 
 // Penumpang baru naik dan mengisi kursi kosong bekas Budi
-tambahPenumpang("Ahmad", daftarKursi);
-console.log("Status Kursi:", daftarKursi);
+tambahPenumpang('Ahmad', daftarKursi);
+console.log('Status Kursi:', daftarKursi);
 ```
 
 ---

@@ -35,11 +35,11 @@ export default function log(message) {
 }
 
 // Named export: konstanta pembantu pendukung
-export const APP_VERSION = "2.0.0";
+export const APP_VERSION = '2.0.0';
 
 // example.js
 // Mengimpor default tidak memerlukan {}, namanya bebas ditentukan
-import customLogger, { APP_VERSION } from "./logger.js";
+import customLogger, { APP_VERSION } from './logger.js';
 
 customLogger(`Aplikasi berjalan pada versi ${APP_VERSION}`);
 ```

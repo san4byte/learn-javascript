@@ -27,14 +27,14 @@ Sebelum ES6 Modules diperkenalkan, memuat beberapa file JavaScript di HTML mengg
 ## 3. 💻 Contoh Kode (`example.js`)
 ```javascript
 // first.js
-var name = "Joko";
+var name = 'Joko';
 
 function sayHello() {
   console.log(`Halo, nama saya ${name} dari first.js`);
 }
 
 // second.js
-var name = "Budi"; // Menimpa variabel di global scope yang dideklarasikan oleh first.js!
+var name = 'Budi'; // Menimpa variabel di global scope yang dideklarasikan oleh first.js!
 
 function sayHello() {
   console.log(`Halo, nama saya ${name} dari second.js`);

@@ -15,11 +15,11 @@ Person.prototype.sayBye = function () {
   console.log(`Sampai jumpa dari ${this.firstName}!`);
 };
 
-const joko = new Person("Joko", "Santoso");
-const samsul = new Person("Samsul", "Arifin");
+const joko = new Person('Joko', 'Santoso');
+const samsul = new Person('Samsul', 'Arifin');
 
-joko.sayHello("Budi");
-samsul.sayHello("Budi");
+joko.sayHello('Budi');
+samsul.sayHello('Budi');
 
 joko.sayBye();
 samsul.sayBye();

@@ -39,7 +39,7 @@ Nilai dari `this` **bersifat dinamis** dan ditentukan sepenuhnya oleh **bagaiman
 
 console.log("--- 1. 'this' di dalam Method Objek ---");
 const akunPengguna = {
-  nama: "Joko Santoso",
+  nama: 'Joko Santoso',
   saldo: 1500000,
   
   tampilkanInfo: function () {
@@ -59,7 +59,7 @@ function Mobil(merk) {
   };
 }
 
-const avanza = new Mobil("Toyota");
+const avanza = new Mobil('Toyota');
 avanza.klakson();
 
 console.log("\n--- 3. Mengikat 'this' secara Eksplisit dengan bind() ---");

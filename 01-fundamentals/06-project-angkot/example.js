@@ -1,6 +1,6 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- Simulasi Status Operasional 10 Angkot ---");
+console.log('--- Simulasi Status Operasional 10 Angkot ---');
 
 const totalAngkot = 10;
 const angkotBeroperasiNormal = 6;

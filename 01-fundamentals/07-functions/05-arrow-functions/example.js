@@ -1,6 +1,6 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Perbandingan Sintaks Regular vs Arrow Function ---");
+console.log('--- 1. Perbandingan Sintaks Regular vs Arrow Function ---');
 // Regular Function
 const kaliRegular = function (a, b) {
   return a * b;
@@ -14,12 +14,12 @@ const kaliArrow = (a, b) => {
 // Arrow Function (Satu Baris / Implicit Return)
 const kaliRingkas = (a, b) => a * b;
 
-console.log("Hasil kaliRingkas(5, 4):", kaliRingkas(5, 4));
+console.log('Hasil kaliRingkas(5, 4):', kaliRingkas(5, 4));
 
 console.log("\n--- 2. Perilaku Lexical 'this' pada Objek ---");
 const kotakPesan = {
-  judul: "Pemberitahuan Sistem",
-  daftarPenerima: ["Joko", "Budi"],
+  judul: 'Pemberitahuan Sistem',
+  daftarPenerima: ['Joko', 'Budi'],
 
   kirimNotifikasi: function () {
     // Di dalam regular function ini, 'this' mengacu pada objek kotakPesan

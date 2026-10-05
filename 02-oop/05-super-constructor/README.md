@@ -50,11 +50,11 @@ class Manager extends Employee {
   }
 }
 
-const budi = new Employee("Budi");
-budi.sayHello("Joko");
+const budi = new Employee('Budi');
+budi.sayHello('Joko');
 
-const eko = new Manager("Eko", "Khannedy");
-eko.sayHello("Joko");
+const eko = new Manager('Eko', 'Khannedy');
+eko.sayHello('Joko');
 ```
 
 ---

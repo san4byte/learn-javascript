@@ -37,7 +37,7 @@ Daripada menyimpan data sopir, penumpang, dan kas dalam variabel-variabel terpis
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- Sistem Pengelolaan Angkot Berbasis Objek ---");
+console.log('--- Sistem Pengelolaan Angkot Berbasis Objek ---');
 
 function Angkot(sopir, trayek, penumpang, kas) {
   this.sopir = sopir;
@@ -48,14 +48,14 @@ function Angkot(sopir, trayek, penumpang, kas) {
   // Method Penumpang Naik
   this.penumpangNaik = function (nama) {
     this.penumpang.push(nama);
-    console.log(`[NAIK]: ${nama} naik ke angkot trayek ${this.trayek.join(" - ")}.`);
+    console.log(`[NAIK]: ${nama} naik ke angkot trayek ${this.trayek.join(' - ')}.`);
     return this.penumpang;
   };
 
   // Method Penumpang Turun & Pembayaran
   this.penumpangTurun = function (nama, ongkos) {
     if (this.penumpang.length === 0) {
-      console.log("Angkot masih kosong!");
+      console.log('Angkot masih kosong!');
       return false;
     }
 
@@ -75,18 +75,18 @@ function Angkot(sopir, trayek, penumpang, kas) {
 }
 
 // Inisialisasi Armada Angkot 1
-const angkot1 = new Angkot("Pak Joko", ["Cicaheum", "Cibiru"], [], 0);
+const angkot1 = new Angkot('Pak Joko', ['Cicaheum', 'Cibiru'], [], 0);
 
 // Operasi Penumpang:
-angkot1.penumpangNaik("Budi");
-angkot1.penumpangNaik("Siti");
-console.log("Daftar Penumpang:", angkot1.penumpang);
+angkot1.penumpangNaik('Budi');
+angkot1.penumpangNaik('Siti');
+console.log('Daftar Penumpang:', angkot1.penumpang);
 
 // Penumpang turun dan membayar ongkos Rp 5.000
-angkot1.penumpangTurun("Budi", 5000);
-angkot1.penumpangTurun("Siti", 5000);
+angkot1.penumpangTurun('Budi', 5000);
+angkot1.penumpangTurun('Siti', 5000);
 
-console.log("Total Kas Akhir:", angkot1.kas);
+console.log('Total Kas Akhir:', angkot1.kas);
 ```
 
 ---

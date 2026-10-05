@@ -1,6 +1,6 @@
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Konsep Dasar Konstruktor IntersectionObserver ---");
+console.log('--- 1. Konsep Dasar Konstruktor IntersectionObserver ---');
 
 // Mock sederhana jika dijalankan di Node.js (di browser IntersectionObserver adalah API bawaan)
 const ObserverClass = typeof IntersectionObserver !== 'undefined' ? IntersectionObserver : class {
@@ -28,7 +28,7 @@ const ObserverClass = typeof IntersectionObserver !== 'undefined' ? Intersection
 // Pengaturan observer
 const observerOptions = {
   root: null,          // Menggunakan viewport browser sebagai acuan
-  rootMargin: "100px", // Trigger 100px sebelum elemen benar-benar masuk layar
+  rootMargin: '100px', // Trigger 100px sebelum elemen benar-benar masuk layar
   threshold: 0.25      // Trigger saat minimal 25% bagian elemen terlihat
 };
 
@@ -44,9 +44,9 @@ function onIntersectCallback(entries, observer) {
 
 // Inisialisasi observer
 const myObserver = new ObserverClass(onIntersectCallback, observerOptions);
-myObserver.observe({ tagName: "SECTION", id: "banner-promosi" });
+myObserver.observe({ tagName: 'SECTION', id: 'banner-promosi' });
 
-console.log("\n--- 2. Pola Real-World: Lazy Loading Gambar Produk ---");
+console.log('\n--- 2. Pola Real-World: Lazy Loading Gambar Produk ---');
 /*
 Struktur HTML Gambar di E-Commerce:
 <img class="lazy-image" data-src="https://cdn.toko.com/produk-hd.jpg" src="placeholder-blur.jpg" alt="Laptop">
@@ -66,13 +66,13 @@ function setupLazyImages() {
   });
 
   // Contoh simulasi elemen target
-  const dummyElement = { tagName: "IMG", alt: "Laptop Gaming ASUS ROG" };
+  const dummyElement = { tagName: 'IMG', alt: 'Laptop Gaming ASUS ROG' };
   imageObserver.observe(dummyElement);
 }
 
 setupLazyImages();
 
-console.log("\n--- 3. Pola Real-World: Infinite Scroll Sentinel ---");
+console.log('\n--- 3. Pola Real-World: Infinite Scroll Sentinel ---');
 /*
 Daripada menghitung posisi scroll, taruh sebuah elemen kecil kosong di bawah daftar:
 <div id="scroll-sentinel"></div>
@@ -81,14 +81,14 @@ function setupInfiniteScroll(fetchNextPageCallback) {
   const infiniteObserver = new ObserverClass((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        console.log("[INFINITE SCROLL] Pengguna mencapai batas bawah halaman -> Memuat batch data baru...");
+        console.log('[INFINITE SCROLL] Pengguna mencapai batas bawah halaman -> Memuat batch data baru...');
         fetchNextPageCallback?.();
       }
     });
   });
 
-  const sentinel = { tagName: "DIV", id: "scroll-sentinel" };
+  const sentinel = { tagName: 'DIV', id: 'scroll-sentinel' };
   infiniteObserver.observe(sentinel);
 }
 
-setupInfiniteScroll(() => console.log("--> Fetch API halaman berikutnya sukses"));
+setupInfiniteScroll(() => console.log('--> Fetch API halaman berikutnya sukses'));

@@ -1,2 +1,2 @@
-import * as bootstrap from "bootstrap";
-import VanillaTilt from "vanilla-tilt";
+import * as bootstrap from 'bootstrap';
+import VanillaTilt from 'vanilla-tilt';

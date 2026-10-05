@@ -39,7 +39,7 @@ class Person {
   }
 
   #sayWithoutName() {
-    console.info("Hello");
+    console.info('Hello');
   }
 
   #sayWithName(name) {
@@ -48,7 +48,7 @@ class Person {
 }
 
 const joko = new Person();
-joko.say("Joko Santoso");
+joko.say('Joko Santoso');
 joko.say();
 ```
 

@@ -59,7 +59,7 @@ Di JavaScript (spesifikasi resmi ECMAScript), terdapat tepat **13 Traps bawaan**
 Kelompok trap yang paling sering digunakan untuk pengamanan data, validasi, dan masking properti:
 
 ```javascript
-const akun = { username: "joko", sandi: "rahasia123", role: "user" };
+const akun = { username: 'joko', sandi: 'rahasia123', role: 'user' };
 
 const handlerDasar = {
   // 1. Trap get: Fallback pesan ramah jika properti tidak ada
@@ -70,7 +70,7 @@ const handlerDasar = {
 
   // 2. Trap set: Validasi nilai sebelum disimpan (Wajib return true)
   set(target, prop, val) {
-    if (prop === "role" && !["admin", "user"].includes(val)) {
+    if (prop === 'role' && !['admin', 'user'].includes(val)) {
       throw new Error("Role hanya boleh 'admin' atau 'user'!");
     }
     target[prop] = val;
@@ -79,13 +79,13 @@ const handlerDasar = {
 
   // 3. Trap has: Sembunyikan properti 'sandi' dari operator 'in'
   has(target, prop) {
-    if (prop === "sandi") return false; // Pura-pura sandi tidak ada
+    if (prop === 'sandi') return false; // Pura-pura sandi tidak ada
     return prop in target;
   },
 
   // 4. Trap deleteProperty: Larang penghapusan properti 'username'
   deleteProperty(target, prop) {
-    if (prop === "username") {
+    if (prop === 'username') {
       throw new Error("Properti 'username' dilarang dihapus!");
     }
     delete target[prop];
@@ -94,7 +94,7 @@ const handlerDasar = {
 };
 
 const proxyAkun = new Proxy(akun, handlerDasar);
-console.log("sandi" in proxyAkun);      // false (Disembunyikan!)
+console.log('sandi' in proxyAkun);      // false (Disembunyikan!)
 delete proxyAkun.username;             // 💥 Error: Properti 'username' dilarang dihapus!
 ```
 
@@ -123,12 +123,12 @@ console.log(proxyKali(3, 4)); // [AUDIT] -> Output: 24 (hasil 12 x 2)
 Mencegah properti sensitif bocor saat objek di-loop dengan `Object.keys()` atau `for...in`:
 
 ```javascript
-const userRahasia = { nama: "Joko", token: "xyz-999", pin: 1234 };
+const userRahasia = { nama: 'Joko', token: 'xyz-999', pin: 1234 };
 
 const handlerKeys = {
   ownKeys(target) {
     // Hanya tampilkan kunci yang BUKAN 'token' dan 'pin'
-    return Object.keys(target).filter(key => key !== "token" && key !== "pin");
+    return Object.keys(target).filter(key => key !== 'token' && key !== 'pin');
   }
 };
 
@@ -151,9 +151,9 @@ Setelah `revoke()` dipanggil, setiap interaksi lanjutan ke proxy akan langsung m
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- 1. Pembuatan Proxy & Interceptor Trap get ---");
+console.log('--- 1. Pembuatan Proxy & Interceptor Trap get ---');
 const user = {
-  nama: "Joko",
+  nama: 'Joko',
   umur: 25,
 };
 
@@ -168,9 +168,9 @@ const handler = {
   },
 
   set(target, property, value) {
-    if (property === "umur") {
-      if (typeof value !== "number" || value <= 0) {
-        throw new Error("Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif!");
+    if (property === 'umur') {
+      if (typeof value !== 'number' || value <= 0) {
+        throw new Error('Umur harus berupa angka tidak boleh 0 dan tidak boleh negatif!');
       }
     }
 
@@ -183,19 +183,19 @@ const handler = {
 const proxyUser = new Proxy(user, handler);
 
 // Uji coba pembacaan properti:
-console.log("Akses properti ada   :", proxyUser.nama);
-console.log("Akses properti gaib  :", proxyUser.alamat);
+console.log('Akses properti ada   :', proxyUser.nama);
+console.log('Akses properti gaib  :', proxyUser.alamat);
 
-console.log("\n--- 2. Validasi Penulisan Data dengan Trap set ---");
+console.log('\n--- 2. Validasi Penulisan Data dengan Trap set ---');
 try {
   // Uji coba nilai yang benar:
   proxyUser.umur = 2;
-  console.log("Berhasil update umur menjadi:", proxyUser.umur);
+  console.log('Berhasil update umur menjadi:', proxyUser.umur);
 
   // Uji coba nilai yang salah (memicu error):
   proxyUser.umur = -5;
 } catch (err) {
-  console.error("Gagal update umur:", err.message);
+  console.error('Gagal update umur:', err.message);
 }
 ```
 

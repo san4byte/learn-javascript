@@ -30,7 +30,7 @@ Pemain diberikan kesempatan terbatas (misal 3 kali kesempatan) untuk menebak ang
 ```javascript
 // Penjelasan lengkap materi ini dapat dilihat di README.md
 
-console.log("--- Mini Game: Tebak Angka (Simulasi Alur Logika) ---");
+console.log('--- Mini Game: Tebak Angka (Simulasi Alur Logika) ---');
 
 function jalankanPermainanTebakAngka(daftarTebakanPemain) {
   // 1. Komputer membangkitkan angka rahasia acak 1 sampai 10
@@ -38,7 +38,7 @@ function jalankanPermainanTebakAngka(daftarTebakanPemain) {
   let kesempatan = 3;
   let menang = false;
 
-  console.log("Komputer telah memikirkan angka antara 1 sampai 10.");
+  console.log('Komputer telah memikirkan angka antara 1 sampai 10.');
   console.log(`Anda memiliki ${kesempatan} kali kesempatan tebakan.\n`);
 
   for (let i = 0; i < daftarTebakanPemain.length; i++) {

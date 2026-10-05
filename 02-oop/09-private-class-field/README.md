@@ -54,7 +54,7 @@ joko.increment();
 joko.increment();
 joko.decrement();
 
-console.info("Nilai Counter:", joko.get()); // 4
+console.info('Nilai Counter:', joko.get()); // 4
 
 // joko.#counter = 100; // ERROR!
 ```
