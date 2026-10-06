@@ -6,7 +6,7 @@ Kurikulum disusun secara bertahap dalam **3 Fase Utama**:
 
 1. **Fase 1: Inti Bahasa JavaScript (_Core Language_)** — Fondasi sintaks, logika, OOP, Standard Library, dan Native ES Modules (berjalan di Node.js maupun browser).
 2. **Fase 2: Lingkungan Browser (_Browser Runtime_)** — Interaksi dokumen (DOM), proses asinkron jaringan (AJAX, Promise, Fetch, Async/Await), dan Web API modern.
-3. **Fase 3: Ekosistem Industri (_Tooling & Build System_)** — Bundler Webpack 5, kompilasi SCSS, pemisahan vendor, dan otomatisasi rilis produksi.
+3. **Fase 3: Ekosistem Industri (_Tooling & Build System_)** — Build Tools modern (Webpack 5 & Vite), kompilasi SCSS, HMR instan, pemisahan vendor, dan otomatisasi rilis produksi.
 
 ---
 
@@ -141,11 +141,12 @@ Pola arsitektur, Web API browser modern, dan teknik optimasi performa industri:
 
 ---
 
-### 8. [08 - Build Tools & Webpack 5 (Capstone Project)](08-build-tools/)
+### 8. [08 - Build Tools](08-build-tools/)
 
-Pengembangan aplikasi skala industri menggunakan modul, bundler, dan build tools:
+Pengembangan aplikasi skala industri menggunakan modul, bundler, dan build tools modern:
 
-- [Arsitektur Webpack 5, SCSS Loader, PurgeCSS, dan Code Splitting](08-build-tools/README.md)
+1. [01 - Webpack 5 (Bundler Tradisional, SCSS Loader, PurgeCSS, Code Splitting)](08-build-tools/01-webpack/README.md)
+2. [02 - Vite (Next-Gen Frontend Tooling, HMR Instan, ES Modules)](08-build-tools/02-vite/README.md)
 
 ---
 
@@ -173,11 +174,19 @@ node 06-asynchronous/06-promise-concurrency/example.js
 
 Buka file `index.html` yang ada di setiap folder materi langsung di browser, atau gunakan ekstensi **Live Server** di VS Code.
 
-### 3. Menjalankan Proyek Build Tools Webpack
+### 3. Menjalankan Proyek Build Tools (Webpack & Vite)
 
 ```bash
-cd 08-build-tools
+# Menjalankan Webpack 5:
+cd 08-build-tools/01-webpack
 npm install
-npm run serve    # Mode dev server interaktif
-npm run build    # Membangun bundle produksi
+npm run serve    # Mode dev server interaktif (port 3000)
+npm run build    # Membangun bundle produksi ke folder dist/
+
+# Menjalankan Vite:
+cd 08-build-tools/02-vite
+npm install
+npm run dev      # Mode dev server instan dengan HMR (port 3000)
+npm run build    # Membangun bundle produksi via Rolldown ke dist/
+npm run preview  # Preview hasil build produksi secara lokal
 ```

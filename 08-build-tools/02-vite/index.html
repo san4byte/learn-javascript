@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="id" class="bg-slate-900">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>Super App Vite - Multi-Page</title>
+  </head>
+  <body
+    class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-6"
+  >
+    <div
+      class="max-w-2xl w-full bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700 text-center space-y-8"
+    >
+      <!-- Header -->
+      <div>
+        <h1 class="text-4xl font-extrabold text-indigo-400 mb-2"></h1>
+        <p class="text-slate-400 text-sm">
+          Arsitektur Multi-Page Application (MPA) dengan Vite & Tailwind CSS
+        </p>
+      </div>
+
+      <!-- Animasi Logo 3D -->
+      <div id="app"></div>
+
+      <!-- Menu Layanan (3 Kartu Navigasi) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+        <!-- 1. Halaman Counter -->
+        <a
+          href="/counter/"
+          class="group bg-slate-900/60 hover:bg-slate-900 border border-slate-700 hover:border-emerald-500/50 p-5 rounded-xl transition duration-300 block"
+        >
+          <div class="text-2xl mb-2">🔢</div>
+          <h3
+            class="font-bold text-white group-hover:text-emerald-400 transition"
+          >
+            Counter State
+          </h3>
+          <p class="text-xs text-slate-400 mt-1">
+            State management reaktif menggunakan JavaScript Proxy.
+          </p>
+        </a>
+
+        <!-- 2. Halaman Kalkulator -->
+        <a
+          href="/calculator/"
+          class="group bg-slate-900/60 hover:bg-slate-900 border border-slate-700 hover:border-indigo-500/50 p-5 rounded-xl transition duration-300 block"
+        >
+          <div class="text-2xl mb-2">🧮</div>
+          <h3
+            class="font-bold text-white group-hover:text-indigo-400 transition"
+          >
+            Kalkulator Sakti
+          </h3>
+          <p class="text-xs text-slate-400 mt-1">
+            Pemisahan tanggung jawab (Calculator & Alert Service).
+          </p>
+        </a>
+
+        <!-- 3. Halaman Jokes -->
+        <a
+          href="/jokes/"
+          class="group bg-slate-900/60 hover:bg-slate-900 border border-slate-700 hover:border-rose-500/50 p-5 rounded-xl transition duration-300 block"
+        >
+          <div class="text-2xl mb-2">🎭</div>
+          <h3 class="font-bold text-white group-hover:text-rose-400 transition">
+            Jokes Receh
+          </h3>
+          <p class="text-xs text-slate-400 mt-1">
+            Mengambil lelucon asinkron lewat Fetch API.
+          </p>
+        </a>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

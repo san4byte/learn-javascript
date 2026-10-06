@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="id" class="bg-slate-900">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/style.css" />
+    <title>Jokes Receh - MPA Vite</title>
+  </head>
+  <body
+    class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-6"
+  >
+    <div
+      class="max-w-md w-full bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700 text-center space-y-6"
+    >
+      <div>
+        <h1 class="text-3xl font-extrabold text-rose-400">🎭 Jokes Receh</h1>
+        <p class="text-slate-400 text-sm mt-1">
+          Mengambil data lelucon santai via Fetch API
+        </p>
+      </div>
+
+      <!-- Tombol Pemicu Jokes -->
+      <div>
+        <button
+          type="button"
+          id="jokes-receh"
+          class="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-600/30 transition transform hover:-translate-y-0.5"
+        >
+          Dapatkan Lelucon Acak! 🎲
+        </button>
+      </div>
+
+      <!-- Link Navigasi Kembali -->
+      <div class="pt-4 border-t border-slate-700">
+        <a
+          href="/"
+          class="text-slate-400 hover:text-white underline text-sm transition"
+        >
+          ⬅️ Kembali ke Dashboard
+        </a>
+      </div>
+    </div>
+
+    <!-- Modal Pop-Up Tailwind (Default-nya tersembunyi dengan class 'hidden') -->
+    <div
+      id="jokes-modal"
+      class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+    >
+      <div
+        class="bg-slate-800 border border-slate-700 max-w-sm w-full p-6 rounded-2xl shadow-2xl text-center space-y-4"
+      >
+        <h3 class="text-lg font-bold text-rose-400">😂 Lelucon Hari Ini</h3>
+
+        <p
+          id="jokes-text"
+          class="text-slate-200 text-base leading-relaxed py-2 italic min-h-[4rem] flex items-center justify-center"
+        >
+          Memuat...
+        </p>
+
+        <button
+          type="button"
+          id="jokes-close"
+          class="w-full bg-slate-700 hover:bg-slate-600 text-white font-semibold py-2 rounded-lg transition"
+        >
+          Tutup
+        </button>
+      </div>
+    </div>
+
+    <!-- Script khusus halaman jokes -->
+    <script type="module" src="/src/jokes-page.js"></script>
+  </body>
+</html>

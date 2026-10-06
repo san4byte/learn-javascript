@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../src/style.css" rel="stylesheet" />
+    <title>Halaman Counter - MPA Vite</title>
+  </head>
+  <body
+    class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-6"
+  >
+    <div
+      class="max-w-md w-full bg-slate-800 p-8 rounded-2xl shadow-2xl border border-slate-700 text-center space-y-6"
+    >
+      <h1 class="text-3xl font-extrabold text-emerald-400">
+        🔢 Halaman Counter
+      </h1>
+      <p class="text-slate-400 text-sm">
+        Ini adalah file HTML fisik terpisah (Multi-Page App)!
+      </p>
+
+      <!-- Tombol Counter -->
+      <div>
+        <button
+          id="counter-btn"
+          class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-3 rounded-lg shadow-lg transition"
+        >
+          Hitung
+        </button>
+      </div>
+
+      <!-- Link kembali ke Halaman Utama -->
+      <div class="pt-4 border-t border-slate-700">
+        <a
+          href="/"
+          class="text-indigo-400 hover:text-indigo-300 underline text-sm"
+        >
+          ⬅️ Kembali ke Halaman Utama
+        </a>
+      </div>
+    </div>
+
+    <!-- Script khusus halaman counter -->
+    <script type="module" src="/src/counter-page.js"></script>
+  </body>
+</html>

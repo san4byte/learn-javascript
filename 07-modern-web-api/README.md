@@ -33,5 +33,5 @@ Topik-topik di modul ini adalah pola dan Web API yang **paling sering digunakan 
 ## 🧭 Navigasi
 
 - ⬅️ **Modul Sebelumnya:** [06 - Asynchronous JavaScript](../06-asynchronous/README.md)
-- ➡️ **Modul Selanjutnya:** [08 - Build Tools & Webpack 5](../08-build-tools/README.md)
+- ➡️ **Modul Selanjutnya:** [08 - Build Tools (Webpack & Vite)](../08-build-tools/README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../README.md)
