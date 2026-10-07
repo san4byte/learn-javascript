@@ -2,11 +2,12 @@
 
 Selamat datang di repositori dokumentasi belajar JavaScript lengkap! Repositori ini menyajikan kurikulum terstruktur dan mendalam dengan studi kasus proyek interaktif modern.
 
-Kurikulum disusun secara bertahap dalam **3 Fase Utama**:
+Kurikulum disusun secara bertahap dalam **4 Fase Utama**:
 
 1. **Fase 1: Inti Bahasa JavaScript (_Core Language_)** — Fondasi sintaks, logika, OOP, Standard Library, dan Native ES Modules (berjalan di Node.js maupun browser).
 2. **Fase 2: Lingkungan Browser (_Browser Runtime_)** — Interaksi dokumen (DOM), proses asinkron jaringan (AJAX, Promise, Fetch, Async/Await), dan Web API modern.
-3. **Fase 3: Ekosistem Industri (_Tooling & Build System_)** — Build Tools modern (Webpack 5 & Vite), kompilasi SCSS, HMR instan, pemisahan vendor, dan otomatisasi rilis produksi.
+3. **Fase 3: Ekosistem Industri (_Tooling & Build System_)** — Build Tools modern (Webpack 5 & Vite), kompilasi SCSS, Tailwind CSS, HMR instan, pemisahan vendor, dan otomatisasi rilis produksi.
+4. **Fase 4: Penerapan Nyata (_Real-World Capstone Projects_)** — Membangun aplikasi web utuh siap produksi yang menggabungkan seluruh konsep teori ke dalam produk nyata.
 
 ---
 
@@ -150,6 +151,16 @@ Pengembangan aplikasi skala industri menggunakan modul, bundler, dan build tools
 
 ---
 
+### 9. [Projects (Aplikasi & Implementasi Nyata)](projects/)
+
+Aplikasi web komprehensif skala penuh yang merangkum dan mengintegrasikan seluruh materi pembelajaran dari **Modul 01 hingga Modul 08**:
+
+1. [OmniStore Pro — Modern E-Commerce Storefront & Detail](projects/omnistore-pro/README.md)
+   - **Teknologi**: Vanilla JavaScript (ES Modules), Vite Multi-Page Application (MPA), Tailwind CSS v4, DummyJSON Products API.
+   - **Fitur Utama**: Live Search dengan Debounce & AbortController, Infinite Scroll & Lazy Loading Gambar (IntersectionObserver), Halaman Detail Produk Dinamis & Galeri Foto, serta Keranjang Belanja Reaktif (Proxy State) & Persisten (LocalStorage).
+
+---
+
 ## 🛠️ Cara Menjalankan Kode
 
 ### 1. Menjalankan File JavaScript via Node.js
@@ -190,3 +201,14 @@ npm run dev      # Mode dev server instan dengan HMR (port 3000)
 npm run build    # Membangun bundle produksi via Rolldown ke dist/
 npm run preview  # Preview hasil build produksi secara lokal
 ```
+
+### 4. Menjalankan Proyek OmniStore Pro (Vite + Tailwind CSS v4)
+
+```bash
+cd projects/omnistore-pro
+npm install
+npm run dev      # Mode dev server instan dengan HMR (port 5173)
+npm run build    # Membangun bundle produksi MPA ke folder dist/
+npm run preview  # Preview hasil build produksi secara lokal
+```
+
