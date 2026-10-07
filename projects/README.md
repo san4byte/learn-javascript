@@ -1,16 +1,17 @@
 # 🚀 Projects (Aplikasi & Implementasi Nyata)
 
-Selamat datang di direktori **Projects**! Direktori ini adalah tempat implementasi nyata (*real-world implementation*) yang merangkum dan mengintegrasikan seluruh teori pembelajaran dari **Modul 01 hingga Modul 08** ke dalam produk aplikasi web yang fungsional, responsif, dan siap rilis.
+Selamat datang di direktori **Projects**! Direktori ini adalah tempat implementasi nyata (_real-world implementation_) yang merangkum dan mengintegrasikan seluruh teori pembelajaran dari **Modul 01 hingga Modul 08** ke dalam produk aplikasi web yang fungsional, responsif, dan siap rilis.
 
 ---
 
 ## 📚 Daftar Projek
 
 ### 1. [OmniStore Pro — Modern E-Commerce Storefront & Detail](omnistore-pro/README.md)
-* **Deskripsi**: Aplikasi belanja online modern berbasis Multi-Page Application (MPA) dengan Vite, Tailwind CSS v4, dan DummyJSON API.
-* **Fitur Utama**: Live Search dengan Debounce & AbortController, Infinite Scroll & Lazy Loading Gambar via IntersectionObserver, Halaman Detail Produk Interaktif dengan galeri foto, serta Keranjang Belanja Reaktif (Proxy State) & Persisten (LocalStorage).
-* **Teknologi**: Vanilla JavaScript (ES Modules), Vite, Tailwind CSS v4, DummyJSON API.
-* **Dokumentasi Lengkap**: [Baca README OmniStore Pro](omnistore-pro/README.md)
+
+- **Deskripsi**: Aplikasi belanja online modern berbasis Multi-Page Application (MPA) dengan Vite, Tailwind CSS v4, dan DummyJSON API.
+- **Fitur Utama**: Live Search dengan Debounce & AbortController, Infinite Scroll & Lazy Loading Gambar via IntersectionObserver, Halaman Detail Produk Interaktif dengan galeri foto, serta Keranjang Belanja Reaktif (Proxy State) & Persisten (LocalStorage).
+- **Teknologi**: Vanilla JavaScript (ES Modules), Vite, Tailwind CSS v4, DummyJSON API.
+- **Dokumentasi Lengkap**: [Baca README OmniStore Pro](omnistore-pro/README.md)
 
 ---
 
