@@ -1,6 +1,6 @@
 /**
  * Modul 03: Standard Library - Proxy, Reflect & Set
- * 
+ *
  * Pusat Penyimpanan State Global Aplikasi (State Store).
  * Menggunakan Proxy untuk mendeteksi setiap perubahan properti secara otomatis (Reaktif),
  * otomatis menyinkronkan data keranjang ke LocalStorage, dan memberi tahu (notify)
@@ -16,10 +16,10 @@ const listeners = new Set();
 // Objek data mentah yang menjadi Single Source of Truth aplikasi
 const rawState = {
   cart: new Cart(loadCart()), // Memuat keranjang belanja lama dari localStorage
-  products: [],               // Daftar produk yang sedang ditampilkan
-  searchQuery: '',            // Kata kunci pencarian saat ini
-  skip: 0,                    // Offset data pagination
-  total: 0,                   // Total keseluruhan produk dari API
+  products: [], // Daftar produk yang sedang ditampilkan
+  searchQuery: '', // Kata kunci pencarian saat ini
+  skip: 0, // Offset data pagination
+  total: 0, // Total keseluruhan produk dari API
 };
 
 /**
@@ -48,7 +48,7 @@ export const state = new Proxy(rawState, {
 
 /**
  * Mendaftarkan fungsi callback yang ingin dipanggil setiap kali state berubah.
- * 
+ *
  * @param {Function} callback - Fungsi pendengar (target, prop) => void
  */
 export function subscribe(callback) {

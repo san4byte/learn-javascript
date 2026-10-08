@@ -1,6 +1,6 @@
 /**
  * OmniStore Pro — Main Entry Point (Katalog & Cart)
- * 
+ *
  * Mengintegrasikan seluruh modul:
  * - Modul 02: OOP (Product, Cart, OutOfStockError)
  * - Modul 03: Standard Library (Proxy Reactive State)
@@ -9,88 +9,21 @@
  */
 import { getProducts } from '@/services/api.js';
 import { Product } from '@/models/product.model.js';
-import { state, subscribe } from '@/state/store.js';
+import { state } from '@/state/store.js';
 import { renderProducts } from '@/ui/render-products.js';
-import { renderCartItems } from '@/ui/render-cart-modal.js';
+import { initCartDrawer } from '@/ui/cart-drawer.js';
 import { debounce } from '@/utils/debounce.js';
 import { initLazyImages, initInfiniteScroll } from '@/utils/observer.js';
+
+// Inisialisasi modal keranjang belanja terpusat
+initCartDrawer();
 
 // ============================================================================
 // 1. ELEMEN DOM SELEKTOR
 // ============================================================================
 const grid = document.getElementById('product-grid');
 const searchInput = document.getElementById('search-input');
-const cartBadge = document.getElementById('cart-badge');
 const sentinel = document.getElementById('scroll-sentinel');
-
-// Elemen Modal Keranjang (Slide-over Drawer)
-const btnCartToggle = document.getElementById('btn-cart-toggle');
-const cartModal = document.getElementById('cart-modal');
-const cartBackdrop = document.getElementById('cart-backdrop');
-const btnCloseCart = document.getElementById('btn-close-cart');
-const cartItemsContainer = document.getElementById('cart-items-container');
-const cartDrawerCount = document.getElementById('cart-drawer-count');
-const cartTotalPrice = document.getElementById('cart-total-price');
-
-// ============================================================================
-// 2. REAKTIVITAS STATE STORE (SUBSCRIBE)
-// ============================================================================
-// Setiap kali state.cart diperbarui, otomatis sinkronkan tampilan badge & isi modal
-subscribe((target, prop) => {
-  if (prop === 'cart') {
-    cartBadge.textContent = state.cart.totalItems;
-    cartDrawerCount.textContent = `${state.cart.totalItems} item`;
-    cartTotalPrice.textContent = state.cart.totalPrice;
-    renderCartItems(state.cart, cartItemsContainer);
-  }
-});
-
-// ============================================================================
-// 3. KONTROL BUKA & TUTUP MODAL KERANJANG
-// ============================================================================
-function openCart() {
-  cartModal.classList.remove('hidden');
-  renderCartItems(state.cart, cartItemsContainer);
-  cartTotalPrice.textContent = state.cart.totalPrice;
-  cartDrawerCount.textContent = `${state.cart.totalItems} item`;
-}
-
-function closeCart() {
-  cartModal.classList.add('hidden');
-}
-
-btnCartToggle.addEventListener('click', openCart);
-btnCloseCart.addEventListener('click', closeCart);
-cartBackdrop.addEventListener('click', closeCart);
-
-// ============================================================================
-// 4. EVENT DELEGATION: KERANJANG BELANJA (INCREASE, DECREASE, DELETE)
-// ============================================================================
-cartItemsContainer.addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-action]');
-  if (!btn) return;
-
-  const action = btn.dataset.action;
-  const id = Number(btn.dataset.id);
-
-  const item = [...state.cart].find((i) => i.product.id === id);
-  if (!item && action !== 'delete') return;
-
-  try {
-    if (action === 'increase') {
-      state.cart.updateQty(id, item.qty + 1);
-    } else if (action === 'decrease') {
-      state.cart.updateQty(id, item.qty - 1);
-    } else if (action === 'delete') {
-      state.cart.removeItem(id);
-    }
-
-    // Picu Proxy setter agar otomatis tersimpan & memicu subscribe()
-    state.cart = state.cart;
-  } catch (err) {
-    alert(err.message); // Tangkap OutOfStockError jika melebihi stok
-  }
-});
 
 // ============================================================================
 // 5. EVENT DELEGATION: TOMBOL BELI DI GRID KATALOG
@@ -181,10 +114,7 @@ initInfiniteScroll(sentinel, async () => {
 // 8. INISIALISASI AWAL APLIKASI (INIT)
 // ============================================================================
 async function init() {
-  // 1. Tampilkan jumlah barang dari keranjang yang tersimpan
-  cartBadge.textContent = state.cart.totalItems;
-
-  // 2. Baca kata kunci pencarian dari URL (?q=...) jika ada
+  // 1. Baca kata kunci pencarian dari URL (?q=...) jika ada
   const urlParams = new URLSearchParams(window.location.search);
   const initialQuery = urlParams.get('q') || '';
   searchInput.value = initialQuery;

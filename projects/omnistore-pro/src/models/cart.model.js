@@ -1,7 +1,7 @@
 /**
  * Modul 02: OOP - Encapsulation, Custom Error, Iterable & Iterator Protocol
  * Modul 03: Standard Library - Map & JSON Serialization Hook
- * 
+ *
  * Class Cart untuk mengelola keranjang belanjaan.
  * Menggunakan private Map (#items) untuk performa O(1) saat mencari/menambah produk berdasarkan ID.
  * Mengimplementasikan [Symbol.iterator] agar objek Cart bisa langsung di-looping
@@ -59,6 +59,13 @@ export class Cart {
    */
   removeItem(productId) {
     this.#items.delete(productId);
+  }
+
+  /**
+   * Mengosongkan seluruh isi keranjang belanja.
+   */
+  clear() {
+    this.#items.clear();
   }
 
   /**

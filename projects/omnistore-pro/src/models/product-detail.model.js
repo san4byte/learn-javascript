@@ -1,6 +1,6 @@
 /**
  * Modul 02: OOP - Inheritance & Super Constructor
- * 
+ *
  * Class ProductDetail yang mewarisi (extends) seluruh kemampuan dari class Product.
  * Menambahkan atribut-atribut spesifik yang hanya dibutuhkan pada halaman rincian produk
  * (seperti garansi, ulasan, informasi pengiriman, dan brand).
@@ -17,9 +17,11 @@ export class ProductDetail extends Product {
     this.category = data.category ?? 'Umum';
     this.rating = data.rating ?? 0;
     this.discountPercentage = data.discountPercentage ?? 0;
-    this.warrantyInformation = data.warrantyInformation ?? 'Garansi Resmi 1 Tahun';
+    this.warrantyInformation =
+      data.warrantyInformation ?? 'Garansi Resmi 1 Tahun';
     this.shippingInformation = data.shippingInformation ?? 'Pengiriman Gratis';
-    this.availabilityStatus = data.availabilityStatus ?? (this.stock > 0 ? 'Tersedia' : 'Habis');
+    this.availabilityStatus =
+      data.availabilityStatus ?? (this.stock > 0 ? 'Tersedia' : 'Habis');
     this.reviews = data.reviews ?? [];
   }
 }

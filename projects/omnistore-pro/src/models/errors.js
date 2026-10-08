@@ -1,6 +1,6 @@
 /**
  * Modul 02: OOP - Custom Error Handling
- * 
+ *
  * Class error kustom turunan dari Error bawaan JavaScript.
  * Digunakan untuk menangani situasi spesifik di aplikasi agar pesan error lebih bermakna.
  */

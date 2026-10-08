@@ -1,6 +1,6 @@
 /**
  * Modul 05: DOM Manipulation & HTML Templating
- * 
+ *
  * Fungsi rendering tampilan halaman rincian produk (Product Detail).
  * Menampilkan galeri foto interaktif, informasi spesifikasi, rating bintang,
  * status ketersediaan stok, dan tombol tambah ke keranjang.
@@ -9,7 +9,7 @@ const html = String.raw;
 
 /**
  * Merender rincian produk ke dalam kontainer halaman detail.
- * 
+ *
  * @param {import('../models/product-detail.model.js').ProductDetail} product - Instance ProductDetail
  * @param {HTMLElement} container - Elemen kontainer (#detail-container)
  */
@@ -45,9 +45,16 @@ export function renderDetail(product, container) {
                 <button
                   type="button"
                   data-full="${img}"
-                  class="thumb-image w-16 h-16 rounded-xl border border-slate-200 p-1.5 shrink-0 bg-slate-50/50 hover:opacity-100 cursor-pointer transition ${i === 0 ? 'ring-2 ring-emerald-500 border-transparent' : 'opacity-70'}"
+                  class="thumb-image w-16 h-16 rounded-xl border border-slate-200 p-1.5 shrink-0 bg-slate-50/50 hover:opacity-100 cursor-pointer transition ${i ===
+                  0
+                    ? 'ring-2 ring-emerald-500 border-transparent'
+                    : 'opacity-70'}"
                 >
-                  <img src="${img}" alt="Thumbnail ${i + 1}" class="w-full h-full object-contain" />
+                  <img
+                    src="${img}"
+                    alt="Thumbnail ${i + 1}"
+                    class="w-full h-full object-contain"
+                  />
                 </button>
               `
             )

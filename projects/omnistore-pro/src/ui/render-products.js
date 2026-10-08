@@ -1,6 +1,6 @@
 /**
  * Modul 05: DOM Manipulation & HTML Templating
- * 
+ *
  * Fungsi rendering kartu katalog produk ke dalam grid HTML.
  * Menggunakan Tailwind CSS untuk styling dan data-src untuk Lazy Loading gambar.
  */
@@ -8,7 +8,7 @@ const html = String.raw;
 
 /**
  * Merender daftar produk ke dalam elemen kontainer.
- * 
+ *
  * @param {Array<import('../models/product.model.js').Product>} products - Array instance Product
  * @param {HTMLElement} container - Elemen grid kontainer (#product-grid)
  * @param {boolean} append - Jika true, tempelkan di akhir (untuk infinite scroll). Jika false, timpa isi lama.

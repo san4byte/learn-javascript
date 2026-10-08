@@ -1,7 +1,7 @@
 /**
  * Modul 02: OOP - Class, Private Fields (#), Encapsulation & Getters
  * Modul 03: Standard Library - toJSON Serialization Hook
- * 
+ *
  * Cetak biru objek produk di OmniStore Pro.
  * Menggunakan private fields (#) agar nilai id, harga, dan stok aman
  * dan tidak bisa dimanipulasi sembarangan dari luar class.

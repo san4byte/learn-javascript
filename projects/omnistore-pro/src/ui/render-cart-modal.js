@@ -1,6 +1,6 @@
 /**
  * Modul 05: DOM Manipulation & HTML Templating
- * 
+ *
  * Fungsi rendering komponen daftar barang belanjaan di dalam Cart Drawer / Modal.
  * Menggunakan data atribut (data-action & data-id) untuk mendukung Event Delegation.
  */

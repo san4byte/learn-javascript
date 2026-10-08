@@ -1,7 +1,7 @@
 /**
  * Modul 06: Asynchronous JavaScript (Fetch API, async/await)
  * Modul 07: Modern Web API (AbortController untuk mencegah Race Condition)
- * 
+ *
  * Service komunikasi data ke DummyJSON Products API.
  */
 
@@ -13,7 +13,7 @@ let searchAbortController = null;
 /**
  * Mengambil daftar produk dari server DummyJSON.
  * Mendukung pencarian teks (query) dan pagination (limit & skip).
- * 
+ *
  * @param {string} query - Kata kunci pencarian produk (opsional)
  * @param {number} limit - Jumlah produk yang diambil per request
  * @param {number} skip - Offset jumlah produk yang dilewati
@@ -41,7 +41,9 @@ export async function getProducts(query = '', limit = 10, skip = 0) {
     const res = await fetch(endpoint, signal ? { signal } : {});
 
     if (!res.ok) {
-      throw new Error(`Gagal mengambil data dari server (Status: ${res.status})`);
+      throw new Error(
+        `Gagal mengambil data dari server (Status: ${res.status})`
+      );
     }
 
     return await res.json();
@@ -56,7 +58,7 @@ export async function getProducts(query = '', limit = 10, skip = 0) {
 
 /**
  * Mengambil rincian lengkap satu produk berdasarkan ID.
- * 
+ *
  * @param {string|number} id - ID produk
  * @returns {Promise<Object>} Data produk mentah dari server
  */

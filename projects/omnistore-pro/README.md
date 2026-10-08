@@ -77,7 +77,8 @@ omnistore-pro/
     ├── ui/                       # [Modul 05: DOM UI Components]
     │   ├── render-products.js    # Komponen render grid kartu produk
     │   ├── render-detail.js      # Komponen render rincian produk & galeri
-    │   └── render-cart-modal.js  # Komponen render list belanjaan drawer
+    │   ├── render-cart-modal.js  # Komponen render list belanjaan drawer
+    │   └── cart-drawer.js        # Kontrol terpusat modal keranjang & reaktivitas
     │
     └── utils/                    # [Modul 01, 03, 07: Helper Utilities]
         ├── debounce.js           # Helper debounce untuk input search
