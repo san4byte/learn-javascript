@@ -2,7 +2,9 @@
 
 if (typeof document === 'undefined') {
   console.log('--- 08. Game Suit Jawa GUI ---');
-  console.log("Buka file 'index.html' di browser Anda untuk memainkan game Suit Jawa visual!");
+  console.log(
+    "Buka file 'index.html' di browser Anda untuk memainkan game Suit Jawa visual!",
+  );
 } else {
   console.log('--- 08. Game Suit Jawa GUI (Browser) ---');
 

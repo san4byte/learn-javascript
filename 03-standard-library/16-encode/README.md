@@ -2,133 +2,174 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami konsep URL Encoding (_Percent-Encoding_) untuk transmisi data aman di internet.
-> - **Kapan Digunakan**: Membedakan fungsi dan peruntukan antara `encodeURI()` dan `encodeURIComponent()`.
-> - **Aturan Praktis**: Gunakan `encodeURIComponent()` untuk setiap nilai parameter query string secara individual.
+> - **Fungsi Utama**: Mengonversi karakter teks khusus menjadi format **Percent-Encoding** agar aman ditransmisikan melalui alamat URL internet.
+> - **Kapan Digunakan**: Membangun parameter query pencarian (_search params_), deep linking callback autentikasi, dan pengiriman pesan via link WhatsApp / media sosial.
+> - **Aturan Praktis**: Selalu gunakan `encodeURIComponent()` untuk **setiap nilai parameter secara terpisah**, jangan pernah gunakan pada seluruh URL utuh, dan bungkus `decodeURIComponent()` dengan `try...catch` untuk mengantisipasi `URIError`.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami konsep URL Encoding (_Percent-Encoding_) untuk transmisi data aman di internet.
-- Membedakan fungsi dan peruntukan antara `encodeURI()` dan `encodeURIComponent()`.
-- Memahami pasangan decoding: `decodeURI()` dan `decodeURIComponent()`.
-- Mengetahui karakter reserved URL (`;`, `/`, `?`, `:`, `@`, `&`, `=`, `+`, `$`, `,`, `#`) dan bagaimana keduanya diperlakukan.
+- Memahami konsep URL Percent-Encoding dan alasan mengapa karakter khusus wajib disandikan dalam protokol HTTP.
+- Membedakan peran dan peruntukan antara `encodeURI()` dan `encodeURIComponent()`.
+- Memahami pasangan fungsi decoding: `decodeURI()` dan `decodeURIComponent()`.
+- Mengetahui daftar karakter _reserved_ URL (`;`, `/`, `?`, `:`, `@`, `&`, `=`, `+`, `$`, `,`, `#`) dan bagaimana keduanya diperlakukan.
+- Menangani potensi crash aplikasi akibat `URIError: URI malformed` menggunakan pola `try...catch`.
+- Memahami alternatif modern berbasis standar web: objek `URL` dan `URLSearchParams`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> `encodeURI` seperti **memberi perangko pos resmi pada amplop surat lengkap**: stempel jalan raya, nama kota, dan kode pos (`https://`, `/`, `?`) tidak boleh dicoret karena kurir butuh melihat struktur alamatnya. Sedangkan `encodeURIComponent` seperti **membungkus dokumen rahasia di dalam amplop dengan bubble wrap tebal**: semua isi di dalamnya diikat rapat agar tidak bocor dan tidak mengganggu proses pengiriman surat.
-
-Saat mengirim data melalui URL (alamat web), karakter tertentu seperti spasi, tanda pagar `#`, tanda tanya `?`, atau huruf non-Latin memiliki arti khusus (_reserved characters_) atau tidak didukung oleh protokol HTTP standar. Karakter-karakter tersebut wajib dikonversi menjadi format **Percent-Encoding** (contoh: spasi menjadi `%20`).
-
-JavaScript menyediakan dua pasang fungsi global untuk menangani encoding dan decoding URL:
-
-### 1. `encodeURI()` vs `encodeURIComponent()`
-
-| Fitur                     | `encodeURI(uri)`                                    | `encodeURIComponent(component)`                   |
-| :------------------------ | :-------------------------------------------------- | :------------------------------------------------ |
-| **Tujuan Penggunaan**     | Meng-encode **seluruh alamat URL lengkap**          | Meng-encode **satu nilai parameter/query string** |
-| **Karakter Reserved URL** | **TIDAK di-encode** (dibiarkan utuh): `;,/?:@&=+$#` | **SEMUA di-encode** menjadi kode persen           |
-| **Karakter Spasi**        | Diubah menjadi `%20`                                | Diubah menjadi `%20`                              |
-| **Contoh Kasus**          | `https://site.com/cari?q=buku baru`                 | Nilai parameter: `buku & majalah/edisi #1`        |
-
-> ⚠️ **Penting**: Jika Anda menggunakan `encodeURI` pada nilai query parameter yang memuat karakter `&` atau `=`, karakter tersebut tidak akan di-encode sehingga struktur parameter URL Anda akan rusak dan terpecah! Sebaliknya, jika Anda menggunakan `encodeURIComponent` pada URL lengkap, tanda protokol `https://` akan berubah menjadi `https%3A%2F%2F` sehingga URL tidak bisa dibuka oleh browser!
-
-### 2. Pasangan Decoding
-
-- **`decodeURI(encodedURI)`**: Mengembalikan URL lengkap hasil `encodeURI` kembali ke karakter aslinya.
-- **`decodeURIComponent(encodedComponent)`**: Mengembalikan nilai komponen hasil `encodeURIComponent` kembali ke karakter aslinya.
+> `encodeURI` seperti **memberi perangko pos resmi pada amplop surat lengkap**: stempel jalan raya, nama kota, dan kode pos (`https://`, `/`, `?`) tidak boleh dicoret karena kurir kantor pos butuh membaca struktur alamatnya. Sedangkan `encodeURIComponent` seperti **membungkus dokumen rahasia di dalam amplop dengan bubble wrap tebal**: semua isi teks di dalamnya diikat rapat agar tidak bocor dan tidak mengganggu proses penyortiran surat oleh kurir.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 1. Tabel Perbandingan `encodeURI()` vs `encodeURIComponent()` (Cheat-Sheet)
+
+| Fitur                       | `encodeURI(uri)`                            | `encodeURIComponent(component)`                      |
+| :-------------------------- | :------------------------------------------ | :--------------------------------------------------- |
+| **Tujuan Utama**            | Meng-encode **seluruh alamat URL lengkap**. | Meng-encode **satu nilai parameter / query string**. |
+| **Karakter Reserved URL**   | **Dibiarkan UTUH**: `;,/?:@&=+$#`           | **SEMUA di-encode** menjadi kode persen (`%XX`).     |
+| **Karakter Spasi**          | Diubah menjadi `%20`.                       | Diubah menjadi `%20`.                                |
+| **Karakter Alpha-Numerik**  | Dibiarkan utuh (`A-Z`, `a-z`, `0-9`).       | Dibiarkan utuh (`A-Z`, `a-z`, `0-9`).                |
+| **Karakter Unescaped Lain** | `- _ . ! ~ * ' ( )`                         | `- _ . ! ~ * ' ( )`                                  |
+| **Contoh Input**            | `'https://web.com/cari?q=buku baru'`        | Nilai parameter: `'buku & majalah #1'`               |
+| **Hasil Output**            | `'https://web.com/cari?q=buku%20baru'`      | `'buku%20%26%20majalah%20%231'`                      |
+
+---
+
+### 2. Aturan Kritis: Kapan Menggunakan yang Mana?
+
+> ⚠️ **Dua Kesalahan Fatal yang Sering Terjadi**:
+>
+> 1. **Jika Anda menggunakan `encodeURI` pada nilai query parameter**: Karakter `&` atau `=` tidak akan di-encode. Akibatnya, string seperti `'buku & majalah'` akan dipecah oleh server backend menjadi dua parameter yang berbeda (_parameter tampering_).
+> 2. **Jika Anda menggunakan `encodeURIComponent` pada URL lengkap**: Simbol protokol `https://` dan garis miring `/` akan diubah menjadi `https%3A%2F%2F`. URL tersebut rusak dan tidak bisa dibuka oleh browser!
+
+- **Praktik yang Benar**:
+
+  ```javascript
+  const domain = "https://toko-buku.com/search";
+  const keyword = "React & Node.js: Panduan Pemula";
+  const kategori = "IT / Web";
+
+  // Biarkan URL dasar utuh, bungkus setiap nilai variabel dengan encodeURIComponent:
+  const urlAman = `${domain}?q=${encodeURIComponent(keyword)}&kategori=${encodeURIComponent(kategori)}`;
+  ```
+
+---
+
+### 3. Pasangan Decoding: `decodeURI()` vs `decodeURIComponent()`
+
+- **`decodeURI(encodedURI)`**: Mengembalikan URL utuh kembali ke teks aslinya, namun tetap membiarkan kode persen karakter reserved (seperti `%26`, `%2F`, `%3A`) dalam bentuk persen.
+- **`decodeURIComponent(encodedComponent)`**: Memulihkan seluruh kode persen kembali menjadi karakter aslinya secara total:
+
+  ```javascript
+  const tersandi = "React%20%26%20Node.js%3A%20100%25";
+
+  console.log(decodeURI(tersandi)); // "React %26 Node.js%3A 100%" (simbol %26 dan %3A tidak dipulihkan)
+  console.log(decodeURIComponent(tersandi)); // "React & Node.js: 100%"     (seluruhnya dipulihkan! ✅)
+  ```
+
+---
+
+### 4. Jebakan Fatal: `URIError: URI malformed`
+
+Jika string yang di-decode memuat tanda persen `%` yang tidak valid (misalnya persen tunggal atau heksadesimal tidak lengkap), JavaScript akan melempar fatal error:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// decodeURIComponent('diskon 100%'); // ❌ URIError: URI malformed
 
-console.log('--- 1. Perbedaan encodeURI vs encodeURIComponent ---');
-const kueri = 'buku & majalah / edisi #1 (edisi baru)';
+// Pola Defensive Programming yang Benar:
+function safeDecodeURI(str, fallback = "") {
+  try {
+    return decodeURIComponent(str);
+  } catch (error) {
+    console.warn("Gagal memulihkan URL:", error.message);
+    return fallback;
+  }
+}
 
-// encodeURI: membiarkan karakter khusus URL (& / #)
-console.log('encodeURI            :', encodeURI(kueri));
-
-// encodeURIComponent: meng-encode seluruh karakter khusus menjadi kode persen
-console.log('encodeURIComponent   :', encodeURIComponent(kueri));
-
-console.log('\n--- 2. Membangun URL Search yang Aman ---');
-const baseUrl = 'https://toko-buku.com/search';
-const kataKunci = 'React & Node.js: Panduan Pemula 100% Bagus!';
-const kategori = 'IT / Programming';
-
-// Gabungkan URL: baseUrl tetap utuh, nilai parameter dibungkus encodeURIComponent
-const urlLengkap = `${baseUrl}?q=${encodeURIComponent(kataKunci)}&kategori=${encodeURIComponent(kategori)}`;
-console.log('URL Lengkap Siap Pakai:\n' + urlLengkap);
-
-console.log(
-  '\n--- 3. Mengembalikan Nilai dengan decodeURI & decodeURIComponent ---'
-);
-const parameterServer =
-  'React%20%26%20Node.js%3A%20Panduan%20Pemula%20100%25%20Bagus!';
-
-// decodeURI: tidak memulihkan karakter reserved (%26, %3A tetap persen)
-console.log('decodeURI            :', decodeURI(parameterServer));
-
-// decodeURIComponent: memulihkan seluruh karakter kembali ke teks asli
-console.log('decodeURIComponent   :', decodeURIComponent(parameterServer));
+console.log(safeDecodeURI("diskon 100%", "diskon 100%")); // Aman tanpa crash ✅
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+### 5. Penanganan Karakter Unicode & Emoji
 
-```text
---- 1. Perbedaan encodeURI vs encodeURIComponent ---
-encodeURI            : buku%20&%20majalah%20/%20edisi%20#1%20(edisi%20baru)
-encodeURIComponent   : buku%20%26%20majalah%20%2F%20edisi%20%231%20(edisi%20baru)
+Karakter internasional atau emoji menempati beberapa byte di UTF-8. `encodeURIComponent` secara cerdas mengonversi setiap byte menjadi pasangan `%XX`:
 
---- 2. Membangun URL Search yang Aman ---
-URL Lengkap Siap Pakai:
-https://toko-buku.com/search?q=React%20%26%20Node.js%3A%20Panduan%20Pemula%20100%25%20Bagus!&kategori=IT%20%2F%20Programming
-
---- 3. Mengembalikan Nilai dengan decodeURI & decodeURIComponent ---
-decodeURI            : React %26 Node.js%3A Panduan Pemula 100% Bagus!
-decodeURIComponent   : React & Node.js: Panduan Pemula 100% Bagus!
+```javascript
+const teks = "Kopi ☕";
+const encoded = encodeURIComponent(teks);
+console.log(encoded); // "Kopi%20%E2%98%95"
+console.log(decodeURIComponent(encoded)); // "Kopi ☕" ✅
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+### 6. Alternatif Modern: API `URL` & `URLSearchParams`
+
+Di browser modern dan Node.js, Anda tidak perlu lagi merangkai URL secara manual dengan string concatenation:
+
+```javascript
+const myUrl = new URL("https://toko-buku.com/search");
+
+// searchParams otomatis melakukan encoding yang benar secara background:
+myUrl.searchParams.set("q", "React & Node.js");
+myUrl.searchParams.set("page", 1);
+
+console.log(myUrl.toString());
+// "https://toko-buku.com/search?q=React+%26+Node.js&page=1" ✅
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep perbedaan `encodeURI` vs `encodeURIComponent`, penyusunan URL aman, pemulihan decoding, penanganan `URIError` via `try...catch`, encoding emoji, dan pemanfaatan `URLSearchParams` di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan langsung di terminal.
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 03-standard-library/16-encode/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Kueri Pencarian Web (Search Bar)**: Mengamankan kata kunci pencarian yang dimasukkan user yang memuat karakter simbol seperti `&`, `?`, `=`, atau `#`.
-2. **Deep Linking & Redirect URL**: Mengirimkan URL tujuan sebagai parameter callback pada sistem login: `login?redirect=${encodeURIComponent('/dashboard?tab=1')}`.
-3. **Sharing Link Media Sosial**: Menyiapkan URL berbagi WhatsApp atau Twitter: `https://wa.me/?text=${encodeURIComponent(pesan)}`.
+1. **Kotak Pencarian Web (Search Bar)**: Mengamankan kata kunci pencarian yang dimasukkan pengguna sebelum dialihkan ke halaman hasil pencarian.
+2. **Deep Linking & Callback URL**: Mengirimkan alamat halaman kembali pada alur login SSO: `/login?returnTo=${encodeURIComponent('/checkout?step=2')}`.
+3. **Integrasi Share Link WhatsApp / Medsos**: Memformat pesan otomatis WhatsApp Web: `https://wa.me/62812345?text=${encodeURIComponent(pesan)}`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Menggunakan `encodeURIComponent` pada seluruh URL**: Menulis `encodeURIComponent('https://google.com')` akan mengubah karakter `:` dan `/` sehingga browser tidak dapat mengenali protokol web.
-- **Menggunakan `encodeURI` pada nilai parameter query**: Karakter `&` pada nilai teks tidak di-encode sehingga server akan menganggapnya sebagai pemisah parameter baru (_parameter tampering_).
-- **Mencoba decode string persen yang tidak lengkap**: `decodeURIComponent('%')` akan melempar fatal error `URIError: URI malformed`. Selalu bungkus decoding string dari luar dalam `try...catch`.
+- **Meng-encode Seluruh URL dengan `encodeURIComponent`**: Mengakibatkan `https://` menjadi `https%3A%2F%2F` sehingga link tidak bisa diklik.
+- **Meng-encode Parameter dengan `encodeURI`**: Karakter pemisah seperti `&` atau `=` tidak di-encode sehingga parameter terpotong di server.
+- **Lupa `try...catch` pada Decoding**: Memicu crash aplikasi jika string URL dari pengguna mengandung karakter persen liar (`%`).
 
 ### 🌟 Best Practice
 
-- Gunakan `encodeURIComponent()` untuk setiap nilai parameter query string secara individual.
-- Gunakan API modern `URLSearchParams` atau objek `URL` bawaan JavaScript yang otomatis melakukan encoding komponen secara tepat.
-- Selalu bungkus `decodeURIComponent()` dengan `try...catch` untuk mengantisipasi URL rusak atau karakter persen malformed dari pengguna jahat.
+- Gunakan `encodeURIComponent()` untuk nilai individual setiap parameter query string.
+- Gunakan objek `new URL()` dan `URLSearchParams` untuk menyusun URL yang bersih, terstruktur, dan otomatis aman.
+- Selalu lindungi pemanggilan `decodeURIComponent()` dengan blok `try...catch`.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat fungsi `bangunUrlWhatsapp(nomorHp, pesanTeks)` yang menghasilkan link `https://wa.me/<nomor>?text=<pesan_terencode>` menggunakan `encodeURIComponent`.
-2. Tulis fungsi `bacaQueryParamAman(encodedStr)` yang mem-decode string parameter dan menangani potensi `URIError` menggunakan `try...catch`.
+1. Buat fungsi `buatLinkWhatsApp(nomor, pesan)` yang menerima nomor telepon internasional dan teks pesan, lalu mengembalikan tautan `https://wa.me/<nomor>?text=<pesan_terencode>`.
+2. Buat fungsi `ekstrakParamSearch(urlLengkap)` yang mem-parsing nilai parameter `q` dari suatu URL dan mengembalikan string bersih yang sudah di-decode secara aman.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [15 - Reflect](../15-reflect/README.md)
 - ➡️ **Selanjutnya:** [17 - Base64](../17-base64/README.md)

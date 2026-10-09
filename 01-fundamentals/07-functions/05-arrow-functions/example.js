@@ -1,36 +1,66 @@
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// =============================================================================
+// MODUL 01 - FUNDAMENTALS: 07.5 - ARROW FUNCTION & CONTEXT THIS
+// =============================================================================
 
-console.log('--- 1. Perbandingan Sintaks Regular vs Arrow Function ---');
-// Regular Function
-const kaliRegular = function (a, b) {
-  return a * b;
+console.log('=== 1. VARIASI SINTAKS ARROW FUNCTION ===');
+// a. Satu parameter tanpa tanda kurung & implicit return
+const kuadrat = (x) => x * x;
+console.log('Kuadrat 7:', kuadrat(7));
+
+// b. Banyak parameter dengan implicit return
+const hitungTotal = (qty, harga) => qty * harga;
+console.log('Total belanja:', hitungTotal(3, 25000));
+
+// c. Implicit return untuk objek literal (wajib dibungkus tanda kurung bulat ())
+const buatPengguna = (id, nama) => ({ id, nama, role: 'User' });
+console.log('Objek pengguna:', buatPengguna(101, 'Joko'));
+
+// d. Multi-baris (membutuhkan kurung kurawal {} dan kata kunci return eksplisit)
+const tentukanGrade = (nilai) => {
+  if (nilai >= 85) return 'A';
+  if (nilai >= 70) return 'B';
+  return 'C';
 };
+console.log('Grade nilai 88:', tentukanGrade(88));
 
-// Arrow Function (Multi-line)
-const kaliArrow = (a, b) => {
-  return a * b;
-};
+console.log('\n=== 2. PERILAKU LEXICAL THIS (WARISAN DARI OUTER SCOPE) ===');
+const manajerTim = {
+  namaTim: 'Engineering Alpha',
+  anggota: ['Citra', 'Dimas', 'Eko'],
 
-// Arrow Function (Satu Baris / Implicit Return)
-const kaliRingkas = (a, b) => a * b;
+  // Regular function sebagai method: memiliki 'this' yang merujuk ke manajerTim
+  tampilkanAnggota() {
+    console.log(`Daftar tim [${this.namaTim}]:`);
 
-console.log('Hasil kaliRingkas(5, 4):', kaliRingkas(5, 4));
-
-console.log("\n--- 2. Perilaku Lexical 'this' pada Objek ---");
-const kotakPesan = {
-  judul: 'Pemberitahuan Sistem',
-  daftarPenerima: ['Joko', 'Budi'],
-
-  kirimNotifikasi: function () {
-    // Di dalam regular function ini, 'this' mengacu pada objek kotakPesan
-    console.log(`Mengirim: ${this.judul}`);
-
-    // Menggunakan Arrow Function di dalam forEach:
-    // Arrow Function mempertahankan 'this' milik kotakPesan!
-    this.daftarPenerima.forEach((nama) => {
-      console.log(`-> Notifikasi '${this.judul}' terkirim ke ${nama}`);
+    // Arrow function di dalam forEach mewarisi 'this' leksikal dari tampilkanAnggota
+    this.anggota.forEach((nama) => {
+      console.log(`- ${nama} (Bagian dari ${this.namaTim})`);
     });
   },
 };
 
-kotakPesan.kirimNotifikasi();
+manajerTim.tampilkanAnggota();
+
+console.log('\n=== 3. PERBEDAAN THIS PADA METHOD OBJEK (COMMON PITFALL) ===');
+const objekMobil = {
+  merk: 'Toyota GR',
+  // REGULAR METHOD: 'this' terikat ke objekMobil
+  infoRegular() {
+    return `Mobil: ${this.merk}`;
+  },
+  // ARROW FUNCTION SEBAGAI METHOD: 'this' mencari ke luar (global/module scope)!
+  infoArrow: () => {
+    return `Mobil: ${this ? this.merk : undefined}`;
+  },
+};
+
+console.log('Panggilan infoRegular():', objekMobil.infoRegular());
+console.log('Panggilan infoArrow()  :', objekMobil.infoArrow()); // merk menjadi undefined!
+
+console.log('\n=== 4. KETIADAAN CONSTRUCTOR PADA ARROW FUNCTION ===');
+try {
+  const KonstruktorPanah = () => {};
+  new KonstruktorPanah();
+} catch (err) {
+  console.log('Arrow function tidak bisa dipanggil dengan new:', err.message);
+}

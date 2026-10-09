@@ -29,16 +29,18 @@ const rawState = {
  */
 export const state = new Proxy(rawState, {
   set(target, prop, value, receiver) {
-    // 1. Eksekusi pengubahan data secara resmi menggunakan Reflect
+    // 1. Eksekusi pengubahan data secara resmi menggunakan Reflect di AWAL.
+    // PENTING: Harus dijalankan di awal agar 'target' sudah memegang nilai terbaru
+    // sebelum disimpan ke LocalStorage dan sebelum mengabari callback listeners (mencegah bug data usang).
     const success = Reflect.set(target, prop, value, receiver);
 
     if (success) {
-      // 2. Jika keranjang belanja berubah, otomatis simpan ke LocalStorage
+      // 2. Jika keranjang belanja berubah, otomatis simpan data BARU ke LocalStorage
       if (prop === 'cart') {
         saveCart(target.cart.toJSON());
       }
 
-      // 3. Kabari semua komponen UI yang berlangganan bahwa ada data yang diperbarui
+      // 3. Kabari semua komponen UI yang berlangganan bahwa ada data terbaru
       listeners.forEach((callback) => callback(target, prop));
     }
 

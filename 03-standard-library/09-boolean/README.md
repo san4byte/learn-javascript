@@ -1,143 +1,219 @@
-# 09 - Boolean (Boolean Wrapper, toString, dan valueOf)
+# 09 - Boolean (Boolean Wrapper, Truthy/Falsy, dan Nilai Konversi)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami tipe primitif `boolean` dan objek wrapper bawaan `Boolean`.
-> - **Kapan Digunakan**: Mengetahui jebakan fatal penggunaan `new Boolean()` dan mengapa konstruktor objek ini dihindari di industri.
-> - **Aturan Praktis**: Gunakan fungsi `Boolean(x)` atau operator double negation `!!x` untuk mengonversi data menjadi boolean primitif murni.
+> - **Fungsi Utama**: Tipe data primitif logika bernilai biner (`true` atau `false`) beserta fungsi konversi bawaan `Boolean()`.
+> - **Kapan Digunakan**: Percabangan kondisi `if/else`, sanitasi array data kosong, dan penentuan nilai flag/status.
+> - **Aturan Praktis**: Jangan pernah menggunakan konstruktor `new Boolean()` karena membuat objek yang selalu bernilai truthy, gunakan `Boolean(x)` atau operator `!!x`, dan gunakan `??` jika angka `0` adalah nilai default yang sah.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami tipe primitif `boolean` dan objek wrapper bawaan `Boolean`.
-- Mengetahui jebakan fatal penggunaan `new Boolean()` dan mengapa konstruktor objek ini dihindari di industri.
-- Menguasai fungsi konversi truthy/falsy menggunakan `Boolean(value)` dan double-negation (`!!value`).
-- Memahami method instance `toString()` dan `valueOf()` pada objek Boolean.
+- Memahami tipe primitif `boolean` dan objek pembungkus (_wrapper object_) `Boolean`.
+- Menguasai seluruh method dan fitur `Boolean` beserta berbagai kondisi kasus (_edge cases_).
+- Mengetahui daftar lengkap 7 nilai _falsy_ di JavaScript serta mengenali jebakan nilai _truthy_ yang tak terduga (`[]`, `{}`, `'0'`).
+- Menguasai teknik konversi tipe data ke boolean menggunakan fungsi `Boolean()` dan _double negation_ (`!!`).
+- Memahami mengapa `new Boolean(false)` dilarang keras di industri dan linting ESLint (`no-new-wrappers`).
+- Menguasai idiom fungsional sanitasi data array menggunakan `filter(Boolean)`.
+- Memahami interaksi boolean dengan operator logika `&&`, `||`, dan Nullish Coalescing (`??`).
 
 ---
 
-## 2. 📖 Penjelasan Konsep & Referensi Lengkap
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Tipe primitif `boolean` seperti **saklar lampu dinding**: hanya bisa berada di posisi Nyala (`true`) atau Mati (`false`). Menggunakan `new Boolean(false)` seperti **membungkus saklar mati tersebut ke dalam kardus paket pos**: kardus paketnya berwujud nyata ada di depan mata Anda (bertipe objek / truthy), meskipun saklar di dalamnya mati.
-
-Tipe data primitif **`boolean`** hanya memiliki dua nilai: `true` dan `false`. Di JavaScript, terdapat juga fungsi dan objek pembungkus bawaan bernama **`Boolean`**.
-
-### Tabel Referensi API & Konversi `Boolean`
-
-| Fitur / Pola        | Sintaks              | Tipe Return          | Kegunaan & Contoh Singkat                                                                |
-| :------------------ | :------------------- | :------------------- | :--------------------------------------------------------------------------------------- |
-| **Type Caster**     | `Boolean(value)`     | `boolean` (primitif) | Mengonversi nilai apa pun menjadi `true`/`false` murni: `Boolean(1) // true`             |
-| **Double Negation** | `!!value`            | `boolean` (primitif) | Shorthand modern identik dengan `Boolean(value)`: `!!"teks" // true`                     |
-| **Object Wrapper**  | `new Boolean(value)` | `object`             | ⚠️ **Dihindari!** Membuat wrapper objek yang selalu bernilai truthy di percabangan `if`. |
-| **String Output**   | `bool.toString()`    | `string`             | Mengembalikan representasi teks: `(true).toString() // "true"`                           |
-| **Nilai Primitif**  | `bool.valueOf()`     | `boolean`            | Mengekstrak nilai primitif dari objek wrapper.                                           |
+> Tipe primitif `boolean` seperti **saklar lampu dinding**: hanya bisa berada di dua posisi: Nyala (`true`) atau Mati (`false`). Sedangkan menggunakan `new Boolean(false)` seperti **membungkus saklar mati tersebut ke dalam kardus pos**: kardus paketnya berwujud fisik nyata di hadapan Anda (sebuah objek / truthy), meskipun isi saklar di dalamnya mati.
 
 ---
 
-### Tabel 6 Nilai Falsy vs Nilai Truthy di JavaScript
+### 1. Tabel Ringkasan Fitur & Method Boolean (Cheat-Sheet)
 
-| Kategori Falsy (Menghasilkan `false`)       | Kategori Truthy (Menghasilkan `true`)                |
-| :------------------------------------------ | :--------------------------------------------------- |
-| `false` (boolean literal)                   | `true` (boolean literal)                             |
-| `0`, `-0`, `0n` (angka nol dan BigInt nol)  | Semua angka bukan nol (`1`, `-10`, `3.14`)           |
-| `""` (string kosong 0 karakter)             | Semua string berisi karakter (`"Halo"`, `" "` spasi) |
-| `null` (ketiadaan nilai sengaja)            | Objek kosong `{}` dan Array kosong `[]`              |
-| `undefined` (variabel belum diinisialisasi) | Fungsi / method `function() {}`                      |
-| `NaN` (Not a Number)                        | Objek pembungkus apa pun (`new Boolean(false)`)      |
-
-> ⚠️ **Jebakan Fatal**: Seluruh objek di JavaScript bernilai **Truthy**! Oleh karena itu, `new Boolean(false)` di dalam pernyataan `if` akan dievaluasi sebagai **`true`**! Hindari penggunaan `new Boolean()`. Selalu gunakan `Boolean(x)` atau `!!x`.
+| Fitur / Pola        | Sintaks            | Nilai Kembalian      | Deskripsi Singkat                                                    |
+| :------------------ | :----------------- | :------------------- | :------------------------------------------------------------------- |
+| **Type Caster**     | `Boolean(value)`   | `boolean` (primitif) | Mengonversi nilai apa pun menjadi `true`/`false` murni.              |
+| **Double Negation** | `!!value`          | `boolean` (primitif) | Shorthand populer identik dengan fungsi `Boolean(value)`.            |
+| **Object Wrapper**  | `new Boolean(val)` | `object`             | ⚠️ **Dihindari!** Membuat wrapper objek yang selalu bernilai truthy. |
+| **String Output**   | `bool.toString()`  | `string`             | Mengubah nilai boolean menjadi teks (`"true"` atau `"false"`).       |
+| **Nilai Primitif**  | `bool.valueOf()`   | `boolean`            | Mengekstrak nilai primitif dari objek wrapper.                       |
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 2. Eksplorasi Mendalam Setiap Fitur & Method Boolean
+
+Berikut adalah rincian lengkap setiap fitur dan method `Boolean` beserta skenario kasusnya masing-masing:
+
+---
+
+#### 1. Fungsi Konversi: `Boolean(value)`
+
+Mengonversi nilai bertipe apa pun menjadi nilai boolean primitif (`true` atau `false`):
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+console.log(Boolean("halo")); // true
+console.log(Boolean("")); // false
+console.log(Boolean(100)); // true
+console.log(Boolean(0)); // false
+```
 
-console.log('--- 1. Jebakan Fatal: new Boolean(false) ---');
-const statusMember = new Boolean(false);
-console.log('Tipe data statusMember   :', typeof statusMember);
+---
 
-if (statusMember) {
-  console.log(
-    'Status percabangan if    : Status dianggap aktif! (karena semua objek bernilai truthy)'
-  );
+#### 2. Shorthand Negasi Ganda: `!!value`
+
+Operator negasi ganda mengevaluasi nilai kebenaran operand secara ringkas, bekerja identik dengan fungsi `Boolean()`:
+
+```javascript
+const user = "joko_dev";
+console.log(!!user); // true
+console.log(!!null); // false
+console.log(!!0); // false
+```
+
+---
+
+#### 3. Tujuh Nilai Falsy di JavaScript
+
+Hanya ada tepat 7 nilai di seluruh bahasa JavaScript yang dievaluasi sebagai `false`:
+
+```javascript
+console.log(Boolean(false)); // 1. Literal false
+console.log(Boolean(0)); // 2. Angka nol (0 dan -0)
+console.log(Boolean(0n)); // 3. BigInt nol
+console.log(Boolean("")); // 4. String kosong
+console.log(Boolean(null)); // 5. Null
+console.log(Boolean(undefined)); // 6. Undefined
+console.log(Boolean(NaN)); // 7. Not-a-Number
+```
+
+---
+
+#### 4. Jebakan Nilai Truthy yang Sering Menipu
+
+Seluruh nilai di luar 7 nilai falsy di atas adalah **truthy** (termasuk yang tampak kosong):
+
+```javascript
+console.log(Boolean("0")); // true! (string berisi teks)
+console.log(Boolean("false")); // true! (string berisi teks)
+console.log(Boolean([])); // true! (array kosong adalah objek)
+console.log(Boolean({})); // true! (objek kosong adalah objek)
+console.log(Boolean(() => {})); // true! (fungsi kosong adalah objek)
+```
+
+---
+
+#### 5. Jebakan Objek Pembungkus: `new Boolean(false)`
+
+Menggunakan kata kunci `new` menghasilkan objek pembungkus (_wrapper object_). Karena semua objek di JavaScript bersifat truthy, percabangan `if` akan selalu tertipu:
+
+```javascript
+const statusAktif = new Boolean(false); // ❌ HINDARI
+
+console.log(typeof statusAktif); // "object"
+
+if (statusAktif) {
+  // Blok ini SELALU dieksekusi meskipun nilainya false!
+  console.log("Tertipu! Objek selalu bernilai truthy.");
 }
-
-console.log('\n--- 2. Konversi Primitif & Shorthand Double Negation (!!) ---');
-const username = 'joko_santoso';
-console.log('Username asli            :', username);
-console.log('Boolean(username)        :', Boolean(username));
-console.log('!!username (Shorthand)   :', !!username);
-
-console.log(
-  '\n--- 3. Sanitasi Data: Membersihkan Nilai Falsy dengan filter(Boolean) ---'
-);
-const dataInput = ['Joko', '', null, 'Admin', undefined, 0, false, 'Aktif'];
-console.log('Data Mentah              :', dataInput);
-
-// Menghapus elemen falsy ('', null, undefined, 0, false) secara fungsional
-const dataBersih = dataInput.filter(Boolean);
-console.log('Data Bersih (Hanya Truthy):', dataBersih);
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+#### 6. Ekstraksi Nilai Primitif: `bool.valueOf()`
 
-```text
---- 1. Jebakan Fatal: new Boolean(false) ---
-Tipe data statusMember   : object
-Status percabangan if    : Status dianggap aktif! (karena semua objek bernilai truthy)
+Mengekstrak nilai primitif boolean asli dari dalam instance objek pembungkus:
 
---- 2. Konversi Primitif & Shorthand Double Negation (!!) ---
-Username asli            : joko_santoso
-Boolean(username)        : true
-!!username (Shorthand)   : true
-
---- 3. Sanitasi Data: Membersihkan Nilai Falsy dengan filter(Boolean) ---
-Data Mentah              : [
-  'Joko',    '',
-  null,      'Admin',
-  undefined, 0,
-  false,     'Aktif'
-]
-Data Bersih (Hanya Truthy): [ 'Joko', 'Admin', 'Aktif' ]
+```javascript
+const boolObj = new Boolean(false);
+console.log(typeof boolObj); // "object"
+console.log(boolObj.valueOf()); // false (primitif)
+console.log(typeof boolObj.valueOf()); // "boolean"
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+#### 7. Konversi ke String: `bool.toString()`
+
+Mengonversi nilai boolean menjadi string teks `"true"` atau `"false"`:
+
+```javascript
+const aktif = true;
+console.log(aktif.toString()); // "true"
+console.log(typeof aktif.toString()); // "string"
+```
+
+---
+
+#### 8. Sanitasi Data Array: Idiom `filter(Boolean)`
+
+Pola elegan untuk membuang semua nilai kosong/falsy dari dalam array:
+
+```javascript
+const formulir = ["Andi", "", null, "Budi", undefined, 0, false, "Siti", NaN];
+const bersih = formulir.filter(Boolean);
+console.log(bersih); // ['Andi', 'Budi', 'Siti'] ✅
+```
+
+---
+
+#### 9. Interaksi dengan Operator Logika: `&&`, `||`, dan `??`
+
+- Operator `||` beralih jika operand bernilai _falsy_ (termasuk `0` dan `false`):
+  ```javascript
+  const kuantitas = 0;
+  console.log(kuantitas || 10); // 10 (angka 0 tertimpa!)
+  ```
+- Operator `??` (_Nullish Coalescing_) hanya beralih jika operand bernilai `null` atau `undefined`:
+  ```javascript
+  console.log(kuantitas ?? 10); // 0 ✅ (angka 0 dipertahankan)
+  ```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep 7 nilai falsy, jebakan truthy pada array/objek kosong, shorthand `!!`, bahaya fatal `new Boolean(false)`, method `toString()`/`valueOf()`, idiom `filter(Boolean)`, dan operator `??` di atas dirangkum ke dalam satu laboratorium kode siap pakai:
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 03-standard-library/09-boolean/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Validasi Keberadaan Input**: Memastikan string pencarian tidak kosong menggunakan `Boolean(searchQuery.trim())` atau `!!searchQuery`.
-2. **Pengalihan Nilai State UI**: Mengonversi nilai non-boolean dari API menjadi murni `true`/`false` untuk properti disabled tombol di React/Vue.
-3. **Penyaringan Elemen Falsy**: Membuang nilai-nilai kosong dari array menggunakan `array.filter(Boolean)`.
+1. **Penyaringan Elemen Kosong Form**: Menggunakan `data.filter(Boolean)` untuk membersihkan baris kosong pada data unggahan file spreadsheet atau input tag.
+2. **Flag Disabled Tombol UI**: Menggunakan `!!errorPesan` untuk mengaktifkan status nonaktif tombol simpan pada React/Vue jika ada pesan error.
+3. **Pemberian Nilai Default yang Aman**: Menggunakan `??` daripada `||` untuk parameter konfigurasi kuantitas belanja agar angka `0` tidak dianggap hilang.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Menggunakan `new Boolean()`**: Selalu hindari `new Boolean()`. Ia menciptakan objek yang selalu bernilai truthy dalam evaluasi percabangan logika.
-- **Mengira array kosong `[]` bernilai falsy**: Di JavaScript, array dan objek kosong tetap bernilai truthy (`Boolean([]) === true`). Untuk mengecek kekosongan array, periksa panjangnya: `arr.length > 0`.
-- **String 'false' bernilai truthy**: `Boolean('false')` menghasilkan `true` karena string tidak kosong. Hanya string kosong `""` yang menghasilkan `false`.
+- **Mengira Array Kosong `[]` adalah Falsy**: Menulis `if (arr)` untuk mengecek apakah array berisi elemen akan selalu menghasilkan true meskipun `arr = []`. Selalu gunakan `if (arr.length > 0)`.
+- **String `'false'` adalah Truthy**: Data query string dari URL browser `"?aktif=false"` bertipe string, sehingga `Boolean('false')` bernilai `true`. Parsing dengan `urlParam === 'true'`.
+- **Menggunakan `new Boolean()`**: Menciptakan objek yang selalu lolos percabangan `if`.
 
 ### 🌟 Best Practice
 
-- Gunakan fungsi `Boolean(x)` atau operator double negation `!!x` untuk mengonversi data menjadi boolean primitif murni.
-- Gunakan idiom fungsional `daftar.filter(Boolean)` untuk membersihkan array dari elemen `null`, `undefined`, atau string kosong secara instan.
-- Hindari membandingkan nilai boolean secara eksplisit seperti `if (isAktif === true)`, cukup tulis `if (isAktif)`.
+- Gunakan `Boolean(x)` atau `!!x` untuk konversi tipe boolean primitif.
+- Hindari penulisan redundan `if (isLolos === true)`, cukup tulis `if (isLolos)`.
+- Gunakan operator Nullish Coalescing `??` untuk nilai default konfigurasi angka/boolean.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Diberikan array campuran `[0, 'Joko', '', null, 'Budi', undefined, NaN, 'Siti']`. Bersihkan seluruh nilai falsy sehingga hanya tersisa nama-nama yang valid menggunakan `filter()` dan `Boolean`.
-2. Buat fungsi `cekKetersediaanBarang(stok)` yang mengembalikan `false` jika stok bernilai 0 atau tidak didefinisikan, dan mengembalikan `true` jika stok lebih dari 0.
+1. Diberikan array formulir `['Andi', '', 0, 'Jakarta', null, 'Programmer', undefined]`. Bersihkan array tersebut sehingga hanya menyisakan data string valid menggunakan `filter(Boolean)`.
+2. Buat fungsi `parseBooleanFromString(str)` yang mampu mengubah string `'true'` (atau `'TRUE'`) menjadi boolean `true`, dan string `'false'` menjadi boolean `false` tanpa terjebak sifat truthy string.
+3. Jelaskan mengapa `Boolean(new Boolean(false))` bernilai `true`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [08 - Math](../08-math/README.md)
 - ➡️ **Selanjutnya:** [10 - Map](../10-map/README.md)

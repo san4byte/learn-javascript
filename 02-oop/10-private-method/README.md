@@ -2,97 +2,212 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Membuat fungsi pembantu internal dengan awalan `#` yang tidak dapat dipanggil dari luar class.
-> - **Kapan Digunakan**: Menyederhanakan method publik yang rumit dengan memecahnya ke helper method tanpa mengotori interface publik.
-> - **Aturan Praktis**: Awali nama method dengan tanda `#` (contoh: `#validasiInput()`).
+> - **Fungsi Utama**: Mendefinisikan fungsi pembantu internal (_helper method_) dengan awalan tanda pagar (`#`) yang hanya bisa dipanggil dari dalam kelas itu sendiri.
+> - **Kapan Digunakan**: Menyederhanakan method publik yang panjang menjadi fungsi-fungsi modular tanpa mengotori atau mengekspos detail implementasi ke antarmuka publik (_Public API_).
+> - **Aturan Praktis**: Awali nama method dengan tanda `#`, contoh: `#validasiData()`, dan panggil di dalam class menggunakan `this.#validasiData()`.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami konsep **Private Method** di JavaScript Class.
-- Menggunakan tanda pagar (**`#`**) untuk menyembunyikan logika fungsi internal (_internal helper functions_).
-- Menjaga antarmuka publik (_Public API_) class tetap bersih dan mudah digunakan.
+- Memahami konsep pilar OOP: **Abstraction & Encapsulation** melalui Private Method.
+- Menguasai pembuatan **Private Instance Method** menggunakan awalan tanda pagar (**`#`**).
+- Menguasai pembuatan **Private Accessor** (`get #properti()` dan `set #properti()`).
+- Menguasai pembuatan **Private Static Method** (`static #helperMethod()`).
+- Membedakan antara private method asli ES2022 dengan konvensi lawas garis bawah (`_namaMethod`).
+- Memahami batasan pewarisan: Mengapa subclass tidak dapat memanggil private method superclass secara langsung.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Seperti **mesin mobil di bawah kap**: Pengemudi hanya berinteraksi dengan antarmuka kemudi publik seperti pedal gas dan setir (`drive()`). Pengemudi tidak perlu (dan tidak boleh) menyentuh mekanisme pembakaran busi di dalam blok mesin tertutup (`#bakarBahanBakar()`).
-
-Sama seperti field, method di dalam class juga bisa dibuat menjadi private dengan memberi awalan tanda pagar (**`#`**):
-
-1. Private method hanya dapat dipanggil oleh method lain di dalam class yang sama (`this.#namaMethod()`).
-2. Kode di luar class tidak dapat melihat atau memanggil private method ini.
-3. Sangat ideal untuk fungsi validasi rumit, hashing password, atau fungsi pembantu kalkulasi yang tidak perlu diketahui oleh pengguna class.
+> Seperti **mesin pembakaran di bawah kap mobil**: Pengemudi hanya berinteraksi dengan antarmuka kemudi publik seperti pedal gas (`tekanGas()`) dan persneling gigi. Pengemudi tidak perlu (dan tidak boleh) menyentuh mekanisme internal pembakaran bahan bakar di dalam blok silinder (`#semprotBensin()` dan `#picuBusi()`). Jika komponen internal tersebut bisa diakses sembarangan, mesin mobil rentan rusak.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 1. Tabel Ringkasan Fitur Private Method (Cheat-Sheet)
+
+| Fitur / Variasi                      | Sintaks                        | Konteks Pemanggilan     | Aksesibilitas Luar                               |
+| :----------------------------------- | :----------------------------- | :---------------------- | :----------------------------------------------- |
+| **Private Instance Method**          | `#namaMethod(...) {}`          | `this.#namaMethod(...)` | Ditolak keras (_SyntaxError_).                   |
+| **Private Accessor (Getter/Setter)** | `get #prop()` / `set #prop(v)` | `this.#prop`            | Ditolak keras (_SyntaxError_).                   |
+| **Private Static Method**            | `static #helper(...) {}`       | `Class.#helper(...)`    | Hanya di dalam method statis kelas bersangkutan. |
+| **Akses Subclass**                   | `subInstance.#method()`        | Tidak diwariskan        | Ditolak (_SyntaxError_).                         |
+| **Konvensi Lawas (`_`)**             | `_helper() {}`                 | `this._helper()`        | Publik semu (tetap bisa dipanggil dari luar).    |
+
+---
+
+### 2. Eksplorasi Mendalam Setiap Fitur & Skenario Kasus
+
+Berikut adalah rincian lengkap cara kerja private method beserta skenario kasusnya:
+
+---
+
+#### 1. Sintaks Dasar Private Instance Method (`#method()`)
+
+Private method didefinisikan dengan menyematkan tanda pagar `#` tepat sebelum nama fungsinya:
 
 ```javascript
-// Penjelasan lengkap dapat dibaca pada README.md
-// Private Method menggunakan tanda pagar (#) untuk fungsi internal rahasia
-
-class Person {
-  say(name) {
-    if (name) {
-      this.#sayWithName(name);
-    } else {
-      this.#sayWithoutName();
-    }
+class Pengguna {
+  #formatNama(nama) {
+    return nama.trim().toUpperCase();
   }
 
-  #sayWithoutName() {
-    console.info('Hello');
-  }
-
-  #sayWithName(name) {
-    console.info(`Hello ${name}`);
+  sapa(nama) {
+    // Memanggil private method dari dalam method publik:
+    return `Halo, ${this.#formatNama(nama)}!`;
   }
 }
 
-const joko = new Person();
-joko.say('Joko Santoso');
-joko.say();
+const user = new Pengguna();
+console.log(user.sapa('   joko  ')); // "Halo, JOKO!"
+// user.#formatNama("joko"); // 💥 SyntaxError!
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+#### 2. Private Accessor: Private Getter dan Setter
 
-```text
-Hello Joko Santoso
-Hello
+Anda juga dapat membuat getter dan setter privat untuk memvalidasi variabel internal tanpa membuka accessor tersebut ke publik:
+
+```javascript
+class Sensor {
+  #nilai = 0;
+
+  get #nilaiTervalidasi() {
+    return this.#nilai;
+  }
+
+  set #nilaiTervalidasi(v) {
+    if (v < 0) throw new Error('Nilai tidak boleh negatif');
+    this.#nilai = v;
+  }
+
+  update(v) {
+    this.#nilaiTervalidasi = v; // Menggunakan private setter
+  }
+}
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+#### 3. Private Static Method (`static #method()`)
+
+Ketika Anda membutuhkan helper function untuk operasi statis yang tidak boleh diketahui oleh modul lain:
+
+```javascript
+class FormatUtil {
+  static formatJson(data) {
+    const bersih = this.#sanitasi(data);
+    return JSON.stringify(bersih);
+  }
+
+  static #sanitasi(data) {
+    // Helper statis internal
+    delete data.password;
+    return data;
+  }
+}
+
+console.log(FormatUtil.formatJson({ user: 'joko', password: '123' }));
+// FormatUtil.#sanitasi // 💥 SyntaxError!
+```
+
+---
+
+#### 4. Perbedaan dengan Konvensi Underscore (`_method()`)
+
+Sebelum ES2022, programmer menggunakan konvensi `_helper()` sebagai penanda bahwa method tersebut jangan disentuh. Namun cara ini tidak memiliki proteksi bahasa:
+
+```javascript
+// Konvensi Lawas:
+class Lawas {
+  _rahasia() {
+    return 'bisa diakses siapa saja';
+  }
+}
+new Lawas()._rahasia(); // ❌ Masih bisa dipanggil dari luar!
+
+// Standar Modern:
+class Modern {
+  #rahasia() {
+    return 'aman 100%';
+  }
+}
+// new Modern().#rahasia(); // ✅ Dicegah oleh runtime JavaScript!
+```
+
+---
+
+#### 5. Batasan Akses pada Subclass (Inheritance Boundary)
+
+Subclass tidak dapat memanggil private method parent secara langsung menggunakan `this.#methodParent()`. Jika subclass membutuhkan bantuan logika tersebut, induk harus membungkusnya dalam method publik:
+
+```javascript
+class Induk {
+  #helperInduk() {
+    return 'Logika privat induk';
+  }
+
+  panggilHelper() {
+    return this.#helperInduk(); // Menjadi gerbang bagi subclass
+  }
+}
+
+class Anak extends Induk {
+  jalankan() {
+    // return this.#helperInduk(); // 💥 SyntaxError!
+    return this.panggilHelper(); // ✅ Sah dan aman
+  }
+}
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep private method di atas—mulai dari pemecahan logika kompleks, private getter/setter, private static helper, perbandingan dengan konvensi lawas, hingga batasan pewarisan subclass—telah dirangkum dalam script laboratorium terpadu:
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 02-oop/10-private-method/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-Enkapsulasi algoritma enkripsi internal, formatting data mentah internal, atau validasi parameter sebelum diproses.
+1. **Sistem Login Keamanan**: Memecah alur login menjadi helper privat: `#cekPercobaanGagal()`, `#cocokkanHash()`, dan `#kunciAkun()`.
+2. **Konektor Pembayaran**: Method publik `checkout()` memanggil rangkaian private method: `#validasiPayload()`, `#tandaTanganiRequest()`, dan `#kirimKeGateway()`.
+3. **Normalisasi Data**: Membersihkan format input (seperti membersihkan spasi, karakter khusus, dan hashing string) sebelum disimpan ke memori atau database.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **SyntaxError Saat Dipanggil di Luar**: Memanggil `#method()` dari luar class menyebabkan `SyntaxError: Private field '#...' must be declared in an enclosing class`.
-- **Tidak Tersedia di Subclass**: Sama seperti private field, subclass tidak dapat memanggil private method superclass secara langsung.
+- **Mencoba Meng-Override Private Method**: Karena private method tidak berada di prototype dan tidak diwariskan, mendeklarasikan `#method()` bernama sama di subclass bukanlah overriding, melainkan dua method independen yang berbeda.
+- **Memanggil dari Subclass**: Mengira `super.#method()` atau `this.#method()` milik parent bisa dipanggil di child class.
 
 ### 🌟 Best Practice
 
-- Pecah logika method publik yang panjang menjadi private helper method kecil yang bersih.
-- Terapkan prinsip Abstraction: sembunyikan kerumitan implementasi dari pengguna luar class.
+- Pertahankan _Public API_ sekecil mungkin (_Minimal Surface Area_). Apa pun yang tidak perlu dipanggil oleh pengguna luar harus dijadikan private.
+- Gunakan private method untuk menghindari duplikasi kode (_DRY_) di dalam internal class.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat class `UserAuth` dengan method publik `register(username, password)`. Buat private method `#validatePassword(password)` yang memeriksa apakah panjang password minimal 8 karakter.
+1. Buat class `KalkulatorKredit` dengan method publik `hitungCicilan(pokok, bulan)`. Buat private method `#hitungBunga(pokok, bulan)` yang menghitung bunga majemuk secara internal.
+2. Buat class `PengacakKupon` dengan private static method `static #generateRandomChars(panjang)` dan public static method `buatKupon()`.
+3. Tulis kode yang mencoba memanggil `#privateMethod()` dari luar class, amati pesan error spesifik yang muncul di terminal, dan jelaskan mengapa error tersebut berupa `SyntaxError`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [09 - Private Class Field](../09-private-class-field/README.md)
 - ➡️ **Selanjutnya:** [11 - Operator instanceof](../11-instanceof-operator/README.md)

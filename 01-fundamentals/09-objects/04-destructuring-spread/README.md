@@ -1,129 +1,166 @@
 # 09.4 - Destructuring Object dan Object Spread Operator
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami sintaks Destructuring Assignment pada Object.
-> * **Kapan Digunakan**: Mampu memberikan nilai default dan mengganti nama variabel (*aliasing*).
-> * **Aturan Praktis**: Gunakan Destructuring pada parameter fungsi untuk menghindari pemanggilan `props.nama`, `props.email` yang berulang-ulang.
+>
+> - **Fungsi Utama**: Mengekstrak data properti objek langsung ke dalam variabel mandiri (_Destructuring_) atau menyebarkan properti objek ke objek baru (_Spread Operator_).
+> - **Kapan Digunakan**: Mengambil data payload dari respons API, menerima _props_ komponen UI, memperbarui state immutabel di Redux/Zustand, serta menggabungkan konfigurasi objek.
+> - **Aturan Praktis**: Gunakan penamaan alias (`{ propLama: namaBaru }`) jika nama properti bertabrakan dengan variabel lain. Selalu manfaatkan nilai default (`{ foto = 'default.png' }`) untuk mengantisipasi nilai `undefined`.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
-- Memahami sintaks Destructuring Assignment pada Object.
-- Mampu memberikan nilai default dan mengganti nama variabel (*aliasing*).
-- Menguasai Object Spread Operator (`...`) untuk menyalin (*clone*) dan menggabungkan properti objek.
+
+- Menguasai sintaks _Destructuring Assignment_ berbasis nama kunci properti objek.
+- Mampu mengganti nama variabel (_Aliasing_) dan menentukan nilai cadangan bawaan (_Default Value_).
+- Mengekstrak data dari objek bersarang (_Nested Destructuring_) secara bersih dalam satu baris.
+- Menguasai teknik destructuring langsung pada daftar parameter fungsi.
+- Memahami pemisahan properti dengan _Rest Property_ (`...rest`).
+- Menggabungkan dan menimpa (_override_) properti objek menggunakan _Object Spread Operator_ (`...`).
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
-> Destructuring object seperti **mengambil barang pesanan online dari dalam kardus paket**: daripada membawa kardus besarnya ke mana-mana, Anda cukup mengambil barang yang Anda butuhkan (buku dan kacamata) dan menyimpannya di saku Anda.
 
-Dua fitur ES6 yang paling sering digunakan dalam pengolahan data Object di industri modern adalah:
-
-### 1. Destructuring Object
-Mengekstrak properti-properti objek langsung ke dalam variabel dengan nama yang cocok:
-```javascript
-const { nama, email, peran = 'User' } = dataPengguna;
-```
-* **Aliasing (Ganti Nama)**: `{ namaPropertiLama: namaVariabelBaru }`
-* **Nested Destructuring**: Mengekstrak properti dari dalam objek bertingkat secara langsung.
-
-### 2. Object Spread Operator (`...`)
-Menyalin atau menggabungkan seluruh pasangan properti objek ke dalam objek baru tanpa merusak objek aslinya:
-```javascript
-const objekBaru = { ...objekAwal, propertiTambahan: 123 };
-```
+> - **Destructuring Object** seperti **membongkar paket kardus belanja online**: Daripada memindahkan seluruh kardus besar ke meja kerja, Anda hanya mengambil dua barang yang Anda perlukan saja (laptop dan kacamata) langsung ke saku Anda.
+> - **Object Spread Operator** seperti **menyalin lembar formulir fotokopi**: Anda mengambil formulir profil dasar, menyalin seluruh isinya ke lembar baru, lalu mencoret dan memperbarui kolom nomor HP dengan nomor baru tanpa mencoret lembar dokumen aslinya.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Perbandingan Fitur Destructuring vs Object Spread
+
+| Fitur                       | Sintaks Contoh                             | Wilayah Penulisan  | Hasil / Fungsi                                      |
+| :-------------------------- | :----------------------------------------- | :----------------- | :-------------------------------------------------- |
+| **Destructuring Ekstraksi** | `const { nama, umur } = user;`             | Sisi kiri (`LHS`)  | Membuat variabel baru dari properti objek           |
+| **Aliasing (Ganti Nama)**   | `const { username: idUser } = user;`       | Sisi kiri (`LHS`)  | Mengambil properti `username` ke variabel `idUser`  |
+| **Default Fallback**        | `const { role = 'User' } = user;`          | Sisi kiri (`LHS`)  | Menggunakan nilai default jika properti `undefined` |
+| **Rest Property**           | `const { id, ...profil } = user;`          | Sisi kiri (`LHS`)  | Mengumpulkan sisa properti ke dalam objek baru      |
+| **Object Spread**           | `const update = { ...user, aktif: true };` | Sisi kanan (`RHS`) | Menyalin seluruh properti dan menimpa sebagian      |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Sintaks Destructuring Assignment Objek
+
+Nama variabel yang dibuat harus sesuai dengan nama kunci di dalam objek:
+
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const user = { nama: "Joko", kota: "Jakarta" };
+const { nama, kota } = user;
+console.log(nama); // 'Joko'
+```
 
-console.log('--- 1. Destructuring Object, Aliasing & Default Value ---');
-const responsServer = {
-  id: 88,
-  username: 'jokosantoso',
-  statusAkun: 'Aktif'
-  // fotoProfil sengaja tidak ada
-};
+#### 2. Memberikan Nama Baru Variabel (Aliasing)
 
-// Ekstrak dengan ganti nama (aliasing) dan beri nilai default
+Gunakan titik dua (`:`) untuk memetakan nama properti asli ke nama variabel baru:
+
+```javascript
+const { nama: namaLengkap } = user;
+console.log(namaLengkap); // 'Joko'
+```
+
+#### 3. Nilai Cadangan Bawaan (Default Values)
+
+Jika properti bernilai `undefined`, nilai default akan digunakan:
+
+```javascript
+const { peran = "Member" } = user;
+console.log(peran); // 'Member'
+```
+
+#### 4. Ekstraksi Objek Bersarang (Nested Destructuring)
+
+Menembus lapisan objek bertingkat secara langsung:
+
+```javascript
+const data = { profil: { kontak: { email: "joko@dev.id" } } };
 const {
-  username: namaUser,
-  statusAkun,
-  fotoProfil = 'default-avatar.png'
-} = responsServer;
+  profil: {
+    kontak: { email },
+  },
+} = data;
+console.log(email); // 'joko@dev.id'
+```
 
-console.log('Nama Variabel Baru :', namaUser);
-console.log('Status             :', statusAkun);
-console.log('Foto (Fallback)    :', fotoProfil);
+#### 5. Destructuring Parameter Fungsi (Pola Props)
 
-console.log('\n--- 2. Destructuring Parameter Fungsi (Sangat Populer di React) ---');
-function kirimEmailSelamatDatang({ namaUser, email = 'support@company.com' }) {
-  console.log(`Mengirim email selamat datang ke ${namaUser} (${email})...`);
+Pola paling dominan dalam framework modern (seperti React) untuk menerima data argumen:
+
+```javascript
+function renderButton({ label, disabled = false }) {
+  console.log(`Tombol: ${label}, Mati: ${disabled}`);
 }
+renderButton({ label: "Kirim" });
+```
 
-kirimEmailSelamatDatang({ namaUser: 'Budi Santoso', email: 'budi@gmail.com' });
+#### 6. Mengumpulkan Sisa Properti dengan Rest Pattern
 
-console.log('\n--- 3. Object Spread Operator (Kloning & Menimpa Properti) ---');
-const pengaturanDefault = {
-  tema: 'light',
-  notifikasi: true,
-  bahasa: 'id'
-};
+Memisahkan properti tertentu dari objek dan menyimpan sisanya ke objek mandiri:
 
-// Salin pengaturan default dan timpa tema menjadi dark (immutability)
-const pengaturanKustom = {
-  ...pengaturanDefault,
-  tema: 'dark' // Menimpa properti tema
-};
+```javascript
+const laptop = { merk: "Asus", ram: 16, ssd: 512 };
+const { merk, ...spesifikasi } = laptop;
+console.log(spesifikasi); // { ram: 16, ssd: 512 }
+```
 
-console.log('Pengaturan Asli   :', pengaturanDefault);
-console.log('Pengaturan Kustom :', pengaturanKustom);
+#### 7. Kloning & Penggabungan Immutabel dengan Spread Operator
+
+Menyalin dan menimpa nilai secara bersih tanpa mutasi langsung:
+
+```javascript
+const stateLama = { count: 0, loading: false };
+const stateBaru = { ...stateLama, count: 1 };
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
-```text
---- 1. Destructuring Object, Aliasing & Default Value ---
-Nama Variabel Baru : jokosantoso
-Status             : Aktif
-Foto (Fallback)    : default-avatar.png
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
---- 2. Destructuring Parameter Fungsi (Sangat Populer di React) ---
-Mengirim email selamat datang ke Budi Santoso (budi@gmail.com)...
+Seluruh implementasi demonstrasi destructuring objek dengan aliasing dan default value, teknik nested destructuring, pemisahan properti via Rest pattern, parameter destructuring pada fungsi notifikasi, serta pembuktian kloning & penimpaan properti aman via Object Spread Operator telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 3. Object Spread Operator (Kloning & Menimpa Properti) ---
-Pengaturan Asli   : { tema: 'light', notifikasi: true, bahasa: 'id' }
-Pengaturan Kustom : { tema: 'dark', notifikasi: true, bahasa: 'id' }
+Jalankan demonstrasi secara langsung di terminal Anda:
+
+```bash
+node 01-fundamentals/09-objects/04-destructuring-spread/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
-
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
-1. **Props Komponen React**: Hampir 100% komponen fungsi di React menerima input props melalui destructuring: `function Tombol({ label, onClick, variant = 'primary' })`.
-2. **State Updates di Redux / Zustand**: Mengupdate sebagian properti state dengan pola immutable: `return { ...state, saldo: state.saldo + action.amount }`.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Nama Variabel Destructuring Harus Cocok**: Berbeda dengan Array yang berbasis urutan posisi index, Destructuring Objek berbasis **nama kunci (*key name*)**. Jika nama kunci salah ketik, variabel akan bernilai `undefined`.
+1. **Komponen UI Modern (Props Handling di React)**:
+   ```javascript
+   function Card({ title, description, badge = "New" }) {
+     return `<div class="card"><h3>${title}</h3><span>${badge}</span></div>`;
+   }
+   ```
+2. **Immutability pada State Management**: Mengubah satu properti dalam state besar tanpa memutasi objek state lama di Redux/Zustand.
+
+### ⚠️ Common Pitfalls
+
+- **Salah Memahami Urutan Sintaks Aliasing**: Menulis `{ namaBaru: namaPropertiAsli }` adalah terbalik. Urutannya selalu `{ namaPropertiAsli: namaBaru }`.
+- **Destructuring Objek yang Bernilai `undefined`**: Menulis `const { nama } = res.user;` saat `res.user` bernilai `undefined` akan memicu crash `TypeError: Cannot destructure property 'nama' of undefined`. Lindungi dengan nilai default: `const { nama } = res.user || {};`.
 
 ### 🌟 Best Practice
-* Gunakan Destructuring pada parameter fungsi untuk menghindari pemanggilan `props.nama`, `props.email` yang berulang-ulang.
-* Gunakan Object Spread Operator untuk mempertahankan prinsip *Immutability* saat memodifikasi objek.
+
+- Gunakan destructuring parameter fungsi jika sebuah fungsi menerima objek konfigurasi.
+- Selalu sediakan nilai fallback default pada variabel penting yang diekstrak dari sumber data dinamis (API atau input form).
 
 ---
 
-## 6. ✍️ Latihan Mandiri
-1. Diberikan objek `buku = { judul: 'Atomic Habits', penulis: 'James Clear', rating: 4.8 }`. Lakukan destructuring untuk mengambil `judul` dan ganti nama `penulis` menjadi `pembuat`.
-2. Buat objek baru `bukuDiskon` yang menyalin seluruh properti buku tersebut dan menambahkan properti `hargaDiskon: 80000` menggunakan spread operator.
+## 5. ✍️ Latihan Mandiri
+
+1. Diberikan objek `buku = { judul: 'Clean Code', pengarang: 'Robert Martin', terbit: 2008 }`. Lakukan destructuring untuk mengambil `judul`, lalu ganti nama variabel `pengarang` menjadi `penulis`.
+2. Buat objek `bukuEdisiBaru` yang menyalin seluruh properti `buku` menggunakan Spread Operator dan menimpa tahun `terbit` menjadi `2024`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
+
 - ⬅️ **Sebelumnya:** [09.3 - Keyword This](../03-keyword-this/README.md)
 - ➡️ **Selanjutnya:** [09.5 - Object Lanjutan & Prototype](../05-advanced-objects/README.md)
 - 🏠 **Daftar Isi Modul 01:** [README Modul 01](../../README.md)

@@ -2,9 +2,14 @@
 
 Selamat datang di direktori **Projects**! Direktori ini adalah tempat implementasi nyata (_real-world implementation_) yang merangkum dan mengintegrasikan seluruh teori pembelajaran dari **Modul 01 hingga Modul 08** ke dalam produk aplikasi web yang fungsional, responsif, dan siap rilis.
 
+Direktori ini dibagi menjadi dua kategori utama:
+
+1. **Capstone Application (Skala Penuh)**: Aplikasi web modern komprehensif siap rilis produksi.
+2. **Mini Projects (Latihan Interaktif WPU)**: Kumpulan aplikasi mini berbasis logika CLI dan manipulasi DOM interaktif.
+
 ---
 
-## 📚 Daftar Projek
+## 📚 Daftar Kategori Projek
 
 ### 1. [OmniStore Pro — Modern E-Commerce Storefront & Detail](omnistore-pro/README.md)
 
@@ -15,25 +20,42 @@ Selamat datang di direktori **Projects**! Direktori ini adalah tempat implementa
 
 ---
 
+### 2. [Mini Projects — Kumpulan Latihan Logika & DOM Interaktif (WPU Series)](mini-projects/README.md)
+
+Kumpulan 6 proyek latihan terpadu untuk mengasah logika komputasi dan manipulasi antarmuka web:
+
+1. **[01 - Juragan Angkot](mini-projects/01-juragan-angkot/README.md)**: Simulasi logika armada transportasi (Loops & Branching).
+2. **[02 - Suit Jawa CLI](mini-projects/02-suit-jawa-cli/README.md)**: Game klasik Suit Jawa berbasis teks console.
+3. **[03 - Tebak Angka CLI](mini-projects/03-tebak-angka-cli/README.md)**: Game tebak angka 1–10 dengan batas peluang.
+4. **[04 - Color Picker](mini-projects/04-color-picker/README.md)**: Manipulasi warna background dengan tombol acak dan slider RGB real-time.
+5. **[05 - Suit Jawa GUI](mini-projects/05-suit-jawa-gui/README.md)**: Game Suit Jawa grafis dengan animasi putar gambar dan skor.
+6. **[06 - Image Gallery](mini-projects/06-image-gallery/README.md)**: Galeri thumbnail foto dengan event delegation dan transisi fade-in.
+
+- **Dokumentasi Lengkap**: [Buka Direktori Mini Projects](mini-projects/README.md)
+
+---
+
 ## 🛠️ Cara Menjalankan Projek
 
-Setiap projek di dalam direktori ini memiliki konfigurasi dan dependensi mandiri:
+Setiap projek di dalam direktori ini memiliki konfigurasi mandiri:
+
+### Menjalankan OmniStore Pro:
 
 ```bash
-# 1. Masuk ke folder projek
 cd projects/omnistore-pro
-
-# 2. Pasang dependensi
 npm install
+npm run dev      # Server dev di http://localhost:5173
+```
 
-# 3. Jalankan development server
-npm run dev
+### Menjalankan Mini Projects:
 
-# 4. Bangun versi produksi
-npm run build
+```bash
+# Contoh menjalankan game atau simulasi CLI di terminal:
+node projects/mini-projects/01-juragan-angkot/example.js
+node projects/mini-projects/02-suit-jawa-cli/example.js
 
-# 5. Preview hasil build produksi
-npm run preview
+# Untuk projek GUI (Color Picker, Suit Jawa GUI, Image Gallery):
+# Buka file index.html masing-masing sub-folder langsung di browser Anda.
 ```
 
 ---

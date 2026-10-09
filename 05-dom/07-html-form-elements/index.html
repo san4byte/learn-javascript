@@ -1,32 +1,144 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <title>07 - HTML Form Elements</title>
-  <style>
-    body { font-family: sans-serif; max-width: 500px; margin: 2rem auto; }
-    .form-group { margin-bottom: 1rem; }
-    label { display: block; margin-bottom: 0.25rem; }
-    input[type="text"] { width: 100%; padding: 0.5rem; box-sizing: border-box; }
-    button { padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; cursor: pointer; border-radius: 4px; }
-    .result { margin-top: 1.5rem; padding: 1rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 4px; display: none; }
-  </style>
-</head>
-<body>
-  <h1>Manipulasi HTML Form Elements</h1>
-  <form id="comment-form">
-    <div class="form-group">
-      <label for="nama">Nama:</label>
-      <input type="text" id="nama" name="nama" required>
-    </div>
-    <div class="form-group">
-      <label for="pesan">Pesan Komentar:</label>
-      <input type="text" id="pesan" name="pesan" required>
-    </div>
-    <button type="submit" id="btn-kirim">Kirim Komentar</button>
-  </form>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>07 - HTML Form Elements</title>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        max-width: 580px;
+        margin: 30px auto;
+        padding: 0 20px;
+        color: #1e293b;
+        line-height: 1.5;
+      }
+      .form-card {
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 24px;
+        background: #f8fafc;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        font-size: 0.9rem;
+      }
+      input[type="text"],
+      input[type="email"],
+      select,
+      textarea {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        font-size: 0.95rem;
+      }
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-container {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      button {
+        padding: 10px 18px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-primary {
+        background: #2563eb;
+        color: white;
+      }
+      .btn-secondary {
+        background: #e2e8f0;
+        color: #334155;
+      }
+      .result-box {
+        margin-top: 20px;
+        padding: 16px;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: 6px;
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>07 - HTML Form Elements</h1>
+    <p>
+      Pengelolaan nilai input form, event submit, FormData API, dan validasi.
+    </p>
 
-  <div id="output" class="result"></div>
-  <script src="example.js"></script>
-</body>
+    <div class="form-card">
+      <form id="comment-form">
+        <div class="form-group">
+          <label for="nama">Nama Lengkap:</label>
+          <input
+            type="text"
+            id="nama"
+            name="nama"
+            required
+            placeholder="Contoh: Joko Santoso"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="kategori">Kategori Pesan:</label>
+          <select id="kategori" name="kategori">
+            <option value="pertanyaan">Pertanyaan Umum</option>
+            <option value="saran">Saran &amp; Masukan</option>
+            <option value="bug">Laporan Masalah (Bug)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="pesan">Pesan Komentar:</label>
+          <textarea
+            id="pesan"
+            name="pesan"
+            rows="3"
+            required
+            placeholder="Tuliskan pesan Anda..."
+          ></textarea>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="langganan" name="langganan" value="ya" />
+          <label for="langganan" style="margin-bottom: 0; font-weight: normal"
+            >Langganan buletin berkala</label
+          >
+        </div>
+
+        <div class="btn-container">
+          <button type="submit" id="btn-kirim" class="btn-primary">
+            Kirim Pesan
+          </button>
+          <button type="reset" id="btn-reset" class="btn-secondary">
+            Reset Form
+          </button>
+        </div>
+      </form>
+
+      <div id="output" class="result-box"></div>
+    </div>
+
+    <script src="./example.js"></script>
+  </body>
 </html>

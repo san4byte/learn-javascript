@@ -2,135 +2,164 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami konsep Variable Scope (lingkup visibilitas variabel).
-> - **Kapan Digunakan**: Memahami perbedaan Global Scope, Function/Local Scope, dan Block Scope.
-> - **Aturan Praktis**: Minimalkan pembuatan variabel global sebisa mungkin.
+> - **Fungsi Utama**: Mengontrol area visibilitas (_accessibility_) dan masa hidup (_lifetime_) dari variabel yang dideklarasikan di dalam program.
+> - **Kapan Digunakan**: Mengisolasi state internal fungsi agar tidak terjadi tabrakan nama (_name collision_) dan mencegah kebocoran data sensitif ke ranah publik.
+> - **Aturan Praktis**: Perlakukan lingkup global sebagai zona terlarang untuk variabel aplikasi reguler. Manfaatkan _Block Scope_ `{}` dengan `const`/`let` untuk mengurung variabel sedekat mungkin dengan tempat ia digunakan.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami konsep Variable Scope (lingkup visibilitas variabel).
-- Memahami perbedaan Global Scope, Function/Local Scope, dan Block Scope.
-- Memahami konsep Scope Chain (bagaimana JavaScript mencari variabel).
+- Memahami hierarki 3 tingkatan ruang lingkup variabel: _Global Scope_, _Function Scope_, dan _Block Scope_.
+- Menguasai cara kerja algoritma _Scope Chain_ dalam menyelesaikan referensi variabel dari dalam ke luar (_inside-out lookup_).
+- Mengetahui fenomena _Variable Shadowing_ (variabel lokal menutupi variabel luar yang bernama identik).
+- Mencegah bahaya kebocoran variabel global tanpa sengaja (_accidental global leakage_).
+- Memahami relasi antara siklus hidup scope dengan pembersihan memori otomatis (_Garbage Collection_).
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Scope Chain seperti **kaca film mobil satu arah**: Orang di dalam mobil (fungsi dalam) bisa dengan jelas melihat ke jalan raya di luar (global scope). Namun orang di jalan raya di luar (global scope) sama sekali tidak bisa melihat apa yang ada di dalam mobil (local scope).
-
-**Variable Scope** menentukan area di mana suatu variabel dapat diakses atau "terlihat" di dalam kode kita.
-
-### 3 Jenis Scope di JavaScript:
-
-1. **Global Scope**: Variabel yang dideklarasikan di luar semua fungsi atau blok kurung kurawal. Dapat diakses dari baris mana saja di seluruh file.
-2. **Function / Local Scope**: Variabel yang dideklarasikan di dalam suatu fungsi. Hanya dapat diakses dari dalam fungsi tersebut.
-3. **Block Scope (ES6 `let` & `const`)**: Variabel yang dideklarasikan di dalam tanda kurung kurawal `{}` (misal di dalam loop atau kondisi `if`).
-
-### ⛓️ Konsep Scope Chain:
-
-Jika sebuah variabel dipanggil di dalam suatu fungsi:
-
-1. JavaScript mencari variabel tersebut di dalam **lingkup lokal fungsi itu sendiri**.
-2. Jika tidak ditemukan, JavaScript akan **melihat ke lingkup satu tingkat di atasnya (luar)**.
-3. Proses ini terus berlanjut hingga ke **Global Scope**. Jika di Global Scope tetap tidak ditemukan, JavaScript melempar `ReferenceError: x is not defined`.
+> Scope Chain seperti **kaca film mobil satu arah (_one-way tint glass_)**:
+>
+> - Orang yang duduk di dalam kabin mobil (**lingkup fungsi lokal**) dapat melihat pemandangan jalan raya dan pohon-pohon di luar mobil dengan sangat jelas (**lingkup global / outer scope**).
+> - Sebaliknya, pejalan kaki yang berdiri di jalan raya (**lingkup global**) sama sekali tidak dapat melihat dokumen atau dompet yang diletakkan di dalam kursi mobil (**variabel terisolasi di dalam local scope**).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Perbandingan Tingkatan Scope
+
+| Tingkatan Scope    | Wilayah Deklarasi                   | Visibilitas Akses                 | Siklus Hidup Variabel                          |
+| :----------------- | :---------------------------------- | :-------------------------------- | :--------------------------------------------- |
+| **Global Scope**   | Di luar semua fungsi & blok kurawal | Seluruh bagian aplikasi / file    | Tetap hidup selama aplikasi/halaman aktif      |
+| **Function Scope** | Di dalam badan `function() {}`      | Hanya di dalam fungsi itu sendiri | Dihancurkan setelah fungsi selesai dieksekusi  |
+| **Block Scope**    | Di dalam tanda kurung kurawal `{}`  | Hanya di dalam blok `{}` terdekat | Dihancurkan saat alur keluar dari blok kurawal |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Tiga Tingkatan Scope di JavaScript
+
+JavaScript membagi ruang lingkup variabel ke dalam tiga lapisan konsentris:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const globalVar = "Dunia"; // Global Scope
 
-console.log('--- 1. Demonstrasi Scope Chain ---');
-const variabelGlobal = 'Saya berada di Global Scope';
-
-function fungsiLuar() {
-  const variabelLokalLuar = 'Saya berada di Fungsi Luar';
-
-  function fungsiDalam() {
-    const variabelLokalDalam = 'Saya berada di Fungsi Dalam';
-
-    // fungsiDalam dapat mengakses variabelnya sendiri, variabel fungsi luar, dan global:
-    console.log('Akses dari dalam:');
-    console.log('- ' + variabelLokalDalam);
-    console.log('- ' + variabelLokalLuar); // Scope chain ke fungsiLuar
-    console.log('- ' + variabelGlobal); // Scope chain ke Global
+function tesFungsi() {
+  const localVar = "Kota"; // Function Scope
+  if (true) {
+    const blockVar = "Rumah"; // Block Scope
   }
-
-  fungsiDalam();
-  // console.log(variabelLokalDalam); // ERROR: tidak bisa diakses dari luar
 }
+```
 
-fungsiLuar();
+#### 2. Mekanisme Pencarian Variabel: Scope Chain
 
-console.log(
-  '\n--- 2. Variable Shadowing (Variabel Menutupi Variabel Luar) ---'
-);
-let mataUang = 'IDR';
+Saat variabel diakses, JavaScript melakukan pencarian bertingkat dari lapisan paling dalam ke luar (_lexical scope resolution_):
 
-function konversi() {
-  let mataUang = 'USD'; // Shadowing: variabel lokal menutupi variabel global
-  console.log('Mata uang di dalam fungsi:', mataUang); // USD
+1. Periksa ruang lingkup lokal saat ini.
+2. Jika tidak ada, naik satu tingkat ke ruang lingkup induk (_parent function_).
+3. Lanjutkan hingga mencapai _Global Scope_.
+4. Jika di tingkat global tetap tidak ditemukan, mesin melempar `ReferenceError`.
+
+#### 3. Penutupan Identifier: Variable Shadowing
+
+Ketika variabel di dalam lingkup anak memiliki nama pengenal (_identifier_) yang persis sama dengan variabel di lingkup induk, variabel anak akan "membayangi" atau menutupi variabel induk tanpa mengubah nilai induknya:
+
+```javascript
+let tema = "terang";
+function gantiTema() {
+  let tema = "gelap"; // Shadowing
+  console.log(tema); // 'gelap'
 }
+gantiTema();
+console.log(tema); // 'terang' (asli tidak terpengaruh)
+```
 
-konversi();
-console.log('Mata uang di luar fungsi :', mataUang); // Tetap IDR
+#### 4. Isolasi Ketat Block Scope pada `let` dan `const`
+
+Setiap kurung kurawal `{}` pada `if`, `for`, `while`, atau sekadar blok terisolasi `{ ... }` mengunci variabel modern:
+
+```javascript
+{
+  const kunci = "XYZ";
+}
+// console.log(kunci); // ReferenceError: kunci is not defined
+```
+
+#### 5. Bahaya Polusi Global Namespace & Accidental Global
+
+Menetapkan nilai ke variabel yang belum pernah dideklarasikan dengan `const`, `let`, atau `var` akan secara otomatis menjadikannya properti objek global (`window` atau `globalThis`):
+
+```javascript
+function bocor() {
+  // Tanpa deklarasi (const/let), ini membuat variabel global baru!
+  // dataBocor = 123;
+}
+```
+
+#### 6. Manajemen Garbage Collection & Masa Hidup Variabel
+
+Variabel lokal yang dideklarasikan di dalam fungsi akan otomatis ditandai untuk dihapus dari RAM oleh _Garbage Collector_ segera setelah fungsi tersebut selesai dieksekusi, selama tidak ada _closure_ yang masih mereferensikannya.
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh implementasi demonstrasi penelusuran 3 tingkat _Scope Chain_, efek _Variable Shadowing_, isolasi _Block Scope_ `{}` terhadap variabel modern, serta pencegahan bahaya kebocoran memori global telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Jalankan demonstrasi secara langsung di terminal Anda:
+
+```bash
+node 01-fundamentals/07-functions/03-scope/example.js
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
-
-```text
---- 1. Demonstrasi Scope Chain ---
-Akses dari dalam:
-- Saya berada di Fungsi Dalam
-- Saya berada di Fungsi Luar
-- Saya berada di Global Scope
-
---- 2. Variable Shadowing (Variabel Menutupi Variabel Luar) ---
-Mata uang di dalam fungsi: USD
-Mata uang di luar fungsi : IDR
-```
-
----
-
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Mencegah Tabrakan Nama Variabel (Name Collision)**: Menggunakan nama variabel umum seperti `counter`, `temp`, atau `index` di dalam beberapa fungsi berbeda tanpa khawatir saling merusak nilai satu sama lain.
-2. **Modul Terenkapsulasi**: Menyembunyikan kunci API rahasia di dalam scope fungsi terisolasi.
+1. **Enkapsulasi Kunci API Rahasia**: Mengisolasi token otentikasi di dalam fungsi konfigurasi modul agar tidak dapat dibaca atau dimodifikasi oleh skrip injeksi pihak ketiga dari konsol browser.
+2. **Penamaan Variabel Looping Independen**: Menggunakan `let i = 0` pada puluhan fungsi berbeda tanpa saling merusak counter iterasi satu sama lain.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Polusi Global Scope (Global Namespace Pollution)**: Mendeklarasikan terlalu banyak variabel global akan memperbesar risiko konflik nama variabel dan memboroskan memori karena variabel global tidak pernah dibersihkan oleh _Garbage Collector_ selama halaman aktif.
-- **Lupa Keyword `let/const` (Accidental Global)**: Menulis `angka = 10` tanpa `let` atau `const` akan membuat JavaScript secara otomatis menjadikannya variabel global window, sumber bug yang sangat berbahaya.
+- **Mengira Objek Global Bersih dari Konflik**: Menggunakan variabel global umum seperti `name`, `status`, atau `data` berisiko menimpa properti bawaan peramban (`window.name` sudah ada sejak standar awal web).
+- **Shadowing yang Membingungkan Pengembang**: Melakukan shadowing variabel penting yang membuat rekan tim salah mengira variabel mana yang sedang diubah.
 
 ### 🌟 Best Practice
 
-- Minimalkan pembuatan variabel global sebisa mungkin.
-- Selalu gunakan deklarasi eksplisit (`const` atau `let`) di setiap pembuatan variabel.
+- Selalu aktifkan Strict Mode (`'use strict';`) atau gunakan modul ES untuk mencegah pembuatan variabel global yang tidak disengaja.
+- Deklarasikan variabel sedekat mungkin dengan baris tempat ia pertama kali dikonsumsi.
+- Hindari membuat variabel di ranah global kecuali untuk konfigurasi tingkat aplikasi utama.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Analisis apakah kode berikut menghasilkan error dan jelaskan alasannya:
+1. Analisis alur kode berikut: tentukan apa output yang dicetak oleh masing-masing `console.log()` dan jelaskan mengapa:
    ```javascript
-   function uji() {
-     let pesan = 'Halo Dunia';
+   let angka = 10;
+   function kalkulasi() {
+     let angka = 20;
+     if (true) {
+       let angka = 30;
+       console.log("Log A:", angka);
+     }
+     console.log("Log B:", angka);
    }
-   uji();
-   console.log(pesan);
+   kalkulasi();
+   console.log("Log C:", angka);
    ```
-2. Buatlah contoh fungsi bersarang 3 tingkat yang mendemonstrasikan pencarian Scope Chain.
+2. Buat sebuah fungsi yang mendemonstrasikan bahwa variabel yang dibuat di dalam blok perulangan `for (let k = 0; ...)` tidak dapat diakses di baris setelah perulangan tersebut selesai.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [07.2 - Parameter dan Argumen](../02-parameters-arguments/README.md)
 - ➡️ **Selanjutnya:** [07.4 - Closures dan Lexical Scope](../04-closures/README.md)

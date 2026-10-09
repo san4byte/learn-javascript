@@ -1,182 +1,188 @@
-# ⚡ Modul 08 - Sub 02: Modern Frontend Tooling dengan Vite 8 & Rolldown
+# 02 - Modern Frontend Tooling dengan Vite 8 & Rolldown
 
-Selamat datang di sub-modul **Vite**! Pada materi ini, kita membangun ulang aplikasi modular (*Super App*) dari modul Webpack ke dalam ekosistem modern menggunakan **Vite 8**, bundler generasi baru **Rolldown** (berbasis Rust), dan styling utilitas modern **Tailwind CSS v4**.
-
----
-
-## 🎯 Capstone Project & Topik Pembelajaran
-
-1. **Arsitektur No-Bundling Dev Server:** Memanfaatkan browser Native ES Modules (`<script type="module">`) sehingga server menyala seketika dan kompilasi modul dilakukan secara *on-demand*.
-2. **Multi-Page Application (MPA) di Vite:** Memisahkan setiap layanan aplikasi ke dalam file HTML fisik mandiri (`index.html`, `counter/`, `calculator/`, `jokes/`).
-3. **State Management Reaktif Mandiri (`Proxy`):** Membangun konsep reaktivitas mirip React/Vue hanya dengan belasan baris JavaScript murni menggunakan objek bawaan `Proxy`.
-4. **Pemisahan Tanggung Jawab (*Separation of Concerns*):** Memisahkan fungsi murni matematika (*Utils*), interaksi DOM form (*CalculatorService*), sistem notifikasi error (*AlertService*), dan konsumsi API asinkron (*JokesService*).
-5. **Integrasi Tailwind CSS v4:** Menggunakan `@tailwindcss/vite` resmi tanpa memerlukan file konfigurasi `postcss.config.js` atau `tailwind.config.js`.
-6. **Solusi Anti-FOUC (*Flash of Unstyled Content*):** Menghilangkan kedipan layout saat navigasi halaman fisik dengan `<link rel="stylesheet">` di `<head>`.
-7. **Kompilasi Produksi dengan Rolldown:** Mengonfigurasi `vite.config.js` multi-input entry point untuk menghasilkan berkas rilis produksi yang terminifikasi dan teroptimasi.
+> ⏱️ **TL;DR (Ringkasan Cepat):**
+>
+> - **Fungsi Utama**: Alat perkakas frontend generasi baru (_next-generation tooling_) yang memanfaatkan modul bawaan browser (_Native ES Modules_) untuk startup server seketika dan bundler berbasis Rust (_Rolldown_) untuk kompilasi produksi super cepat.
+> - **Kapan Digunakan**: Seluruh proyek web frontend modern berbasis Vanilla JavaScript, React, Vue, Svelte, atau arsitektur Multi-Page Application (MPA).
+> - **Aturan Praktis**: Manfaatkan `import.meta.env` dengan awalan `VITE_` untuk variabel lingkungan klien. Letakkan pemanggilan CSS Tailwind di dalam tag `<head>` dokumen HTML untuk mengeliminasi kedipan tampilan (_Anti-FOUC_).
 
 ---
 
-## 📁 Struktur Folder Proyek
+## 1. 🎯 Tujuan Belajar
 
-```text
-08-build-tools/02-vite/
-├── .env                       # Variabel lingkungan lokal (prefix VITE_)
-├── .env.example               # Template environment variables
-├── index.html                 # Halaman 1: Dashboard Menu Utama
-├── package.json               # Konfigurasi npm ("type": "module")
-├── vite.config.js             # Konfigurasi server, alias '@', & rolldownOptions
-├── counter/
-│   └── index.html             # Halaman 2: Halaman Counter State
-├── calculator/
-│   └── index.html             # Halaman 3: Halaman Kalkulator Sakti
-├── jokes/
-│   └── index.html             # Halaman 4: Halaman Jokes Receh (Modal)
-└── src/
-    ├── main.js                # Entry script Dashboard (animasi 3D logo & env)
-    ├── counter-page.js        # Entry script Halaman Counter
-    ├── calculator-page.js     # Entry script Halaman Kalkulator
-    ├── jokes-page.js          # Entry script Halaman Jokes
-    ├── style.css              # @import 'tailwindcss' & styling 3D logo
-    ├── services/
-    │   ├── alert.service.js   # Class penanganan kotak alert error
-    │   ├── calculator.service.js # Class penanganan input form kalkulator & keyboard Enter
-    │   └── jokes.service.js   # Class penanganan pop-up modal jokes
-    ├── utils/
-    │   ├── state-counter.js   # Mini-state reactive helper menggunakan JavaScript Proxy
-    │   ├── parse-input.js     # Helper sanitasi string & konversi Number
-    │   └── cek-input-valid.js # Helper validasi tipe angka murni
-    └── assets/                # Aset gambar & vektor
-```
+- Memahami arsitektur _No-Bundling Dev Server_ berbasis Native ES Modules pada browser modern.
+- Menguasai pembuatan arsitektur _Multi-Page Application_ (MPA) di Vite (`index.html`, `counter/`, `calculator/`, `jokes/`).
+- Membangun mekanisme _State Management_ reaktif mandiri menggunakan objek standar JavaScript `Proxy`.
+- Menerapkan prinsip _Separation of Concerns_ (pemisahan logika murni matematika, penanganan DOM, alert service, dan asinkron API).
+- Mengintegrasikan styling utilitas modern Tailwind CSS v4 via plugin resmi `@tailwindcss/vite`.
+- Mengatasi masalah kedipan tampilan halaman (_Flash of Unstyled Content / FOUC_).
+- Mengonfigurasi build produksi multi-entry menggunakan standar baru bundler Rust `Rolldown`.
 
 ---
 
-## 🧠 Catatan Khusus & Pembahasan Konsep Penting
+## 2. 📖 Penjelasan Konsep & Arsitektur
 
-### 1. State Management Reaktif Menggunakan JavaScript `Proxy`
-Di framework seperti React atau Vue, saat nilai data (*state*) diubah, tampilan layar (DOM) otomatis ter-update tanpa kita mengetik `element.innerText` manual. 
+### 🎭 Analogi Dunia Nyata
 
-Di proyek ini, kita membuktikan bahwa konsep tersebut **bisa dibuat di JavaScript murni** menggunakan objek standar [`Proxy`](file:///home/jokosantoso/code/learn-javascript/03-standard-library/14-proxy/README.md):
+> - **Bundler Tradisional (Webpack)** seperti **mencetak dan menjilid seluruh ensiklopedia 1.000 halaman menjadi satu buku tebal sebelum Anda boleh membaca halaman 1**: Pembaca harus menunggu mesin mencetak seluruh bab hingga selesai (_bundling bottleneck_).
+> - **Modern Tooling (Vite)** seperti **membaca artikel web digital sesuai permintaan (_on-demand_)**: Pembaca membuka bab yang diinginkan, dan server hanya mengirimkan halaman tersebut saat itu juga tanpa perlu mencetak halaman lain yang belum dibuka.
+
+---
+
+### Tabel Perbandingan Arsitektur: Tradisional Bundler vs Vite
+
+| Fitur                    | Bundler Tradisional (Webpack)           | Modern Tooling (Vite)                                   |
+| :----------------------- | :-------------------------------------- | :------------------------------------------------------ |
+| **Penyalaan Dev Server** | Mem-bundle seluruh file terlebih dahulu | Instan (_No-bundling_, memanfaatkan browser native ESM) |
+| **Pembaruan Kode (HMR)** | Kompilasi ulang graf modul              | Pembaruan instan hanya pada modul yang dimodifikasi     |
+| **Kompilasi Produksi**   | Node.js JavaScript bundler              | Engine Rust performa tinggi (_Rolldown_)                |
+| **Konfigurasi Awal**     | Ekstensif & membutuhkan banyak loaders  | Sangat minimalis & siap pakai (_Zero-config defaults_)  |
+| **Penyajian HTML**       | Ditangani plugin JavaScript             | Berkas `index.html` bertindak sebagai entry point utama |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Arsitektur Dev Server No-Bundling Berbasis Native ESM
+
+Vite menyajikan kode sumber langsung ke browser menggunakan `<script type="module">`. Kompilasi modul dilakukan secara dinamis hanya ketika browser meminta modul tersebut (_on-demand compilation_).
+
+#### 2. Multi-Page Application (MPA) di Vite
+
+Setiap halaman web memiliki dokumen HTML fisik mandiri dengan entry script-nya sendiri:
+
+- `index.html` $\rightarrow$ `src/main.js` (Dashboard)
+- `counter/index.html` $\rightarrow$ `src/counter-page.js` (State counter)
+- `calculator/index.html` $\rightarrow$ `src/calculator-page.js` (Kalkulator)
+- `jokes/index.html` $\rightarrow$ `src/jokes-page.js` (Modal jokes)
+
+#### 3. State Management Reaktif Mandiri via `Proxy`
+
+Membuat reaktivitas data mirip React/Vue menggunakan objek bawaan JavaScript [`Proxy`](file:///home/jokosantoso/code/learn-javascript/03-standard-library/14-proxy/README.md):
 
 ```javascript
-// src/utils/state-counter.js
 export function stateCounter(initialVal, renderFunc) {
   const state = new Proxy(initialVal, {
-    set(target, property, value) {
-      target[property] = value;
-      renderFunc(target); // ⚡ Otomatis render ulang UI saat nilai berubah!
+    set(target, prop, value) {
+      target[prop] = value;
+      renderFunc(target); // Otomatis picu re-render DOM saat state dimutasi!
       return true;
     },
   });
-
-  renderFunc(state); // Render pertama saat dibuka
+  renderFunc(state);
   return state;
 }
 ```
 
-Penggunaannya di [src/counter-page.js](file:///home/jokosantoso/code/learn-javascript/08-build-tools/02-vite/src/counter-page.js):
-```javascript
-const state = stateCounter({ count: 0 }, (currentState) => {
-  button.textContent = `Hitungan: ${currentState.count} (Reaktif!)`;
-});
+#### 4. Pemisahan Tanggung Jawab (_Separation of Concerns_)
 
-button.addEventListener('click', () => {
-  state.count += 1; // Cukup mutasi data, UI otomatis berubah seketika!
-});
-```
+Arsitektur kode dibagi ke dalam lapisan-lapisan independen:
 
----
+- **`src/utils/`**: Fungsi murni sanitasi input (`parseInput.js`) dan validasi tipe (`cekInputValid.js`).
+- **`src/services/`**: Kelas pengendali logika interaksi DOM formulir (`calculator.service.js`) dan request HTTP jokes (`jokes.service.js`).
 
-### 2. Penanganan Bug Input Parsing: `Number('') === 0`
-Di JavaScript murni, terdapat perilaku unik di mana string kosong dikonversi menjadi angka `0`:
-```javascript
-Number(""); // Hasilnya 0, bukan NaN!
-```
-Pada implementasi awal Webpack, jika kolom input dikosongkan oleh pengguna, aplikasi keliru menganggapnya sebagai angka `0` (bukan error).
+#### 5. Integrasi Tailwind CSS v4 (`@tailwindcss/vite`)
 
-Di proyek ini, kita memperbaiki masalah tersebut di [src/utils/parse-input.js](file:///home/jokosantoso/code/learn-javascript/08-build-tools/02-vite/src/utils/parse-input.js):
-```javascript
-export const parseInput = (...inputs) => {
-  return inputs.map((str) => (str.trim() === '' ? '' : Number(str)));
-};
-```
-Jika input kosong atau hanya berisi spasi, ia tetap dikembalikan sebagai string kosong `''`, sehingga fungsi [src/utils/cek-input-valid.js](file:///home/jokosantoso/code/learn-javascript/08-build-tools/02-vite/src/utils/cek-input-valid.js) akan mendeteksinya sebagai tipe non-number dan memicu pesan error yang tepat: `"Perhatian: (kolom kosong) bukan angka!"`.
+Menggunakan pustaka resmi `@tailwindcss/vite` tanpa memerlukan berkas konfigurasi lawas `postcss.config.js` atau `tailwind.config.js`. Cukup pasang plugin di `vite.config.js` dan panggil `@import "tailwindcss";` di CSS.
 
----
+#### 6. Solusi Pencegahan Anti-FOUC pada MPA
 
-### 3. Mengatasi FOUC (*Flash of Unstyled Content*) pada MPA
-Pada arsitektur Multi-Page Application (MPA), perpindahan antar halaman fisik sempat memicu kedipan (*glitch/white blink*) karena browser merender dokumen HTML sebelum JavaScript di bawah `<body>` selesai menginjeksi CSS.
+Untuk mencegah kedipan layout saat transisi antar halaman fisik di arsitektur MPA, berkas CSS diimpor langsung di dalam tag `<head>`:
 
-**Solusinya:**
-Vite mendukung pemanggilan stylesheet langsung di dalam `<head>`:
 ```html
 <head>
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 ```
-Dengan menaruhnya di `<head>`, berkas CSS Tailwind menjadi *render-blocking*, sehingga browser menjamin antarmuka sudah memiliki gaya sebelum ditampilkan ke layar.
 
----
+#### 7. Kompilasi Produksi dengan Rolldown & Environment Variables
 
-### 4. Transisi dari Rollup ke Rolldown di Vite 8
-Pada file [vite.config.js](file:///home/jokosantoso/code/learn-javascript/08-build-tools/02-vite/vite.config.js), properti lama `rollupOptions` berstatus `@deprecated` karena tim Vite (Evan You) resmi mengadopsi bundler baru berbasis bahasa Rust bernama **Rolldown**.
+Pada Vite 8, properti `rolldownOptions` menggantikan `rollupOptions` untuk mengatur berkas input multi-halaman:
 
-Kita mengonfigurasi multi-entry point menggunakan standar terbaru `rolldownOptions.input`:
 ```javascript
-export default defineConfig({
-  plugins: [tailwindcss()],
-  server: { port: 3000, open: true },
-  resolve: {
-    alias: { '@': path.resolve(__dirname, './src') },
-  },
-  build: {
-    outDir: 'dist',
-    sourcemap: true,
-    rolldownOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html'),
-        counter: path.resolve(__dirname, 'counter/index.html'),
-        calculator: path.resolve(__dirname, 'calculator/index.html'),
-        jokes: path.resolve(__dirname, 'jokes/index.html'),
-      },
-    },
-  },
-});
+build: {
+  rolldownOptions: {
+    input: {
+      main: path.resolve(__dirname, 'index.html'),
+      counter: path.resolve(__dirname, 'counter/index.html'),
+      calculator: path.resolve(__dirname, 'calculator/index.html'),
+      jokes: path.resolve(__dirname, 'jokes/index.html'),
+    }
+  }
+}
 ```
 
----
-
-### 5. Manajemen Variabel Lingkungan (`import.meta.env`)
-Vite tidak menggunakan `process.env` milik Node.js:
-- Semua variabel klien disimpan di [.env](file:///home/jokosantoso/code/learn-javascript/08-build-tools/02-vite/.env) dan **wajib** diawali dengan `VITE_` demi alasan keamanan.
-- Variabel bawaan otomatis: `import.meta.env.MODE`, `import.meta.env.DEV`, dan `import.meta.env.PROD`.
+Variabel lingkungan dibaca melalui `import.meta.env.VITE_NAMA_VARIABEL`.
 
 ---
 
-## 🚀 Cara Menjalankan Proyek
+## 3. 💻 Struktur Proyek & Panduan Eksekusi
 
-Pastikan Anda berada di direktori `08-build-tools/02-vite`:
+Struktur berkas lengkap proyek modern Vite berlokasi di direktori [08-build-tools/02-vite/](file:///home/jokosantoso/code/learn-javascript/08-build-tools/02-vite):
+
+```text
+08-build-tools/02-vite/
+├── .env                       # Variabel lingkungan (VITE_)
+├── index.html                 # Halaman 1: Dashboard Utama
+├── package.json               # Konfigurasi npm ("type": "module")
+├── vite.config.js             # Konfigurasi server, alias '@', & rolldownOptions
+├── counter/index.html         # Halaman 2: State Counter Reaktif
+├── calculator/index.html      # Halaman 3: Kalkulator
+├── jokes/index.html           # Halaman 4: Modal Jokes Asinkron
+└── src/
+    ├── main.js                # Entry script Dashboard
+    ├── style.css              # Styling Tailwind CSS v4
+    ├── services/              # AlertService, CalculatorService, JokesService
+    └── utils/                 # stateCounter (Proxy), parseInput, cekInputValid
+```
+
+### Menjalankan Proyek
+
+Masuk ke folder proyek dan jalankan perintah npm:
 
 ```bash
 cd 08-build-tools/02-vite
 
-# 1. Pasang dependensi
-npm install
-
-# 2. Jalankan development server lokal (port 3000)
+# 1. Menjalankan development server instan (port 3000)
 npm run dev
 
-# 3. Bangun berkas bundle rilis produksi (Rolldown)
+# 2. Membangun bundle produksi teroptimasi via Rolldown
 npm run build
 
-# 4. Preview hasil rilis produksi di server lokal
+# 3. Meninjau preview hasil rilis produksi lokal
 npm run preview
 ```
 
 ---
 
-## 🧭 Navigasi Materi
+## 4. 💡 Panduan Praktis & Studi Kasus
+
+### 🏢 Real-World Use Case
+
+1. **Dashboard Aplikasi Perusahaan Modern**: Menggunakan arsitektur Multi-Page Application (MPA) di mana setiap modul (Keuangan, Karyawan, Inventaris) memiliki halaman HTML terpisah namun berbagi desain sistem Tailwind CSS yang sama.
+2. **Micro-Reactivity Tanpa Framework**: Menggunakan pola `Proxy` untuk membangun antarmuka interaktif yang ringan tanpa harus membebani bundle dengan ukuran React atau Vue (di bawah 10KB total ukuran JavaScript).
+
+### ⚠️ Common Pitfalls
+
+- **Variabel Lingkungan Tanpa Awalan `VITE_`**: Menyimpan variabel seperti `API_KEY` di berkas `.env` tidak akan terbaca di kode browser karena Vite secara sengaja memblokir variabel tanpa awalan `VITE_` demi keamanan.
+- **Kesalahan Konversi `Number('') === 0`**: Mengonversi string input kosong langsung dengan `Number(input)` menghasilkan angka `0`, bukan error. Selalu periksa `input.trim() === ''` terlebih dahulu.
+
+### 🌟 Best Practice
+
+- Gunakan path alias `'@'` di `vite.config.js` untuk memudahkan navigasi impor berkas (`import { service } from '@/services/...'`).
+- Pasang stylesheet di `<head>` untuk mencegah _Flash of Unstyled Content_ pada aplikasi multi-halaman.
+
+---
+
+## 5. ✍️ Latihan Mandiri
+
+1. Tambahkan sebuah halaman fisik baru `profile/index.html` lengkap dengan file script `src/profile-page.js`. Daftarkan halaman tersebut ke dalam `rolldownOptions.input` di `vite.config.js`.
+2. Buat sebuah variabel lingkungan baru di berkas `.env`: `VITE_APP_AUTHOR="Joko Santoso"`. Tampilkan nama pengarang tersebut di halaman dashboard utama menggunakan `import.meta.env.VITE_APP_AUTHOR`.
+
+---
+
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sub-Modul Sebelumnya:** [01 - Webpack 5 (Tradisional Bundler)](../01-webpack/README.md)
 - 🛠️ **Kembali ke Modul 08:** [08 - Build Tools](../README.md)
-- 🏠 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)
-
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

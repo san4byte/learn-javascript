@@ -1,36 +1,64 @@
-// Tipe Data Khusus, Operator Typeof, In, dan Truthy/Falsy
+// =============================================================================
+// MODUL 01 - FUNDAMENTALS: 11 - TIPE DATA LANJUTAN & OPERATOR TYPEOF/IN
+// =============================================================================
 
-// 1. Undefined vs Null
-let belumDiisi;
-console.log('Nilai belum diisi:', belumDiisi); // undefined
+console.log('=== 1. DELAPAN TIPE DATA RESMI JAVASCRIPT ===');
+console.log("typeof 'Halo'            :", typeof 'Halo'); // string
+console.log('typeof 42                :', typeof 42); // number
+console.log('typeof 42n               :', typeof 42n); // bigint
+console.log('typeof true              :', typeof true); // boolean
+console.log('typeof undefined         :', typeof undefined); // undefined
+console.log("typeof Symbol('id')      :", typeof Symbol('id')); // symbol
+console.log('typeof null (Quirk Bug)  :', typeof null); // object (quirk historis JS 1995)
+console.log('typeof { a: 1 }          :', typeof { a: 1 }); // object
+console.log('typeof [1, 2]            :', typeof [1, 2]); // object (Array adalah objek)
+console.log('typeof function(){}      :', typeof function () {}); // function (objek callable)
 
-let sengajaKosong = null;
-console.log('Nilai sengaja dikosongkan:', sengajaKosong); // null
+console.log('\n=== 2. UNDEFINED VS NULL SECARA SEMANTIK ===');
+let variabelBelumDiisi;
+console.log('Variabel tanpa inisialisasi :', variabelBelumDiisi); // undefined
 
-// 2. Operator typeof
-console.log('typeof 100:', typeof 100);             // number
-console.log("typeof 'Halo':", typeof 'Halo');       // string
-console.log('typeof true:', typeof true);           // boolean
-console.log('typeof null:', typeof null);           // object (quirk historis JS)
-console.log('typeof undefined:', typeof undefined); // undefined
+let variabelSengajaDikosongkan = null;
+console.log('Variabel disetel sengaja kosong:', variabelSengajaDikosongkan); // null
 
-// 3. Operator 'in' (Mengecek keberadaan properti/index)
-const orang = { nama: 'Joko', umur: 25 };
-console.log("'nama' in orang:", 'nama' in orang);   // true
-console.log("'alamat' in orang:", 'alamat' in orang); // false
+console.log('Perbandingan null == undefined  :', null == undefined); // true (coercion)
+console.log('Perbandingan null === undefined :', null === undefined); // false (strict)
 
-const buah = ['Apel', 'Jeruk'];
-console.log('0 in buah (cek index 0):', 0 in buah); // true
-console.log('5 in buah (cek index 5):', 5 in buah); // false
+console.log('\n=== 3. OPERATOR IN PADA OBJEK DAN ARRAY ===');
+const profil = { nama: 'Joko Santoso', peran: 'Admin' };
+console.log("'nama' in profil  :", 'nama' in profil); // true
+console.log("'gaji' in profil  :", 'gaji' in profil); // false
 
-// 4. Truthy dan Falsy
-// Nilai falsy di JS: false, 0, -0, "", null, undefined, NaN
-const nilaiUji = ['', 0, null, undefined, NaN, 'Ada teks', 123, [], {}];
-console.log('\n--- Evaluasi Truthy & Falsy ---');
-nilaiUji.forEach((item) => {
-  if (item) {
-    console.log(`[TRUTHY]:`, item);
+const daftarWarna = ['Merah', 'Hijau', 'Biru'];
+console.log('0 in daftarWarna (Index 0 ada) :', 0 in daftarWarna); // true
+console.log('5 in daftarWarna (Index 5 ada) :', 5 in daftarWarna); // false
+
+console.log('\n=== 4. EVALUASI TRUTHY DAN FALSY ===');
+const daftarUji = [
+  false,
+  0,
+  -0,
+  0n,
+  '',
+  null,
+  undefined,
+  NaN,
+  'Ada Teks',
+  123,
+  [],
+  {},
+  ' ',
+];
+
+daftarUji.forEach((item) => {
+  const status = item ? 'TRUTHY' : 'FALSY';
+  let label;
+  if (typeof item === 'bigint') {
+    label = `${item}n`;
+  } else if (typeof item === 'symbol') {
+    label = item.toString();
   } else {
-    console.log(`[FALSY] :`, item);
+    label = JSON.stringify(item) ?? String(item);
   }
+  console.log(`[${status.padEnd(6)}] -> ${label}`);
 });

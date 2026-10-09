@@ -2,124 +2,202 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami cara menyeleksi elemen HTML dari DOM menggunakan 5 method seleksi utama.
-> - **Kapan Digunakan**: Memahami perbedaan return value: Single Element vs HTMLCollection vs NodeList.
-> - **Aturan Praktis**: Standar industri modern merekomendasikan penggunaan **`querySelector()`** dan **`querySelectorAll()`** karena fleksibel mendukung sintaks CSS Selector lengkap (`#id`, `.class`, `div > p`, `[data-status="active"]`).
+> - **Fungsi Utama**: Mengambil (_query_) referensi simpul elemen HTML dari struktur DOM agar dapat dimanipulasi melalui skrip JavaScript.
+> - **Kapan Digunakan**: Langkah wajib pertama sebelum membaca isi teks, mengubah style, memanipulasi atribut, atau memasang _event listener_.
+> - **Aturan Praktis**: Gunakan `querySelector()` untuk mengambil satu elemen unik dan `querySelectorAll()` untuk mengambil kumpulan elemen menggunakan sintaks CSS Selector modern. Gunakan `getElementById()` saat memprioritaskan performa mikro pada ID unik.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami cara menyeleksi elemen HTML dari DOM menggunakan 5 method seleksi utama.
-- Memahami perbedaan return value: Single Element vs HTMLCollection vs NodeList.
-- Memahami perbedaan Live Collection vs Static Collection.
-- Mengetahui method seleksi yang paling direkomendasikan di industri modern.
+- Menguasai 5 method seleksi elemen W3C DOM.
+- Memahami perbedaan tipe nilai balik: _Single Element_, `HTMLCollection`, dan `NodeList`.
+- Memahami perbedaan mendasar antara _Live Collection_ (dinamis) dan _Static Collection_ (rekaman statis).
+- Memahami teknik _Scoped Querying_ (menyeleksi simpul turunan dari elemen induk tertentu).
+- Mengetahui standar industri modern dalam menyeleksi elemen secara efisien dan aman.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> DOM Selection seperti **sistem pencarian buku di perpustakaan**: `getElementById` seperti mencari buku berdasarkan nomor barcode unik (pasti dapat 1 buku). `querySelector` seperti mencari buku pertama yang bersampul biru. Sedangkan `querySelectorAll` seperti mengambil seluruh buku di rak nomor 3 ke dalam satu keranjang belanja.
-
-Sebelum kita bisa mengubah teks, warna, atau menambahkan aksi klik pada sebuah elemen HTML, kita harus **menyeleksi** (_query_) elemen tersebut terlebih dahulu.
-
-### 5 Method DOM Selection:
-
-| Method                                     | Mengembalikan                 | Sifat Koleksi | Kemudahan           |
-| :----------------------------------------- | :---------------------------- | :------------ | :------------------ |
-| `document.getElementById('id')`            | 1 Elemen (_Single Element_)   | -             | Cepat, berbasis ID  |
-| `document.getElementsByTagName('tag')`     | `HTMLCollection` (Array-like) | **Live**      | Berbasis nama tag   |
-| `document.getElementsByClassName('class')` | `HTMLCollection` (Array-like) | **Live**      | Berbasis nama class |
-| `document.querySelector('selectorCSS')`    | 1 Elemen Pertama              | -             | Sangat Fleksibel    |
-| `document.querySelectorAll('selectorCSS')` | `NodeList` (Array-like)       | **Static**    | Sangat Fleksibel    |
-
-### Perbedaan HTMLCollection vs NodeList:
-
-- **HTMLCollection**: Hanya berisi element node. Bersifat _Live_ (otomatis terupdate jika ada elemen yang ditambah/dihapus dari DOM). **Tidak memiliki method bawaan `.forEach()`** (harus diubah dulu ke Array via `Array.from()`).
-- **NodeList**: Bisa berisi element, text, atau comment node. Bersifat _Static_. **Sudah memiliki method bawaan `.forEach()`**.
+> Bayangkan DOM Tree seperti **gedung perpustakaan raksasa**:
+>
+> - `getElementById('ISBN-123')`: Mencari buku dengan kode barcode unik. Petugas langsung mengambil **tepat 1 buku spesifik**.
+> - `querySelector('.buku-resep')`: Mengambil **buku resep pertama** yang terlihat di rak paling depan.
+> - `querySelectorAll('section#komik .manga')`: Mengumpulkan **seluruh komik manga** yang ada di bagian rak komik ke dalam satu keranjang belanja.
+> - `getElementsByTagName('p')`: Seperti sensor otomatis (_Live_) yang selalu menghitung total kertas di ruangan secara seketika (_real-time_).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Perbandingan 5 Method DOM Selection
+
+| Method Seleksi                             | Nilai Kembali (_Return Value_) | Sifat Koleksi | Dukungan `.forEach()` | Kecepatan Relatif |
+| :----------------------------------------- | :----------------------------- | :------------ | :-------------------- | :---------------- |
+| `document.getElementById('id')`            | `Element` (atau `null`)        | -             | Tidak Berlaku         | Paling Cepat      |
+| `document.getElementsByTagName('tag')`     | `HTMLCollection`               | **Live**      | ❌ Tidak Ada          | Sangat Cepat      |
+| `document.getElementsByClassName('class')` | `HTMLCollection`               | **Live**      | ❌ Tidak Ada          | Sangat Cepat      |
+| `document.querySelector('selector')`       | `Element` (atau `null`)        | -             | Tidak Berlaku         | Cepat & Fleksibel |
+| `document.querySelectorAll('selector')`    | `NodeList`                     | **Static**    | ✅ Tersedia           | Fleksibel         |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. `document.getElementById(id)`
+
+Mencari satu elemen berdasarkan atribut `id` persis tanpa tanda pagar (`#`). Mengembalikan objek `Element` atau `null` jika tidak ditemukan.
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
-
-if (typeof document === 'undefined') {
-  console.log('--- 02. DOM Selection ---');
-  console.log(
-    "Buka file 'index.html' di browser untuk melihat demonstrasi seleksi elemen secara visual!"
-  );
-} else {
-  console.log('--- 02. DOM Selection (Browser) ---');
-
-  // 1. getElementById -> Mengembalikan 1 elemen unik
-  const judul = document.getElementById('judul-utama');
-  if (judul) {
-    judul.style.color = '#2563eb';
-    console.log('Berhasil menyeleksi ID:', judul.tagName);
-  }
-
-  // 2. querySelector -> Menyeleksi 1 elemen pertama menggunakan sintaks selector CSS
-  const paragrafPertama = document.querySelector('.deskripsi');
-  console.log('Teks paragraf pertama:', paragrafPertama?.textContent);
-
-  // 3. querySelectorAll -> Menyeleksi SELURUH elemen yang cocok (NodeList)
-  const semuaItem = document.querySelectorAll('ul.daftar-belajar li');
-  console.log(`Ditemukan ${semuaItem.length} item daftar:`);
-
-  // NodeList mendukung forEach langsung:
-  semuaItem.forEach((item, index) => {
-    item.textContent = `${index + 1}. ${item.textContent}`;
-    console.log(`- Item ${index + 1}: ${item.textContent}`);
-  });
+const judul = document.getElementById("judul-utama");
+if (judul) {
+  judul.style.color = "#1d4ed8";
 }
 ```
 
----
+#### 2. `document.getElementsByTagName(tagName)`
 
-## 4. 🖥️ Output yang Diharapkan
+Mengambil seluruh elemen yang memiliki nama tag HTML yang ditentukan (misalnya `'p'`, `'div'`, `'li'`). Mengembalikan `HTMLCollection`.
 
-```text
---- 02. DOM Selection (Browser) ---
-Berhasil menyeleksi ID: H1
-Teks paragraf pertama: Memahami seleksi elemen di web
-Ditemukan 3 item daftar:
-- Item 1: 1. HTML Dasar
-- Item 2: 2. CSS Styling
-- Item 3: 3. JavaScript Modern
+```javascript
+const semuaParagraf = document.getElementsByTagName("p");
+console.log("Jumlah paragraf:", semuaParagraf.length);
+console.log("Paragraf pertama:", semuaParagraf[0].textContent);
+```
+
+#### 3. `document.getElementsByClassName(className)`
+
+Mengambil seluruh elemen yang memiliki nama kelas CSS tertentu tanpa tanda titik (`.`). Mengembalikan `HTMLCollection` yang bersifat _live_.
+
+```javascript
+const cards = document.getElementsByClassName("card-item");
+for (let i = 0; i < cards.length; i++) {
+  cards[i].classList.add("border-aktif");
+}
+```
+
+#### 4. `document.querySelector(selector)`
+
+Mengembalikan elemen **pertama** yang cocok dengan CSS Selector yang diberikan. Sangat ekspresif karena mendukung kombinasi ID, class, atribut, maupun pseudo-class.
+
+```javascript
+// Mengambil tombol submit di dalam form komentar
+const btnKirim = document.querySelector(
+  'form#form-kontak button[type="submit"]',
+);
+if (btnKirim) {
+  btnKirim.disabled = true;
+}
+```
+
+#### 5. `document.querySelectorAll(selector)`
+
+Mengembalikan seluruh elemen yang cocok dalam bentuk `NodeList` statis. Koleksi ini memiliki method bawaan `.forEach()` untuk mempermudah perulangan modern.
+
+```javascript
+const items = document.querySelectorAll("#daftar-item li");
+items.forEach((item, index) => {
+  item.textContent = `${index + 1}. ${item.textContent}`;
+});
+```
+
+#### 6. Perbandingan `HTMLCollection` vs `NodeList`
+
+`HTMLCollection` hanya dapat menampung _Element Node_, sedangkan `NodeList` dapat menampung _Element_, _Text_, atau _Comment Node_.
+
+```javascript
+const liveItems = document.getElementsByTagName("li"); // HTMLCollection
+// liveItems.forEach(...) // ❌ TypeError: liveItems.forEach is not a function
+
+// Konversi HTMLCollection ke Array asli:
+Array.from(liveItems).forEach((li) => console.log(li.textContent));
+```
+
+#### 7. Perilaku Live Collection vs Static Collection
+
+_Live Collection_ (`HTMLCollection`) otomatis memperbarui panjang array-nya saat DOM berubah, sedangkan _Static Collection_ (`NodeList` dari `querySelectorAll`) mempertahankan rekaman saat query dijalankan (_snapshot_).
+
+```javascript
+const staticList = document.querySelectorAll("li"); // snapshot (misal 3 item)
+const liveCol = document.getElementsByTagName("li"); // live (misal 3 item)
+
+// Menambah elemen baru ke DOM...
+document.body.appendChild(document.createElement("li"));
+console.log(staticList.length); // Tetap 3 (tidak berubah)
+console.log(liveCol.length); // Berubah menjadi 4 (live updated)
+```
+
+#### 8. Scoped Querying (Pencarian dari Elemen Induk)
+
+Method `querySelector` dan `querySelectorAll` juga tersedia pada setiap objek `Element`, bukan hanya pada `document`.
+
+```javascript
+const sectionB = document.getElementById("section-b");
+// Mencari hanya di dalam batas elemen <section id="section-b">
+const liDiSectionB = sectionB.querySelectorAll("li");
+console.log("Item khusus Section B:", liDiSectionB.length);
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh implementasi demonstrasi kelima method seleksi, perbandingan live vs static collection, dan iterasi modern telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Berkas tersebut mendukung eksekusi terminal (Node.js) untuk pengujian alur logika seleksi serta pengujian langsung di peramban web via [`index.html`](index.html).
+
+Jalankan demonstrasi simulasi seleksi di terminal:
+
+```bash
+node 05-dom/02-dom-selection/example.js
+```
+
+Atau buka [`index.html`](index.html) langsung di browser dan buka **DevTools Console (`F12`)** untuk melihat perubahan gaya visual dan log seleksi.
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Validasi Form Input**: Menyeleksi input email dan password: `const emailInput = document.querySelector('#input-email')`.
-2. **Pemberian Event Listener Massal**: Mengambil seluruh tombol dengan class `.btn-action` untuk dipasangi aksi klik.
+1. **Seleksi Komponen Form Dinamis**:
+   ```javascript
+   const inputEmail = document.querySelector('input[name="user_email"]');
+   const isChecked = document.querySelector("#terms:checked");
+   ```
+2. **Pemasangan Listener Massal pada Tombol Aksi**:
+   ```javascript
+   document.querySelectorAll(".btn-delete").forEach((btn) => {
+     btn.addEventListener("click", handleDelete);
+   });
+   ```
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Lupa Tanda Titik atau Pagar pada querySelector**: `querySelector('tombol')` mencari tag `<tombol>`, bukan class `.tombol`! Selalu gunakan tanda titik `.` untuk class dan tanda pagar `#` untuk ID.
-- **Memanggil .forEach pada HTMLCollection**: `document.getElementsByTagName('p').forEach(...)` akan melempar `TypeError: ...forEach is not a function`. Ubah dulu ke array: `Array.from(koleksi).forEach(...)`.
+- **Lupa Prefix Simbol CSS**: Menulis `document.querySelector('judul')` alih-alih `document.querySelector('#judul')` (mencari tag kustom `<judul>` bukan elemen dengan ID `judul`).
+- **Memanggil `.forEach()` pada `HTMLCollection`**: Memanggil method `.forEach` langsung pada hasil `getElementsByTagName` atau `getElementsByClassName` menyebabkan runtime error. Selalu gunakan `Array.from()` atau beralih ke `querySelectorAll()`.
+- **Tidak Melakukan Pengecekan `null`**: Memanggil `el.textContent` saat `querySelector()` mengembalikan `null` akan melempar fatal error `Cannot read properties of null`. Gunakan _Optional Chaining_ (`el?.textContent`) atau percabangan `if (el)`.
 
 ### 🌟 Best Practice
 
-- Standar industri modern merekomendasikan penggunaan **`querySelector()`** dan **`querySelectorAll()`** karena fleksibel mendukung sintaks CSS Selector lengkap (`#id`, `.class`, `div > p`, `[data-status="active"]`).
-- Gunakan `getElementById()` jika performa eksekusi kecepatan tinggi menjadi prioritas mutlak.
+- Utamakan `querySelector()` dan `querySelectorAll()` sebagai standar utama proyek modern karena fleksibilitas CSS selector yang seragam.
+- Manfaatkan _Scoped Querying_ (`parentEl.querySelector(...)`) untuk menghindari pencarian global yang lambat di seluruh dokumen.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buka file `index.html` modul ini di browser. Gunakan `document.querySelectorAll('li')` untuk mengubah warna teks seluruh elemen list menjadi hijau (`item.style.color = 'green'`).
+1. Buka berkas [`index.html`](index.html) di browser. Menggunakan Console (`F12`), seleksi seluruh elemen `<p>` yang berada di dalam `#section-a` menggunakan `querySelectorAll()`, lalu ubah warna teksnya menjadi merah (`item.style.color = 'red'`).
+2. Uji perbedaan kecepatan dan fleksibilitas antara:
+   - `document.getElementById('link-mdn')`
+   - `document.querySelector('#section-a a[target="_blank"]')`
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [01 - Pengenalan DOM](../01-intro/README.md)
-- ➡️ **Selanjutnya:** [03 - DOM Manipulasi Element](../03-element-manipulation/README.md)
+- ⬅️ **Materi Sebelumnya:** [01 - Pengenalan DOM & DOM Tree](../01-intro/README.md)
+- ➡️ **Materi Selanjutnya:** [03 - DOM Manipulasi Element](../03-element-manipulation/README.md)
 - 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

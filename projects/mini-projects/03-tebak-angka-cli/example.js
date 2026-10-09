@@ -18,7 +18,9 @@ function jalankanPermainanTebakAngka(daftarTebakanPemain) {
     console.log(`[Tebakan ke-${i + 1}]: Anda menebak ${tebakan}`);
 
     if (tebakan === angkaRahasia) {
-      console.log(`🎉 SELAMAT! Tebakan Anda BENAR! Angka rahasia adalah ${angkaRahasia}.`);
+      console.log(
+        `🎉 SELAMAT! Tebakan Anda BENAR! Angka rahasia adalah ${angkaRahasia}.`,
+      );
       menang = true;
       break;
     } else if (tebakan < angkaRahasia) {
@@ -28,7 +30,9 @@ function jalankanPermainanTebakAngka(daftarTebakanPemain) {
     }
 
     if (kesempatan === 0) {
-      console.log(`\n💀 KESEMPATAN HABIS! Anda kalah. Angka rahasianya adalah ${angkaRahasia}.`);
+      console.log(
+        `\n💀 KESEMPATAN HABIS! Anda kalah. Angka rahasianya adalah ${angkaRahasia}.`,
+      );
       break;
     }
   }

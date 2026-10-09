@@ -1,40 +1,75 @@
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// 05 - Promise (Konsep Pending, Fulfilled, dan Rejected)
+// File ini dapat dijalankan langsung di Node.js maupun di Browser.
 
-console.log('--- 1. Membuat dan Mengonsumsi Promise Sederhana ---');
-function verifikasiAkunBank(saldoMinimal) {
+console.log('========================================================');
+console.log('📌 DEMONSTRASI PEMBUATAN & KONSUMSI PROMISE ES6');
+console.log('========================================================\n');
+
+// 1. Membuat Promise kustom dengan new Promise((resolve, reject) => {})
+function cekSaldoRekening(jumlah) {
   return new Promise((resolve, reject) => {
-    console.log('Sedang memverifikasi rekening di sistem pusat...');
-
+    console.log(`[PROMISE]: Memeriksa saldo sebesar Rp ${jumlah}...`);
     setTimeout(() => {
-      if (saldoMinimal >= 50000) {
-        resolve({
-          status: 'Aktif',
-          pesan: 'Rekening valid dan saldo mencukupi.',
-        });
+      if (jumlah >= 50000) {
+        resolve({ status: 'VALID', saldo: jumlah });
       } else {
-        reject(new Error('Saldo di bawah ketentuan minimal (Rp 50.000)!'));
+        reject(
+          new Error(`Saldo Rp ${jumlah} kurang dari batas minimum Rp 50.000!`),
+        );
       }
-    }, 300);
+    }, 150);
   });
 }
 
-// Mengonsumsi Promise dengan .then, .catch, .finally
-verifikasiAkunBank(100000)
-  .then((hasil) => {
-    console.log('[SUKSES]:', hasil.pesan);
-    return 'Lanjut ke langkah otorisasi'; // Return nilai untuk diteruskan ke .then berikutnya
+// 2. Chaining .then(), .catch(), dan .finally() pada skenario Sukses
+console.log('--- 1. Skenario Sukses & Promise Chaining ---');
+cekSaldoRekening(100000)
+  .then((data) => {
+    console.log('[THEN 1]: Saldo valid terverifikasi:', data);
+    return `Kupon Cashback untuk saldo Rp ${data.saldo}`; // mengembalikan nilai ke then berikutnya
   })
-  .then((pesanLanjutan) => {
-    console.log('[CHAINING]:', pesanLanjutan);
+  .then((promo) => {
+    console.log(
+      '[THEN 2 - Chaining]: Menerima hasil then sebelumnya ->',
+      promo,
+    );
   })
   .catch((err) => {
-    console.error('[GAGAL]:', err.message);
+    console.error('[CATCH]: Terjadi kesalahan:', err.message);
   })
   .finally(() => {
-    console.log('[FINALLY]: Proses verifikasi perbankan selesai ditutup.');
+    console.log('[FINALLY]: Sesi verifikasi perbankan ditutup.');
+
+    // 3. Skenario Gagal (Rejected)
+    ujiSkenarioGagal();
   });
 
-console.log('\n--- 2. Simulasi Promise yang Gagal (Rejected) ---');
-verifikasiAkunBank(10000).catch((err) => {
-  console.log('[TERTANGKAP DI CATCH]:', err.message);
-});
+function ujiSkenarioGagal() {
+  console.log('\n--- 2. Skenario Gagal (Rejected) Terpanggil di .catch() ---');
+  cekSaldoRekening(20000)
+    .then((data) => {
+      console.log('Baris ini tidak akan pernah dijalankan karena error:', data);
+    })
+    .catch((err) => {
+      console.error('[CATCH MENANGKAP ERROR]:', err.message);
+    })
+    .finally(() => {
+      console.log('[FINALLY]: Pembersihan selesai.');
+
+      // 4. Instan Promise.resolve() dan Promise.reject()
+      ujiInstantPromises();
+    });
+}
+
+function ujiInstantPromises() {
+  console.log(
+    '\n--- 3. Instant Promises (Promise.resolve & Promise.reject) ---',
+  );
+  Promise.resolve('Nilai Instan Langsung Resolved').then((pesan) =>
+    console.log('[INSTANT RESOLVE]:', pesan),
+  );
+
+  Promise.reject(new Error('Penolakan Instan Langsung Ditolak')).catch((err) =>
+    console.log('[INSTANT REJECT]:', err.message),
+  );
+}

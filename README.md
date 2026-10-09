@@ -22,13 +22,12 @@ Fondasi logika pemrograman, sintaks dasar, dan fitur modern ES6+:
 3. [03 - Template Literals & String Interpolation](01-fundamentals/03-template-literals/README.md)
 4. [04 - Loops (While, For, Nested Loops, For..of, For..in)](01-fundamentals/04-loops/01-while/README.md)
 5. [05 - Conditionals (If Else, Switch Case, Ternary)](01-fundamentals/05-conditionals/01-if-else/README.md)
-6. [06 - Project Simulasi Pengelolaan Angkot](01-fundamentals/06-project-angkot/README.md)
-7. [07 - Functions (Params, Scope, Closures, Arrow, HOF, Rest, Recursion)](01-fundamentals/07-functions/01-intro/README.md)
-8. [08 - Arrays (Manipulasi, Destructuring, Spread, Project Penumpang)](01-fundamentals/08-arrays/01-array-manipulation/README.md)
-9. [09 - Objects (Literal, This, Destructuring, Prototype, Project Object)](01-fundamentals/09-objects/01-object-basics/README.md)
-10. [10 - Mini Games Interaktif (Suit Jawa, Tebak Angka)](01-fundamentals/10-mini-games/01-suit-jawa/README.md)
-11. [11 - Tipe Data Lanjutan, Operator in, typeof, Falsy Truthy](01-fundamentals/11-data-types-and-operators/README.md)
-12. [12 - Sintaks Modern ES Lanjutan (Optional Chaining, Nullish Coalescing, Strict Mode)](01-fundamentals/12-advanced-syntax/README.md)
+6. [07 - Functions (Params, Scope, Closures, Arrow, HOF, Rest, Recursion)](01-fundamentals/07-functions/01-intro/README.md)
+7. [08 - Arrays (Manipulasi, Destructuring, Spread, Pengelolaan Penumpang)](01-fundamentals/08-arrays/01-array-manipulation/README.md)
+8. [09 - Objects (Literal, This, Destructuring, Prototype, Angkot Object)](01-fundamentals/09-objects/01-object-basics/README.md)
+9. [11 - Tipe Data Lanjutan, Operator in, typeof, Falsy Truthy](01-fundamentals/11-data-types-and-operators/README.md)
+10. [12 - Sintaks Modern ES Lanjutan (Optional Chaining, Nullish Coalescing, Strict Mode)](01-fundamentals/12-advanced-syntax/README.md)
+    _(Latihan Mini Projects: [Juragan Angkot](projects/mini-projects/01-juragan-angkot/README.md), [Suit Jawa CLI](projects/mini-projects/02-suit-jawa-cli/README.md), [Tebak Angka CLI](projects/mini-projects/03-tebak-angka-cli/README.md))_
 
 ---
 
@@ -107,9 +106,7 @@ Interaksi JavaScript dengan dokumen web dan antarmuka HTML dinamis:
 6. [06 - DOM Traversal dan Event Delegation](05-dom/06-dom-traversal/README.md)
 7. [07 - HTML Form Elements (Form, Input, submit event)](05-dom/07-html-form-elements/README.md)
 8. [08 - HTML Table Elements (insertRow & insertCell)](05-dom/08-html-table-elements/README.md)
-9. [09 - Latihan Mandiri: Manipulasi Warna Background](05-dom/09-practice-color-picker/README.md)
-10. [10 - Latihan Mandiri: Game Suit Jawa GUI Interaktif](05-dom/10-practice-suit-jawa-gui/README.md)
-11. [11 - Latihan Mandiri: Galeri Gambar Interaktif](05-dom/11-practice-image-gallery/README.md)
+   _(Latihan Mini Projects: [Color Picker](projects/mini-projects/04-color-picker/README.md), [Suit Jawa GUI](projects/mini-projects/05-suit-jawa-gui/README.md), [Galeri Gambar](projects/mini-projects/06-image-gallery/README.md))_
 
 ---
 
@@ -153,11 +150,13 @@ Pengembangan aplikasi skala industri menggunakan modul, bundler, dan build tools
 
 ### 9. [Projects (Aplikasi & Implementasi Nyata)](projects/)
 
-Aplikasi web komprehensif skala penuh yang merangkum dan mengintegrasikan seluruh materi pembelajaran dari **Modul 01 hingga Modul 08**:
+Direktori implementasi terbagi menjadi dua kategori utama:
 
-1. [OmniStore Pro — Modern E-Commerce Storefront & Detail](projects/omnistore-pro/README.md)
+1. **[OmniStore Pro — Modern E-Commerce Storefront & Detail](projects/omnistore-pro/README.md)** (Full-Scale Capstone):
    - **Teknologi**: Vanilla JavaScript (ES Modules), Vite Multi-Page Application (MPA), Tailwind CSS v4, DummyJSON Products API.
    - **Fitur Utama**: Live Search dengan Debounce & AbortController, Infinite Scroll & Lazy Loading Gambar (IntersectionObserver), Halaman Detail Produk Dinamis & Galeri Foto, serta Keranjang Belanja Reaktif (Proxy State) & Persisten (LocalStorage).
+2. **[Mini Projects — Latihan Logika & DOM Interaktif (WPU Series)](projects/mini-projects/README.md)** (6 Mini Apps):
+   - **Koleksi**: [01 - Juragan Angkot](projects/mini-projects/01-juragan-angkot/README.md), [02 - Suit Jawa CLI](projects/mini-projects/02-suit-jawa-cli/README.md), [03 - Tebak Angka CLI](projects/mini-projects/03-tebak-angka-cli/README.md), [04 - Color Picker](projects/mini-projects/04-color-picker/README.md), [05 - Suit Jawa GUI](projects/mini-projects/05-suit-jawa-gui/README.md), [06 - Image Gallery](projects/mini-projects/06-image-gallery/README.md).
 
 ---
 
@@ -211,4 +210,3 @@ npm run dev      # Mode dev server instan dengan HMR (port 5173)
 npm run build    # Membangun bundle produksi MPA ke folder dist/
 npm run preview  # Preview hasil build produksi secara lokal
 ```
-

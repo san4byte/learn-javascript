@@ -2,125 +2,158 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami struktur Array sebagai kumpulan elemen berindeks terurut.
-> - **Kapan Digunakan**: Menguasai method mutator: `push()`, `pop()`, `shift()`, `unshift()`, `splice()`.
-> - **Aturan Praktis**: Gunakan `push()` dan `pop()` jika butuh performa tercepat ($O(1)$).
+> - **Fungsi Utama**: Mengelola elemen-elemen data berurutan pada struktur Array menggunakan metode pengubah (_Mutator_) atau metode pembaca salinan (_Accessor_).
+> - **Kapan Digunakan**: Mengelola antrean (_Queue_), tumpukan (_Stack_), menyaring data, mencari indeks item, atau memotong sebagian elemen array.
+> - **Aturan Praktis**: Gunakan `push()` dan `pop()` untuk manipulasi performa tinggi ($O(1)$). Gunakan `slice()` jika Anda ingin menyalin data tanpa memodifikasi array aslinya (_immutable pattern_).
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami struktur Array sebagai kumpulan elemen berindeks terurut.
-- Menguasai method mutator: `push()`, `pop()`, `shift()`, `unshift()`, `splice()`.
-- Menguasai method accessor: `slice()`, `indexOf()`, `includes()`, `join()`.
-- Memahami perbedaan operasi di awal array vs di akhir array.
+- Memahami representasi struktur Array berbasis indeks numerik yang dimulai dari nol (`0`).
+- Menguasai metode mutator ujung array: `push()`, `pop()`, `shift()`, dan `unshift()`.
+- Memahami dampak performa komputasi ($O(1)$ pada ujung belakang vs $O(n)$ pada ujung depan).
+- Membedakan secara mutlak antara metode pemotong `slice()` (immutabel) dan `splice()` (mutasi langsung).
+- Menguasai metode pencarian dan penggabungan: `indexOf()`, `includes()`, `join()`, dan `concat()`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Array seperti **gerbong kereta api penumpang**: setiap gerbong memiliki nomor urut $(0, 1, 2...)$. Menambah gerbong di belakang (**push**) sangat cepat dan mudah. Sedangkan menambah gerbong di paling depan (**unshift**) memaksa seluruh nomor gerbong di belakangnya harus digeser dan dinomori ulang satu per satu.
-
-**Array** adalah tipe data bertipe objek yang digunakan untuk menyimpan kumpulan elemen nilai secara terurut berdasarkan nomor indeks (dimulai dari `0`).
-
-### Method Utama Manipulasi Array:
-
-| Kategori         | Method                              | Fungsi                       | Mengubah Array Asli?     |
-| :--------------- | :---------------------------------- | :--------------------------- | :----------------------- |
-| **Akhir Array**  | `push(item)`                        | Menambah elemen di akhir     | Ya (Mutasi)              |
-| **Akhir Array**  | `pop()`                             | Menghapus elemen terakhir    | Ya (Mutasi)              |
-| **Awal Array**   | `unshift(item)`                     | Menambah elemen di awal      | Ya (Mutasi)              |
-| **Awal Array**   | `shift()`                           | Menghapus elemen pertama     | Ya (Mutasi)              |
-| **Tengah Array** | `splice(start, delCount, ...items)` | Sisip/hapus elemen di tengah | Ya (Mutasi)              |
-| **Pemotong**     | `slice(start, end)`                 | Mengambil sebagian elemen    | **Tidak (Salinan Baru)** |
-| **Pencarian**    | `includes(item)`                    | Cek apakah item ada          | Tidak                    |
-| **Penggabung**   | `join(separator)`                   | Mengubah array jadi string   | Tidak                    |
+> Array seperti **rangkaian gerbong kereta api berpenumpang**:
+>
+> - Menggandeng atau melepas gerbong di paling belakang (**`push` / `pop`**) berlangsung sangat cepat karena tidak mengganggu penumpang lain ($O(1)$).
+> - Namun menyisipkan gerbong baru di paling depan persis di belakang lokomotif (**`unshift` / `shift`**) memaksa petugas mengumumkan dan mengubah seluruh nomor tiket kursi gerbong di belakangnya satu per satu ($O(n)$).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Ringkasan Metode Manipulasi Array
+
+| Metode                           | Kategori                 | Kompleksitas | Mengubah Asli? | Nilai Balik (_Return Value_) |
+| :------------------------------- | :----------------------- | :----------- | :------------- | :--------------------------- |
+| **`push(...items)`**             | Mutator (Ujung Belakang) | $O(1)$       | **Ya**         | Panjang array baru           |
+| **`pop()`**                      | Mutator (Ujung Belakang) | $O(1)$       | **Ya**         | Elemen yang terhapus         |
+| **`unshift(...items)`**          | Mutator (Ujung Depan)    | $O(n)$       | **Ya**         | Panjang array baru           |
+| **`shift()`**                    | Mutator (Ujung Depan)    | $O(n)$       | **Ya**         | Elemen yang terhapus         |
+| **`splice(start, del, ...add)`** | Mutator (Tengah)         | $O(n)$       | **Ya**         | Array elemen yang terhapus   |
+| **`slice(start, end)`**          | Accessor (Salinan)       | $O(n)$       | **Tidak**      | Array salinan baru           |
+| **`includes(value)`**            | Accessor (Pencarian)     | $O(n)$       | **Tidak**      | Boolean (`true` / `false`)   |
+| **`join(separator)`**            | Accessor (Format String) | $O(n)$       | **Tidak**      | String teks gabungan         |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Operasi Akhir Array: `push()` dan `pop()`
+
+Menambahkan atau membuang data dari indeks terakhir. Membentuk struktur data **Stack (LIFO - Last In First Out)**:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const stack = ["A", "B"];
+stack.push("C"); // ['A', 'B', 'C']
+const last = stack.pop(); // 'C', sisa: ['A', 'B']
+```
 
-console.log('--- 1. Operasi di Ujung Array (push, pop, shift, unshift) ---');
-const antreanKlinik = ['Budi', 'Siti'];
+#### 2. Operasi Awal Array: `unshift()` dan `shift()`
 
-// Menambah pasien di akhir antrean
-antreanKlinik.push('Joko');
-console.log("Setelah push('Joko')     :", antreanKlinik);
+Menambahkan atau membuang elemen dari indeks `0`. Kombinasi `push()` dan `shift()` membentuk struktur data **Queue (FIFO - First In First Out)**:
 
-// Pasien pertama dipanggil dokter (dihapus dari awal)
-const pasienDipanggil = antreanKlinik.shift();
-console.log(`Pasien dipanggil dokter  : ${pasienDipanggil}`);
-console.log('Sisa antrean             :', antreanKlinik);
+```javascript
+const antrean = ["Budi", "Siti"];
+antrean.unshift("Pasien Gawat"); // Menambah di awal
+const dilayani = antrean.shift(); // 'Pasien Gawat'
+```
 
-console.log('\n--- 2. Operasi Tengah Array: splice() vs slice() ---');
-const daftarKota = ['Jakarta', 'Bandung', 'Surabaya', 'Yogyakarta'];
+#### 3. Memahami Kompleksitas Performa $O(1)$ vs $O(n)$
 
-// slice(1, 3): Mengambil elemen dari index 1 sampai sebelum index 3 (tanpa mutasi)
-const kotaPilihan = daftarKota.slice(1, 3);
-console.log('Hasil slice(1, 3)        :', kotaPilihan);
-console.log('Array asli tetap utuh    :', daftarKota);
+Saat memanggil `shift()` atau `unshift()`, JavaScript harus memetakan ulang (_re-indexing_) setiap elemen dari indeks $1 \dots n$ menjadi indeks $0 \dots (n-1)$. Untuk array berisi 500.000 elemen, `shift()` ribuan kali lebih lambat dibanding `pop()`.
 
-// splice(2, 1, 'Semarang'): Di index 2, hapus 1 elemen ('Surabaya'), ganti dengan 'Semarang'
-daftarKota.splice(2, 1, 'Semarang');
-console.log("Setelah splice(2, 1, 'Semarang'):", daftarKota);
+#### 4. Mutasi Fleksibel Tengah Array: `splice()`
 
-console.log('\n--- 3. Pencarian & Penggabungan ---');
-console.log("Apakah ada 'Bandung'?    :", daftarKota.includes('Bandung'));
-console.log('Format Teks Rapi (join)  :', daftarKota.join(' -> '));
+Dapat menghapus, menyisipkan, atau mengganti elemen pada posisi indeks mana pun:
+
+```javascript
+const angka = [10, 20, 40];
+// Sisipkan 30 di indeks 2 tanpa menghapus (deleteCount: 0)
+angka.splice(2, 0, 30); // [10, 20, 30, 40]
+```
+
+#### 5. Ekstraksi Salinan Immutabel: `slice()`
+
+Mengambil sebagian potongan array dari indeks `start` hingga sebelum indeks `end` tanpa mengubah array asal:
+
+```javascript
+const hewan = ["Kucing", "Kuda", "Gajah", "Singa"];
+const mamaliaDarat = hewan.slice(1, 3); // ['Kuda', 'Gajah']
+```
+
+#### 6. Pencarian Elemen: `indexOf()` dan `includes()`
+
+- `indexOf(item)`: Mengembalikan indeks posisi pertama ditemukan, atau `-1` jika tidak ada.
+- `includes(item)`: Mengembalikan nilai boolean murni yang lebih mudah dibaca pada kondisi `if`.
+
+```javascript
+const warna = ["merah", "kuning", "hijau"];
+warna.includes("kuning"); // true
+warna.indexOf("biru"); // -1
+```
+
+#### 7. Transformasi dan Penggabungan: `join()` dan `concat()`
+
+- `join(separator)`: Menggabungkan seluruh elemen array menjadi string dengan tanda pemisah kustom.
+- `concat(otherArray)`: Menggabungkan dua atau lebih array menjadi satu array baru tanpa mengubah array asal.
+
+```javascript
+const pecahan = ["0812", "3456", "7890"];
+const noHp = pecahan.join("-"); // '0812-3456-7890'
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. Operasi di Ujung Array (push, pop, shift, unshift) ---
-Setelah push('Joko')     : [ 'Budi', 'Siti', 'Joko' ]
-Pasien dipanggil dokter  : Budi
-Sisa antrean             : [ 'Siti', 'Joko' ]
+Seluruh implementasi demonstrasi alur penambahan antrean klinik via `push()` / `pop()` / `unshift()` / `shift()`, perbandingan mutasi `splice()` vs salinan immutabel `slice()`, serta pencarian dan penggabungan teks rute via `includes()` dan `join()` telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. Operasi Tengah Array: splice() vs slice() ---
-Hasil slice(1, 3)        : [ 'Bandung', 'Surabaya' ]
-Array asli tetap utuh    : [ 'Jakarta', 'Bandung', 'Surabaya', 'Yogyakarta' ]
-Setelah splice(2, 1, 'Semarang'): [ 'Jakarta', 'Bandung', 'Semarang', 'Yogyakarta' ]
+Jalankan demonstrasi secara langsung di terminal Anda:
 
---- 3. Pencarian & Penggabungan ---
-Apakah ada 'Bandung'?    : true
-Format Teks Rapi (join)  : Jakarta -> Bandung -> Semarang -> Yogyakarta
+```bash
+node 01-fundamentals/08-arrays/01-array-manipulation/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Manajemen Antrean Tiket / Notifikasi**: Struktur data _Queue_ (antrean FIFO: First-In First-Out) diimplementasikan dengan `push()` untuk masuk antrean dan `shift()` saat dilayani.
-2. **Breadcrumb Navigasi Halaman Web**: Menggunakan `join(' / ')` untuk menampilkan jalur navigasi `Home / Kategori / Elektronik`.
+1. **Breadcrumbs Navigasi Website**: Mengubah array segmen URL menjadi link breadcrumb:
+   ```javascript
+   const breadcrumbs = ["Beranda", "Katalog", "Sepatu"].join(" / ");
+   ```
+2. **Riwayat Tindakan Undo / Redo**: Memanfaatkan struktur data Stack (`push()` dan `pop()`) untuk mencatat aksi pengguna di editor teks.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Tertukar antara `slice()` dan `splice()`**: `slice()` bersifat _immutable_ (menghasilkan array baru), sedangkan `splice()` bersifat _mutator_ (mengubah isi array aslinya secara permanen).
-- **Performa `shift()` pada Array Raksasa**: `shift()` dan `unshift()` memiliki kompleksitas $O(n)$ karena harus menggeser indeks seluruh elemen di belakangnya. Hindari pada array dengan jutaan data.
+- **Salah Mengira `splice` Aman untuk State**: Menggunakan `state.splice(...)` langsung pada framework reaktif seperti React dapat merusak deteksi perubahan data karena array mengalami mutasi di tempat (_in-place mutation_). Gunakan `slice()` atau filter fungsional.
+- **Indeks Negatif pada `slice`**: `array.slice(-2)` mengambil 2 elemen terakhir dari belakang. Berguna jika dipahami, namun sering membingungkan bagi pemula.
 
 ### 🌟 Best Practice
 
-- Gunakan `push()` dan `pop()` jika butuh performa tercepat ($O(1)$).
-- Gunakan `includes()` daripada `indexOf() !== -1` untuk pengecekan keberadaan elemen yang lebih mudah dibaca.
+- Gunakan `includes()` daripada menulis pengecekan kuno `indexOf(...) !== -1`.
+- Jika Anda tidak perlu mengubah array asli, biasakan menggunakan pendekatan _immutability_ (`slice()`, `concat()`, atau _spread operator_).
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah array `daftarTugas = ['Belajar HTML', 'Belajar CSS']`. Tambahkan `'Belajar JS'` di akhir, dan tambahkan `'Persiapan Laptop'` di paling awal.
-2. Hapus tugas paling awal menggunakan `shift()`, lalu cetak daftar tugas saat ini.
+1. Buat array `daftarTugas = ['Desain UI', 'Koding Frontend']`. Tambahkan `'Testing QA'` di akhir array dan tambahkan `'Meeting Klien'` di awal array.
+2. Gunakan `splice()` untuk menghapus tugas `'Koding Frontend'` dan menggantinya dengan `'Koding Backend & API'`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [07.9 - Project Volume Kubus](../../07-functions/09-project-cube-volume/README.md)
 - ➡️ **Selanjutnya:** [08.2 - Destructuring & Spread Array](../02-destructuring-spread/README.md)

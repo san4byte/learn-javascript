@@ -13,19 +13,19 @@ const ObserverClass =
         }
         observe(target) {
           console.log(
-            `[Observer] Mulai memantau elemen: <${target.tagName || 'elemen'}>`
+            `[Observer] Mulai memantau elemen: <${target.tagName || 'elemen'}>`,
           );
           // Simulasi asinkron bahwa elemen masuk ke viewport layar
           setTimeout(() => {
             this.callback(
               [{ target, isIntersecting: true, intersectionRatio: 0.75 }],
-              this
+              this,
             );
           }, 100);
         }
         unobserve(target) {
           console.log(
-            `[Observer] Berhenti memantau elemen: <${target.tagName || 'elemen'}> (hemat memori)`
+            `[Observer] Berhenti memantau elemen: <${target.tagName || 'elemen'}> (hemat memori)`,
           );
         }
         disconnect() {
@@ -45,7 +45,7 @@ function onIntersectCallback(entries, observer) {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
       console.log(
-        `Elemen terlihat di layar! Rasio visibilitas: ${entry.intersectionRatio}`
+        `Elemen terlihat di layar! Rasio visibilitas: ${entry.intersectionRatio}`,
       );
       observer.unobserve(entry.target);
     }
@@ -68,7 +68,7 @@ function setupLazyImages() {
       if (entry.isIntersecting) {
         const img = entry.target;
         console.log(
-          `[LAZY LOAD] Mendownload gambar HD untuk: ${img.alt || 'Produk'}`
+          `[LAZY LOAD] Mendownload gambar HD untuk: ${img.alt || 'Produk'}`,
         );
         // img.src = img.dataset.src;
         // img.classList.remove('lazy-image');
@@ -94,7 +94,7 @@ function setupInfiniteScroll(fetchNextPageCallback) {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         console.log(
-          '[INFINITE SCROLL] Pengguna mencapai batas bawah halaman -> Memuat batch data baru...'
+          '[INFINITE SCROLL] Pengguna mencapai batas bawah halaman -> Memuat batch data baru...',
         );
         fetchNextPageCallback?.();
       }
@@ -106,5 +106,5 @@ function setupInfiniteScroll(fetchNextPageCallback) {
 }
 
 setupInfiniteScroll(() =>
-  console.log('--> Fetch API halaman berikutnya sukses')
+  console.log('--> Fetch API halaman berikutnya sukses'),
 );

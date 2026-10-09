@@ -1,47 +1,73 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Dom Selection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>03 - DOM Manipulasi Element</title>
     <style>
-      * {
-        border: 2px solid #dedede;
-        padding: 15px;
-        margin: 15px;
-      }
-      html {
-        margin: 0;
-        padding: 0;
-      }
       body {
-        max-width: 600px;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        max-width: 680px;
         margin: 30px auto;
-        font-family: sans-serif;
-        color: #333;
+        padding: 0 20px;
+        color: #1e293b;
+        line-height: 1.6;
       }
-      .biru-muda {
-        background-color: lightblue;
+      .panel {
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 20px;
+        background: #f8fafc;
+      }
+      .badge-aktif {
+        display: inline-block;
+        padding: 4px 10px;
+        background-color: #22c55e;
+        color: white;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      .sorot {
+        background-color: #fef08a;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+      .tema-gelap {
+        background-color: #1e293b !important;
+        color: #f8fafc !important;
+        border-color: #334155 !important;
+      }
+      .sembunyi {
+        display: none !important;
       }
     </style>
   </head>
   <body>
-    <h1 id="judul">Hello World</h1>
-    <div id="container">
-      <section id="a">
-        <p class="p1">paragraf 1</p>
-        <a href="https://developer.mozilla.org">Dokumentasi JavaScript</a>
-        <p class="p2">paragraf 2</p>
-        <p class="p3">paragraf 3</p>
-        <button>let's Go!!</button>
-      </section>
-      <section id="b">
-        <p>paragraf 4</p>
-        <ul>
-          <li>item 1</li>
-          <li>item 2</li>
-          <li>item 3</li>
-        </ul>
-      </section>
+    <h1 id="judul-halaman">03 - DOM Manipulasi Element</h1>
+    <p id="paragraf-deskripsi">
+      Belajar memanipulasi teks, atribut HTML, dan class CSS secara dinamis.
+    </p>
+
+    <!-- Panel Kotak Status untuk Demo -->
+    <div id="kotak-status" class="panel" data-role="admin" data-id="USR-1024">
+      <h3 id="status-title">Status Komponen</h3>
+      <p id="pesan-status">Menunggu inisialisasi...</p>
+      <a id="link-referensi" href="https://developer.mozilla.org" target="_self"
+        >Kunjungi MDN Web Docs</a
+      >
+    </div>
+
+    <!-- Elemen demonstrasi teks tersembunyi -->
+    <div id="demo-visibilitas">
+      Teks Terlihat <span style="display: none">Teks Tersembunyi via CSS</span>
     </div>
 
     <script src="./example.js"></script>

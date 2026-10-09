@@ -2,7 +2,9 @@
 
 if (typeof document === 'undefined') {
   console.log('--- 09. Image Gallery ---');
-  console.log("Buka file 'index.html' di browser Anda untuk melihat interaksi galeri foto!");
+  console.log(
+    "Buka file 'index.html' di browser Anda untuk melihat interaksi galeri foto!",
+  );
 } else {
   console.log('--- 09. Image Gallery (Browser) ---');
 

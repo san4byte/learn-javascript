@@ -2,165 +2,137 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Menerapkan konsep manipulasi Array dalam skenario studi kasus nyata.
-> - **Kapan Digunakan**: Mengimplementasikan fungsi penambahan penumpang (`tambahPenumpang`).
-> - **Aturan Praktis**: Kembalikan array kursi di akhir fungsi (`return kursi`) agar fungsi bersifat prediktif dan konsisten.
+> - **Fungsi Utama**: Mengintegrasikan konsep manipulasi Array (pencarian, penyisipan kembali slot kosong, penambahan di ujung, dan penghapusan) ke dalam studi kasus sistem manajemen kursi penumpang.
+> - **Kapan Digunakan**: Mengelola alokasi sumber daya berkapasitas terbatas (sistem reservasi kursi bioskop, alokasi loker gym, antrean loket, atau pool koneksi memori).
+> - **Aturan Praktis**: Tandai kursi kosong dengan nilai `undefined` saat penumpang turun agar indeks posisi kursi di belakangnya tidak bergeser, dan gunakan loop pencarian untuk menduduki slot kosong tersebut terlebih dahulu.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Menerapkan konsep manipulasi Array dalam skenario studi kasus nyata.
-- Mengimplementasikan fungsi penambahan penumpang (`tambahPenumpang`).
-- Mengimplementasikan fungsi penurunan penumpang (`hapusPenumpang`).
-- Menangani kondisi kursi kosong (`undefined`), kursi penuh, dan validasi nama duplikat.
+- Mengimplementasikan logika pemecahan masalah dunia nyata menggunakan struktur data Array.
+- Menguasai alur percabangan kompleks saat menambah penumpang (`tambahPenumpang`) berdasarkan status ketersediaan kursi.
+- Menguasai alur penurunan penumpang (`turunkanPenumpang`) dengan mekanisme penandaan slot kosong (`undefined`).
+- Menerapkan proteksi terhadap data duplikat menggunakan metode `Array.prototype.includes()`.
+- Menetapkan batas kapasitas maksimal angkot untuk menolak permintaan saat armada penuh.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Sistem ini seperti **manajemen loker gym**: saat loker nomor 2 dikosongkan oleh anggota yang pulang, anggota baru yang datang diprioritaskan mengisi loker nomor 2 yang kosong tersebut sebelum manajemen membuka baris loker baru di belakang.
-
-Proyek **Pengelolaan Kursi Penumpang** adalah implementasi studi kasus algoritma dunia nyata:
-
-### Aturan Bisnis:
-
-1. Angkot memiliki array kursi penampung penumpang: `penumpang = []`.
-2. **Fungsi `tambahPenumpang(namaPenumpang, penumpang)`**:
-   - Jika angkot masih kosong, penumpang duduk di kursi pertama (index 0).
-   - Jika ada kursi kosong di tengah (karena penumpang sebelumnya turun), duduki kursi kosong tersebut terlebih dahulu.
-   - Jika ada nama yang sama persis sudah ada di dalam angkot, tolak penambahan (cegah duplikasi).
-   - Jika seluruh kursi terisi penuh, tambahkan penumpang di kursi paling belakang.
-3. **Fungsi `hapusPenumpang(namaPenumpang, penumpang)`**:
-   - Jika angkot kosong, cetak peringatan bahwa angkot kosong.
-   - Jika nama ditemukan, ubah posisinya menjadi `undefined` (kursi menjadi kosong kembali).
-   - Jika nama tidak ditemukan, beri tahu bahwa penumpang tidak ada di dalam angkot.
+> Sistem kursi angkot seperti **lemari loker penitipan barang di gym**:
+> Ketika loker nomor 2 dikosongkan oleh anggota yang pulang duluan (**penumpang turun, kursi menjadi `undefined`**), anggota baru yang baru saja datang akan diarahkan petugas untuk mengisi loker nomor 2 yang kosong tersebut terlebih dahulu (**daur ulang slot kosong / seat recycling**), sebelum petugas membuka dan memberikan loker baru di deretan belakang.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Logika Keputusan Penambahan Penumpang
+
+| Kondisi Array Kursi                     | Aksi yang Dijalankan | Hasil Posisi Penumpang             |
+| :-------------------------------------- | :------------------- | :--------------------------------- |
+| **Array Masih Kosong (`length === 0`)** | `push(nama)`         | Duduk di Kursi 1 (indeks 0)        |
+| **Nama Sudah Ada di Array**             | Tolak penambahan     | Cetak peringatan duplikasi         |
+| **Ada Nilai `undefined` di Tengah**     | `kursi[i] = nama`    | Mengisi slot kursi kosong terdepan |
+| **Kapasitas Penuh (`>= batas`)**        | Tolak penambahan     | Cetak peringatan angkot penuh      |
+| **Kursi Terisi Penuh Normal**           | `push(nama)`         | Duduk di kursi paling belakang     |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Arsitektur Aturan Bisnis Kursi Angkot
+
+Sistem ini memodelkan angkot sebagai array satu dimensi di mana setiap indeks merepresentasikan nomor kursi fisik (`indeks + 1`):
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const daftarKursi = ["Joko", undefined, "Siti"];
+// Kursi 1: Joko, Kursi 2: Kosong, Kursi 3: Siti
+```
 
-console.log('--- Project Sistem Kursi Penumpang Angkot ---');
+#### 2. Logika Penambahan Penumpang (`tambahPenumpang`)
 
-const daftarKursi = [];
+Fungsi mengevaluasi 5 tahapan berurutan: periksa kekosongan total, periksa duplikasi nama, cari kursi kosong `undefined`, periksa batas kapasitas, dan tambahkan di baris paling akhir jika masih ada kuota.
 
-function tambahPenumpang(nama, kursi) {
-  // 1. Jika angkot kosong
-  if (kursi.length === 0) {
-    kursi.push(nama);
-    console.log(`[NAIK]: ${nama} duduk di kursi pertama (kursi 1).`);
+#### 3. Logika Penurunan Penumpang (`turunkanPenumpang`)
+
+Saat penumpang turun, kursi **tidak dihapus menggunakan `splice()`**, melainkan disetel menjadi `undefined`:
+
+```javascript
+kursi[i] = undefined;
+```
+
+Alasannya: jika menggunakan `splice()`, seluruh nomor kursi penumpang di belakangnya akan otomatis bergeser dan mengubah nomor tiket yang sudah dipegang penumpang lain.
+
+#### 4. Pengelolaan Slot Kosong (_Seat Recycling_)
+
+Melakukan iterasi untuk menemukan indeks pertama yang bernilai `undefined`:
+
+```javascript
+for (let i = 0; i < kursi.length; i++) {
+  if (kursi[i] === undefined) {
+    kursi[i] = namaBaru;
     return kursi;
   }
+}
+```
 
-  // 2. Cek apakah nama sudah ada (duplikasi)
-  if (kursi.includes(nama)) {
-    console.log(
-      `[DITOLAK]: Penumpang bernama '${nama}' sudah ada di dalam angkot!`
-    );
-    return kursi;
-  }
+#### 5. Pencegahan Duplikasi Data dengan `Array.includes()`
 
-  // 3. Telusuri apakah ada kursi kosong di tengah (undefined)
-  for (let i = 0; i < kursi.length; i++) {
-    if (kursi[i] === undefined) {
-      kursi[i] = nama;
-      console.log(`[NAIK]: ${nama} menduduki kursi kosong (kursi ${i + 1}).`);
-      return kursi;
-    }
-  }
+Mencegah satu orang penumpang yang sama duduk di dua kursi berbeda:
 
-  // 4. Jika seluruh kursi terisi penuh, tambah di kursi belakang
-  kursi.push(nama);
-  console.log(
-    `[NAIK]: Seluruh kursi penuh, ${nama} duduk di kursi paling belakang (kursi ${kursi.length}).`
-  );
+```javascript
+if (kursi.includes(nama)) {
+  console.log(`Penumpang '${nama}' sudah ada di dalam angkot!`);
   return kursi;
 }
+```
 
-function turunkanPenumpang(nama, kursi) {
-  if (kursi.length === 0) {
-    console.log(
-      '[PERINGATAN]: Angkot masih kosong, tidak ada penumpang yang bisa turun.'
-    );
-    return kursi;
-  }
+#### 6. Validasi Kapasitas Maksimum Angkot
 
-  for (let i = 0; i < kursi.length; i++) {
-    if (kursi[i] === nama) {
-      kursi[i] = undefined; // Kursi menjadi kosong kembali
-      console.log(`[TURUN]: ${nama} telah turun dari kursi ${i + 1}.`);
-      return kursi;
-    }
-  }
+Menjaga keselamatan armada agar tidak melebihi muatan resmi yang diizinkan (_max capacity barrier_).
 
-  console.log(
-    `[GAGAL]: Tidak ada penumpang bernama '${nama}' di dalam angkot.`
-  );
-  return kursi;
-}
+---
 
-// Simulasi Alur Penumpang:
-tambahPenumpang('Joko', daftarKursi);
-tambahPenumpang('Budi', daftarKursi);
-tambahPenumpang('Siti', daftarKursi);
-console.log('Status Kursi:', daftarKursi);
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-// Budi turun di perjalanan
-turunkanPenumpang('Budi', daftarKursi);
-console.log('Status Kursi:', daftarKursi);
+Seluruh implementasi demonstrasi simulasi sistem kursi angkot: alur penumpang naik berurutan, proses penumpang turun meninggalkan kursi `undefined`, penumpang baru menduduki slot kosong, penolakan nama ganda, serta pengujian kapasitas maksimum armada telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
-// Penumpang baru naik dan mengisi kursi kosong bekas Budi
-tambahPenumpang('Ahmad', daftarKursi);
-console.log('Status Kursi:', daftarKursi);
+Jalankan demonstrasi secara langsung di terminal Anda:
+
+```bash
+node 01-fundamentals/08-arrays/03-project-manage-passengers/example.js
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
-
-```text
---- Project Sistem Kursi Penumpang Angkot ---
-[NAIK]: Joko duduk di kursi pertama (kursi 1).
-[NAIK]: Seluruh kursi penuh, Budi duduk di kursi paling belakang (kursi 2).
-[NAIK]: Seluruh kursi penuh, Siti duduk di kursi paling belakang (kursi 3).
-Status Kursi: [ 'Joko', 'Budi', 'Siti' ]
-[TURUN]: Budi telah turun dari kursi 2.
-Status Kursi: [ 'Joko', undefined, 'Siti' ]
-[NAIK]: Ahmad menduduki kursi kosong (kursi 2).
-Status Kursi: [ 'Joko', 'Ahmad', 'Siti' ]
-```
-
----
-
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Sistem Pemesanan Kursi Bioskop / Kereta Api**: Mengelola status ketersediaan kursi (`Tersedia`, `Terisi`, `Dibatalkan`) secara dinamis.
-2. **Memory Pool Allocation**: Menggunakan kembali slot memori yang kosong (_recycled memory buffer_) sebelum mengalokasikan blok memori baru.
+1. **Sistem Tiket Bioskop & Maskapai Penerbangan**: Menyediakan denah kursi di mana pembatalan tiket mengubah status kursi menjadi `AVAILABLE` kembali untuk dipesan pembeli lain.
+2. **Buffer Memory Allocation (Object Pool)**: Di industri game development, objek peluru atau musuh yang hancur disetel kembali menjadi `null/undefined` di dalam array pool agar memorinya dapat digunakan kembali oleh peluru baru tanpa membebani _Garbage Collector_.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Menggunakan `delete array[i]` tanpa hati-hati**: Operator `delete` menghapus nilai tetapi mempertahankan index array sebagai `empty slot / undefined`. Pastikan loop Anda memeriksa nilai `undefined` dengan benar.
+- **Menggunakan `shift()` atau `splice()` untuk Menghapus Penumpang**: Menyebabkan penumpang yang duduk di kursi 3 tiba-tiba tergeser ke kursi 2, merusak konsistensi penomoran kursi fisik.
+- **Mengabaikan Nilai `undefined` Saat Menghitung Jumlah Penumpang**: Menggunakan `kursi.length` untuk mengetahui jumlah penumpang riil akan salah jika ada kursi kosong `undefined` di tengah. Gunakan `kursi.filter(Boolean).length`.
 
 ### 🌟 Best Practice
 
-- Kembalikan array kursi di akhir fungsi (`return kursi`) agar fungsi bersifat prediktif dan konsisten.
-- Gunakan method array bawaan seperti `includes()` untuk validasi duplikasi data.
+- Selalu kembalikan nilai array kursi (`return kursi`) pada setiap cabang kondisi fungsi agar pemanggilan fungsi bersifat terprediksi.
+- Ekstrak batas kapasitas maksimum menjadi parameter konfigurasi fungsi dengan nilai default (`kapasitas = 10`).
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Tambahkan batasan kapasitas maksimal angkot (misal maksimal 5 penumpang). Jika penumpang ke-6 mencoba naik dan tidak ada kursi kosong, tolak dengan pesan 'Maaf, angkot sudah penuh!'.
-2. Buat fungsi `hitungSisaKursiKosong(kursi, kapasitasMaksimal)`.
+1. Buatlah fungsi pembantu `hitungPenumpangAktif(kursi)` yang mengembalikan jumlah penumpang yang benar-benar ada di dalam angkot (abaikan slot kursi yang bernilai `undefined`).
+2. Tambahkan fitur tarif angkot: buat variabel `kasAngkot = 0`. Setiap kali penumpang berhasil turun via `turunkanPenumpang()`, tambahkan kas angkot sebesar `Rp 5.000`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [08.2 - Destructuring & Spread Array](../02-destructuring-spread/README.md)
 - ➡️ **Selanjutnya:** [09.1 - Dasar Object](../../09-objects/01-object-basics/README.md)

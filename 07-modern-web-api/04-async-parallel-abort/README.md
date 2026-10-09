@@ -2,230 +2,191 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami perbedaan eksekusi asinkron Sekuensial (satu per satu) vs Paralel (bersamaan).
-> - **Kapan Digunakan**: Mampu menggunakan `Promise.all` dan `Promise.allSettled` sesuai kebutuhan skenario proyek.
-> - **Aturan Praktis**: Selalu sediakan timeout otomatis menggunakan `AbortSignal.timeout(5000)` agar request tidak menggantung selamanya saat jaringan internet user lambat.
+> - **Fungsi Utama**: Menjalankan banyak request data jaringan secara serentak (paralel) untuk mempercepat loading aplikasi, serta mengendalikan pembatalan request tertunda menggunakan `AbortController`.
+> - **Kapan Digunakan**: Mengambil data profil, notifikasi, dan analitik secara bersamaan di dashboard, serta membatalkan request pencarian lama saat pengguna mengetik kata kunci baru (_debounced live search_).
+> - **Aturan Praktis**: Gunakan `Promise.all()` saat semua data wajib ada (_all-or-nothing_). Gunakan `Promise.allSettled()` untuk dashboard banyak widget agar satu service yang down tidak merusak tampilan widget lain. Selalu manfaatkan `AbortSignal.timeout(ms)` untuk proteksi request menggantung.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami perbedaan eksekusi asinkron Sekuensial (satu per satu) vs Paralel (bersamaan).
-- Mampu menggunakan `Promise.all` dan `Promise.allSettled` sesuai kebutuhan skenario proyek.
-- Memahami bahaya Race Condition pada input pencarian live (Search Autocomplete).
-- Menguasai `AbortController` untuk membatalkan request HTTP `fetch` yang sudah tidak dibutuhkan.
+- Mengidentifikasi masalah _bottleneck_ performa akibat pemanggilan `await` sekuensial yang ceroboh.
+- Menguasai eksekusi konkurensi paralel menggunakan `Promise.all()` dan destrukturisasi array hasil.
+- Mampu membangun antarmuka multi-widget tahan banting menggunakan `Promise.allSettled()`.
+- Memahami bahaya _Race Condition_ pada komponen pencarian interaktif (_Autocomplete_).
+- Menguasai cara kerja `AbortController` dan properti `signal` untuk membatalkan `fetch()`.
+- Menggunakan `AbortSignal.timeout()` untuk menerapkan batas waktu toleransi request jaringan secara modern.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> **Eksekusi Sekuensial** seperti Anda memesan burger di kasir, menunggu burger matang, baru kemudian memesan es teh (lama). **Promise.all** seperti memesan burger dan es teh sekaligus ke dua pelayan berbeda. Sedangkan **AbortController** seperti tombol 'Batalkan Pesanan' di aplikasi ojek online ketika driver belum berangkat.
+> - **Eksekusi Sekuensial** seperti Anda memesan makanan di kasir: pesan burger, tunggu burger matang (5 menit), baru pesan es teh, tunggu es teh dibuat (2 menit). Total waktu: **7 menit**.
+> - **`Promise.all`** seperti memesan burger dan es teh secara bersamaan ke dua pelayan dapur yang berbeda. Keduanya dimasak bersamaan, sehingga seluruh pesanan siap dalam waktu masakan terlama (**5 menit**).
+> - **`AbortController`** seperti **tombol "Batalkan Pesanan" di aplikasi transportasi online**: Jika Anda salah mengetik alamat tujuan atau pengemudi terlalu lama merespon, Anda menekan tombol batal sebelum mobil meluncur ke rumah Anda.
 
-Dalam pengembangan aplikasi web skala produksi, hampir semua halaman membutuhkan pengambilan data dari lebih dari satu endpoint API (misalnya: data profil user, data notifikasi, dan data daftar pesanan).
+---
 
-### 1. Masalah Eksekusi Sekuensial (Sequential Await)
+### Tabel Perbandingan Penanganan Permintaan Jaringan
 
-Jika Anda menulis:
+| Pola / Komponen          | Perilaku Saat Gagal           | Total Waktu Tunggu                            | Kapan Harus Digunakan                              |
+| :----------------------- | :---------------------------- | :-------------------------------------------- | :------------------------------------------------- |
+| **Sequential `await`**   | Berhenti di titik error       | Penjumlahan waktu ($T_1 + T_2 + T_3$)         | Jika tugas B membutuhkan data output dari tugas A. |
+| **`Promise.all`**        | Langsung reject (_Fail-Fast_) | Secepat tugas terlama ($\max(T_1, T_2, T_3)$) | Semua data saling terikat (User + Autorisasi).     |
+| **`Promise.allSettled`** | Tidak pernah melempar reject  | Secepat tugas terlama ($\max(T_1, T_2, T_3)$) | Dashboard multi-service independen.                |
+| **`AbortController`**    | Melempar `AbortError`         | Dibatalkan seketika oleh klien                | Autocomplete search, timeout, unmount komponen.    |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Masalah Bottleneck Eksekusi Sekuensial (Sequential Await)
+
+Menulis `await` baris demi baris pada operasi yang independen adalah kesalahan desain paling umum yang memperlambat website:
 
 ```javascript
-const user = await fetchUser(); // butuh 2 detik
-const orders = await fetchOrders(); // butuh 2 detik
-const notifs = await fetchNotifs(); // butuh 2 detik
-// Total waktu tunggu: 6 detik!
+// ❌ LAMBAT: Total 1.5 detik (500ms + 500ms + 500ms)
+const user = await fetch("/api/user");
+const stats = await fetch("/api/stats");
+const notif = await fetch("/api/notif");
 ```
 
-Karena ketiga data tersebut independen, menunggu satu per satu membuat aplikasi lambat.
+#### 2. Eksekusi Paralel Maksimal dengan `Promise.all()`
 
-### 2. Eksekusi Paralel Modern:
-
-- **`Promise.all([p1, p2, p3])`**:
-  - Menjalankan semua promise secara serentak.
-  - Selesai dalam waktu request terlama (misal hanya 2 detik!).
-  - **Karakteristik Fail-Fast**: Jika **SATU SAJA** promise gagal (reject), seluruh operasi dianggap gagal dan langsung melempar error.
-- **`Promise.allSettled([p1, p2, p3])`**:
-  - Menjalankan semua promise secara serentak.
-  - **TIDAK PERNAH FAIL-FAST**: Menunggu semua promise selesai, baik berhasil (`fulfilled`) maupun gagal (`rejected`).
-  - Mengembalikan array objek status: `[{ status: 'fulfilled', value: ... }, { status: 'rejected', reason: ... }]`.
-
-### 3. Membatalkan HTTP Request dengan `AbortController`
-
-Ketika pengguna mengetik di kotak pencarian:
-
-1. User mengetik "lap" -> Fetch request 1 dikirim.
-2. User cepat mengetik "laptop" -> Fetch request 2 dikirim.
-   Jika server memproses request 1 lebih lambat daripada request 2, hasil pencarian "lap" bisa muncul belakangan dan menimpa hasil pencarian "laptop" (**Race Condition**).
-   Solusi: Batalkan (_abort_) request 1 sebelum mengirim request 2 menggunakan `AbortController`.
-
----
-
-## 3. 💻 Contoh Kode (`example.js`)
+Memulai ketiga request pada saat yang sama sehingga total waktu tunggu hanya sepanjang request yang paling lambat:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// ✅ CEPAT: Total hanya ~500 milidetik!
+const [user, stats, notif] = await Promise.all([
+  fetch("/api/user").then((r) => r.json()),
+  fetch("/api/stats").then((r) => r.json()),
+  fetch("/api/notif").then((r) => r.json()),
+]);
+```
 
-// Fungsi simulasi fetch dengan delay
-function fetchMock(endpoint, delayMs, shouldFail = false) {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (shouldFail) {
-        reject(new Error(`Gagal memuat data dari ${endpoint}`));
-      } else {
-        resolve({
-          endpoint,
-          data: `Hasil dari ${endpoint}`,
-          waktu: `${delayMs}ms`,
-        });
-      }
-    }, delayMs);
+#### 3. Ketahanan Parsial dengan `Promise.allSettled()`
+
+Mencegah satu error membatalkan tampilan seluruh halaman. Setiap elemen hasil diperiksa statusnya:
+
+```javascript
+const results = await Promise.allSettled([fetchWidget1(), fetchWidget2()]);
+results.forEach((res) => {
+  if (res.status === "fulfilled") renderWidget(res.value);
+  else renderFallbackError(res.reason);
+});
+```
+
+#### 4. Fenomena Race Condition pada Live Search
+
+Ketika pengguna mengetik `"lap"` lalu cepat mengetik `"laptop"`, request pertama untuk `"lap"` bisa saja tiba belakangan dari server dan menimpa hasil pencarian `"laptop"`.
+
+#### 5. Arsitektur Pembatalan Request via `AbortController`
+
+Hubungkan `controller.signal` ke opsi `fetch`:
+
+```javascript
+const controller = new AbortController();
+
+fetch("/api/search?q=laptop", { signal: controller.signal })
+  .then((res) => res.json())
+  .catch((err) => {
+    if (err.name === "AbortError") console.log("Request dibatalkan!");
   });
+
+// Batalkan request kapan saja:
+controller.abort();
+```
+
+#### 6. Membatalkan Request Lama Saat Pengguna Mengetik Ulang
+
+Simpan referensi controller aktif dan batalkan sebelum membuat request pencarian baru:
+
+```javascript
+let activeController = null;
+
+function onSearch(keyword) {
+  if (activeController) activeController.abort(); // Batalkan request sebelumnya
+  activeController = new AbortController();
+
+  fetch(`/api/search?q=${keyword}`, { signal: activeController.signal });
 }
+```
 
-async function loadDashboardCepat() {
-  console.log('--- 1. Eksekusi Paralel dengan Promise.all ---');
-  console.time('Durasi Promise.all');
-  try {
-    // Semua request berjalan bersamaan!
-    const [profil, ringkasan, notifikasi] = await Promise.all([
-      fetchMock('/api/user/profile', 300),
-      fetchMock('/api/dashboard/stats', 500),
-      fetchMock('/api/notifications', 200),
-    ]);
+#### 7. Pola Auto-Timeout Menggunakan `AbortSignal.timeout(ms)`
 
-    console.log('Berhasil memuat dashboard:');
-    console.log('- Profil     :', profil.data);
-    console.log('- Ringkasan  :', ringkasan.data);
-    console.log('- Notifikasi :', notifikasi.data);
-  } catch (error) {
-    console.error('Dashboard gagal dimuat:', error.message);
+Standar modern tanpa perlu menyetel timer `setTimeout` manual:
+
+```javascript
+try {
+  // Otomatis dibatalkan jika server tidak merespon dalam 3 detik:
+  const res = await fetch("/api/data", { signal: AbortSignal.timeout(3000) });
+  const data = await res.json();
+} catch (e) {
+  if (e.name === "TimeoutError")
+    console.error("Koneksi internet terputus (Timeout)!");
+}
+```
+
+#### 8. Penanganan Error `AbortError` pada Blok `try...catch`
+
+Pastikan kode Anda mengabaikan log error jika pembatalan memang sengaja dilakukan oleh sistem:
+
+```javascript
+try {
+  const res = await fetch(url, { signal });
+} catch (error) {
+  if (error.name === "AbortError") {
+    return; // Abaikan, ini aksi normal pengguna
   }
-  console.timeEnd('Durasi Promise.all'); // Sekitar ~500ms, bukan 1000ms!
+  console.error("Error jaringan sungguhan:", error);
 }
-
-async function loadWidgetHalaman() {
-  console.log('\n--- 2. Eksekusi Tahan Banting dengan Promise.allSettled ---');
-  const hasil = await Promise.allSettled([
-    fetchMock('/api/berita-utama', 200),
-    fetchMock('/api/widget-cuaca', 150, true), // Simulasi endpoint cuaca sedang down/error
-    fetchMock('/api/kurs-mata-uang', 300),
-  ]);
-
-  console.log('Hasil pemrosesan multi-widget:');
-  hasil.forEach((res, index) => {
-    if (res.status === 'fulfilled') {
-      console.log(`Widget ${index + 1} [SUKSES]:`, res.value.endpoint);
-    } else {
-      console.log(
-        `Widget ${index + 1} [GAGAL]:`,
-        res.reason.message,
-        '(Tampilkan fallback UI)'
-      );
-    }
-  });
-}
-
-async function demonstrasiAbort() {
-  console.log('\n--- 3. Membatalkan Fetch dengan AbortController ---');
-  const controller = new AbortController();
-  const { signal } = controller;
-
-  // Jadwalkan pembatalan setelah 100 milidetik
-  setTimeout(() => {
-    console.log(
-      '[User menekan tombol Batal / mengetik kata baru] -> Membatalkan request!'
-    );
-    controller.abort();
-  }, 100);
-
-  try {
-    console.log('Mengirim request fetch download file besar...');
-    // Di real-world: await fetch('/api/file-besar', { signal });
-    // Simulasi native Promise yang mendengarkan signal abort:
-    await new Promise((resolve, reject) => {
-      const timer = setTimeout(() => resolve('Download selesai'), 400);
-      signal.addEventListener('abort', () => {
-        clearTimeout(timer);
-        reject(new DOMException('The user aborted a request.', 'AbortError'));
-      });
-    });
-  } catch (err) {
-    if (err.name === 'AbortError') {
-      console.log(
-        'Request berhasil dibatalkan secara aman tanpa membocorkan memori.'
-      );
-    } else {
-      console.error('Terjadi error lain:', err);
-    }
-  }
-}
-
-// Jalankan demonstrasi secara berurutan
-async function runAll() {
-  await loadDashboardCepat();
-  console.log('');
-  await loadWidgetHalaman();
-  console.log('');
-  await demonstrasiAbort();
-}
-
-runAll();
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. Eksekusi Paralel dengan Promise.all ---
-Berhasil memuat dashboard:
-- Profil     : Hasil dari /api/user/profile
-- Ringkasan  : Hasil dari /api/dashboard/stats
-- Notifikasi : Hasil dari /api/notifications
-Durasi Promise.all: ~500ms
+Seluruh implementasi benchmark durasi `Promise.all`, penanganan multi-widget menggunakan `Promise.allSettled`, serta simulasi pembatalan permintaan pencarian jaringan dengan `AbortController` telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. Eksekusi Tahan Banting dengan Promise.allSettled ---
-Hasil pemrosesan multi-widget:
-Widget 1 [SUKSES]: /api/berita-utama
-Widget 2 [GAGAL]: Gagal memuat data dari /api/widget-cuaca (Tampilkan fallback UI)
-Widget 3 [SUKSES]: /api/kurs-mata-uang
+Jalankan demonstrasi menggunakan Node.js di terminal:
 
---- 3. Membatalkan Fetch dengan AbortController ---
-Mengirim request fetch download file besar...
-[User menekan tombol Batal / mengetik kata baru] -> Membatalkan request!
-Request berhasil dibatalkan secara aman tanpa membocorkan memori.
+```bash
+node 07-modern-web-api/04-async-parallel-abort/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Halaman Dashboard**: Memuat data profil user, grafik penjualan, dan saldo rekening secara paralel menggunakan `Promise.all`.
-2. **Widget Independen**: Pada portal berita, widget kurs uang dan ramalan cuaca tidak boleh membuat berita utama gagal dimuat jika API cuaca mati. Solusinya: gunakan `Promise.allSettled`.
-3. **Live Search / Typeahead Input**: Saat user mengetik cepat di form pencarian Google/Tokopedia, request lama dibatalkan via `controller.abort()` sehingga hanya request kata kunci terakhir yang diproses.
+1. **Dashboard Home E-Commerce**: Memuat data profil user, banner promosi, dan 10 produk terlaris secara paralel saat aplikasi pertama kali dibuka.
+2. **Pembersihan Komponen UI (React / Vue Cleanup Effect)**: Membatalkan fetch data di dalam fungsi cleanup saat pengguna berpindah halaman sebelum request selesai dimuat.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Salah Menggunakan Promise.all untuk Data Non-Kritis**: Menggunakan `Promise.all` untuk memuat seluruh halaman menyebabkan jika satu widget iklan/sponsor error, seluruh dashboard ikut blank/crash. Gunakan `Promise.allSettled` untuk widget independen.
-- **Lupa Menangkap AbortError**: Saat request dibatalkan dengan `AbortController`, fetch akan melempar error dengan nama `AbortError`. Anda harus mengecek `if (err.name === 'AbortError')` agar tidak menampilkan pesan error merah yang membingungkan ke user.
+- **Menggunakan `Promise.all` untuk Data yang Tidak Bersifat Kritis**: Jika 1 dari 10 service gagal (misal service avatar mati), `Promise.all` akan membatalkan 9 service penting lainnya (seperti data transaksi). Gunakan `Promise.allSettled` untuk kasus ini.
+- **Lupa Menangkap Error `AbortError`**: Membiarkan error pembatalan mencemari log konsol atau menampilkan pop-up error palsu kepada pengguna.
 
 ### 🌟 Best Practice
 
-- Selalu sediakan timeout otomatis menggunakan `AbortSignal.timeout(5000)` agar request tidak menggantung selamanya saat jaringan internet user lambat.
-- Kelola satu instance `AbortController` aktif di tingkat komponen pencarian, dan panggil `.abort()` sebelum membuat request baru.
+- Selalu pasangkan `AbortSignal.timeout()` pada pemanggilan `fetch` eksternal untuk menghindari request menggantung selamanya (_infinite pending_).
+- Gunakan `Promise.all()` jika dan hanya jika seluruh data memiliki ketergantungan mutlak satu sama lain.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Diberikan tiga fungsi API: `getUser()`, `getNotifications()`, dan `getRecommendations()`. Jika rekomendasi gagal dimuat, halaman tetap harus menampilkan user dan notifikasi. Tuliskan kodenya menggunakan `Promise.allSettled()`.
-2. Buatlah fungsi `fetchDenganTimeout(url, timeoutMs)` yang menggunakan `AbortController` untuk membatalkan fetch jika respon server tidak kunjung diterima melebihi waktu `timeoutMs`.
+1. Buatlah fungsi yang menjalankan 3 promise dengan `Promise.all` dan catat durasi total eksekusinya menggunakan `console.time('waktu')` dan `console.timeEnd('waktu')`.
+2. Buat sebuah request `fetch` yang dibatalkan otomatis setelah 200 milidetik menggunakan `AbortSignal.timeout(200)`. Amati pesan error yang tertangkap di blok `catch`!
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [03 - URL dan FormData API](../03-url-and-formdata/README.md)
-- ➡️ **Selanjutnya:** [05 - Debounce dan Throttle Optimization](../05-debounce-and-throttle/README.md)
+- ⬅️ **Materi Sebelumnya:** [03 - URL & FormData API](../03-url-and-formdata/README.md)
+- ➡️ **Materi Selanjutnya:** [05 - Debounce & Throttle](../05-debounce-and-throttle/README.md)
 - 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -2,139 +2,265 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami tipe data primitif `BigInt` untuk menangani bilangan bulat berukuran sangat besar.
-> - **Kapan Digunakan**: Mengetahui cara deklarasi BigInt menggunakan literal berakhiran huruf `n` atau fungsi global `BigInt()`.
-> - **Aturan Praktis**: Gunakan BigInt hanya jika data Anda benar-benar berpotensi melebihi $2^{53} - 1$. Untuk angka transaksi biasa di bawah 9 triliun, gunakan tipe `Number` standar.
+> - **Fungsi Utama**: Tipe data primitif untuk merepresentasikan bilangan bulat dengan presisi tak terbatas tanpa batasan $2^{53} - 1$ (`Number.MAX_SAFE_INTEGER`).
+> - **Kapan Digunakan**: Mengolah ID Twitter/Discord 64-bit (_Snowflake_), saldo token kripto/blockchain (Wei), dan kriptografi matematika.
+> - **Aturan Praktis**: Dilarang mencampur BigInt dan Number secara implisit (`10n + 5` memicu `TypeError`), pembagian BigInt selalu membuang desimal, dan gunakan fungsi replacer untuk serialisasi JSON.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami tipe data primitif `BigInt` untuk menangani bilangan bulat berukuran sangat besar.
-- Mengetahui cara deklarasi BigInt menggunakan literal berakhiran huruf `n` atau fungsi global `BigInt()`.
-- Memahami batas toleransi tipe data `Number` standar dan alasan mutlak diperlukannya BigInt.
-- Mengetahui batasan operasi aritmetika antara BigInt dan Number biasa (tidak bisa dioperasikan langsung tanpa konversi eksplisit).
+- Memahami batasan IEEE 754 pada tipe `Number` standar dan alasan mutlak diperlukannya `BigInt`.
+- Menguasai inisialisasi BigInt menggunakan literal `n` dan fungsi `BigInt()`.
+- Menguasai seluruh method & properti `BigInt` beserta berbagai kondisi kasus (_edge cases_).
+- Menguasai operasi aritmetika (`+`, `-`, `*`, `/`, `%`, `**`) serta memahami efek pembulatan desimal (_truncation_).
+- Memahami aturan ketat _type coercion_ dan cara konversi eksplisit antara BigInt dan Number.
+- Menguasai perbandingan longgar (`==`) vs ketat (`===`) serta pengurutan array campuran.
+- Memahami fungsi pembatas bit: `BigInt.asIntN()` dan `BigInt.asUintN()`.
+- Mengetahui keterbatasan ekosistem: ketiadaan dukungan di objek `Math` dan cara mengatasi kegagalan `JSON.stringify()`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep & Referensi Lengkap
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> `Number` seperti timbangan dapur kue yang hanya akurat hingga 5 kilogram (angka di atas itu jarumnya meleset). Sedangkan `BigInt` seperti timbangan jembatan truk tronton di jalan tol: mampu menimbang bobot sebesar apa pun tanpa batasan kapasitas selama ada ruang memori di komputer Anda.
+> Tipe `Number` seperti timbangan dapur digital yang hanya akurat menimbang hingga 5 kilogram (beban di atas itu jarumnya melenceng). Sedangkan `BigInt` seperti jembatan timbang truk tronton di jalan tol: mampu menimbang bobot sebesar apa pun tanpa batasan kapasitas selama komputer Anda masih memiliki sisa ruang memori.
 
-Tipe data bawaan `Number` di JavaScript menggunakan representasi _64-bit floating point_ (IEEE 754), yang memiliki batas bilangan bulat aman maksimal sebesar **$2^{53} - 1$** atau `9007199254740991` (`Number.MAX_SAFE_INTEGER`). Jika kita melakukan operasi angka di atas angka ini, hasil kalkulasi akan menjadi tidak akurat (_precision loss_).
-
-Untuk mengatasi kebutuhan kalkulasi angka raksasa (seperti kriptografi, ID database 64-bit Snowflake di Twitter/Discord, atau kalkulasi ilmiah), ES2020 memperkenalkan tipe data primitif baru bernama **`BigInt`**.
-
-### Tabel Referensi Fitur & Method `BigInt`
-
-| Fitur / Method                     | Parameter                     | Tipe Return | Deskripsi & Contoh Singkat                                                                 |
-| :--------------------------------- | :---------------------------- | :---------- | :----------------------------------------------------------------------------------------- |
-| **Sufiks `n`**                     | Literal angka                 | `bigint`    | Menandai angka sebagai BigInt: `const x = 100n;`                                           |
-| **`BigInt(value)`**                | `number`, `string`, `boolean` | `bigint`    | Mengonversi nilai ke BigInt: `BigInt("9007199254740993")`                                  |
-| **`BigInt.asIntN(bits, bigint)`**  | `(bits, bigint)`              | `bigint`    | Membatasi nilai BigInt ke rentang integer bertanda (_signed_) sejumlah bit tertentu.       |
-| **`BigInt.asUintN(bits, bigint)`** | `(bits, bigint)`              | `bigint`    | Membatasi nilai BigInt ke rentang integer tak bertanda (_unsigned_) sejumlah bit tertentu. |
-| **`bigint.toString([radix])`**     | `radix` (opsional 2-36)       | `string`    | Mengubah BigInt jadi string: `(255n).toString(16) // "ff"`                                 |
-| **`bigint.toLocaleString([loc])`** | `locale` (opsional)           | `string`    | Memformat tampilan angka BigInt sesuai bahasa/region lokal.                                |
-
----
-
-### Aturan & Batasan Penting BigInt
-
-| Aspek                                 | Perilaku pada `BigInt`            | Contoh & Keterangan                                                                             |
-| :------------------------------------ | :-------------------------------- | :---------------------------------------------------------------------------------------------- |
-| **Pencampuran dengan Number**         | ❌ Dilarang keras secara implisit | `10n + 5` menghasilkan `TypeError: Cannot mix BigInt and other types`. Wajib `10n + BigInt(5)`. |
-| **Bilangan Pecahan / Desimal**        | ❌ Tidak didukung                 | `5n / 2n` menghasilkan `2n` (angka desimal dibuang/dibulatkan ke bawah).                        |
-| **Dukungan Objek `Math`**             | ❌ Tidak didukung                 | `Math.max(10n, 20n)` atau `Math.sqrt(16n)` melempar `TypeError`.                                |
-| **Perbandingan Longgar (`==`)**       | ✅ Boleh (mengecek nilai)         | `10n == 10` bernilai `true`.                                                                    |
-| **Perbandingan Ketat (`===`)**        | ✅ Boleh (mengecek tipe & nilai)  | `10n === 10` bernilai `false` karena tipe datanya berbeda (`bigint` vs `number`).               |
-| **Pengurutan (`<`, `>`, `<=`, `>=`)** | ✅ Berfungsi normal               | `10n < 20` bernilai `true`.                                                                     |
-| **Serialisasi ke JSON**               | ❌ Gagal bawaan                   | `JSON.stringify(10n)` melempar `TypeError` kecuali ditambahkan kustomisasi method `toJSON`.     |
-
----
-
-## 3. 💻 Contoh Kode (`example.js`)
+Tipe data bawaan `Number` di JavaScript menggunakan representasi _64-bit floating point_ (IEEE 754), dengan batas bilangan bulat aman maksimal sebesar **$2^{53} - 1$** atau `9007199254740991` (`Number.MAX_SAFE_INTEGER`). Di atas angka tersebut, kalkulasi akan kehilangan presisi bit terakhir:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+console.log(9007199254740991 + 1 === 9007199254740991 + 2); // true! ❌ (Bug kalkulasi angka besar)
+```
 
-console.log('--- 1. Inisialisasi BigInt (Literal n vs BigInt()) ---');
-const saldoAwal = 9007199254740991n; // Literal n di batas maksimal Number aman
-const transferMasuk = BigInt('5000000000000000'); // Dari string angka raksasa
-const biayaAdmin = 1000; // Tipe Number biasa
+Tipe data primitif **`BigInt`** hadir di ES2020 untuk menyelesaikan masalah ini secara tuntas.
 
-console.log('Saldo Awal              :', saldoAwal);
-console.log('Transfer Masuk          :', transferMasuk);
-console.log('Biaya Admin (Number)    :', biayaAdmin);
+---
 
-console.log('\n--- 2. Operasi Aritmetika & Konversi Eksplisit ---');
-const totalSaldo = saldoAwal + transferMasuk;
-console.log('Total Saldo Akumulasi   :', totalSaldo);
+### 1. Tabel Ringkasan Fitur & Method BigInt (Cheat-Sheet)
 
-// Wajib konversi biayaAdmin dari Number ke BigInt agar tidak melempar TypeError
-const saldoSetelahAdmin = totalSaldo - BigInt(biayaAdmin);
-console.log('Saldo Setelah Biaya Admin:', saldoSetelahAdmin);
+| Fitur / Method                     | Parameter                     | Nilai Kembalian | Deskripsi Singkat                                                     |
+| :--------------------------------- | :---------------------------- | :-------------- | :-------------------------------------------------------------------- |
+| **Sufiks `n`**                     | Literal angka                 | `bigint`        | Menandai angka sebagai BigInt: `const x = 100n;`                      |
+| **`BigInt(value)`**                | `number`, `string`, `boolean` | `bigint`        | Mengonversi nilai ke BigInt: `BigInt("9007199254740993")`             |
+| **`BigInt.asIntN(bits, bigint)`**  | `(bits, bigint)`              | `bigint`        | Membatasi nilai ke rentang integer bertanda (_signed_) $n$-bit.       |
+| **`BigInt.asUintN(bits, bigint)`** | `(bits, bigint)`              | `bigint`        | Membatasi nilai ke rentang integer tak bertanda (_unsigned_) $n$-bit. |
+| **`bigint.toString([radix])`**     | `radix` _(opsional 2-36)_     | `string`        | Mengubah BigInt menjadi teks string basis tertentu.                   |
+| **`bigint.toLocaleString([loc])`** | `locale` _(opsional)_         | `string`        | Memformat angka BigInt sesuai bahasa/wilayah lokal.                   |
 
-// Pembagian bulat ke 2 rekening (desimal otomatis dibuang)
-const saldoBagiDua = saldoSetelahAdmin / 2n;
-console.log('Saldo Dibagi Rata (2 Rek):', saldoBagiDua);
+---
 
-console.log('\n--- 3. Inspeksi Tipe Data & Perbandingan Identik ---');
-console.log('Tipe data saldoBagiDua  :', typeof saldoBagiDua);
-console.log('Apakah identik BigInt?  :', totalSaldo === BigInt(totalSaldo));
+### 2. Eksplorasi Mendalam Setiap Fitur & Method BigInt
+
+Berikut adalah rincian lengkap setiap fitur dan method `BigInt` beserta skenario kasusnya masing-masing:
+
+---
+
+#### 1. Sintaks Literal Sufiks: `n`
+
+Membuat nilai `BigInt` secara langsung dengan menambahkan huruf `n` di akhir deretan angka.
+
+```javascript
+const idBesar = 9007199254740995n;
+console.log(typeof idBesar); // "bigint"
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+#### 2. Fungsi Konstruktor: `BigInt(value)`
 
-```text
---- 1. Inisialisasi BigInt (Literal n vs BigInt()) ---
-Saldo Awal              : 9007199254740991n
-Transfer Masuk          : 5000000000000000n
-Biaya Admin (Number)    : 1000
+Mengonversi tipe data lain (string, number, boolean) menjadi `BigInt`.
 
---- 2. Operasi Aritmetika & Konversi Eksplisit ---
-Total Saldo Akumulasi   : 14007199254740991n
-Saldo Setelah Biaya Admin: 14007199254739991n
-Saldo Dibagi Rata (2 Rek): 7003599627369995n
+- **Kasus A: Dari String Angka Raksasa (Sangat Dianjurkan)**
 
---- 3. Inspeksi Tipe Data & Perbandingan Identik ---
-Tipe data saldoBagiDua  : bigint
-Apakah identik BigInt?  : true
+  ```javascript
+  const idDiscord = BigInt("1234567890123456789");
+  console.log(idDiscord); // 1234567890123456789n
+  ```
+
+- **Kasus B: Dari Tipe Number & Boolean**
+
+  ```javascript
+  console.log(BigInt(42)); // 42n
+  console.log(BigInt(true)); // 1n
+  console.log(BigInt(false)); // 0n
+  ```
+
+- **Kasus C: Jebakan Input Desimal atau Teks Rusak**
+  ```javascript
+  // BigInt(10.5);   // ❌ RangeError: The number 10.5 cannot be converted to a BigInt
+  // BigInt('42px'); // ❌ SyntaxError: Cannot convert 42px to a BigInt
+  ```
+
+---
+
+#### 3. Pembatasan Signed Integer: `BigInt.asIntN(bits, bigint)`
+
+Membatasi angka ke dalam rentang _signed_ integer ($-2^{bits-1}$ hingga $2^{bits-1} - 1$). Sangat berguna untuk simulasi arsitektur perangkat keras atau WebAssembly:
+
+```javascript
+// Simulasi 64-bit Signed Integer (Batas: 9223372036854775807n)
+const batas64 = 2n ** 63n - 1n;
+console.log(BigInt.asIntN(64, batas64)); // 9223372036854775807n
+
+// Overflow akan membungkus (wrap-around) ke nilai negatif:
+console.log(BigInt.asIntN(64, batas64 + 1n)); // -9223372036854775808n
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+#### 4. Pembatasan Unsigned Integer: `BigInt.asUintN(bits, bigint)`
+
+Membatasi angka ke dalam rentang _unsigned_ integer ($0$ hingga $2^{bits} - 1$):
+
+```javascript
+// Simulasi 8-bit Unsigned Integer (0 s.d. 255)
+console.log(BigInt.asUintN(8, 255n)); // 255n
+console.log(BigInt.asUintN(8, 256n)); // 0n (wrap ke 0)
+```
+
+---
+
+#### 5. Konversi String & Basis: `bigint.toString([radix])`
+
+Mengubah nilai BigInt menjadi string teks, mendukung konversi basis bilangan (2 hingga 36):
+
+```javascript
+const angka = 255n;
+console.log(angka.toString()); // "255"
+console.log(angka.toString(16)); // "ff" (heksadesimal)
+console.log(angka.toString(2)); // "11111111" (biner)
+```
+
+---
+
+#### 6. Pemformatan Lokal: `bigint.toLocaleString([locale, options])`
+
+Memformat angka raksasa sesuai konvensi bahasa dan pemisah ribuan regional:
+
+```javascript
+const triliun = 1000000000000n;
+console.log(triliun.toLocaleString("id-ID")); // "1.000.000.000.000"
+```
+
+---
+
+#### 7. Operasi Aritmetika & Pembagian Bulat (_Truncation_)
+
+BigInt mendukung operator `+`, `-`, `*`, `/`, `%`, dan `**`.
+
+- **Jebakan Desimal Lenyap pada Pembagian**:
+  BigInt membuang seluruh angka di belakang koma (_integer truncation_):
+
+  ```javascript
+  console.log(10n / 3n); // 3n (angka .333 dibuang sepenuhnya!)
+  console.log(5n / 2n); // 2n (bukan 2.5n)
+  console.log(10n % 3n); // 1n
+  ```
+
+- **Jebakan Unary Plus (`+`)**:
+  Operator `+10n` akan melempar `TypeError`. Gunakan `Number(10n)` secara eksplisit jika ingin mengubahnya menjadi number.
+
+---
+
+#### 8. Aturan Ketat Type Coercion
+
+JavaScript melarang keras mencampur `BigInt` dan `Number` secara implisit dalam kalkulasi aritmetika:
+
+```javascript
+const a = 10n;
+const b = 5;
+
+// console.log(a + b); // ❌ TypeError: Cannot mix BigInt and other types
+
+// Solusi: Konversi eksplisit salah satu tipe:
+console.log(a + BigInt(b)); // 15n (jika ingin hasil BigInt)
+console.log(Number(a) + b); // 15  (jika ingin hasil Number)
+```
+
+---
+
+#### 9. Perbandingan & Pengurutan Campuran
+
+- **Perbandingan Longgar vs Ketat**:
+  ```javascript
+  console.log(10n == 10); // true  (nilai sama)
+  console.log(10n === 10); // false (tipe data berbeda)
+  ```
+- **Pengurutan Array**:
+  ```javascript
+  const campuran = [10n, 2, 5n, 1];
+  campuran.sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  console.log(campuran); // [1, 2, 5n, 10n]
+  ```
+
+---
+
+#### 10. Serialisasi JSON untuk BigInt
+
+JSON standar tidak mendukung BigInt secara bawaan. `JSON.stringify()` akan crash jika menerima BigInt tanpa bantuan replacer:
+
+```javascript
+const payload = { id: 123456789012345678n };
+
+// Solusi A: Menggunakan Replacer Function
+const json = JSON.stringify(payload, (_, v) =>
+  typeof v === "bigint" ? v.toString() : v,
+);
+console.log(json); // '{"id":"123456789012345678"}' ✅
+
+// Solusi B: Global Prototype Hook
+BigInt.prototype.toJSON = function () {
+  return this.toString();
+};
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep inisialisasi, truncation desimal, aturan type coercion, komparasi lintas tipe, pembatasan bitwise, dan solusi serialisasi JSON di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan langsung di terminal.
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 03-standard-library/06-bigint/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Twitter / Discord ID (Snowflake)**: ID unik tweet, user, dan message di Discord menggunakan format 64-bit integer yang melebihi batas `Number.MAX_SAFE_INTEGER` sehingga wajib diolah sebagai BigInt atau string.
-2. **Blockchain & Smart Contracts**: Nilai saldo mata uang kripto Ethereum (Wei) sering kali memiliki 18 digit desimal sehingga nominalnya mencapai puluhan digit integer.
-3. **Kriptografi & Matematika Teoretis**: Perhitungan faktorial angka besar dan algoritma kunci privat/publik RSA.
+1. **Integrasi API Discord & Twitter**: ID channel, user, dan tweet menggunakan format 64-bit Snowflake ID (melebihi 9 triliun) yang wajib diolah sebagai BigInt agar ID tidak tertukar.
+2. **Platform Web3 / Blockchain**: Nilai terkecil koin Ethereum adalah Wei ($1 \text{ ETH} = 10^{18} \text{ Wei}$), yang membutuhkan angka hingga 30 digit integer.
+3. **Kalkulasi Faktorial & Kombinatorika**: Menghitung probabilitas atau permutasi angka besar ($50!$) tanpa distorsi angka floating-point.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Mencampur BigInt dan Number tanpa konversi**: Menulis `1n + 2` langsung melempar `TypeError`. Anda harus mengonversinya secara sadar.
-- **Menghilangkan angka desimal tanpa disadari**: Pembagian `7n / 2n` menghasilkan `3n`, bukan `3.5n`. Jika membutuhkan presisi desimal, BigInt bukan solusi yang tepat.
-- **Tidak bisa langsung diserialisasi ke JSON**: `JSON.stringify({ id: 100n })` melempar `TypeError: Do not know how to serialize a BigInt`. Anda perlu mengonversinya ke string terlebih dahulu.
+- **Mencampur BigInt dan Number**: Kesalahan `TypeError: Cannot mix BigInt and other types` sering terjadi jika lupa mengonversi variabel number biasa.
+- **Kehilangan Angka Desimal**: Mengira `5n / 2n` menghasilkan desimal, padahal nilai desimal dibuang tanpa peringatan.
+- **Mengirim BigInt Langsung ke `JSON.stringify`**: Memicu server/aplikasi crash seketika karena JSON tidak mendukung serialisasi BigInt secara native.
 
 ### 🌟 Best Practice
 
-- Gunakan BigInt hanya jika data Anda benar-benar berpotensi melebihi $2^{53} - 1$. Untuk angka transaksi biasa di bawah 9 triliun, gunakan tipe `Number` standar.
-- Selalu simpan ID 64-bit dari database backend sebagai string atau BigInt saat dikonsumsi di frontend JavaScript.
-- Tambahkan method `BigInt.prototype.toJSON` jika sistem Anda sering melakukan serialisasi JSON yang memuat angka BigInt.
+- Gunakan BigInt hanya untuk angka yang berpotensi melampaui `Number.MAX_SAFE_INTEGER` ($> 9 \text{ triliun}$). Untuk angka counter atau harga toko biasa, gunakan `Number`.
+- Simpan ID 64-bit sebagai string di payload API atau database kolom teks untuk interoperabilitas yang aman.
+- Pasang replacer string saat melakukan serialisasi data yang memuat BigInt.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah fungsi `faktorialBigInt(n)` yang menghitung faktorial dari bilangan `n` (contoh: 50!) menggunakan tipe data BigInt.
+1. Buatlah fungsi `faktorial(n)` yang mampu menghitung nilai faktorial dari bilangan bulat besar ($50!$) secara akurat menggunakan tipe data `BigInt`.
 2. Diberikan string ID transaksi dari server: `'9876543210987654321'`. Ubah ke BigInt, tambahkan nilai `100n`, lalu kembalikan hasilnya kembali dalam format string.
+3. Buat fungsi pembagian aman `bagiDenganSisa(a, b)` yang menerima dua BigInt dan mengembalikan objek `{ hasil: bigint, sisa: bigint }`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [05 - JSON](../05-json/README.md)
 - ➡️ **Selanjutnya:** [07 - Date](../07-date/README.md)

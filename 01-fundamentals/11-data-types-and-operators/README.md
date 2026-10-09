@@ -2,162 +2,154 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami tipe khusus `undefined` vs `null`, operator pengecekan `typeof` dan `in`, serta aturan evaluasi Boolean _Truthy_ & _Falsy_.
-> - **Kapan Digunakan**: Validasi data form, pengecekan properti objek aman, dan penyusunan logika percabangan kondisional.
-> - **Aturan Praktis**: Hanya ada 7 nilai yang bernilai falsy di JavaScript: `false`, `0`, `-0`, `""`, `null`, `undefined`, dan `NaN`; objek kosong `{}` dan array kosong `[]` tetap bernilai _truthy_.
+> - **Fungsi Utama**: Menguasai sistem tipe data JavaScript (7 tipe primitif + 1 tipe objek referensi), operator pengecekan `typeof` dan `in`, serta aturan evaluasi Boolean _Truthy_ & _Falsy_.
+> - **Kapan Digunakan**: Validasi data formulir, pengecekan properti objek secara aman, dan pencegahan bug akibat konversi tipe data otomatis (_type coercion_).
+> - **Aturan Praktis**: Hanya ada 8 nilai yang bernilai _Falsy_ di JavaScript (`false`, `0`, `-0`, `0n`, `""`, `null`, `undefined`, `NaN`). Objek kosong `{}` dan array kosong `[]` selalu bernilai _Truthy_.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Membedakan konsep `null` dan `undefined` secara tepat.
-- Menggunakan operator `typeof` untuk memeriksa tipe data primitif.
-- Menggunakan operator `in` untuk mengecek keberadaan properti objek atau indeks array.
-- Menguasai daftar nilai _Truthy_ dan _Falsy_ dalam evaluasi kondisi `if`.
+- Menguasai 8 tipe data resmi spesifikasi ECMAScript (7 primitif dan 1 objek referensi).
+- Membedakan secara semantik antara ketiadaan nilai alami (`undefined`) dan ketiadaan nilai disengaja (`null`).
+- Memahami hasil nilai operator `typeof` serta kejanggalan historis _quirk_ `typeof null === 'object'`.
+- Menggunakan operator `in` untuk memeriksa keberadaan properti objek atau indeks numerik array.
+- Menguasai evaluasi kondisi Boolean _Truthy_ vs _Falsy_ pada seluruh jenis data.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Seperti **kotak surat di depan rumah**:
+> Sistem tipe data dan nilai ketiadaan seperti **kotak surat di depan gerbang rumah**:
 >
-> - `undefined` adalah kotak surat yang baru dipasang tukang pos tetapi belum pernah diisi apa pun oleh pemilik rumah.
-> - `null` adalah pemilik rumah sengaja menempelkan stiker "Kotak Surat Ini Sedang Dikosongkan".
-> - Operator `in` seperti petugas pos yang mengintip ke dalam kotak apakah ada surat bernama tertentu.
-
-### 1. `undefined` vs `null`
-
-- **`undefined`**: Menunjukkan suatu variabel telah dideklarasikan namun belum diberikan nilai apa pun. Ini juga nilai default fungsi yang tidak memiliki statement `return`.
-- **`null`**: Menunjukkan nilai ketiadaan yang disengaja (_intentional absence of value_). Diberikan oleh programmer saat ingin mengosongkan objek.
-
-### 2. Operator `typeof` & Quirk Historis
-
-Operator `typeof` mengembalikan string yang mendeskripsikan tipe data suatu operan. Namun ada satu catatan penting: `typeof null` menghasilkan `"object"`. Ini adalah bug/quirk historis JavaScript sejak versi pertama tahun 1995 yang dipertahankan demi kompatibilitas kode web lama.
-
-### 3. Operator `in`
-
-Operator `in` memeriksa apakah suatu nama properti (string) ada di dalam objek atau apakah suatu nomor indeks ada di dalam array:
-
-- `"nama" in user` $\rightarrow$ `true` jika properti `nama` ada.
-- `0 in fruits` $\rightarrow$ `true` jika array `fruits` memiliki indeks ke-0.
-
-### 4. Nilai Truthy dan Falsy
-
-Di JavaScript, dalam evaluasi kondisi boolean (`if (...)`), setiap nilai akan dikonversi otomatis (_type coercion_).
-Hanya ada 7 nilai yang dievaluasi sebagai **Falsy**:
-
-1. `false`
-2. `0` dan `-0`
-3. `""` (string kosong)
-4. `null`
-5. `undefined`
-6. `NaN` (Not-a-Number)
-7. `0n` (BigInt nol)
-
-Semua nilai selain 7 nilai di atas adalah **Truthy**, termasuk string spasi `" "`, array kosong `[]`, dan objek kosong `{}`.
+> - **`undefined`** adalah **kotak surat yang baru dipasang pengembang perumahan**: kotak tersebut ada, tetapi belum pernah diisi atau disentuh oleh pemilik rumah.
+> - **`null`** adalah **pemilik rumah sengaja menempelkan stiker "KOTAK KOSONG / TIDAK DIGUNAKAN"**: ketiadaan isi di dalamnya merupakan keputusan yang disengaja.
+> - **Operator `in`** seperti petugas pengantar pos yang mengintip ke dalam slot apakah ada label nama tertentu yang tertera di kotak tersebut.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel 8 Tipe Data Resmi ECMAScript
+
+| Tipe Data     | Kategori  | Hasil `typeof`            | Contoh Nilai                    |
+| :------------ | :-------- | :------------------------ | :------------------------------ |
+| **String**    | Primitif  | `"string"`                | `'Halo'`, `"Dunia"`             |
+| **Number**    | Primitif  | `"number"`                | `42`, `3.14`, `NaN`, `Infinity` |
+| **BigInt**    | Primitif  | `"bigint"`                | `9007199254740991n`             |
+| **Boolean**   | Primitif  | `"boolean"`               | `true`, `false`                 |
+| **Undefined** | Primitif  | `"undefined"`             | `undefined`                     |
+| **Symbol**    | Primitif  | `"symbol"`                | `Symbol('id')`                  |
+| **Null**      | Primitif  | `"object"` _(Quirk Bug)_  | `null`                          |
+| **Object**    | Referensi | `"object"` / `"function"` | `{}`, `[]`, `new Date()`, `fn`  |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Delapan Tipe Data Resmi JavaScript
+
+JavaScript membagi tipe data menjadi dua kelompok besar:
+
+- **Tipe Primitif** (disimpan langsung berdasarkan nilai di stack memori): String, Number, BigInt, Boolean, Undefined, Symbol, dan Null.
+- **Tipe Referensi** (disimpan berdasarkan pointer alamat memori di heap): Object (termasuk Array, Date, Map, Set, dan Function).
+
+#### 2. Perbedaan Semantik `undefined` vs `null`
+
+- `undefined`: Nilai variabel yang sudah dideklarasikan tetapi belum diberi nilai, atau parameter fungsi yang tidak dipasok argumen, atau fungsi tanpa pernyataan `return`.
+- `null`: Representasi eksplisit dari ketiadaan nilai (_intentional absence of any object value_).
 
 ```javascript
-// Tipe Data Khusus, Operator Typeof, In, dan Truthy/Falsy
+let belumAda; // undefined
+let disengajaKosong = null; // null
+```
 
-// 1. Undefined vs Null
-let belumDiisi;
-console.log('Nilai belum diisi:', belumDiisi); // undefined
+#### 3. Operator `typeof` dan Quirk Historis `typeof null`
 
-let sengajaKosong = null;
-console.log('Nilai sengaja dikosongkan:', sengajaKosong); // null
+Operator `typeof` mengembalikan string nama tipe operan. Namun sejak JavaScript 1.0 (1995), `typeof null` menghasilkan `"object"` karena bug representasi bit tipe data awal. Bug ini sengaja tidak diperbaiki agar jutaan situs web warisan tidak rusak (_legacy compatibility_).
 
-// 2. Operator typeof
-console.log('typeof 100:', typeof 100); // number
-console.log("typeof 'Halo':", typeof 'Halo'); // string
-console.log('typeof true:', typeof true); // boolean
-console.log('typeof null:', typeof null); // object (quirk historis JS)
-console.log('typeof undefined:', typeof undefined); // undefined
+```javascript
+// Cara valid memeriksa apakah data adalah Objek murni (bukan null):
+function isRealObject(val) {
+  return val !== null && typeof val === "object";
+}
+```
 
-// 3. Operator 'in' (Mengecek keberadaan properti/index)
-const orang = { nama: 'Joko', umur: 25 };
-console.log("'nama' in orang:", 'nama' in orang); // true
-console.log("'alamat' in orang:", 'alamat' in orang); // false
+#### 4. Operator `in` untuk Pengecekan Kunci Objek & Indeks Array
 
-const buah = ['Apel', 'Jeruk'];
-console.log('0 in buah (cek index 0):', 0 in buah); // true
-console.log('5 in buah (cek index 5):', 5 in buah); // false
+Operator `in` memeriksa eksistensi nama kunci string atau nomor indeks:
 
-// 4. Truthy dan Falsy
-const nilaiUji = ['', 0, null, undefined, NaN, 'Ada teks', 123, [], {}];
-console.log('\n--- Evaluasi Truthy & Falsy ---');
-nilaiUji.forEach((item) => {
-  if (item) {
-    console.log(`[TRUTHY]:`, item);
-  } else {
-    console.log(`[FALSY] :`, item);
-  }
-});
+```javascript
+const user = { nama: "Joko" };
+console.log("nama" in user); // true
+console.log("umur" in user); // false
+
+const item = ["A", "B"];
+console.log(0 in item); // true (karena indeks 0 ada)
+console.log(2 in item); // false (indeks 2 belum ada)
+```
+
+#### 5. Delapan Nilai Falsy Resmi vs Keunikan `[]` dan `{}`
+
+Dalam percabangan `if`, hanya ada 8 nilai yang bernilai salah (_Falsy_):
+`false`, `0`, `-0`, `0n`, `""` (string kosong), `null`, `undefined`, dan `NaN`.
+
+> ⚠️ **Peringatan Kritis**: Objek kosong `{}` dan array kosong `[]` bernilai **TRUTHY**! Menulis `if ([])` akan selalu dieksekusi. Untuk mengecek array kosong, periksa panjangnya: `if (arr.length === 0)`.
+
+#### 6. Type Coercion: Kesetaraan Ketat (`===`) vs Longgar (`==`)
+
+Operator `==` melakukan konversi tipe data otomatis (_coercion_) yang menghasilkan anomali:
+
+- `null == undefined` $\rightarrow$ `true`
+- `0 == false` $\rightarrow$ `true`
+- `"" == false` $\rightarrow$ `true`
+
+Selalu gunakan _Strict Equality_ (`===`) yang memeriksa kesamaan nilai dan tipe secara mutlak tanpa konversi tersembunyi.
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh implementasi demonstrasi 8 tipe data resmi ECMAScript, perbandingan semantik `null` vs `undefined`, pembuktian quirk `typeof null`, pemeriksaan kunci dan indeks via operator `in`, serta evaluasi menyeluruh terhadap seluruh nilai Falsy dan Truthy telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Jalankan demonstrasi secara langsung di terminal Anda:
+
+```bash
+node 01-fundamentals/11-data-types-and-operators/example.js
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
-
-```text
-Nilai belum diisi: undefined
-Nilai sengaja dikosongkan: null
-typeof 100: number
-typeof 'Halo': string
-typeof true: boolean
-typeof null: object
-typeof undefined: undefined
-'nama' in orang: true
-'alamat' in orang: false
-0 in buah (cek index 0): true
-5 in buah (cek index 5): false
-
---- Evaluasi Truthy & Falsy ---
-[FALSY] :
-[FALSY] : 0
-[FALSY] : null
-[FALSY] : undefined
-[FALSY] : NaN
-[TRUTHY]: Ada teks
-[TRUTHY]: 123
-[TRUTHY]: []
-[TRUTHY]: {}
-```
-
----
-
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Pembersihan Cache & Reset State**: Memberikan nilai `null` pada objek keranjang belanja (`cart = null`) setelah transaksi pembayaran sukses.
-2. **Validasi Formulir Cepat**: Menggunakan `if (!nama)` untuk mendeteksi apakah pengguna lupa mengisi nama (karena string kosong `""` adalah falsy).
+1. **Pembersihan Cache State**: Menyetel `currentUser = null` saat pengguna melakukan logout dari aplikasi.
+2. **Validasi Formulir Cepat**: Menggunakan `if (!username.trim())` untuk mendeteksi apakah isian pengguna berupa string kosong (karena string kosong terdeteksi Falsy).
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Memeriksa Array Kosong dengan `if (arr)`**: Array kosong `[]` bernilai _truthy_! `if ([])` akan tetap dijalankan. Untuk mengecek apakah array kosong, periksa panjangnya: `if (arr.length === 0)`.
-- **Mengandalkan `typeof null === 'object'`**: Jangan gunakan `typeof` untuk mengecek objek jika ada kemungkinan nilainya `null`. Gunakan `obj !== null && typeof obj === 'object'`.
+- **Pemeriksaan Array Kosong Menggunakan `if (array)`**: Seringkali pemula mengira `if (items)` bernilai false saat array kosong. Nyatanya `[]` adalah objek truthy! Selalu gunakan `if (items.length > 0)`.
+- **Mengecek Nilai Numerik 0 dengan `if (val)`**: Jika variabel bernilai `0` (misalnya saldo rekening `0`), kondisi `if (saldo)` akan bernilai falsy dan memicu blok error atau fallback secara keliru.
 
 ### 🌟 Best Practice
 
-- Gunakan operator `in` atau `Object.hasOwn(obj, prop)` untuk mengecek properti tanpa memicu eksekusi getter.
-- Gunakan `null` saat Anda sebagai programmer ingin mengosongkan nilai secara eksplisit, dan biarkan `undefined` menjadi urusan engine JavaScript.
+- Gunakan `===` dan `!==` 100% di seluruh basis kode Anda.
+- Gunakan `null` saat Anda ingin mengosongkan nilai secara sengaja, dan biarkan `undefined` menjadi domain otomatis runtime JavaScript.
+- Gunakan `Object.hasOwn(obj, key)` atau operator `'key' in obj` untuk memeriksa properti tanpa perlu mengevaluasi getter.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat sebuah objek `produk` dengan properti `nama` dan `harga`. Gunakan operator `in` untuk memeriksa apakah produk tersebut memiliki properti `diskon`.
-2. Tulis fungsi `cekIsi(data)` yang mencetak apakah argumen bernilai Truthy atau Falsy.
+1. Buat fungsi `validasiInput(input)` yang mengembalikan string `'KOSONG'` jika input bernilai Falsy, dan mengembalikan `'TERISI'` jika bernilai Truthy. Uji fungsi tersebut dengan angka `0`, string kosong `""`, array kosong `[]`, dan objek kosong `{}`.
+2. Jelaskan mengapa ekspresi `typeof NaN` menghasilkan tipe `"number"` meskipun kepanjangannya adalah _Not-a-Number_.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [10 - Mini Games (Tebak Angka)](../10-mini-games/02-guess-number/README.md)
+- ⬅️ **Sebelumnya:** [09.6 - Latihan Angkot Berbasis Objek](../09-objects/06-practice-angkot-object/README.md)
 - ➡️ **Selanjutnya:** [12 - Sintaks Modern ES Lanjutan](../12-advanced-syntax/README.md)
 - 🏠 **Daftar Isi Modul 01:** [README Modul 01](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

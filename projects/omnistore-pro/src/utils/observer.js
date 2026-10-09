@@ -1,6 +1,6 @@
 /**
  * Modul 07: Modern Web API - IntersectionObserver
- * 
+ *
  * Pengamat berbasis browser untuk mendeteksi visibilitas suatu elemen
  * di dalam viewport (layar) tanpa membebani performa scroll.
  */
@@ -40,7 +40,7 @@ export const initLazyImages = () => {
  * 2. Infinite Scroll
  * Mengawasi elemen Sentinel di bagian paling bawah halaman katalog.
  * Ketika user scroll dan menyentuh Sentinel, fungsi `onLoadMore` akan dieksekusi.
- * 
+ *
  * @param {HTMLElement} sentinelElement - Elemen penanda batas bawah
  * @param {Function} onLoadMore - Callback untuk mengambil produk batch berikutnya
  */

@@ -2,192 +2,183 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami masalah performa (event flooding) pada event browser seperti input, scroll, dan resize.
-> - **Kapan Digunakan**: Memahami konsep, cara kerja, dan implementasi teknik Debounce.
-> - **Aturan Praktis**: Untuk delay input pencarian, rentang waktu debounce ideal adalah antara `250ms` hingga `400ms` (cukup responsif bagi manusia, namun sangat menghemat request server).
+> - **Fungsi Utama**: Mengontrol laju frekuensi pemanggilan fungsi (_rate limiting_) untuk mencegah banjir eksekusi (_event flooding_) pada kejadian yang terpicu sangat cepat seperti `input`, `scroll`, dan `resize`.
+> - **Kapan Digunakan**: Menghemat request HTTP pada kolom pencarian otomatis (_Autocomplete_), memantau posisi scroll halaman web (_Scroll Progress Tracker_), serta menghitung ulang tata letak saat ukuran jendela diubah (_Resize Handler_).
+> - **Aturan Praktis**: Gunakan **Debounce** jika Anda ingin fungsi baru berjalan HANYA SETELAH pengguna benar-benar berhenti melakukan aksi. Gunakan **Throttle** jika Anda ingin fungsi tetap dieksekusi secara teratur berkala maksimal 1 kali setiap $N$ milidetik selama aksi berlangsung.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami masalah performa (event flooding) pada event browser seperti input, scroll, dan resize.
-- Memahami konsep, cara kerja, dan implementasi teknik Debounce.
-- Memahami konsep, cara kerja, dan implementasi teknik Throttle.
-- Mampu menentukan kapan harus menggunakan Debounce dan kapan harus menggunakan Throttle di aplikasi nyata.
+- Memahami ancaman performa _event flooding_ (penurunan frame rate dan kelebihan beban server).
+- Menguasai konsep dan cara kerja teknik **Debouncing**.
+- Menguasai konsep dan cara kerja teknik **Throttling**.
+- Mampu mengimplementasikan fungsi pembungkus (_higher-order helper_) `debounce()` dan `throttle()` sendiri dari nol.
+- Mengetahui kapan harus memilih Debounce dan kapan harus memilih Throttle pada kasus nyata di industri web.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> **Debounce** seperti _pintu lift otomatis_: pintu lift tidak akan pernah menutup selama masih ada orang yang melangkah masuk. Pintu baru menutup setelah 3 detik tidak ada satupun orang yang masuk. **Throttle** seperti _keran dispenser air otomatis_: saat Anda menekan tombolnya berulang kali secara histeris, air hanya akan keluar 1 cangkir setiap 5 detik.
-
-Event tertentu di browser seperti `keyup` / `input` pada form pencarian, `scroll`, dan `resize` dapat terpicu hingga puluhan bahkan ratusan kali dalam satu detik.
-
-Jika pada setiap event tersebut kita menjalankan operasi berat (seperti melakukan kalkulasi DOM atau menembak request HTTP ke server), aplikasi web akan mengalami:
-
-- Layar tersendat (_frame rate drop / jank_).
-- Server backend kebanjiran beban request sia-sia.
-- Baterai perangkat user cepat habis.
-
-Dua teknik utama industri untuk mengatasi masalah ini adalah **Debounce** dan **Throttle**.
-
-### 1. Debouncing
-
-**Debounce** menunda pemanggilan suatu fungsi hingga pengguna **berhenti melakukan aksi** selama jangka waktu tertentu.
-
-- Jika aksi baru terjadi sebelum batas waktu tercapai, timer waktu akan di-reset dari awal.
-- _Contoh Terbaik_: Fitur **Live Search / Autocomplete**. Kita hanya ingin memanggil API pencarian setelah user berhenti mengetik selama 300ms, bukan setiap kali 1 huruf diketik.
-
-### 2. Throttling
-
-**Throttle** memastikan bahwa suatu fungsi dieksekusi **paling banyak satu kali** dalam rentang interval waktu tertentu, tidak peduli seberapa sering event tersebut terpicu.
-
-- _Contoh Terbaik_: Memantau posisi scroll halaman pada event `window.onscroll` untuk menampilkan tombol "Back to Top".
+> - **Debounce** seperti **pintu lift gedung kantor**: Pintu lift tidak akan pernah menutup selama masih ada orang baru yang melangkah masuk ke dalam lift. Sensor lift akan mereset hitungan timer dari awal setiap kali ada orang baru masuk. Pintu lift baru benar-benar menutup setelah hening selama 3 detik tanpa ada orang baru lagi.
+> - **Throttle** seperti **keran dispenser air otomatis di kantor**: Meskipun Anda menekan tombol keran air berkali-kali secara histeris 100 kali dalam 1 detik, mesin dispenser hanya akan mengalirkan 1 cangkir air setiap interval 5 detik.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Perbandingan Debounce vs Throttle
+
+| Kriteria Evaluasi       | Debounce                                                | Throttle                                                  |
+| :---------------------- | :------------------------------------------------------ | :-------------------------------------------------------- |
+| **Prinsip Utama**       | Menunggu sampai aktivitas benar-benar **berhenti**.     | Menjamin eksekusi teratur **maksimal 1x per interval**.   |
+| **Pemicu Ulang**        | Timer selalu di-_reset_ dari nol setiap ada event baru. | Event baru diabaikan jika interval waktu belum berlalu.   |
+| **Karakteristik Waktu** | Eksekusi tertunda di akhir (_trailing edge_).           | Eksekusi berkala selama aktivitas berlangsung.            |
+| **Kasus Ideal**         | Search input, resize selesai, auto-save formulir.       | Infinite scroll, mousemove, slider games, audio playback. |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Masalah Event Flooding pada Scroll, Resize, dan Input
+
+Event seperti `window.addEventListener('scroll')` dapat terpicu 60 hingga 120 kali per detik. Menjalankan manipulasi DOM atau request jaringan di dalamnya akan membuat peramban mengalami _jank_ (stuttering).
+
+#### 2. Definisi & Mekanisme Kerja Debounce
+
+Debounce memanfaatkan `clearTimeout` dan `setTimeout` untuk menunda eksekusi sampai rentang waktu hening (_quiet period_) tercapai.
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+let timer;
+function onType(val) {
+  clearTimeout(timer);
+  timer = setTimeout(() => kirimKeServer(val), 300);
+}
+```
 
-console.log('--- 1. Implementasi Fungsi Helper Debounce ---');
-/**
- * Debounce: Menunda eksekusi fungsi sampai tidak ada aktivitas lagi selama delayMs.
- */
-function debounce(fungsiAsli, delayMs = 300) {
+#### 3. Implementasi Fungsi Helper `debounce(fn, delay)`
+
+Higher-Order Function reusable yang mempertahankan konteks `this` dan argumen:
+
+```javascript
+function debounce(fn, delayMs = 300) {
   let timerId;
-
   return function (...args) {
-    // Bersihkan timer sebelumnya jika user masih aktif melakukan trigger
     clearTimeout(timerId);
-
-    // Buat timer baru
-    timerId = setTimeout(() => {
-      fungsiAsli.apply(this, args);
-    }, delayMs);
+    timerId = setTimeout(() => fn.apply(this, args), delayMs);
   };
 }
+```
 
-// Simulasi fungsi pencarian API
-function lakukanPencarianAPI(query) {
-  console.log(`[PANGGIL API] Mencari data produk untuk keyword: "${query}"`);
+#### 4. Kapan Menggunakan Debounce
+
+Sangat tepat untuk aksi yang hanya membutuhkan hasil final pengguna:
+
+- **Pencarian Autocomplete**: Menunggu user selesai mengetik kata kunci.
+- **Form Validation**: Menilai validitas password setelah user selesai mengetik.
+- **Auto-Save Draft**: Menyimpan artikel ke database 1 detik setelah pengetikan berhenti.
+
+#### 5. Definisi & Mekanisme Kerja Throttle
+
+Throttle mencatat stempel waktu (_timestamp_) eksekusi terakhir dan hanya mengizinkan pemanggilan jika selisih waktu sudah melebihi interval yang ditentukan.
+
+#### 6. Implementasi Fungsi Helper `throttle(fn, interval)`
+
+Implementasi berbasis stempel waktu `Date.now()`:
+
+```javascript
+function throttle(fn, intervalMs = 200) {
+  let waktuTerakhir = 0;
+  return function (...args) {
+    const sekarang = Date.now();
+    if (sekarang - waktuTerakhir >= intervalMs) {
+      waktuTerakhir = sekarang;
+      fn.apply(this, args);
+    }
+  };
 }
-
-// Bungkus fungsi pencarian dengan debounce (delay 200ms)
-const pencarianTerDebounce = debounce(lakukanPencarianAPI, 200);
-
-console.log('Simulasi user mengetik cepat di keyboard:');
-console.log("- User mengetik 'j'");
-pencarianTerDebounce('j');
-
-setTimeout(() => {
-  console.log("- User mengetik 'ja' (setelah 50ms)");
-  pencarianTerDebounce('ja');
-}, 50);
-
-setTimeout(() => {
-  console.log("- User mengetik 'jav' (setelah 100ms)");
-  pencarianTerDebounce('jav');
-}, 100);
-
-setTimeout(() => {
-  console.log("- User berhenti mengetik di kata 'javascript' (setelah 150ms)");
-  pencarianTerDebounce('javascript');
-}, 150);
-
-// Hasil: Dari 4 kali pengetikan, fungsi lakukanPencarianAPI hanya dipanggil 1 KALI saja!
-
-// Tunggu sampai simulasi debounce selesai (400ms) sebelum memulai throttle
-setTimeout(() => {
-  console.log('\n--- 2. Implementasi Fungsi Helper Throttle ---');
-  /**
-   * Throttle: Membatasi eksekusi fungsi maksimal 1 kali setiap intervalMs.
-   */
-  function throttle(fungsiAsli, intervalMs = 200) {
-    let terakhirDipanggil = 0;
-
-    return function (...args) {
-      const sekarang = Date.now();
-      if (sekarang - terakhirDipanggil >= intervalMs) {
-        terakhirDipanggil = sekarang;
-        fungsiAsli.apply(this, args);
-      }
-    };
-  }
-
-  function rekamPosisiScroll(posisiY) {
-    console.log(`[EVENT THROTTLE] Menghitung posisi scroll: ${posisiY}px`);
-  }
-
-  const scrollTerThrottle = throttle(rekamPosisiScroll, 100);
-
-  // Simulasi scroll cepat browser
-  console.log('Simulasi scroll intensif dalam 300ms:');
-  scrollTerThrottle(10); // Dipanggil (eksekusi pertama)
-  scrollTerThrottle(50); // Diabaikan (terlalu cepat)
-  scrollTerThrottle(120); // Diabaikan
-
-  setTimeout(() => scrollTerThrottle(250), 110); // Dipanggil (>100ms berlalu)
-  setTimeout(() => scrollTerThrottle(400), 120); // Diabaikan
-  setTimeout(() => scrollTerThrottle(600), 220); // Dipanggil (>100ms berlalu)
-}, 450);
 ```
+
+#### 7. Kapan Menggunakan Throttle
+
+Sangat tepat untuk aksi berkelanjutan di mana pengguna perlu melihat progres secara bertahap:
+
+- **Scroll Progress Bar**: Memperbarui persentase baca artikel di atas layar.
+- **Infinite Scrolling**: Memeriksa apakah posisi scroll mendekati bagian bawah halaman.
+- **Drag and Drop**: Memperbarui koordinat elemen saat mouse digeser.
+
+#### 8. Panduan Keputusan: Debounce vs Throttle
+
+- Apakah Anda hanya peduli dengan **keadaan akhir**? $\rightarrow$ Gunakan **Debounce**.
+- Apakah Anda ingin aplikasi tetap **merespon secara bertahap** selama proses berjalan? $\rightarrow$ Gunakan **Throttle**.
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. Implementasi Fungsi Helper Debounce ---
-Simulasi user mengetik cepat di keyboard:
-- User mengetik 'j'
-- User mengetik 'ja' (setelah 50ms)
-- User mengetik 'jav' (setelah 100ms)
-- User berhenti mengetik di kata 'javascript' (setelah 150ms)
-[PANGGIL API] Mencari data produk untuk keyword: "javascript"
+Seluruh implementasi fungsi mandiri `debounce()` dan `throttle()`, simulasi pengetikan keyboard cepat beruntun, serta simulasi laju event scroll halaman telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. Implementasi Fungsi Helper Throttle ---
+Jalankan demonstrasi menggunakan Node.js di terminal:
 
-Simulasi scroll intensif dalam 300ms:
-[EVENT THROTTLE] Menghitung posisi scroll: 10px
-[EVENT THROTTLE] Menghitung posisi scroll: 250px
-[EVENT THROTTLE] Menghitung posisi scroll: 600px
+```bash
+node 07-modern-web-api/05-debounce-and-throttle/example.js
 ```
+
+Atau buka [`index.html`](index.html) langsung di browser dan buka **DevTools Console (`F12`)** untuk menguji perbedaan pengetikan debounce di kotak input secara interaktif.
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Auto-save Formulir / Artikel Blog**: Menyimpan draft tulisan otomatis ke server 1 detik setelah user berhenti mengetik.
-2. **Search Autocomplete**: Mencegah ribuan request API sia-sia saat user mengetik kata pencarian.
-3. **Infinite Scroll Berbasis Scroll Listener**: Menggunakan throttle agar perhitungan posisi tinggi layar tidak membuat browser lemot.
-4. **Window Resize Visualizer**: Menghitung ulang tata letak grid grafik dashboard saat ukuran jendela browser diubah.
+1. **Live Search Box dengan Debounce**:
+   ```javascript
+   const inputCari = document.getElementById("search-input");
+   const cariProdukDebounced = debounce((keyword) => {
+     fetch(`/api/search?q=${keyword}`)
+       .then((r) => r.json())
+       .then(renderHasil);
+   }, 300);
+   inputCari.addEventListener("input", (e) =>
+     cariProdukDebounced(e.target.value),
+   );
+   ```
+2. **Indikator Scroll Bar dengan Throttle**:
+   ```javascript
+   window.addEventListener(
+     "scroll",
+     throttle(() => {
+       const persentase =
+         (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
+         100;
+       document.getElementById("progress-bar").style.width = `${persentase}%`;
+     }, 100),
+   );
+   ```
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Salah Memilih Antara Debounce vs Throttle**: Menggunakan debounce untuk event scroll bisa membuat tampilan kaku karena fungsi baru jalan saat user benar-benar berhenti menggerakkan mouse. Untuk scroll yang butuh update berkala terus-menerus, gunakan throttle.
-- **Membuat Fungsi Debounce Baru di Dalam Render Loop**: Di framework seperti React, jika Anda membungkus fungsi dengan `debounce` langsung di dalam komponen tanpa `useMemo` atau `useCallback`, timer akan selalu dibuat ulang di setiap render sehingga debounce tidak berfungsi.
+- **Membuat Fungsi Debounce Baru di Dalam Event Listener**: Menulis `input.addEventListener('input', () => debounce(fn, 300)())` adalah kesalahan fatal. Instance debounce baru dibuat di tiap ketikan sehingga timer tidak pernah dibatalkan. Bungkus fungsinya sekali di luar listener.
+- **Delay Debounce Terlalu Lambat**: Menyetel delay debounce hingga 1.000ms membuat antarmuka terasa lambat dan tidak responsif. Rentang ideal untuk input adalah `250ms - 400ms`.
 
 ### 🌟 Best Practice
 
-- Untuk delay input pencarian, rentang waktu debounce ideal adalah antara `250ms` hingga `400ms` (cukup responsif bagi manusia, namun sangat menghemat request server).
-- Jangan menulis fungsi debounce/throttle sendiri di proyek produksi skala besar jika sudah menggunakan library utilitas standar industri seperti **Lodash** (`lodash.debounce` / `lodash.throttle`). Namun, memahami cara kerjanya di balik layar adalah syarat wajib wawancara kerja.
+- Gunakan pustaka utilitas teruji seperti Lodash (`lodash.debounce`, `lodash.throttle`) jika proyek berskala perusahaan besar.
+- Untuk event scrolling murni yang hanya memantau visibilitas elemen, prioritaskan penggunaan **Intersection Observer API** alih-alih throttle scroll manual.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah fungsi `debounceImmediate(fn, delay)` di mana fungsi dieksekusi pertama kali secara langsung saat klik pertama, kemudian panggilan berikutnya di-debounce.
-2. Tuliskan kode HTML sederhana dengan input teks yang menampilkan panjang karakter tulisan hanya setelah user berhenti mengetik selama 500ms.
+1. Buka berkas [`index.html`](index.html) di browser. Pasang fungsi throttle pada event `window.addEventListener('resize')` untuk mencetak ukuran lebar jendela browser ke console maksimal 1 kali setiap 500ms.
+2. Buat simulasi debounce untuk tombol auto-save formulir yang baru menyimpan data jika form tidak diedit selama 1 detik!
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [04 - Async Paralel dan AbortController](../04-async-parallel-abort/README.md)
-- ➡️ **Selanjutnya:** [06 - Intersection Observer API](../06-intersection-observer/README.md)
+- ⬅️ **Materi Sebelumnya:** [04 - Async Parallel & AbortController](../04-async-parallel-abort/README.md)
+- ➡️ **Materi Selanjutnya:** [06 - Intersection Observer](../06-intersection-observer/README.md)
 - 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

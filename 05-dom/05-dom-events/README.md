@@ -1,141 +1,243 @@
-# 05 - DOM Events (Merespon Aksi Pengguna)
+# 05 - DOM Events (Penanganan Aksi Pengguna)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami konsep Event sebagai sinyal bahwa suatu aksi telah terjadi di halaman web.
-> - **Kapan Digunakan**: Memahami 3 cara menangani event: Inline Attribute, DOM Property, dan `addEventListener()`.
-> - **Aturan Praktis**: Selalu gunakan **`addEventListener()`** untuk mendaftarkan event di aplikasi modern.
+> - **Fungsi Utama**: Merespon interaksi pengguna (klik mouse, pengetikan keyboard, pengiriman form, scroll, resize) secara asinkron di browser.
+> - **Kapan Digunakan**: Seluruh fitur interaktif web: validasi form langsung, tombol aksi, animasi hover, navigasi keyboard, dan gestur sentuh.
+> - **Aturan Praktis**: Selalu gunakan `element.addEventListener()` alih-alih atribut `onclick` inline atau `el.onclick`. Manfaatkan objek event (`e`) untuk mengambil target pemicu (`e.target`) serta mencegah perilaku default browser (`e.preventDefault()`).
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami konsep Event sebagai sinyal bahwa suatu aksi telah terjadi di halaman web.
-- Memahami 3 cara menangani event: Inline Attribute, DOM Property, dan `addEventListener()`.
-- Mengakses informasi aksi melalui `Event Object` (`e.target`, `e.type`, `e.key`).
-- Mampu mencegah aksi bawaan browser menggunakan `e.preventDefault()`.
+- Memahami mekanisme sinyal kejadian (_events_) di browser dan bagaimana JavaScript menangkapnya.
+- Mengetahui 3 cara mendaftarkan event handler serta alasan mengapa `addEventListener()` adalah standar industri.
+- Membedah objek `Event` (`e`), memahami perbedaan `e.target` vs `e.currentTarget`.
+- Mampu membatalkan perilaku bawaan browser menggunakan `e.preventDefault()`.
+- Menghentikan perambatan event ke elemen induk menggunakan `e.stopPropagation()`.
+- Memahami kategori event penting: _Mouse Events_ (`click`, `mouseenter`, `mouseleave`) dan _Keyboard Events_ (`keydown`, `keyup`).
+- Memahami cara melepas listener dengan `removeEventListener()` dan opsi modern `{ once: true }`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Event seperti **bel pintu rumah**: tombol bel dipasang di luar pagar (_listener_). Ketika tamu menekan tombol bel (_event 'click'_), lonceng berdering di ruang tengah dan pemilik rumah keluar membukakan pintu (_fungsi callback_).
-
-**Event** adalah peristiwa atau interaksi yang terjadi pada halaman web (baik dipicu oleh pengguna seperti klik mouse, ketikan keyboard, maupun oleh browser seperti selesai memuat halaman).
-
-### 3 Cara Menangani Event:
-
-1. **Inline HTML Attribute (Kuno / Hindari)**: `<button onclick="klikSaya()">`
-   _Mencampurkan logika JavaScript ke dalam struktur HTML._
-2. **DOM Event Property (ES5)**: `tombol.onclick = function() { ... }`
-   _Kelemahan: Hanya bisa mendaftarkan 1 fungsi listener saja (akan tertimpa jika ada listener baru)._
-3. **`addEventListener(event, callback)` (Standar Industri Modern)**:
-   - Dapat mendaftarkan lebih dari satu listener untuk event yang sama tanpa saling menimpa.
-   - Mendukung opsi bubbling dan capturing.
-
-### Objek Event (`e`) & Kontrol Propagasi:
-
-- **`e.target`**: Elemen HTML spesifik yang memicu event.
-- **`e.currentTarget`**: Elemen yang saat ini sedang menangani event (elemen tempat listener dipasang).
-- **`e.preventDefault()`**: Menghentikan aksi default browser (misal: mencegah form reload atau link `<a>` berpindah URL).
-- **`e.stopPropagation()`**: Menghentikan perambatan event ke elemen induk di atasnya (_event bubbling_).
-- **`removeEventListener(event, handler)`**: Menghapus listener yang sebelumnya didaftarkan (wajib menggunakan referensi named function yang sama).
-
-### Tabel Katalog Event Browser Populer
-
-| Kategori             | Nama Event                 | Pemicu Terjadinya Event                                      |
-| :------------------- | :------------------------- | :----------------------------------------------------------- |
-| **Mouse**            | `click`, `dblclick`        | Klik tunggal atau klik ganda mouse                           |
-|                      | `mouseenter`, `mouseleave` | Kursor mouse masuk atau keluar dari batas elemen             |
-|                      | `mousemove`                | Kursor mouse digerakkan di atas elemen                       |
-| **Keyboard**         | `keydown`, `keyup`         | Tombol keyboard ditekan turun atau dilepaskan                |
-| **Formulir**         | `submit`                   | Tombol submit ditekan pada form `<form>`                     |
-|                      | `input`                    | Nilai kolom teks sedang diketik secara real-time             |
-|                      | `change`                   | Nilai input/select telah selesai diubah dan kehilangan fokus |
-|                      | `focus`, `blur`            | Kolom input sedang aktif diklik atau keluar fokus            |
-| **Dokumen / Window** | `DOMContentLoaded`         | Struktur HTML selesai dibaca oleh browser (DOM siap)         |
-|                      | `scroll`, `resize`         | Halaman di-scroll atau ukuran jendela browser diubah         |
+> Bayangkan sistem DOM Event seperti **tombol bel pintu di sebuah rumah**:
+>
+> - Pemasangan bel adalah **`addEventListener('click', bunyikanBel)`**: Pemilik rumah mendaftarkan fungsi pendengar yang siap siaga.
+> - Tindakan menekan tombol bel adalah **pemicu event (_dispatching event_)**.
+> - Objek Event (`e`) adalah **laporan rekaman CCTV**: berisi siapa yang menekan (`e.target`), jam berapa kejadiannya (`e.timeStamp`), dan posisi jari menempel (`e.clientX, e.clientY`).
+> - Opsi `{ once: true }` seperti **kupon undian sekali pakai**: setelah tiket digores dan hadiah keluar, tiket tersebut otomatis hangus dan tidak dapat dipakai lagi.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Ringkasan Properti & Method DOM Events
+
+| Properti / Method                 | Tipe Data | Deskripsi Singkat                                                             |
+| :-------------------------------- | :-------- | :---------------------------------------------------------------------------- |
+| `addEventListener(type, fn, opt)` | Method    | Mendaftarkan fungsi pendengar untuk event tertentu pada elemen.               |
+| `removeEventListener(type, fn)`   | Method    | Mencopot pendaftaran listener (harus menggunakan referensi fungsi yang sama). |
+| `event.target`                    | `Element` | Simpul elemen yang menjadi asal mula pemicu event.                            |
+| `event.currentTarget`             | `Element` | Simpul elemen yang saat ini menangani listener yang sedang dieksekusi.        |
+| `event.preventDefault()`          | Method    | Mencegah tindakan bawaan browser (misal: refresh form atau redirect link).    |
+| `event.stopPropagation()`         | Method    | Menghentikan gelembung perambatan event (_event bubbling_) ke elemen induk.   |
+| `event.key` / `event.code`        | `string`  | Karakter yang diketik (`"Enter"`, `"a"`) dan kode fisik tombol keyboard.      |
+| `event.clientX` / `clientY`       | `number`  | Koordinat kursor mouse relatif terhadap area pandang viewport browser.        |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Tiga Pendekatan Memasang Event
+
+Terdapat evolusi sejarah penanganan event di peramban web:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// ❌ 1. Inline HTML Attribute (Hindari: Mengotori HTML & melanggar CSP)
+// <button onclick="alert('Halo')">Klik</button>
 
-if (typeof document === 'undefined') {
-  console.log('--- 05. DOM Events ---');
-  console.log(
-    "Buka file 'index.html' di browser untuk mencoba interaksi klik tombol dan input keyboard!"
-  );
-} else {
-  console.log('--- 05. DOM Events (Browser) ---');
+// ⚠️ 2. DOM Property (Kelemahan: Hanya bisa 1 fungsi, fungsi lama tertimpa)
+btn.onclick = function () {
+  console.log("Handler 1");
+};
+btn.onclick = function () {
+  console.log("Handler 2");
+}; // Menimpa Handler 1!
 
-  const tombolAksi = document.getElementById('btn-klik');
-  const kotakInput = document.getElementById('input-teks');
+// ✅ 3. addEventListener (Standar W3C: Fleksibel, multi-listener)
+btn.addEventListener("click", () => console.log("Handler 1"));
+btn.addEventListener("click", () => console.log("Handler 2")); // Keduanya jalan berdampingan!
+```
 
-  if (tombolAksi) {
-    // 1. Mendaftarkan Event Listener Klik
-    tombolAksi.addEventListener('click', function (e) {
-      console.log(
-        `[EVENT KLIK] Tombol diklik! Koordinat: (${e.clientX}, ${e.clientY})`
-      );
-      tombolAksi.textContent = 'Tombol Berhasil Diklik!';
-      tombolAksi.style.backgroundColor = '#16a34a';
-    });
-  }
+#### 2. Anatomi `addEventListener()` dan Argumen Options
 
-  if (kotakInput) {
-    // 2. Mendaftarkan Event Listener Keyboard (keyup)
-    kotakInput.addEventListener('keyup', function (e) {
-      console.log(
-        `[KEYBOARD]: Pengguna menekan tombol '${e.key}' | Nilai teks: "${this.value}"`
-      );
-    });
-  }
+Menerima 3 argumen: nama event, fungsi callback handler, dan konfigurasi opsional.
+
+```javascript
+const tombol = document.getElementById("btn-sekali");
+
+tombol.addEventListener(
+  "click",
+  function (e) {
+    console.log("Hanya dieksekusi tepat 1 kali!");
+  },
+  { once: true },
+); // Otomatis dicopot setelah eksekusi pertama
+```
+
+#### 3. Menghapus Event Listener via `removeEventListener()`
+
+Untuk dapat menghapus listener, Anda **harus** memberikan referensi fungsi bernamanya (_named function_), bukan fungsi anonim.
+
+```javascript
+function saatScroll() {
+  console.log("Pengguna melakukan scroll");
 }
+
+// Mendaftarkan
+window.addEventListener("scroll", saatScroll);
+
+// Melepas pendengar (misal saat komponen di-unmount)
+window.removeEventListener("scroll", saatScroll);
+```
+
+#### 4. Anatomi Objek Event: `e.target` vs `e.currentTarget`
+
+Ketika tombol di dalam sebuah `<div>` diklik:
+
+- `e.target`: Elemen aktual paling dalam yang diklik kursor (misal tombol `<button>`).
+- `e.currentTarget`: Elemen tempat listener terpasang (misal kontainer `<div>`).
+
+```javascript
+kontainer.addEventListener("click", function (e) {
+  console.log("Elemen pemicu (asal klik) :", e.target.tagName);
+  console.log("Elemen pemilik listener   :", e.currentTarget.tagName);
+  console.log("this merujuk ke currentTarget:", this === e.currentTarget); // true
+});
+```
+
+#### 5. Mencegah Aksi Bawaan Browser: `e.preventDefault()`
+
+Browser memiliki perilaku bawaan pada elemen tertentu (seperti tag `<a>` yang membuka URL atau `<form>` yang me-refresh halaman saat di-submit). Gunakan `preventDefault()` untuk menghentikannya.
+
+```javascript
+const link = document.querySelector("a");
+link.addEventListener("click", function (e) {
+  e.preventDefault(); // Mencegah browser berpindah halaman
+  console.log("Navigasi dibatalkan, dialihkan ke penanganan AJAX JavaScript");
+});
+```
+
+#### 6. Menghentikan Rambatan Event: `e.stopPropagation()`
+
+Event secara default akan merambat naik ke atas hierarki pohon DOM (_Event Bubbling_). Gunakan method ini untuk mengisolasi penanganan event di simpul lokal saja.
+
+```javascript
+const modalInner = document.querySelector(".modal-content");
+modalInner.addEventListener("click", function (e) {
+  e.stopPropagation(); // Mencegah klik di dalam modal menutup overlay backdrop di luarnya
+});
+```
+
+#### 7. Kategori Mouse Events (`click`, `mouseenter`, `mouseleave`)
+
+Event mouse memungkinkan pendeteksian gestur kursor secara presisi.
+
+```javascript
+const box = document.querySelector(".hover-box");
+
+box.addEventListener("mouseenter", () => box.classList.add("aktif"));
+box.addEventListener("mouseleave", () => box.classList.remove("aktif"));
+box.addEventListener("dblclick", () => console.log("Kotak diklik ganda!"));
+```
+
+#### 8. Kategori Keyboard Events (`keydown`, `keyup`, `e.key`, `e.code`)
+
+Mendeteksi penekanan tombol keyboard pengguna:
+
+- `e.key`: Nilai karakter yang dihasilkan (memperhatikan Shift/Caps Lock, misal: `"A"` atau `"a"`).
+- `e.code`: Kode tombol keyboard fisik (misal: `"KeyA"`, `"Escape"`, `"Enter"`).
+
+```javascript
+window.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") {
+    tutupModalDialog();
+  }
+});
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 05. DOM Events (Browser) ---
-[EVENT KLIK] Tombol diklik! Koordinat: (254, 412)
-[KEYBOARD]: Pengguna menekan tombol 'a' | Nilai teks: "a"
-[KEYBOARD]: Pengguna menekan tombol 'b' | Nilai teks: "ab"
+Seluruh implementasi pendaftaran event klik dengan counter, opsi `{ once: true }`, penangkapan pengetikan keyboard real-time, manipulasi hover mouse, dan inspeksi objek `Event` telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Berkas ini dirancang untuk dapat dijalankan langsung di terminal Node.js guna memverifikasi model data event, maupun di peramban web via [`index.html`](index.html).
+
+Jalankan demonstrasi simulasi di terminal:
+
+```bash
+node 05-dom/05-dom-events/example.js
 ```
+
+Atau buka [`index.html`](index.html) langsung di browser dan buka **DevTools Console (`F12`)** untuk mencoba interaksi klik, hover, dan pengetikan keyboard interaktif secara langsung.
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Form Submit AJAX**: Menangkap event `submit` pada formulir pendaftaran, memanggil `e.preventDefault()` agar halaman tidak reload, lalu mengirim data ke server via `fetch()`.
-2. **Keyboard Shortcut**: Mendengarkan event `keydown` pada `window` untuk fitur seperti `Ctrl + K` (membuka kotak pencarian) atau tombol `Esc` (menutup modal).
+1. **Pintasan Keyboard Global (Keyboard Shortcuts)**:
+   ```javascript
+   document.addEventListener("keydown", (e) => {
+     if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+       e.preventDefault();
+       openSearchCommandPalette();
+     }
+   });
+   ```
+2. **Infinite Scroll Detection**:
+   ```javascript
+   window.addEventListener(
+     "scroll",
+     () => {
+       if (
+         window.innerHeight + window.scrollY >=
+         document.body.offsetHeight - 200
+       ) {
+         loadMoreItems();
+       }
+     },
+     { passive: true },
+   );
+   ```
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Lupa `e.preventDefault()` pada Form Submit**: Form HTML bawaan browser memiliki perilaku default me-refresh halaman saat tombol submit ditekan. Jika lupa menulis `e.preventDefault()`, aplikasi akan ter-refresh dan seluruh state JavaScript hilang seketika.
+- **Menggunakan Fungsi Anonim saat Ingin Melepas Listener**: Menulis `removeEventListener('click', () => {})` tidak akan pernah berhasil mencopot listener karena fungsi panah baru tersebut memiliki referensi memori yang berbeda dari fungsi anonim saat mendaftar. Selalu gunakan _named function_.
+- **Lupa `e.preventDefault()` pada Form Submit**: Menyebabkan halaman me-reload secara otomatis dan seluruh state aplikasi JavaScript di memori hilang seketika.
+- **Masalah Konteks `this` pada Arrow Function**: Di dalam _arrow function_, kata kunci `this` tidak merujuk ke elemen pemilik event (`currentTarget`), melainkan ke lingkup leksikal terluar (`window`). Gunakan `e.currentTarget` atau fungsi reguler `function(e) {}`.
 
 ### 🌟 Best Practice
 
-- Selalu gunakan **`addEventListener()`** untuk mendaftarkan event di aplikasi modern.
-- Hindari meletakkan fungsi callback event anonim yang sangat panjang di dalam `addEventListener`; pisahkan menjadi fungsi bernama (_named function_) agar kode rapi dan mudah di-_removeEventListener_.
+- Gunakan opsi `{ passive: true }` pada event scroll dan touch untuk meningkatkan performa kelancaran frame layar (_60 FPS scrolling performance_).
+- Manfaatkan opsi `{ once: true }` untuk event yang hanya boleh terpicu 1 kali (seperti event inisialisasi tutorial).
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah elemen link `<a href="https://google.com">Menuju Google</a>`. Pasang event listener klik dan gunakan `e.preventDefault()` agar link tidak berpindah halaman, melainkan menampilkan pesan alert di layar.
+1. Buka berkas [`index.html`](index.html) di browser. Tambahkan listener pada elemen `window` di DevTools Console (`F12`) sehingga setiap kali pengguna menekan tombol `'d'` pada keyboard, seluruh halaman beralih ke warna gelap.
+2. Pasang event `dblclick` pada `#btn-klik` yang mereset hitungan klik kembali ke angka 0.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [04 - DOM Manipulasi Node](../04-node-manipulation/README.md)
-- ➡️ **Selanjutnya:** [06 - DOM Traversal & Event Bubbling](../06-dom-traversal/README.md)
+- ⬅️ **Materi Sebelumnya:** [04 - DOM Manipulasi Node](../04-node-manipulation/README.md)
+- ➡️ **Materi Selanjutnya:** [06 - DOM Traversal & Event Delegation](../06-dom-traversal/README.md)
 - 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

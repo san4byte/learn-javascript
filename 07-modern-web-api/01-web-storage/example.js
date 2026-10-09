@@ -22,7 +22,7 @@ const activeTheme = storage.getItem('app_theme');
 console.log('Tema saat ini:', activeTheme);
 
 console.log(
-  '\n--- 2. Menyimpan Objek Kompleks (JSON Serialize & Deserialize) ---'
+  '\n--- 2. Menyimpan Objek Kompleks (JSON Serialize & Deserialize) ---',
 );
 // Web Storage hanya mendukung string. Objek harus di-stringify terlebih dahulu!
 const userProfile = {
@@ -56,7 +56,7 @@ class StorageHelper {
     } catch (error) {
       console.error(
         `Gagal menyimpan data ke storage untuk key '${key}':`,
-        error
+        error,
       );
       return false;
     }
@@ -86,9 +86,9 @@ StorageHelper.set('cart_items', [
 const currentCart = StorageHelper.get('cart_items', []);
 const totalBelanja = currentCart.reduce(
   (acc, item) => acc + item.price * item.qty,
-  0
+  0,
 );
 console.log(`Jumlah jenis barang di cart: ${currentCart.length}`);
 console.log(
-  `Total biaya keranjang: Rp ${totalBelanja.toLocaleString('id-ID')}`
+  `Total biaya keranjang: Rp ${totalBelanja.toLocaleString('id-ID')}`,
 );

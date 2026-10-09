@@ -1,161 +1,231 @@
-# 12 - Symbol (Primitive Unik dan Global Symbol Registry)
+# 12 - Symbol (Primitive Unik, Global Registry, dan Well-Known Symbols)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami `Symbol` sebagai tipe data primitif ke-7 yang menjamin keunikan identitas 100%.
-> - **Kapan Digunakan**: Mampu membuat Symbol lokal dengan deskripsi opsional menggunakan fungsi `Symbol()`.
-> - **Aturan Praktis**: Gunakan Symbol ketika membuat properti metadata internal pada objek yang tidak boleh tercampur dalam serialisasi JSON atau iterasi umum.
+> - **Fungsi Utama**: Tipe data primitif ke-7 yang menjamin keunikan identitas 100% tanpa risiko tabrakan nama (_collision-proof_).
+> - **Kapan Digunakan**: Kunci metadata tersembunyi pada objek library/plugin, konstanta enum unik, dan kustomisasi perilaku bahasa via _Well-Known Symbols_ (`Symbol.iterator`, `Symbol.toStringTag`).
+> - **Aturan Praktis**: Symbol bukan konstruktor (`new Symbol()` melempar TypeError), tersembunyi dari `Object.keys()` dan `JSON.stringify()`, serta tidak bisa dikonversi secara implisit ke string via operator `+`.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami `Symbol` sebagai tipe data primitif ke-7 yang menjamin keunikan identitas 100%.
-- Mampu membuat Symbol lokal dengan deskripsi opsional menggunakan fungsi `Symbol()`.
-- Menguasai **Global Symbol Registry** dengan method `Symbol.for()` dan `Symbol.keyFor()`.
-- Memahami penggunaan Symbol sebagai kunci properti objek yang tersembunyi (_hidden/non-enumerable properties_).
+- Memahami konsep dasar tipe data primitif `Symbol` dan jaminan keunikan nilainya di memori.
+- Mampu membuat Symbol lokal dan membaca properti `description`.
+- Menguasai penggunaan Symbol sebagai kunci properti objek tersembunyi (_non-enumerable & non-JSON_).
+- Mengetahui cara inspeksi kunci Symbol menggunakan `Object.getOwnPropertySymbols()` dan `Reflect.ownKeys()`.
+- Menguasai Global Symbol Registry menggunakan `Symbol.for()` dan `Symbol.keyFor()`.
+- Memahami implementasi praktis _Well-Known Symbols_ (`Symbol.iterator` dan `Symbol.toStringTag`).
+- Menghindari jebakan _type coercion_ string pada nilai Symbol.
 
 ---
 
-## 2. 📖 Penjelasan Konsep & Referensi Lengkap
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> `Symbol()` lokal seperti **sidik jari biometrik manusia**: meskipun ada dua orang bernama sama persis 'Joko Santoso', sidik jari keduanya dijamin 100% berbeda dan unik. Sementara `Symbol.for()` seperti **nomor induk registrasi kependudukan (NIK) terpusat di kantor Dukcapil**: siapapun instansi yang meminta NIK atas kode tersebut akan selalu mendapatkan satu identitas yang sama.
-
-**`Symbol`** adalah tipe data primitif yang diperkenalkan pada ES6. Karakteristik utama dari Symbol adalah **setiap nilai Symbol yang dibuat selalu bersifat unik dan tidak dapat diubah (_immutable_)**, bahkan jika dua Symbol dibuat dengan deskripsi teks yang persis sama.
-
-### Tabel Referensi API `Symbol`
-
-| Fitur / Method                          | Parameter                | Tipe Return               | Kegunaan & Contoh Singkat                                                          |
-| :-------------------------------------- | :----------------------- | :------------------------ | :--------------------------------------------------------------------------------- |
-| **`Symbol([description])`**             | `description` (opsional) | `symbol`                  | Membuat Symbol lokal unik baru: `const s = Symbol("id");`                          |
-| **`sym.description`**                   | -                        | `string` / `undefined`    | Properti baca-saja (_read-only_) untuk melihat teks deskripsi Symbol.              |
-| **`Symbol.for(key)`**                   | `key` (string)           | `symbol`                  | Mencari di Global Registry; jika belum ada, otomatis dibuatkan. Bersifat _shared_. |
-| **`Symbol.keyFor(sym)`**                | `sym` (symbol)           | `string` / `undefined`    | Mengambil nama key dari Symbol yang terdaftar di Global Registry.                  |
-| **`Object.getOwnPropertySymbols(obj)`** | `obj`                    | `Array<symbol>`           | Mengambil seluruh properti Symbol yang terpasang pada suatu objek.                 |
-| **`Reflect.ownKeys(obj)`**              | `obj`                    | `Array<string \| symbol>` | Mengambil **seluruh** kunci properti objek (baik String biasa maupun Symbol).      |
+> `Symbol()` lokal seperti **sidik jari biometrik manusia**: meskipun ada dua orang dengan nama teks identik 'Joko Santoso', sidik jari keduanya dijamin 100% unik dan berbeda. Sementara `Symbol.for()` seperti **Nomor Induk Kependudukan (NIK) terpusat di kantor Dukcapil**: instansi mana pun yang meminta NIK atas kode tersebut akan selalu mendapatkan satu identitas yang dibagikan bersama.
 
 ---
 
-### Well-Known Symbols (Symbol Bawaan JavaScript)
+### 1. Tabel Ringkasan API Symbol (Cheat-Sheet)
 
-JavaScript menggunakan Symbol bawaan sistem (_Well-Known Symbols_) untuk mengekspos mekanisme internal bahasa:
-
-- **`Symbol.iterator`**: Menentukan metode iterator default untuk perulangan `for...of`.
-- **`Symbol.toPrimitive`**: Menentukan konversi objek menjadi nilai primitif.
-- **`Symbol.hasInstance`**: Mengatur perilaku operator `instanceof`.
-- **`Symbol.toStringTag`**: Mengatur nilai string saat objek dipanggil oleh `Object.prototype.toString()`.
-
----
-
-### Sifat Kunci Symbol pada Objek
-
-1. **Non-enumerable secara default**: Tidak akan muncul pada `for...in` maupun `Object.keys()`.
-2. **Tidak Masuk ke JSON**: `JSON.stringify(obj)` otomatis mengabaikan dan menghapus properti berkunci Symbol.
-3. **Bukan Enkapsulasi Privat Sejati**: Walaupun tersembunyi dari loop biasa, properti Symbol tetap bisa dibaca menggunakan `Object.getOwnPropertySymbols(obj)`.
+| Fitur / Method                          | Parameter                  | Nilai Kembalian           | Deskripsi Singkat                                                     |
+| :-------------------------------------- | :------------------------- | :------------------------ | :-------------------------------------------------------------------- |
+| **`Symbol([description])`**             | `description` _(opsional)_ | `symbol`                  | Membuat Symbol lokal unik baru.                                       |
+| **`sym.description`**                   | `-`                        | `string` \| `undefined`   | Properti _read-only_ untuk membaca teks deskripsi.                    |
+| **`Symbol.for(key)`**                   | `key` _(string)_           | `symbol`                  | Mengambil/mendaftarkan Symbol pada Global Registry.                   |
+| **`Symbol.keyFor(sym)`**                | `sym` _(symbol)_           | `string` \| `undefined`   | Mengambil string kunci dari Symbol yang terdaftar di Global Registry. |
+| **`Object.getOwnPropertySymbols(obj)`** | `obj`                      | `Array<symbol>`           | Mengambil seluruh kunci Symbol yang menempel pada objek.              |
+| **`Reflect.ownKeys(obj)`**              | `obj`                      | `Array<string \| symbol>` | Mengambil **seluruh** properti objek (string biasa + symbol).         |
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 2. Keunikan Mutlak & Larangan Konstruktor `new`
+
+Setiap pemanggilan `Symbol()` selalu menghasilkan nilai unik di memori:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const s1 = Symbol("auth");
+const s2 = Symbol("auth");
 
-console.log('--- 1. Keunikan Mutlak Symbol Primitif ---');
-const id1 = Symbol('id');
-const id2 = Symbol('id');
+console.log(s1 === s2); // false! ❌ (Meskipun deskripsinya sama persis)
+console.log(s1.description); // "auth"
+```
 
-console.log('Deskripsi id1             :', id1.description);
-console.log('Deskripsi id2             :', id2.description);
-console.log('Apakah id1 === id2?       :', id1 === id2); // false (selalu unik di memori)
+> ⚠️ **Bukan Konstruktor**: Jangan pernah memanggil dengan keyword `new`:
+>
+> ```javascript
+> // new Symbol('id'); // ❌ TypeError: Symbol is not a constructor
+> ```
 
-console.log('\n--- 2. Symbol sebagai Kunci Objek Tersembunyi ---');
-const TOKEN_SECRET = Symbol('token');
+---
+
+### 3. Kunci Properti Tersembunyi (Anti-Collision)
+
+Saat Anda membuat plugin atau library yang ingin menyematkan data internal ke objek pengguna tanpa takut menabrak nama properti yang sudah ada:
+
+```javascript
+const METADATA_KEY = Symbol("metadataInternal");
 
 const user = {
-  nama: 'Joko Santoso',
-  role: 'Developer',
-  [TOKEN_SECRET]: 'RAHASIA_12345',
+  nama: "Budi",
+  role: "Admin",
+  [METADATA_KEY]: { idInternal: 9999, secretKey: "xyz" },
 };
 
-console.log('Akses properti biasa      :', user.nama);
-console.log('Akses via kunci Symbol    :', user[TOKEN_SECRET]);
+console.log(user[METADATA_KEY]); // { idInternal: 9999, secretKey: 'xyz' }
 
-console.log('\n--- 3. Kunci Symbol Tersembunyi dari Loop & JSON ---');
-console.log('Object.keys(user)         :', Object.keys(user)); // Hanya ['nama', 'role']
-console.log('Hasil JSON.stringify      :', JSON.stringify(user)); // TOKEN_SECRET tidak ikut
-
-// Cara resmi mengakses kunci Symbol pada objek:
-const simbolObjek = Object.getOwnPropertySymbols(user);
-console.log('getOwnPropertySymbols     :', simbolObjek);
-console.log('Nilai dari Symbol         :', user[simbolObjek[0]]);
-
-console.log('\n--- 4. Global Symbol Registry (Symbol.for & Symbol.keyFor) ---');
-const symGlobal1 = Symbol.for('app.version');
-const symGlobal2 = Symbol.for('app.version');
-
-console.log('Apakah symGlobal1 === 2?  :', symGlobal1 === symGlobal2); // true (berbagi registry global)
-console.log('Nama kunci via keyFor     :', Symbol.keyFor(symGlobal1)); // "app.version"
-console.log('keyFor pada Symbol lokal  :', Symbol.keyFor(id1)); // undefined
+// Karakteristik Kunci Symbol:
+console.log(Object.keys(user)); // ['nama', 'role'] (METADATA_KEY tidak muncul!)
+console.log(JSON.stringify(user)); // '{"nama":"Budi","role":"Admin"}' (otomatis disingkirkan dari JSON!)
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+### 4. Cara Menginspeksi Kunci Symbol
 
-```text
---- 1. Keunikan Mutlak Symbol Primitif ---
-Deskripsi id1             : id
-Deskripsi id2             : id
-Apakah id1 === id2?       : false
+Meskipun tersembunyi dari loop biasa (`for...in`, `Object.keys()`), Symbol **bukan enkapsulasi privat sejati**:
 
---- 2. Symbol sebagai Kunci Objek Tersembunyi ---
-Akses properti biasa      : Joko Santoso
-Akses via kunci Symbol    : RAHASIA_12345
+```javascript
+// 1. Mengambil hanya kunci-kunci Symbol:
+const daftarSimbol = Object.getOwnPropertySymbols(user);
+console.log(daftarSimbol); // [ Symbol(metadataInternal) ]
+console.log(user[daftarSimbol[0]]); // Nilai tetap dapat dibaca!
 
---- 3. Kunci Symbol Tersembunyi dari Loop & JSON ---
-Object.keys(user)         : [ 'nama', 'role' ]
-Hasil JSON.stringify      : {"nama":"Joko Santoso","role":"Developer"}
-getOwnPropertySymbols     : [ Symbol(token) ]
-Nilai dari Symbol         : RAHASIA_12345
+// 2. Mengambil SEMUA kunci (String dan Symbol):
+const semuaKunci = Reflect.ownKeys(user);
+console.log(semuaKunci); // ['nama', 'role', Symbol(metadataInternal)]
+```
 
---- 4. Global Symbol Registry (Symbol.for & Symbol.keyFor) ---
-Apakah symGlobal1 === 2?  : true
-Nama kunci via keyFor     : app.version
-keyFor pada Symbol lokal  : undefined
+> 💡 Jika Anda membutuhkan enkapsulasi data privat sejati yang tidak dapat diakses dari luar kelas, gunakan sintaks **Private Field `#`** di dalam Class JavaScript (`#privateField`).
+
+---
+
+### 5. Global Symbol Registry: `Symbol.for()` & `Symbol.keyFor()`
+
+Jika Anda memiliki beberapa modul atau berkas terpisah yang perlu membagikan satu Symbol yang sama:
+
+- **`Symbol.for(key)`**: Mengecek apakah ada Symbol dengan kunci string tersebut di registry runtime global. Jika ada, Symbol tersebut dikembalikan; jika belum, dibuatkan baru.
+- **`Symbol.keyFor(sym)`**: Membaca kembali nama kunci string dari Symbol yang terdaftar di registry global.
+
+```javascript
+const globalA = Symbol.for("app.tema");
+const globalB = Symbol.for("app.tema");
+
+console.log(globalA === globalB); // true ✅ (merujuk ke Symbol yang sama di memori)
+console.log(Symbol.keyFor(globalA)); // "app.tema"
+
+// Symbol lokal biasa tidak terdaftar di Global Registry:
+const lokal = Symbol("lokal");
+console.log(Symbol.keyFor(lokal)); // undefined
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+### 6. Well-Known Symbols dalam Praktik
+
+JavaScript menyediakan konstanta bawaan (_Well-Known Symbols_) untuk mengatur perilaku internal bahasa:
+
+#### 1. `Symbol.iterator`: Membuat Objek Dapat Di-Loop `for...of`
+
+```javascript
+const penghitung = {
+  batas: 3,
+  [Symbol.iterator]() {
+    let hitung = 1;
+    return {
+      next: () => ({
+        value: hitung,
+        done: hitung++ > this.batas,
+      }),
+    };
+  },
+};
+
+for (const angka of penghitung) {
+  console.log(angka); // 1, lalu 2, lalu 3
+}
+```
+
+---
+
+#### 2. `Symbol.toStringTag`: Kustomisasi Label Objek
+
+```javascript
+class KeranjangBelanja {
+  get [Symbol.toStringTag]() {
+    return "KeranjangBelanja";
+  }
+}
+
+const k = new KeranjangBelanja();
+console.log(Object.prototype.toString.call(k)); // "[object KeranjangBelanja]"
+```
+
+---
+
+### 7. Jebakan Type Coercion String
+
+Symbol tidak dapat dikonversi secara otomatis/implisit menjadi string via operator penjumlahan `+`:
+
+```javascript
+const id = Symbol("akun");
+
+// console.log('ID: ' + id); // ❌ TypeError: Cannot convert a Symbol value to a string
+
+// Solusi yang Benar:
+console.log("ID: " + id.description); // "ID: akun" ✅
+console.log("ID: " + String(id)); // "ID: Symbol(akun)" ✅
+console.log("ID: " + id.toString()); // "ID: Symbol(akun)" ✅
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep keunikan mutlak, kunci tersembunyi objek, inspeksi via `Reflect.ownKeys()`, Global Symbol Registry (`Symbol.for`), implementasi praktis _Well-Known Symbols_, dan pencegahan error _type coercion_ di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan langsung di terminal.
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 03-standard-library/12-symbol/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Mencegah Tabrakan Nama Properti (Property Collision)**: Saat membuat plugin atau library open-source yang menyematkan metadata ke objek milik developer lain tanpa risiko merusak properti aslinya.
-2. **Konstanta Unik (Enum)**: Membuat nilai state yang tidak mungkin tertukar secara kebetulan dengan string biasa.
-3. **Well-Known Symbols**: Fitur internal JavaScript seperti `Symbol.iterator`, `Symbol.toPrimitive`, dan `Symbol.hasInstance` untuk memodifikasi perilaku bawaan bahasa.
+1. **Pembuatan Plugin / Middleware**: Menyematkan metadata internal (seperti ID pelacakan trace log) ke objek _Request_ atau _Response_ tanpa khawatir menimpa properti milik aplikasi utama.
+2. **Konstanta Enum Unik**: Mendefinisikan status transaksi di mana nilai status dijamin tidak akan pernah bentrok dengan string biasa.
+3. **Mendefinisikan Protokol Kustom**: Mengimplementasikan `[Symbol.iterator]` agar objek custom dapat diurai menggunakan Spread Operator (`[...obj]`) atau perulangan `for...of`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Memanggil `new Symbol()`**: Symbol adalah tipe primitif. Memanggil dengan keyword `new` akan menghasilkan fatal error `TypeError: Symbol is not a constructor`.
-- **Mengira Symbol adalah data rahasia absolut (Private)**: Symbol menyembunyikan properti dari `for...in` dan `JSON.stringify`, namun ia **bukan enkapsulasi privat sejati**. Developer lain tetap bisa membacanya menggunakan `Object.getOwnPropertySymbols(obj)` atau `Reflect.ownKeys(obj)`.
-- **Tidak bisa dikonversi implisit ke string**: Menulis `console.log('ID: ' + id1)` melempar `TypeError: Cannot convert a Symbol value to a string`. Anda harus memanggil `id1.toString()` atau `String(id1)` secara eksplisit.
+- **Mengira Symbol Adalah Private Field**: Properti Symbol masih dapat dibaca via `Object.getOwnPropertySymbols(obj)` atau `Reflect.ownKeys(obj)`.
+- **Konkatenasi String Implisit**: Menulis `'ID ' + sym` melempar `TypeError`.
+- **Tertukar `Symbol()` dengan `Symbol.for()`**: `Symbol('x') !== Symbol('x')`, sedangkan `Symbol.for('x') === Symbol.for('x')`.
 
 ### 🌟 Best Practice
 
-- Gunakan Symbol ketika membuat properti metadata internal pada objek yang tidak boleh tercampur dalam serialisasi JSON atau iterasi umum.
-- Selalu sertakan deskripsi string pada `Symbol('deskripsi')` untuk mempermudah proses debugging di console.
-- Gunakan `Symbol.for()` jika Anda merancang arsitektur multi-modul yang membutuhkan koordinasi identifier bersama.
+- Selalu sertakan deskripsi string pada `Symbol('namaDeskripsi')` agar mudah dikenali saat debugging log.
+- Gunakan `Symbol.for()` jika Anda merancang sistem multi-bundle atau multi-iframe yang membutuhkan identifier terpusat.
+- Gunakan `sym.description` untuk membaca nama teks deskripsi tanpa format pembungkus `Symbol(...)`.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat objek `mobil` dengan properti biasa `merk` dan properti tersembunyi `[Symbol('nomorRangka')]`. Tunjukkan bahwa `Object.keys(mobil)` hanya mencetak `merk`.
-2. Daftarkan Symbol global dengan identifier `'pengaturan.bahasa'` menggunakan `Symbol.for()`, lalu buktikan bahwa pemanggilan di baris lain menghasilkan referensi yang identik.
+1. Buat class `KoleksiBuku` yang menyimpan daftar buku di dalam array internal. Gunakan `[Symbol.iterator]` agar instance `KoleksiBuku` dapat di-loop langsung menggunakan perulangan `for...of`.
+2. Buat objek `profil` dengan properti biasa `nama` dan properti tersembunyi ber-Symbol `[Symbol('apiKey')]`. Buktikan bahwa serialisasi `JSON.stringify(profil)` tidak menyertakan `apiKey`.
+3. Gunakan `Symbol.for()` untuk membuat sistem registrasi event global sederhana dengan nama event `'onUserLogin'`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [11 - Set](../11-set/README.md)
 - ➡️ **Selanjutnya:** [13 - RegExp](../13-regexp/README.md)

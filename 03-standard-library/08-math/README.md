@@ -2,144 +2,271 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami objek bawaan `Math` sebagai namespace utilitas matematika statis.
-> - **Kapan Digunakan**: Menguasai konstanta matematika fundamental: `Math.PI` dan `Math.E`.
-> - **Aturan Praktis**: Gunakan `Math.ceil()` untuk paginasi data agar elemen pecahan terakhir tidak hilang dari tampilan pengguna.
+> - **Fungsi Utama**: Objek bawaan statis yang menyediakan konstanta matematika dan fungsi kalkulasi numerik tingkat lanjut tanpa perlu diinstansiasi (`new Math()` dilarang).
+> - **Kapan Digunakan**: Paginasi data (`Math.ceil`), pencarian harga ekstrem (`Math.min` / `Math.max`), kalkulasi geometri (`Math.hypot`), dan angka acak (`Math.random`).
+> - **Aturan Praktis**: Pahami perbedaan pembulatan negatif antara `Math.floor()` dan `Math.trunc()`, dan ingat bahwa objek `Math` tidak mendukung tipe `BigInt`.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami objek bawaan `Math` sebagai namespace utilitas matematika statis.
-- Menguasai konstanta matematika fundamental: `Math.PI` dan `Math.E`.
-- Memahami 4 teknik pembulatan angka: `round()`, `floor()`, `ceil()`, dan `trunc()`.
-- Menguasai operasi kalkulasi: `abs()`, `min()`, `max()`, `pow()`, `sqrt()`, dan randomisasi angka `Math.random()`.
-- Mengetahui bahwa seluruh method di objek `Math` **hanya bekerja untuk tipe `Number`**, bukan `BigInt`.
+- Menguasai seluruh konstanta dan method kalkulasi `Math` beserta berbagai kondisi kasus (*edge cases*).
+- Memahami perbedaan mendalam 4 teknik pembulatan angka (`round`, `floor`, `ceil`, `trunc`) pada bilangan positif maupun negatif.
+- Menguasai operasi kalkulasi: `abs()`, `sign()`, `min()`, `max()`, `pow()`, `sqrt()`, `cbrt()`, dan `hypot()`.
+- Menguasai rumus generator angka acak bilangan bulat dalam rentang tertentu via `Math.random()`.
+- Mengetahui batasan tipe data pada objek `Math` yang hanya menerima tipe `Number`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> `Math` seperti **kalkulator ilmiah saku**: Anda tidak perlu merakit atau membeli kalkulator baru setiap kali ingin berhitung (`new Math()` tidak diperlukan); cukup tekan tombol fungsi yang tersedia langsung di badannya (`Math.sqrt`, `Math.PI`). Namun kalkulator ini hanya mengerti sistem angka biasa dan akan error jika Anda memasukkan format chip khusus raksasa (BigInt).
-
-Objek **`Math`** adalah objek built-in statis di JavaScript yang menyediakan properti konstanta matematika dan fungsi-fungsi kalkulasi numerik. Objek ini **bukan sebuah konstruktor** (`new Math()` akan menghasilkan error).
-
-### 1. Empat Ragam Pembulatan Angka
-
-- **`Math.round(x)`**: Membulatkan ke bilangan bulat **terdekat** (jika $\ge 0.5$ dibulatkan ke atas, jika $< 0.5$ dibulatkan ke bawah).
-- **`Math.floor(x)`**: Membulatkan selalu **ke bawah** (ke arah angka yang lebih kecil/negatif).
-- **`Math.ceil(x)`**: Membulatkan selalu **ke atas** (ke arah angka yang lebih besar).
-- **`Math.trunc(x)`**: Membuang angka di belakang koma secara langsung tanpa pembulatan (memotong bagian desimal).
-
-### Tabel Referensi Lengkap Method & Konstanta Objek `Math`
-
-| Kategori              | Method / Properti                             | Penjelasan & Contoh Singkat                                                   |
-| :-------------------- | :-------------------------------------------- | :---------------------------------------------------------------------------- |
-| **Konstanta**         | `Math.PI`                                     | Nilai Pi ($\approx 3.14159$)                                                  |
-|                       | `Math.E`                                      | Nilai Euler konstanta logaritma natural ($\approx 2.718$)                     |
-| **Pembulatan**        | `Math.round(x)`                               | Dibulatkan ke bilangan bulat terdekat: `Math.round(4.5) // 5`                 |
-|                       | `Math.floor(x)`                               | Dibulatkan ke bawah: `Math.floor(4.9) // 4`                                   |
-|                       | `Math.ceil(x)`                                | Dibulatkan ke atas: `Math.ceil(4.1) // 5`                                     |
-|                       | `Math.trunc(x)`                               | Memotong angka desimal: `Math.trunc(-4.9) // -4`                              |
-| **Aritmetika Dasar**  | `Math.abs(x)`                                 | Nilai mutlak/positif: `Math.abs(-50) // 50`                                   |
-|                       | `Math.sign(x)`                                | Mengetahui tanda angka: mengembalikan `1` (positif), `-1` (negatif), atau `0` |
-|                       | `Math.max(...val)`                            | Mencari nilai terbesar: `Math.max(10, 5, 80) // 80`                           |
-|                       | `Math.min(...val)`                            | Mencari nilai terkecil: `Math.min(10, 5, 80) // 5`                            |
-| **Pangkat & Akar**    | `Math.pow(x, y)`                              | Menghitung $x^y$: `Math.pow(2, 3) // 8` (setara `2 ** 3`)                     |
-|                       | `Math.sqrt(x)`                                | Akar kuadrat: `Math.sqrt(16) // 4`                                            |
-|                       | `Math.cbrt(x)`                                | Akar kubik: `Math.cbrt(27) // 3`                                              |
-|                       | `Math.hypot(...val)`                          | Sisi miring Pythagoras: `Math.hypot(3, 4) // 5`                               |
-| **Acak (Random)**     | `Math.random()`                               | Angka desimal pseudo-acak di rentang $[0, 1)$                                 |
-| **Logaritma & Sudut** | `Math.log10(x)`, `Math.sin(x)`, `Math.cos(x)` | Logaritma dan trigonometri sudut (dalam radian)                               |
-
-### 3. Batasan Penting: Math Tidak Mendukung BigInt
-
-Seluruh method di dalam `Math` dirancang khusus untuk tipe data `Number` 64-bit IEEE 754. Memberikan nilai `BigInt` (misal: `Math.max(10n, 20n)`) akan memicu **`TypeError: Cannot convert a BigInt value to a number`**.
+> `Math` seperti **kalkulator ilmiah saku**: Anda tidak perlu merakit atau membeli kalkulator baru setiap kali ingin berhitung (`new Math()` tidak diperbolehkan dan akan menghasilkan error). Anda cukup menekan tombol fungsi yang tersedia langsung pada badannya (`Math.sqrt`, `Math.PI`). Namun kalkulator ini hanya mengerti sistem bilangan standar dan akan mogok jika Anda memasukkan format chip raksasa (`BigInt`).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 1. Tabel Ringkasan Method & Konstanta Math (Cheat-Sheet)
+
+| Kategori | Method / Properti | Nilai Kembalian | Deskripsi Singkat |
+| :--- | :--- | :--- | :--- |
+| **Konstanta** | `Math.PI` | `number` ($\approx 3.14159$) | Rasio keliling lingkaran terhadap diameternya. |
+| | `Math.E` | `number` ($\approx 2.71828$) | Konstanta basis logaritma natural (bilangan Euler). |
+| **Pembulatan** | `Math.round(x)` | `number` (bulat) | Membulatkan ke integer terdekat ($\ge 0.5$ ke atas). |
+| | `Math.floor(x)` | `number` (bulat) | Membulatkan selalu ke bawah (ke arah $-\infty$). |
+| | `Math.ceil(x)` | `number` (bulat) | Membulatkan selalu ke atas (ke arah $+\infty$). |
+| | `Math.trunc(x)` | `number` (bulat) | Memotong seluruh angka di belakang koma desimal. |
+| **Aritmetika** | `Math.abs(x)` | `number` ($\ge 0$) | Menghitung nilai mutlak (selalu positif). |
+| | `Math.sign(x)` | `1`, `-1`, `0`, `-0`, `NaN` | Menentukan tanda positif/negatif dari suatu angka. |
+| | `Math.max(...val)`| `number` | Mengambil angka terbesar (argumen kosong = `-Infinity`). |
+| | `Math.min(...val)`| `number` | Mengambil angka terkecil (argumen kosong = `Infinity`). |
+| **Pangkat & Akar**| `Math.pow(x, y)` | `number` | Menghitung nilai perpangkatan $x^y$ (setara `x ** y`). |
+| | `Math.sqrt(x)` | `number` | Menghitung akar kuadrat $\sqrt{x}$. |
+| | `Math.cbrt(x)` | `number` | Menghitung akar kubik $\sqrt[3]{x}$. |
+| | `Math.hypot(...v)`| `number` | Sisi miring teorema Pythagoras $\sqrt{a^2 + b^2}$. |
+| **Acak** | `Math.random()` | `number` | Menghasilkan desimal acak dalam rentang $[0, 1)$. |
+
+---
+
+### 2. Eksplorasi Mendalam Setiap Fitur & Method Math
+
+Berikut adalah rincian lengkap setiap fitur dan method `Math` beserta skenario kasusnya masing-masing:
+
+---
+
+#### 1. Konstanta Pi & Euler: `Math.PI` & `Math.E`
+Menyediakan rasio lingkaran dan basis logaritma natural dengan presisi float 64-bit:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+console.log(Math.PI); // 3.141592653589793
+console.log(Math.E);  // 2.718281828459045
 
-console.log('--- 1. Paginasi Halaman dengan Math.ceil() ---');
-const totalProduk = 53;
-const produkPerHalaman = 10;
-
-// Pembulatan ke atas menjamin item sisa tetap memperoleh lembar halaman tersendiri
-const totalHalaman = Math.ceil(totalProduk / produkPerHalaman);
-console.log(
-  `Total Halaman (${totalProduk} produk, ${produkPerHalaman}/hal) :`,
-  totalHalaman
-);
-
-console.log('\n--- 2. Pencarian Nilai Ekstrem (Math.min & Math.max) ---');
-const daftarHarga = [150000, 45000, 750000, 20000, 120000];
-
-// Menggunakan spread operator (...) untuk memecah elemen array menjadi argumen
-const hargaTermurah = Math.min(...daftarHarga);
-const hargaTermahal = Math.max(...daftarHarga);
-
-console.log('Daftar Harga Katalog :', daftarHarga);
-console.log('Harga Termurah       : Rp', hargaTermurah.toLocaleString('id-ID'));
-console.log('Harga Termahal       : Rp', hargaTermahal.toLocaleString('id-ID'));
-
-console.log('\n--- 3. Generator Angka Acak dalam Rentang (Math.random) ---');
-// Rumus angka acak bulat antara min dan max: Math.floor(Math.random() * (max - min + 1)) + min
-const diskon = Math.floor(Math.random() * (50 - 10 + 1)) + 10;
-console.log(`Voucher Diskon Acak (10% - 50%) : ${diskon}%`);
+// Contoh Menghitung Luas Lingkaran (r = 7):
+const radius = 7;
+const luas = Math.PI * radius ** 2;
+console.log(luas); // 153.93804002589985
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+#### 2. Pembulatan Terdekat: `Math.round(x)`
+Membulatkan angka ke integer terdekat. Nilai pecahan $\ge 0.5$ dibulatkan ke atas:
 
-```text
---- 1. Paginasi Halaman dengan Math.ceil() ---
-Total Halaman (53 produk, 10/hal) : 6
-
---- 2. Pencarian Nilai Ekstrem (Math.min & Math.max) ---
-Daftar Harga Katalog : [ 150000, 45000, 750000, 20000, 120000 ]
-Harga Termurah       : Rp 20.000
-Harga Termahal       : Rp 750.000
-
---- 3. Generator Angka Acak dalam Rentang (Math.random) ---
-Voucher Diskon Acak (10% - 50%) : [Angka antara 10% sampai 50%]
+```javascript
+console.log(Math.round(4.2));  // 4
+console.log(Math.round(4.7));  // 5
+console.log(Math.round(-4.2)); // -4
+console.log(Math.round(-4.7)); // -5
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+#### 3. Pembulatan ke Bawah: `Math.floor(x)`
+Membulatkan angka ke bawah menuju bilangan yang lebih kecil (ke arah $-\infty$):
+
+```javascript
+console.log(Math.floor(4.7));  // 4
+console.log(Math.floor(-4.2)); // -5 (menjauhi nol ke arah negatif)
+console.log(Math.floor(-4.7)); // -5
+```
+
+---
+
+#### 4. Pembulatan ke Atas: `Math.ceil(x)`
+Membulatkan angka ke atas menuju bilangan yang lebih besar (ke arah $+\infty$). Sangat cocok untuk sistem paginasi web:
+
+```javascript
+console.log(Math.ceil(4.2));  // 5
+console.log(Math.ceil(-4.7)); // -4 (mendekati nol)
+
+// Kalkulasi Total Halaman:
+const totalItem = 53;
+const limitPerHal = 10;
+console.log(Math.ceil(totalItem / limitPerHal)); // 6 halaman
+```
+
+---
+
+#### 5. Pemotongan Desimal: `Math.trunc(x)`
+Membuang seluruh angka di belakang tanda koma tanpa memedulikan arah positif atau negatif:
+
+```javascript
+console.log(Math.trunc(4.9));  // 4
+console.log(Math.trunc(-4.9)); // -4 (berbeda dengan Math.floor yang menghasilkan -5!)
+```
+
+---
+
+#### 6. Nilai Mutlak: `Math.abs(x)`
+Mengembalikan nilai absolut/mutlak (selalu bernilai non-negatif):
+
+```javascript
+console.log(Math.abs(-150)); // 150
+console.log(Math.abs(150));  // 150
+```
+
+---
+
+#### 7. Penanda Bilangan: `Math.sign(x)`
+Mengembalikan nilai penanda apakah angka bertanda positif, negatif, atau nol:
+
+```javascript
+console.log(Math.sign(50));  // 1
+console.log(Math.sign(-50)); // -1
+console.log(Math.sign(0));   // 0
+```
+
+---
+
+#### 8. Nilai Terbesar: `Math.max(...values)`
+Mengembalikan angka terbesar dari daftar argumen yang diberikan:
+
+```javascript
+const skor = [10, 45, 99, 32];
+console.log(Math.max(...skor)); // 99
+
+// Peringatan jika dipanggil tanpa argumen:
+console.log(Math.max()); // -Infinity
+```
+
+---
+
+#### 9. Nilai Terkecil: `Math.min(...values)`
+Mengembalikan angka terkecil dari daftar argumen:
+
+```javascript
+console.log(Math.min(...skor)); // 10
+
+// Peringatan jika dipanggil tanpa argumen:
+console.log(Math.min()); // Infinity
+```
+
+---
+
+#### 10. Perpangkatan: `Math.pow(base, exponent)`
+Menghitung $x^y$, setara dengan operator eksponensial `x ** y`:
+
+```javascript
+console.log(Math.pow(2, 8)); // 256
+console.log(2 ** 8);         // 256
+```
+
+---
+
+#### 11. Akar Kuadrat: `Math.sqrt(x)`
+Menghitung akar pangkat dua ($\sqrt{x}$):
+
+```javascript
+console.log(Math.sqrt(64)); // 8
+console.log(Math.sqrt(-1)); // NaN (akar dari bilangan negatif)
+```
+
+---
+
+#### 12. Akar Kubik: `Math.cbrt(x)`
+Menghitung akar pangkat tiga ($\sqrt[3]{x}$):
+
+```javascript
+console.log(Math.cbrt(27));  // 3
+console.log(Math.cbrt(-27)); // -3 (mendukung bilangan negatif)
+```
+
+---
+
+#### 13. Hipotenusa Pythagoras: `Math.hypot(...values)`
+Menghitung panjang sisi miring segitiga siku-siku ($\sqrt{a^2 + b^2}$) atau jarak Euclidean multidimensi tanpa risiko overflow numerik:
+
+```javascript
+// Segitiga dengan alas 3 dan tinggi 4:
+console.log(Math.hypot(3, 4)); // 5
+
+// Jarak Euclidean 3 Dimensi (x, y, z):
+console.log(Math.hypot(2, 3, 6)); // 7
+```
+
+---
+
+#### 14. Generator Bilangan Acak: `Math.random()`
+Mengembalikan bilangan desimal pseudo-acak di rentang $[0, 1)$:
+
+```javascript
+console.log(Math.random()); // Contoh: 0.728491...
+
+// Rumus Standar Integer Acak Inklusif [min, max]:
+function acakInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+console.log(acakInteger(1, 6)); // Dadu (1 s.d. 6)
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep konstanta matematika, 4 teknik pembulatan, pencarian nilai ekstrem, kalkulasi geometri Pythagoras, dan generator bilangan bulat acak di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan langsung di terminal.
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 03-standard-library/08-math/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Paginasi Halaman Web**: Menghitung total lembar halaman menggunakan `Math.ceil(totalBarang / barangPerHalaman)` agar barang sisa tetap mendapat 1 halaman baru.
-2. **Game & Simulasi (RNG)**: Menentukan giliran dadu, drop rate item RPG, atau penentuan pemenang undian menggunakan `Math.random()`.
-3. **Pencarian Nilai Ekstrem**: Mencari harga produk termurah dan termahal dari array katalog dengan `Math.min(...hargaList)`.
+1. **Sistem Paginasi Web**: Menghitung jumlah lembar halaman tabel produk dengan `Math.ceil(totalData / limitPerHalaman)`.
+2. **Game & Simulasi Fisika**: Menghitung jarak antar dua titik pemain di peta menggunakan `Math.hypot(x2 - x1, y2 - y1)`.
+3. **Penentuan Pemenang Undian / Door Prize**: Mengambil indeks acak pemenang dari daftar peserta menggunakan `Math.floor(Math.random() * peserta.length)`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Memasukkan BigInt ke Math**: Menulis `Math.max(10n, 5n)` melempar `TypeError`. Math hanya menerima Number biasa.
-- **Tertukar antara `floor()` dan `trunc()` pada angka negatif**: `Math.floor(-1.2)` menghasilkan `-2`, sedangkan `Math.trunc(-1.2)` menghasilkan `-1`.
-- **Ketidakamanan Kriptografi pada `Math.random()`**: `Math.random()` bukan generator acak yang aman secara kriptografi (_not cryptographically secure_). Jangan gunakan untuk token autentikasi atau reset password; gunakan `crypto.getRandomValues()` di Web Crypto API.
+- **Tertukar `floor()` dan `trunc()` pada Angka Negatif**: `Math.floor(-1.5)` menghasilkan `-2`, sedangkan `Math.trunc(-1.5)` menghasilkan `-1`.
+- **Argumen Kosong pada `Math.max()`**: Mengirim array kosong via spread `Math.max(...[])` menghasilkan `-Infinity`, bukan `0` atau `undefined`.
+- **Menggunakan `Math.random()` untuk Keamanan Akun**: Angka acak dari `Math.random()` dapat ditebak polanya oleh peretas. Selalu gunakan `crypto.getRandomValues()`.
 
 ### 🌟 Best Practice
 
-- Gunakan `Math.ceil()` untuk paginasi data agar elemen pecahan terakhir tidak hilang dari tampilan pengguna.
-- Gunakan spread operator bersama `Math.max(...arr)` dan `Math.min(...arr)` untuk mencari nilai ekstrem array secara elegan.
-- Kuasai rumus standar integer random: `Math.floor(Math.random() * (max - min + 1)) + min`.
+- Selalu gunakan `Math.ceil()` untuk paginasi data agar sisa pecahan data tidak terpotong.
+- Gunakan `Math.hypot()` alih-alih merumuskan `Math.sqrt(a * a + b * b)` secara manual demi kestabilan presisi numerik.
+- Selalu sertakan validasi array kosong sebelum memanggil `Math.min(...arr)` atau `Math.max(...arr)`.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat fungsi `hitungTotalHalaman(totalItem, itemPerHalaman)` yang mengembalikan jumlah halaman yang dibutuhkan menggunakan `Math.ceil()`.
-2. Buat fungsi `lemparKoin()` yang mengembalikan string `'Gambar'` atau `'Angka'` dengan probabilitas seimbang 50:50 menggunakan `Math.random()`.
+1. Buat fungsi `hitungJarak2D(titikA, titikB)` yang menerima dua objek `{ x, y }` dan mengembalikan jarak garis lurus antara kedua titik menggunakan `Math.hypot()`.
+2. Buat fungsi `acakElemenArray(arr)` yang memilih satu elemen acak dari array yang diberikan menggunakan `Math.random()`.
+3. Buat fungsi `pembulatanDesimalKustom(angka, jumlahDesimal)` yang mampu membulatkan angka ke $n$ digit desimal menggunakan perkalian faktor 10 dan `Math.round()`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [07 - Date](../07-date/README.md)
 - ➡️ **Selanjutnya:** [09 - Boolean](../09-boolean/README.md)

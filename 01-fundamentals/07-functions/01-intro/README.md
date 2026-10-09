@@ -2,135 +2,165 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami fungsi sebagai blok kode mandiri yang dapat digunakan berulang kali (_reusable_).
-> - **Kapan Digunakan**: Mengenal struktur deklarasi fungsi: keyword `function`, nama fungsi, parameter, body, dan `return`.
-> - **Aturan Praktis**: Satu fungsi sebaiknya hanya memiliki **satu tanggung jawab tunggal** (_Single Responsibility Principle_).
+> - **Fungsi Utama**: Membungkus blok instruksi logika mandiri ke dalam modul kode yang dapat dipanggil dan digunakan kembali (_reusable unit of code_).
+> - **Kapan Digunakan**: Kapan pun Anda mendapati duplikasi logika kode (_DRY - Don't Repeat Yourself_), perlu membagi program besar menjadi bagian-bagian kecil yang terisolasi, atau ingin mengembalikan hasil komputasi data.
+> - **Aturan Praktis**: Gunakan _Single Responsibility Principle_ (satu fungsi hanya menyelesaikan satu tugas spesifik). Terapkan pola _Early Return_ (_Guard Clauses_) untuk menghindari percabangan `if...else` bersarang yang dalam.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami fungsi sebagai blok kode mandiri yang dapat digunakan berulang kali (_reusable_).
-- Mengenal struktur deklarasi fungsi: keyword `function`, nama fungsi, parameter, body, dan `return`.
-- Memahami perbedaan antara Function Declaration dan Function Expression.
-- Memahami peran krusial keyword `return` dalam menghasilkan nilai keluaran.
+- Memahami konsep dasar fungsi, anatomi parameter masukan, badan fungsi (_function body_), dan nilai keluaran (_return value_).
+- Mengetahui perbedaan mendasar antara _Function Declaration_ (di-hoist penuh) dan _Function Expression_ (terikat variabel).
+- Memahami siklus kata kunci `return` serta perilaku _implicit undefined_ ketika fungsi tidak memiliki pernyataan `return`.
+- Mampu menerapkan pola desain _Guard Clauses_ (_Early Return_) untuk menjaga kode tetap datar dan bersih.
+- Mengakui sifat fungsi sebagai _First-Class Citizen_ di JavaScript yang dapat disimpan dalam variabel atau array.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Fungsi seperti **mesin pembuat kopi (_coffee maker_)**: Anda memasukkan biji kopi dan air (parameter input), mesin memprosesnya di dalam wadah tertutup (body fungsi), lalu mengeluarkan secangkir kopi hangat ke cangkir Anda (nilai `return`).
-
-**Fungsi (Function)** adalah sub-program berisi kumpulan instruksi logika yang dibungkus dalam satu blok nama untuk menyelesaikan tugas spesifik.
-
-### Dua Cara Utama Mendefinisikan Fungsi:
-
-1. **Function Declaration**:
-   ```javascript
-   function namaFungsi(param1, param2) {
-     return hasil;
-   }
-   ```
-   _Karakteristik_: Mengalami _Hoisting_, sehingga dapat dipanggil **sebelum** baris deklarasinya ditulis.
-2. **Function Expression**:
-   ```javascript
-   const namaFungsi = function (param1, param2) {
-     return hasil;
-   };
-   ```
-   _Karakteristik_: Disimpan ke dalam variabel. Tidak bisa dipanggil sebelum dideklarasikan (mengikuti aturan `const`/`let`).
-
-### Peran Keyword `return`:
-
-- Keyword `return` menghentikan eksekusi di dalam badan fungsi dan melempar (_return_) nilai kembali ke pemanggil fungsi.
-- Fungsi yang **tidak memiliki** keyword `return` secara implisit akan selalu mengembalikan nilai **`undefined`**.
+> Fungsi seperti **mesin pembuat kopi otomatis (_coffee maker_)**:
+> Anda memasukkan biji kopi dan air melalui wadah atas (**parameter masukan**). Mesin memanaskan, menggiling, dan menyaring kopi di dalam ruang tertutup yang tidak terlihat dari luar (**badan fungsi / scope lokal**). Setelah selesai, mesin mengalirkan secangkir kopi hangat ke cangkir Anda (**nilai kembalian / `return`**). Jika mesin hanya menggiling tanpa menyalurkan cairan ke cangkir, Anda mendapatkan cangkir kosong (**`undefined`**).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Perbandingan Deklarasi Fungsi
+
+| Karakteristik          | Function Declaration                       | Function Expression                               |
+| :--------------------- | :----------------------------------------- | :------------------------------------------------ |
+| **Bentuk Sintaks**     | `function nama() { ... }`                  | `const nama = function() { ... }`                 |
+| **Hoisting Behavior**  | Di-hoist penuh bersama badannya            | Terikat variabel `const`/`let` (berada dalam TDZ) |
+| **Waktu Pemanggilan**  | Bisa dipanggil **sebelum** baris deklarasi | Hanya bisa dipanggil **setelah** baris deklarasi  |
+| **Nama Fungsi**        | Wajib memiliki pengenal (_identifier_)     | Bisa anonim (_anonymous_) atau bernama            |
+| **Konteks Penggunaan** | Fungsi modul global/top-level              | Fungsi callback, closure, pemetaan objek          |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Sintaks Function Declaration & Mekanisme Hoisting
+
+Deklarasi fungsi standar diangkat secara penuh ke bagian atas scope oleh compiler engine JavaScript:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// Pemanggilan sebelum definisi DIPERBOLEHKAN
+sapa();
 
-console.log(
-  '--- 1. Function Declaration (Contoh Kasus Nyata: Hitung Diskon) ---'
-);
-// Dapat dipanggil sebelum deklarasi karena di-hoist oleh JavaScript
-const totalBelanja = hitungHargaDiskon(100000, 10);
-console.log(
-  `Total setelah diskon 10%: Rp ${totalBelanja.toLocaleString('id-ID')}`
-);
-
-function hitungHargaDiskon(hargaAwal, persentaseDiskon) {
-  const nominalPotongan = (hargaAwal * persentaseDiskon) / 100;
-  const hargaAkhir = hargaAwal - nominalPotongan;
-  return hargaAkhir; // Mengembalikan hasil perhitungan
+function sapa() {
+  console.log("Halo dari Function Declaration!");
 }
+```
 
-console.log('\n--- 2. Function Expression ---');
-// Disimpan ke dalam variabel const
-const sapaPengguna = function (nama, peran = 'Pengunjung') {
-  return `Halo, ${nama}! Anda masuk sebagai [${peran}].`;
+#### 2. Sintaks Function Expression & Anonymous Function
+
+Fungsi disimpan sebagai nilai di dalam variabel. Karena dideklarasikan dengan `const`, fungsi ini mengikuti aturan _Temporal Dead Zone_ (TDZ):
+
+```javascript
+const tambah = function (a, b) {
+  return a + b;
 };
+console.log(tambah(5, 3)); // 8
+```
 
-console.log(sapaPengguna('Joko Santoso', 'Software Engineer'));
+#### 3. Nilai Balik `return` vs Implicit `undefined`
 
-console.log('\n--- 3. Efek Fungsi Tanpa Keyword return ---');
-function fungsiTanpaReturn() {
-  const rahasia = 12345;
-  // Lupa me-return nilai
+Pernyataan `return` menghentikan eksekusi di dalam badan fungsi dan melempar hasilnya kembali ke pemanggil. Jika tidak ada kata kunci `return`, fungsi secara implisit menghasilkan `undefined`:
+
+```javascript
+function kali(x, y) {
+  return x * y;
 }
+function cetak(x) {
+  console.log(x); // Mengembalikan undefined
+}
+```
 
-const hasilUji = fungsiTanpaReturn();
-console.log('Nilai kembalian fungsi:', hasilUji); // undefined
+#### 4. Kode Tidak Terjangkau (_Unreachable Code_) Setelah `return`
+
+Setiap baris kode yang ditulis setelah perintah `return` di blok yang sama tidak akan pernah dieksekusi:
+
+```javascript
+function uji() {
+  return 100;
+  console.log("Baris ini tidak akan pernah dijalankan!"); // Dead code
+}
+```
+
+#### 5. Pola Desain Early Return (_Guard Clauses_)
+
+Pola ini memeriksa kondisi galat atau batas di awal fungsi dan langsung mengembalikan hasil, sehingga logika utama tetap berada pada tingkat indentasi terluar:
+
+```javascript
+function kirimEmail(email) {
+  if (!email) return "Gagal: Email kosong";
+  if (!email.includes("@")) return "Gagal: Format tidak valid";
+
+  // Logika utama pengiriman
+  return "Email berhasil dikirim!";
+}
+```
+
+#### 6. Fungsi Sebagai First-Class Citizen di JavaScript
+
+Fungsi di JavaScript dapat diperlakukan selayaknya nilai biasa: disimpan dalam variabel, dimasukkan ke dalam elemen array, atau dipassing ke fungsi lain:
+
+```javascript
+const operasi = [(n) => n * 2, (n) => n + 10];
+console.log(operasi[0](5)); // 10
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. Function Declaration (Contoh Kasus Nyata: Hitung Diskon) ---
-Total setelah diskon 10%: Rp 90.000
+Seluruh implementasi demonstrasi perbandingan _Function Declaration_ ter-hoist, _Function Expression_, konsekuensi fungsi tanpa _return_, pola pengamanan _Early Return Guard Clauses_, serta fleksibilitas fungsi sebagai _first-class citizen_ telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. Function Expression ---
-Halo, Joko Santoso! Anda masuk sebagai [Software Engineer].
+Jalankan demonstrasi secara langsung di terminal Anda:
 
---- 3. Efek Fungsi Tanpa Keyword return ---
-Nilai kembalian fungsi: undefined
+```bash
+node 01-fundamentals/07-functions/01-intro/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Kalkulator Tagihan / Kasir POS**: Fungsi yang menghitung total belanjaan, pajak PPN 11%, dan potongan voucher diskon.
-2. **Helper Validasi Email**: Fungsi `isValidEmail(email)` yang mengembalikan nilai boolean `true` atau `false`.
+1. **Format Mata Uang Terpusat**:
+   ```javascript
+   function formatRupiah(nominal) {
+     if (typeof nominal !== "number" || isNaN(nominal)) return "Rp 0";
+     return `Rp ${nominal.toLocaleString("id-ID")}`;
+   }
+   ```
+2. **Kalkulator Tagihan Transaksi**: Menghitung subtotal barang, menambahkan PPN 11%, dan memotong voucher diskon.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Lupa Keyword `return`**: Jika Anda menulis rumus komputasi rumit tetapi lupa kata kunci `return`, variabel pemanggil akan bernilai `undefined`.
-- **Menulis Kode Setelah `return` (Unreachable Code)**: Baris kode apapun yang diletakkan persis setelah baris `return` di blok yang sama tidak akan pernah dieksekusi oleh JavaScript.
+- **Lupa Menuliskan Kata Kunci `return`**: Menghitung rumus rumit di badan fungsi tetapi lupa kata kunci `return`, sehingga variabel penampung hasil bernilai `undefined`.
+- **Mencoba Memanggil Function Expression Sebelum Baris Inisialisasi**: Menyebabkan fatal error `ReferenceError: Cannot access 'fn' before initialization`.
 
 ### 🌟 Best Practice
 
-- Satu fungsi sebaiknya hanya memiliki **satu tanggung jawab tunggal** (_Single Responsibility Principle_).
-- Gunakan kata kerja deskriptif (_verb_) untuk menamai fungsi, seperti: `hitungTotal()`, `validasiForm()`, `ambilDataUser()`.
+- Berikan nama fungsi berupa kata kerja aksi (_action verb_), seperti `getUserData()`, `validateForm()`, atau `calculateTax()`.
+- Usahakan panjang badan fungsi tidak lebih dari 20–30 baris. Jika lebih, pertimbangkan untuk membaginya menjadi beberapa sub-fungsi pembantu.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah fungsi `hitungLuasLingkaran(radius)` yang mengembalikan nilai luas lingkaran ($\pi 	imes r^2$). Gunakan `Math.PI`.
-2. Buatlah function expression `cekKelayakanKredit(skorKredit)` yang mengembalikan pesan 'Disetujui' jika skor >= 700, dan 'Ditolak' jika < 700.
+1. Buatlah sebuah fungsi declaration bernama `hitungLuasLingkaran(radius)` yang menerima satu parameter angka jari-jari dan mengembalikan luas lingkaran ($\pi \times r^2$). Gunakan `Math.PI` dan batasi 2 angka di belakang koma dengan `.toFixed(2)`.
+2. Buatlah function expression `validasiPassword(pass)` yang mengembalikan string `'Valid'` jika panjang password minimal 8 karakter, dan mengembalikan `'Terlalu Pendek'` jika kurang dari 8 karakter menggunakan pola _Guard Clause_.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [06 - Project Simulasi Angkot](../../06-project-angkot/README.md)
+- ⬅️ **Sebelumnya:** [05.2 - Else If dan Switch Case](../../05-conditionals/02-else-if-switch/README.md)
 - ➡️ **Selanjutnya:** [07.2 - Parameter dan Argumen](../02-parameters-arguments/README.md)
 - 🏠 **Daftar Isi Modul 01:** [README Modul 01](../../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../../README.md)

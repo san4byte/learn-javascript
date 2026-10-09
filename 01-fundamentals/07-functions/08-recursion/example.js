@@ -1,47 +1,79 @@
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// =============================================================================
+// MODUL 01 - FUNDAMENTALS: 07.8 - FUNGSI REKURSIF
+// =============================================================================
 
-console.log('--- 1. Rekursi Hitung Mundur Sederhana ---');
+console.log('=== 1. REKURSI HITUNG MUNDUR (BASE CASE & RECURSIVE STEP) ===');
 function hitungMundur(n) {
-  // Base case: berhenti saat n mencapai 0
-  if (n === 0) {
-    console.log('Selesai!');
+  // 1. Base Case: Kondisi mutlak untuk berhenti
+  if (n <= 0) {
+    console.log('Selesai! 🚀');
     return;
   }
 
+  // 2. Aksi
   console.log(`Detik: ${n}`);
-  hitungMundur(n - 1); // Pemanggilan rekursif dengan nilai yang mengecil
+
+  // 3. Recursive Call: Menuju ke arah base case
+  hitungMundur(n - 1);
 }
 
 hitungMundur(3);
 
-console.log('\n--- 2. Menghitung Nilai Faktorial (n!) ---');
-// Contoh: 5! = 5 * 4 * 3 * 2 * 1 = 120
+console.log('\n=== 2. KALKULASI FAKTORIAL MATEMATIKA (N!) ===');
 function faktorial(n) {
-  if (n <= 1) return 1; // Base case: 1! = 1
+  if (n <= 1) return 1; // Base case: 0! = 1 dan 1! = 1
   return n * faktorial(n - 1);
 }
 
-console.log('5! =', faktorial(5));
-console.log('4! =', faktorial(4));
+console.log('5! (Faktorial 5) =', faktorial(5)); // 120
+console.log('4! (Faktorial 4) =', faktorial(4)); // 24
 
-console.log(
-  '\n--- 3. Studi Kasus Nyata: Menelusuri Kategori Bersarang (Tree/Folder) ---'
-);
-const strukturFolder = {
-  nama: 'Root',
+console.log('\n=== 3. TRAVERSAL STRUKTUR DATA POHON (TREE TRAVERSAL) ===');
+const direktoriProyek = {
+  nama: 'src',
+  berkas: ['index.js'],
   subFolder: [
-    { nama: 'Dokumen', subFolder: [{ nama: 'Surat.docx', subFolder: [] }] },
-    { nama: 'Gambar', subFolder: [{ nama: 'Foto.jpg', subFolder: [] }] },
+    {
+      nama: 'components',
+      berkas: ['Button.js', 'Modal.js'],
+      subFolder: [],
+    },
+    {
+      nama: 'utils',
+      berkas: ['format.js'],
+      subFolder: [
+        {
+          nama: 'math',
+          berkas: ['calc.js'],
+          subFolder: [],
+        },
+      ],
+    },
   ],
 };
 
-function cetakPohonFolder(folder, level = 0) {
-  const indentasi = '  '.repeat(level);
-  console.log(`${indentasi}📁 ${folder.nama}`);
+function cetakPohon(folder, kedalaman = 0) {
+  const indentasi = '  '.repeat(kedalaman);
+  console.log(`${indentasi}📁 [${folder.nama}]`);
 
-  for (const anak of folder.subFolder) {
-    cetakPohonFolder(anak, level + 1); // Rekursi menelusuri sub-folder sedalam apapun
+  for (const file of folder.berkas) {
+    console.log(`${indentasi}  📄 ${file}`);
+  }
+
+  for (const sub of folder.subFolder) {
+    cetakPohon(sub, kedalaman + 1); // Rekursi menelusuri sub-cabang
   }
 }
 
-cetakPohonFolder(strukturFolder);
+cetakPohon(direktoriProyek);
+
+console.log('\n=== 4. PENCEGAHAN & PENANGANAN MAXIMUM CALL STACK SIZE ===');
+function rekursiTanpaHenti(counter) {
+  return rekursiTanpaHenti(counter + 1); // Tidak ada base case!
+}
+
+try {
+  rekursiTanpaHenti(1);
+} catch (err) {
+  console.log('Menangkap Stack Overflow Error:', err.name, '-', err.message);
+}

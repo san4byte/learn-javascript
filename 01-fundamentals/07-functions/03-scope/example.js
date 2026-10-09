@@ -1,36 +1,68 @@
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// =============================================================================
+// MODUL 01 - FUNDAMENTALS: 07.3 - VARIABLE SCOPE & SCOPE CHAIN
+// =============================================================================
 
-console.log('--- 1. Demonstrasi Scope Chain ---');
-const variabelGlobal = 'Saya berada di Global Scope';
+console.log('=== 1. DEMONSTRASI TIGA LEVEL SCOPE & SCOPE CHAIN ===');
+const levelGlobal = 'Level 1: GLOBAL SCOPE';
 
-function fungsiLuar() {
-  const variabelLokalLuar = 'Saya berada di Fungsi Luar';
+function levelFungsiLuar() {
+  const levelLokalLuar = 'Level 2: FUNCTION SCOPE (LUAR)';
 
-  function fungsiDalam() {
-    const variabelLokalDalam = 'Saya berada di Fungsi Dalam';
+  function levelFungsiDalam() {
+    const levelLokalDalam = 'Level 3: INNER SCOPE (DALAM)';
 
-    // fungsiDalam dapat mengakses variabelnya sendiri, variabel fungsi luar, dan global:
-    console.log('Akses dari dalam:');
-    console.log('- ' + variabelLokalDalam);
-    console.log('- ' + variabelLokalLuar); // Scope chain ke fungsiLuar
-    console.log('- ' + variabelGlobal); // Scope chain ke Global
+    // Pencarian Scope Chain naik ke atas (Inside-out lookup):
+    console.log(levelLokalDalam);
+    console.log(levelLokalLuar); // Ditemukan di parent scope
+    console.log(levelGlobal); // Ditemukan di global scope
   }
 
-  fungsiDalam();
-  // console.log(variabelLokalDalam); // ERROR: tidak bisa diakses dari luar
+  levelFungsiDalam();
 }
 
-fungsiLuar();
+levelFungsiLuar();
 
+console.log('\n=== 2. VARIABLE SHADOWING (PENUTUPAN IDENTIFIER) ===');
+let tarifDasar = 5000;
+
+function hitungTarifKhusus() {
+  // Variabel lokal membayangi (shadowing) variabel global dengan nama yang sama
+  let tarifDasar = 12000;
+  console.log(
+    `Tarif khusus (Lokal Shadowing): Rp ${tarifDasar.toLocaleString('id-ID')}`,
+  );
+}
+
+hitungTarifKhusus();
 console.log(
-  '\n--- 2. Variable Shadowing (Variabel Menutupi Variabel Luar) ---'
+  `Tarif reguler (Global Asli)    : Rp ${tarifDasar.toLocaleString('id-ID')}`,
 );
-let mataUang = 'IDR';
 
-function konversi() {
-  let mataUang = 'USD'; // Shadowing: variabel lokal menutupi variabel global
-  console.log('Mata uang di dalam fungsi:', mataUang); // USD
+console.log('\n=== 3. ISOLASI BLOCK SCOPE ({}) PADA LET & CONST ===');
+if (true) {
+  const tokenRahasia = 'TOKEN-RAHASIA-BLOK';
+  console.log('Token di dalam blok if:', tokenRahasia);
 }
 
-konversi();
-console.log('Mata uang di luar fungsi :', mataUang); // Tetap IDR
+try {
+  eval('console.log(tokenRahasia)');
+} catch (err) {
+  console.log('Token tidak bocor ke luar blok if:', err.message);
+}
+
+console.log('\n=== 4. BAHAYA ACCIDENTAL GLOBAL LEAK ===');
+function prosesTransaksi() {
+  // Tanpa deklarasi (const/let), variabel akan bocor menjadi properti global!
+  // Di sini kita tunjukkan deklarasi aman vs terisolasi
+  const idTransaksi = 'TRX-998811';
+  return idTransaksi;
+}
+prosesTransaksi();
+try {
+  eval('console.log(idTransaksi)');
+} catch (err) {
+  console.log(
+    'idTransaksi terisolasi dengan aman di dalam fungsi:',
+    err.message,
+  );
+}

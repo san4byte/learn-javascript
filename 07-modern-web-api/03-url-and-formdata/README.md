@@ -2,180 +2,196 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami manipulasi query string URL secara dinamis menggunakan `URLSearchParams`.
-> - **Kapan Digunakan**: Mampu membuat fitur sinkronisasi filter dan search e-commerce ke URL browser.
-> - **Aturan Praktis**: Manfaatkan `window.history.pushState({}, '', urlKatalog)` di browser agar URL di address bar browser berubah saat filter diganti tanpa me-reload seluruh halaman.
+> - **Fungsi Utama**: Mengurai dan memanipulasi alamat URL beserta query parameternya secara deklaratif menggunakan `URLSearchParams`, serta merakit data formulir dan unggahan berkas biner menggunakan `FormData`.
+> - **Kapan Digunakan**: Fitur filter pencarian e-commerce yang dapat dibagikan (_shareable URL_), pagination web, pengiriman formulir dinamis, serta upload file avatar/dokumen via Fetch API.
+> - **Aturan Praktis**: Saat mengirim `FormData` melalui `fetch()`, **JANGAN** pernah menyetel header `Content-Type: multipart/form-data` secara manual. Biarkan peramban menyetelnya secara otomatis lengkap dengan kode pembatas (_multipart boundary_).
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami manipulasi query string URL secara dinamis menggunakan `URLSearchParams`.
-- Mampu membuat fitur sinkronisasi filter dan search e-commerce ke URL browser.
-- Menguasai penggunaan `FormData` untuk membaca input formulir HTML secara otomatis.
-- Mengetahui cara mengirim file upload (gambar/dokumen) ke backend via `fetch` secara aman.
+- Memahami anatomi objek standar `URL` (`protocol`, `hostname`, `pathname`, `search`, `hash`).
+- Menguasai manipulasi parameter URL menggunakan antarmuka `URLSearchParams`.
+- Mampu menyinkronkan status filter antarmuka pengguna ke address bar peramban.
+- Menguasai pembuatan dan pengelolaan data formulir menggunakan `FormData`.
+- Memahami teknik melampirkan berkas fisik (_File / Blob upload_) ke dalam payload HTTP.
+- Mengetahui cara mengirimkan `FormData` secara aman menggunakan `fetch()` tanpa kesalahan header.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> **URLSearchParams** seperti formulir pesanan yang ditempel di kaca mobil truk ekspedisi (semua orang di jalan raya bisa melihat pesanan Anda di alamat URL). Sedangkan **FormData** seperti kardus paket bersegel tertutup rapat yang dikirim oleh kurir (dapat menampung barang padat/file fisik maupun surat dokumen, tertutup rapi di dalam payload HTTP request).
-
-Dua aspek fundamental dari komunikasi data di aplikasi web adalah:
-
-1. **Navigasi & Filter berbasis URL**: Menyimpan state filter (kategori, harga, halaman) di URL agar link bisa dibagikan (_shareable link_).
-2. **Pengiriman Formulir & Berkas (Form & File Upload)**: Mengambil data input user dan berkas fisik (file) untuk dikirim ke server.
-
-### 1. Objek `URL` dan `URLSearchParams`
-
-Sebelum adanya `URLSearchParams`, developer harus menulis Regular Expression rumit untuk memecah string `?search=baju&kategori=pria&halaman=2`.
-Dengan `URLSearchParams`, kita bisa melakukan manipulasi query string layaknya sebuah Map:
-
-- `get(name)`: Mengambil nilai parameter pertama.
-- `set(name, value)`: Menyetel atau menimpa nilai parameter.
-- `append(name, value)`: Menambahkan nilai baru (bisa untuk parameter jamak).
-- `delete(name)`: Menghapus parameter dari URL.
-- `toString()`: Mengubah seluruh parameter menjadi string query yang valid.
-
-### 2. Objek `FormData`
-
-Objek `FormData` menyediakan cara mudah untuk menyusun kumpulan pasangan kunci/nilai yang merepresentasikan field formulir beserta nilainya.
-Data ini dapat langsung dikirimkan melalui `fetch()` dengan encoding `multipart/form-data`.
+> - **`URLSearchParams`** seperti **papan rute dan stiker nomor pesanan di kaca depan mobil ekspedisi**: Siapa pun di luar mobil dapat membaca stiker tersebut (`?kategori=elektronik&halaman=2`). Jika Anda ingin mengubah rute, Anda cukup menempel stiker baru (`params.set('halaman', '3')`).
+> - **`FormData`** seperti **kardus paket kargo bersegel tertutup rapat**: Anda dapat memasukkan surat teks (`username`), dokumen formulir, maupun barang fisik berupa file foto biner (`avatar.png`). Kurir mengantarkannya ke kantor pusat server dalam satu kesatuan kardus kargo yang aman.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Ringkasan Method URLSearchParams & FormData
+
+| Antarmuka         | Method Penting                    | Fungsi Utama                                                            |
+| :---------------- | :-------------------------------- | :---------------------------------------------------------------------- |
+| `URLSearchParams` | `get(key)` / `getAll(key)`        | Mengambil nilai pertama atau seluruh nilai (jika jamak) dari parameter. |
+| `URLSearchParams` | `set(key, value)`                 | Menyetel nilai parameter (menimpa jika kunci sudah ada).                |
+| `URLSearchParams` | `append(key, value)`              | Menambahkan nilai baru tanpa menimpa nilai yang sudah ada.              |
+| `URLSearchParams` | `delete(key)`                     | Menghapus parameter tertentu dari susunan query string.                 |
+| `FormData`        | `append(name, value, [filename])` | Menambahkan field teks atau berkas Blob/File ke formulir.               |
+| `FormData`        | `get(name)` / `has(name)`         | Membaca atau memeriksa keberadaan suatu field di form.                  |
+| `FormData`        | `entries()`                       | Mengembalikan iterator pasangan `[key, value]` untuk looping.           |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Anatomi Objek URL
+
+Standar W3C menyediakan konstruktor `URL` untuk membedah bagian-bagian alamat web tanpa regex rumit:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const url = new URL("https://toko.com:8080/produk?kat=buku#ulasan");
+console.log(url.protocol); // "https:"
+console.log(url.hostname); // "toko.com"
+console.log(url.pathname); // "/produk"
+console.log(url.search); // "?kat=buku"
+console.log(url.hash); // "#ulasan"
+```
 
-console.log('--- 1. Manipulasi Query Param dengan URLSearchParams ---');
-// Simulasi URL katalog produk di toko online
-const urlKatalog = new URL(
-  'https://toko-online.com/katalog?kategori=elektronik&halaman=1'
-);
+#### 2. Membaca Query String dengan `URLSearchParams`
 
-const params = urlKatalog.searchParams;
+Mengambil nilai filter dari URL secara langsung:
 
-console.log('Kategori awal  :', params.get('kategori'));
-console.log('Halaman awal   :', params.get('halaman'));
+```javascript
+const params = new URLSearchParams("?q=laptop&sort=asc&tag=sale&tag=free");
+console.log(params.get("q")); // "laptop"
+console.log(params.getAll("tag")); // ["sale", "free"] (parameter jamak)
+console.log(params.has("diskon")); // false
+```
 
-// Update parameter dan tambahkan filter harga & pencarian
-params.set('halaman', '2');
-params.append('tag', 'flash-sale');
-params.append('tag', 'gratis-ongkir');
-params.set('sort', 'harga-terendah');
+#### 3. Memodifikasi Query String (`set`, `append`, `delete`, `sort`)
 
-console.log('Query String baru :', params.toString());
-console.log('Full URL baru     :', urlKatalog.toString());
+Memperbarui parameter pencarian secara dinamis:
 
-console.log('\n--- 2. Membaca Query String dari URL Saat Ini ---');
-const queryStringContoh =
-  '?keyword=laptop+gaming&min_price=10000000&brand=asus';
-const pencarianParams = new URLSearchParams(queryStringContoh);
+```javascript
+params.set("page", "2"); // Mengatur page=2
+params.append("tag", "promo"); // Menambah tag=promo baru
+params.delete("sort"); // Menghapus parameter sort
+params.sort(); // Mengurutkan parameter secara alfabetis
+console.log(params.toString()); // "page=2&q=laptop&tag=sale&tag=free&tag=promo"
+```
 
-console.log('Kata kunci cari :', pencarianParams.get('keyword'));
-console.log('Punya brand?    :', pencarianParams.has('brand'));
+#### 4. Iterasi Pasangan Query via `for...of`
 
-// Iterasi semua pasangan query
-console.log('Daftar seluruh filter:');
-for (const [kunci, nilai] of pencarianParams.entries()) {
-  console.log(`- ${kunci}: ${nilai}`);
+Mendukung iterasi fungsional modern:
+
+```javascript
+for (const [key, val] of params.entries()) {
+  console.log(`${key} -> ${val}`);
 }
+```
 
-console.log(
-  '\n--- 3. Bekerja dengan FormData (Simulasi Pengiriman Formulir) ---'
-);
-// Di browser, Anda bisa membuat FormData langsung dari elemen HTML: new FormData(formElement)
-// Di sini kita demonstrasikan pembuatan dan manipulasi FormData terprogram:
-const formData = new FormData();
+#### 5. Objek `FormData` dari Form HTML vs Pembuatan Terprogram
 
-// Menambahkan field teks
-formData.append('username', 'jokosantoso');
-formData.append('email', 'joko@example.com');
-formData.append('bio', 'Web Developer & Lifelong Learner');
+Dapat diinstansiasi langsung dari elemen `<form>` atau dibuat kosong di memori:
 
-// Simulasi lampiran file berkas foto profil (Blob / File)
-const fileSimulasi = new Blob(['konten binary gambar simulasi'], {
-  type: 'image/png',
+```javascript
+// Cara 1: Dari form HTML yang ada
+const formEl = document.querySelector("form");
+const fdFromDom = new FormData(formEl);
+
+// Cara 2: Terprogram manual
+const fd = new FormData();
+fd.append("email", "joko@example.com");
+```
+
+#### 6. Mengunggah Berkas Fisik (File / Blob) via `formData.append()`
+
+Menerima berkas objek `File` dari `<input type="file">` atau `Blob` buatan:
+
+```javascript
+const fileInput = document.querySelector('input[type="file"]');
+const fdUpload = new FormData();
+if (fileInput.files[0]) {
+  fdUpload.append("dokumen", fileInput.files[0], "laporan-tahunan.pdf");
+}
+```
+
+#### 7. Mengirimkan `FormData` dengan Fetch API
+
+Kirimkan objek FormData langsung sebagai nilai `body`.
+
+```javascript
+// ✅ BENAR: Biarkan browser membuat Content-Type beserta boundary uniknya
+await fetch("/api/upload", {
+  method: "POST",
+  body: fdUpload,
 });
-formData.append('avatar', fileSimulasi, 'avatar-joko.png');
 
-// Menginspeksi isi FormData
-console.log('Kunci username dalam FormData:', formData.get('username'));
-console.log('Nama file yang diunggah      :', formData.get('avatar').name);
+// ❌ JANGAN PERNAH MENULIS INI:
+// headers: { 'Content-Type': 'multipart/form-data' } // boundary akan hilang dan server error 500!
+```
 
-/*
-Contoh Pengiriman Nyata ke Server Backend via Fetch:
-async function kirimDataRegistrasi(formData) {
-  const response = await fetch('/api/register', {
-    method: 'POST',
-    body: formData
-    // CATATAN PENTING: JANGAN menyetel 'Content-Type': 'multipart/form-data' secara manual!
-    // Browser akan otomatis menyetel boundary multipart yang benar.
-  });
-  return await response.json();
-}
-*/
+#### 8. Konversi `FormData` ke Plain JSON Object
+
+Jika API Anda hanya menerima payload `application/json` murni tanpa file upload:
+
+```javascript
+const payloadJson = Object.fromEntries(new FormData(formEl).entries());
+console.log(payloadJson); // { email: "...", nama: "..." }
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. Manipulasi Query Param dengan URLSearchParams ---
-Kategori awal  : elektronik
-Halaman awal   : 1
-Query String baru : kategori=elektronik&halaman=2&tag=flash-sale&tag=gratis-ongkir&sort=harga-terendah
-Full URL baru     : https://toko-online.com/katalog?kategori=elektronik&halaman=2&tag=flash-sale&tag=gratis-ongkir&sort=harga-terendah
+Seluruh implementasi manipulasi URL e-commerce, pembacaan parameter query pencarian, iterasi filter, serta perakitan data formulir lengkap dengan lampiran berkas Blob simulasi telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. Membaca Query String dari URL Saat Ini ---
-Kata kunci cari : laptop gaming
-Punya brand?    : true
-Daftar seluruh filter:
-- keyword: laptop gaming
-- min_price: 10000000
-- brand: asus
+Jalankan demonstrasi menggunakan Node.js di terminal:
 
---- 3. Bekerja dengan FormData (Simulasi Pengiriman Formulir) ---
-Kunci username dalam FormData: jokosantoso
-Nama file yang diunggah      : avatar-joko.png
+```bash
+node 07-modern-web-api/03-url-and-formdata/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **E-Commerce Shareable Filter**: Ketika user menyortir sepatu berdasarkan harga, URL otomatis diperbarui ke `?kategori=sepatu&sort=termurah`. Link ini bisa di-copy dan dikirim ke teman, dan teman akan melihat halaman dengan filter yang persis sama.
-2. **Form Pendaftaran Lamaran Kerja**: Mengirimkan data identitas diri berupa teks bersamaan dengan lampiran Curriculum Vitae (PDF) dalam satu kali klik submit.
-3. **Pagination Komponen**: Tombol 'Halaman Berikutnya' cukup membaca `params.get('page')`, menambahkan +1, lalu memanggil fungsi fetch data.
+1. **Sinkronisasi Filter E-Commerce ke Address Bar**:
+   ```javascript
+   function updateFilterUrl(kategori, halaman) {
+     const url = new URL(window.location.href);
+     url.searchParams.set("kategori", kategori);
+     url.searchParams.set("page", halaman);
+     window.history.pushState({}, "", url);
+     fetchProducts(url.searchParams.toString());
+   }
+   ```
+2. **Unggah Foto Profil dengan Preview**: Menangkap file gambar pengguna dan langsung mengunggahnya secara asinkron ke server CDN.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Salah Memasang Header Content-Type pada Fetch FormData**:
-  Kesalahan paling sering terjadi adalah developer secara manual menulis `headers: { 'Content-Type': 'multipart/form-data' }`. Hal ini menyebabkan server gagal memproses upload karena browser kehilangan _boundary delimiter_. Biarkan browser yang mengatur header `Content-Type` secara otomatis saat `body` diisi objek `FormData`.
-- **Karakter Khusus di Query URL**: Jangan merakit query string dengan penggabungan string manual (`url + '?a=' + input`) karena karakter spasi atau tanda `&` akan merusak URL. Selalu gunakan `URLSearchParams` yang otomatis melakukan _URL encoding_ aman.
+- **Menyetel `Content-Type: multipart/form-data` Secara Manual**: Ini adalah jebakan paling sering terjadi. Ketika Anda menyetelnya manual, browser tidak menyertakan parameter `boundary=----WebKitFormBoundary...`, sehingga server backend gagal mem-parse isi body dan melempar error `Multer/Formidable Error`.
+- **Lupa Encoding Karakter Khusus**: Membangun URL secara manual via penggabungan string (`"?q=" + kata`) dapat memicu URL rusak jika kata mengandung spasi atau tanda `&`. Gunakan selalu `URLSearchParams` yang otomatis melakukan _URL-encoding_.
 
 ### 🌟 Best Practice
 
-- Manfaatkan `window.history.pushState({}, '', urlKatalog)` di browser agar URL di address bar browser berubah saat filter diganti tanpa me-reload seluruh halaman.
-- Validasi ukuran file (misal maksimal 2MB) dan tipe ekstensi (_MIME type_) di sisi JavaScript sebelum memasukkannya ke `FormData`.
+- Manfaatkan `URLSearchParams` untuk membuat URL tautan produk yang ramah dibagikan pengguna ke media sosial (_shareable state_).
+- Gunakan `Object.fromEntries(formData.entries())` untuk formulir berbasis JSON murni.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah fungsi `generateSearchUrl(baseUrl, query, page, limit)` yang menghasilkan URL string lengkap dengan parameter `q`, `page`, dan `limit` menggunakan `URL` dan `URLSearchParams`.
-2. Diberikan elemen form HTML dengan input nama dan file dokumen. Tuliskan kode untuk mengecek apakah ukuran file yang dipilih user lebih besar dari 2MB sebelum dimasukkan ke `FormData`.
+1. Buatlah objek `new URLSearchParams()` dari string `"?role=admin&status=active&status=verified"`. Gunakan method `.getAll('status')` untuk mengambil seluruh statusnya.
+2. Tambahkan parameter baru `sort=terbaru` dan ubah hasilnya menjadi string query URL yang valid menggunakan `.toString()`!
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [02 - Modern Syntax ES2020-ES2023](../02-modern-syntax-es2020/README.md)
-- ➡️ **Selanjutnya:** [04 - Async Paralel dan AbortController](../04-async-parallel-abort/README.md)
+- ⬅️ **Materi Sebelumnya:** [02 - Modern Syntax ES2020+](../02-modern-syntax-es2020/README.md)
+- ➡️ **Materi Selanjutnya:** [04 - Async Parallel & AbortController](../04-async-parallel-abort/README.md)
 - 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

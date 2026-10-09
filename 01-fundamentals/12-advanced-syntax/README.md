@@ -2,144 +2,148 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Menghindari error crash pada properti bersarang dengan Optional Chaining (`?.`), menetapkan nilai default aman dengan Nullish Coalescing (`??`), dan mengunci kode berkualitas dengan Strict Mode (`"use strict"`).
-> - **Kapan Digunakan**: Mengolah data respons API yang tidak lengkap atau propertinya opsional tanpa rentetan `if` bertingkat.
-> - **Aturan Praktis**: Gunakan `??` alih-alih `||` jika angka `0` atau string kosong `""` adalah nilai valid yang tidak boleh ditimpa fallback.
+> - **Fungsi Utama**: Mengamankan pembacaan properti bertingkat dari crash fatal dengan _Optional Chaining_ (`?.`), menetapkan nilai default aman tanpa merusak nilai nol/string kosong dengan _Nullish Coalescing_ (`??`), serta mengunci eksekusi kode bersih bebas bug warisan dengan _Strict Mode_ (`'use strict'`).
+> - **Kapan Digunakan**: Mengonsumsi data dinamis dari REST API yang bentuk propertinya tidak terjamin lengkap, konfigurasi aplikasi dengan nilai numerik default, dan debugging aplikasi.
+> - **Aturan Praktis**: Gunakan `??` alih-alih `||` untuk penetapan fallback data angka atau teks. Jangan gunakan `?.` secara berlebihan jika suatu properti memang diwajibkan ada secara kontrak arsitektur sistem.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Menghindari bug _TypeError: Cannot read properties of undefined_ dengan **Optional Chaining (`?.`)**.
-- Membedakan operator logika OR (`||`) dengan **Nullish Coalescing Operator (`??`)**.
-- Mengaktifkan **Strict Mode (`"use strict"`)** untuk mencegah variabel global tak disengaja.
-- Menggunakan kata kunci `debugger` saat mencari bug melalui developer tools.
+- Menghindari galat fatal _TypeError: Cannot read properties of undefined_ menggunakan operator **Optional Chaining (`?.`)**.
+- Menguasai pembacaan properti bersarang, elemen array opsional (`?.[]`), dan pemanggilan fungsi opsional (`?.()`).
+- Membedakan perbedaan evaluasi antara operator Logika OR (`||`) dan **Nullish Coalescing (`??`)**.
+- Menguasai penugasan ringkas modern menggunakan _Logical Assignment Operators_ (`??=`, `||=`, `&&=`).
+- Memahami aturan pengamanan kode pada **Strict Mode (`'use strict'`)** dan teknik debugging menggunakan instruksi `debugger`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Seperti **pohon silsilah keluarga atau rantai kunci pintu**:
->
-> - Jika ada rumah yang tidak memiliki pintu belakang, mencoba mendobrak kuncinya akan membuat alarm berbunyi keras (crash _TypeError_).
-> - **Optional Chaining (`?.`)** seperti mengetuk pintu secara sopan: jika pintu tersebut tidak ada, Anda langsung melangkah mundur dengan tenang (`undefined`) tanpa merusak apa pun.
-> - **Nullish Coalescing (`??`)** seperti jaring pengaman yang hanya menangkap jika kotak benar-benar kosong (`null` / `undefined`), bukan saat kotak berisi koin bernilai 0.
+> - **Optional Chaining (`?.`)** seperti **mengetuk pintu pagar rumah secara sopan sebelum masuk**: Jika rumah tersebut ternyata tidak memiliki pintu samping (**undefined**), Anda langsung melangkah mundur dengan tenang dan selamat (**mengembalikan `undefined`**) tanpa mendobrak dinding dan memicu alarm kebakaran gedung (**crash `TypeError`**).
+> - **Nullish Coalescing (`??`)** seperti **jaring pengaman barang jatuh**: Jaring hanya menangkap jika kotak yang dibawa kurir benar-benar hilang atau tidak berwujud (**`null` / `undefined`**). Jika kotak tersebut berisi uang koin nominal Rp 0 atau kertas kosong (**nilai `0` atau `""`**), kurir tetap diizinkan membawanya karena barang tersebut nyata ada.
 
-### 1. Optional Chaining (`?.`)
+---
 
-Sebelum fitur ini hadir, mengakses properti bersarang memerlukan pemeriksaan berulang yang melelahkan:
-`user && user.profile && user.profile.address && user.profile.address.city`.
-Dengan `?.`, JavaScript akan segera berhenti dan mengembalikan `undefined` jika salah satu referensi di sebelah kiri bernilai `null` atau `undefined`:
-`user?.profile?.address?.city`.
+### Tabel Perbandingan Operator Logika Modern
 
-### 2. Nullish Coalescing Operator (`??`)
+| Operator  | Nama Operator      | Kondisi Pemicu Evaluasi Kanan                                       | Contoh Kasus                     |
+| :-------- | :----------------- | :------------------------------------------------------------------ | :------------------------------- | ----------------------------------------------------------------- | ------------------- | --- | ----------- |
+| **`?.`**  | Optional Chaining  | Sisi kiri bernilai `null` atau `undefined` (langsung berhenti)      | `user?.address?.city`            |
+| **`??`**  | Nullish Coalescing | Sisi kiri bernilai **HANYA** `null` atau `undefined`                | `const port = cfg.port ?? 3000;` |
+| \*\*`     |                    | `\*\*                                                               | Logical OR Fallback              | Sisi kiri bernilai sembarang nilai **Falsy** (`0`, `""`, `false`) | `const teks = input |     | 'Default';` |
+| **`??=`** | Nullish Assignment | Menetapkan nilai jika variabel saat ini bernilai `null`/`undefined` | `config.host ??= 'localhost';`   |
 
-Operator `||` menganggap semua nilai falsy (`0`, `""`, `false`, `null`, `undefined`) sebagai pemicu fallback:
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Sintaks Optional Chaining (`?.`) pada Properti Objek
+
+Menghentikan evaluasi ekspresi dan segera menghasilkan `undefined` jika target sebelum tanda `?.` bernilai nullish:
+
+```javascript
+const response = { data: { profil: null } };
+console.log(response.data.profil?.alamat?.kota); // undefined (tidak crash)
+```
+
+#### 2. Optional Chaining pada Indeks Array & Pemanggilan Method
+
+- **Array indexing**: `daftarPesanan?.[0]`
+- **Method call**: `logger.log?.('Pesan')` (jika method `log` tidak ada, tidak melempar error `is not a function`).
+
+```javascript
+const handler = {};
+handler.onClick?.(); // Aman jika handler tidak mendefinisikan onClick
+```
+
+#### 3. Operator Nullish Coalescing (`??`) vs Logical OR (`||`)
+
+Operator `||` salah mengartikan angka `0` atau string kosong `""` sebagai ketiadaan nilai:
 
 ```javascript
 let totalSkor = 0;
-let nilai = totalSkor || 10; // Hasilnya 10! (Keliru, padahal skor 0 adalah sah)
+const viaOR = totalSkor || 10; // 10 (Keliru: 0 ditimpa)
+const viaNullish = totalSkor ?? 10; // 0 (Tepat: 0 dipertahankan)
 ```
 
-Operator `??` **HANYA** memicu nilai default jika sisi kiri bernilai **`null`** atau **`undefined`**:
+#### 4. Operator Logical Assignment (`??=`, `||=`, `&&=`)
+
+Menyederhanakan pola penugasan nilai bersyarat:
 
 ```javascript
-let nilai = totalSkor ?? 10; // Hasilnya 0 (Benar!)
+let options = { timeout: 0 };
+options.timeout ??= 5000; // timeout tetap 0
+options.retries ??= 3; // retries dibuat dengan nilai 3
 ```
 
-### 3. Strict Mode (`"use strict"`)
+#### 5. Penegakan Disiplin Kode via Strict Mode (`'use strict'`)
 
-Mencegah bug konyol JavaScript lama, seperti:
+Diletakkan di awal berkas atau fungsi untuk mengaktifkan aturan ketat compiler:
 
-- Menulis variabel tanpa deklarasi (`nama = "Joko"`) langsung melempar `ReferenceError`.
-- Mencegah duplikasi nama parameter pada fungsi.
-- Menolak penugasan pada properti _read-only_.
+1. Menolak pembuatan variabel tanpa deklarasi (`x = 10` memicu `ReferenceError`).
+2. Mencegah penulisan properti non-writable.
+3. Menolak parameter duplikat pada fungsi (`function(a, a) {}`).
 
----
+#### 6. Debugger Statement & Integrasi DevTools Breakpoints
 
-## 3. 💻 Contoh Kode (`example.js`)
+Instruksi `debugger;` bertindak sebagai titik henti paksa (_breakpoint_) saat browser Developer Tools (F12) atau debugger VS Code sedang aktif:
 
 ```javascript
-// Nullish Coalescing, Optional Chaining, Strict Mode & Debugger
-'use strict'; // Mengaktifkan strict mode untuk mencegah penulisan kode sembarangan
-
-// 1. Optional Chaining (?.)
-const user = {
-  profile: {
-    name: 'Joko',
-    address: {
-      city: 'Jakarta',
-    },
-  },
-};
-
-// Mengakses properti bersarang tanpa khawatir error TypeError
-console.log('Kota user:', user?.profile?.address?.city); // Jakarta
-console.log('Kode pos :', user?.profile?.contact?.zipCode); // undefined (tidak crash!)
-
-// 2. Nullish Coalescing Operator (??)
-let jumlahPengunjung = 0;
-
-// Menggunakan OR (||): 0 dianggap falsy, sehingga keliru memilih default!
-const hasilOR = jumlahPengunjung || 10;
-console.log('Hasil dengan || (keliru) :', hasilOR); // 10
-
-// Menggunakan Nullish Coalescing (??): 0 dipertahankan karena bukan null/undefined
-const hasilNullish = jumlahPengunjung ?? 10;
-console.log('Hasil dengan ?? (benar)  :', hasilNullish); // 0
-
-// 3. Debugger Statement
-function hitungTotal(harga, kuantitas) {
-  // debugger; // Uncomment saat debugging di Chrome DevTools / VS Code Debugger
-  return harga * kuantitas;
+function hitungPajak(nilai) {
+  // debugger; // Eksekusi browser akan dijeda di baris ini
+  return nilai * 0.11;
 }
-
-console.log('Total belanja:', hitungTotal(15000, 3));
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
-Kota user: Jakarta
-Kode pos : undefined
-Hasil dengan || (keliru) : 10
-Hasil dengan ?? (benar)  : 0
-Total belanja: 45000
+Seluruh implementasi demonstrasi pemanfaatan Optional Chaining pada properti bersarang, array, dan method opsional, perbandingan akurasi Nullish Coalescing vs Logical OR pada data angka nol dan string kosong, penggunaan operator Logical Assignment `??=`, serta penegakan disiplin error Strict Mode telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Jalankan demonstrasi secara langsung di terminal Anda:
+
+```bash
+node 01-fundamentals/12-advanced-syntax/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Mengonsumsi Respons REST API**: Data profil pengguna dari server sering kali opsional (misal user belum mengisi alamat pengiriman). Menggunakan `order.shipping?.address?.street ?? "Alamat belum diatur"` membuat frontend tahan banting dari crash.
-2. **Pengaturan Konfigurasi Default**: Nilai konfigurasi game seperti `volumeLevel = config.volume ?? 100`. Jika user sengaja membisukan suara (`volume = 0`), nilainya tidak akan dipaksa kembali ke 100.
+1. **Konsumsi Data Respons REST API**: Menghindari crash aplikasi frontend saat server merespons dengan data parsial:
+   ```javascript
+   const avatarUrl = user?.profile?.avatar?.url ?? "/images/default-avatar.png";
+   ```
+2. **Konfigurasi Pengaturan Aplikasi Audio / Skor**: Mempertahankan pengaturan volume suara `volume = 0` (mode senyap) tanpa dipaksa kembali ke volume 50%.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Menggabungkan `??` dengan `&&` atau `||` tanpa tanda kurung**: Menulis `a || b ?? c` akan memicu `SyntaxError`. JavaScript mewajibkan tanda kurung eksplisit: `(a || b) ?? c`.
-- **Menggunakan `?.` secara berlebihan**: Jangan membubuhkan `?.` di semua tempat tanpa alasan; jika suatu properti seharusnya memang wajib ada, biarkan error muncul agar Anda tahu ada anomali data.
+- **Menggabungkan `??` dengan `&&` atau `||` Tanpa Tanda Kurung**: Menulis `a || b ?? c` memicu `SyntaxError: Unexpected token '??'`. Mesin JavaScript mewajibkan pengelompokan eksplisit: `(a || b) ?? c`.
+- **Menyalahgunakan `?.` di Sisi Kiri Penugasan**: Menulis `obj?.nama = 'Budi'` adalah kesalahan sintaks (_Invalid left-hand side in assignment_).
 
 ### 🌟 Best Practice
 
-- Selalu pasang `"use strict"` di baris paling pertama file JS jadul (modul ES6 sudah otomatis mengaktifkan strict mode).
-- Gunakan `??` sebagai pilihan utama saat menangani default fallback value untuk data numerik dan teks.
+- Utamakan `??` daripada `||` untuk semua penanganan nilai fallback bawaan (_default value assignment_).
+- Gunakan `?.` hanya pada batas data yang memang bersifat dinamis atau opsional.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat objek `pelanggan` yang tidak memiliki properti `telepon`. Gunakan Optional Chaining dan Nullish Coalescing untuk mencetak `"Nomor tidak terdaftar"` jika nomor telepon tidak ditemukan.
-2. Ubah variabel `saldo = 0` dan buktikan perbedaan hasil antara `saldo || 50000` dengan `saldo ?? 50000`.
+1. Diberikan objek `respons = { status: 200, payload: { user: { kontak: {} } } }`. Gunakan kombinasi Optional Chaining dan Nullish Coalescing untuk membaca `telepon` dengan fallback `'Nomor Tidak Tersedia'`.
+2. Diberikan objek `setelan = { levelSuara: 0, kualitas: '' }`. Bandingkan nilai hasil saat mengisi properti tersebut menggunakan `setelan.levelSuara || 80` dan `setelan.levelSuara ?? 80`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [11 - Tipe Data Lanjutan](../11-data-types-and-operators/README.md)
-- ➡️ **Selanjutnya:** [01 - Modul 02 (OOP)](../../02-oop/01-constructor-function/README.md)
+- ➡️ **Selanjutnya:** [Modul 02 - Object-Oriented Programming (OOP)](../../02-oop/01-constructor-function/README.md)
 - 🏠 **Daftar Isi Modul 01:** [README Modul 01](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -20,11 +20,20 @@ function mainkanSuitJawa(pilihanPlayer) {
   if (pilihanPlayer === pilihanKomputer) {
     hasil = 'SERI!';
   } else if (pilihanPlayer === 'gajah') {
-    hasil = pilihanKomputer === 'orang' ? 'MENANG! (Gajah menginjak Orang)' : 'KALAH! (Gajah dikalahkan Semut)';
+    hasil =
+      pilihanKomputer === 'orang'
+        ? 'MENANG! (Gajah menginjak Orang)'
+        : 'KALAH! (Gajah dikalahkan Semut)';
   } else if (pilihanPlayer === 'orang') {
-    hasil = pilihanKomputer === 'gajah' ? 'KALAH! (Orang diinjak Gajah)' : 'MENANG! (Orang menginjak Semut)';
+    hasil =
+      pilihanKomputer === 'gajah'
+        ? 'KALAH! (Orang diinjak Gajah)'
+        : 'MENANG! (Orang menginjak Semut)';
   } else if (pilihanPlayer === 'semut') {
-    hasil = pilihanKomputer === 'orang' ? 'KALAH! (Semut diinjak Orang)' : 'MENANG! (Semut masuk telinga Gajah)';
+    hasil =
+      pilihanKomputer === 'orang'
+        ? 'KALAH! (Semut diinjak Orang)'
+        : 'MENANG! (Semut masuk telinga Gajah)';
   } else {
     hasil = 'Pilihan tidak valid! Pilih: gajah, orang, atau semut.';
   }

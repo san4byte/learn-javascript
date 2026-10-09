@@ -2,110 +2,177 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami fungsi dialog bawaan browser: alert(), prompt(), dan confirm().
-> - **Kapan Digunakan**: Mengetahui nilai balik (return value) dari masing-masing fungsi dialog.
-> - **Aturan Praktis**: Selalu gunakan helper guard jika ingin script Anda kompatibel di terminal maupun browser.
+> - **Fungsi Utama**: Menyediakan antarmuka dialog modal bawaan peramban (_browser native dialog_) untuk memberikan notifikasi pesan, menerima teks masukan pengguna, serta mengonfirmasi keputusan Ya/Tidak.
+> - **Kapan Digunakan**: Skrip latihan logika dasar, konfirmasi tindakan berbahaya (misal: "Apakah Anda yakin ingin menghapus akun?"), serta purwarupa cepat (_rapid prototyping_).
+> - **Aturan Praktis**: Dialog popup browser bersifat **blocking / synchronous** (membekukan rendering UI dan skrip sampai pengguna menekan tombol). Objek ini tidak ada di runtime Node.js, gunakan pembungkus _guard_ `typeof alert !== 'undefined'` untuk kode universal.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami fungsi dialog bawaan browser: alert(), prompt(), dan confirm().
-- Mengetahui nilai balik (return value) dari masing-masing fungsi dialog.
-- Mampu membuat pengulangan interaktif berbasis konfirmasi pengguna.
-- Membuat kode universal yang aman dijalankan baik di Terminal (Node.js) maupun Browser.
+- Memahami 3 fungsi kotak dialog bawaan browser: `alert()`, `prompt()`, dan `confirm()`.
+- Mengetahui tipe data nilai balik (_return value_) dari masing-masing fungsi dialog.
+- Memahami dampak perilaku pemblokiran eksekusi (_blocking nature_) terhadap performa halaman web.
+- Mampu membuat alur perulangan interaktif berbasis persetujuan pengguna via `confirm()`.
+- Menguasai pola kode universal agar skrip tidak _crash_ saat dijalankan di terminal Node.js.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Popup box seperti **penjaga pintu palang kereta api**: saat palang turun (popup muncul), semua kendaraan di jalan raya berhenti total (blocking). Kendaraan baru boleh jalan kembali setelah palang diangkat (pengguna menekan tombol).
-
-JavaScript di browser menyediakan 3 fungsi dialog interaktif modal sederhana:
-
-1. **`alert(pesan)`**: Menampilkan pesan informasi kepada pengguna dengan tombol OK. Mengembalikan nilai `undefined`.
-2. **`prompt(pesan, defaultValue)`**: Menampilkan input teks yang meminta pengguna mengetikkan sesuatu. Mengembalikan nilai bertipe `String` jika pengguna menekan OK, atau `null` jika pengguna menekan Batal (_Cancel_).
-3. **`confirm(pertanyaan)`**: Menampilkan kotak pertanyaan dengan tombol OK dan Batal. Mengembalikan nilai Boolean: `true` jika menekan OK, dan `false` jika menekan Batal.
-
-### ⚠️ Sifat Blocking:
-
-Dialog popup browser bersifat **blocking / synchronous**: seluruh eksekusi skrip JavaScript dan render antarmuka halaman web akan terhenti total sampai pengguna menekan salah satu tombol pada dialog tersebut.
+> Dialog popup browser seperti **palang pintu perlintasan kereta api**: Saat palang pintu diturunkan (popup dialog muncul di layar), semua kendaraan di jalan raya berhenti total (seluruh eksekusi JavaScript dan animasi browser terhenti membeku). Kendaraan baru diizinkan melaju kembali setelah palang diangkat (pengguna menekan tombol OK atau Batal).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Ringkasan Fungsi Dialog Browser
+
+| Fungsi Dialog              | Parameter Masukan           | Nilai Balik (_Return Value_) | Tujuan Penggunaan                             |
+| :------------------------- | :-------------------------- | :--------------------------- | :-------------------------------------------- |
+| `alert(pesan)`             | String pesan informasi      | `undefined`                  | Menampilkan pengumuman penting satu arah.     |
+| `prompt(pesan, [default])` | Pesan & nilai awal opsional | `string` atau `null`         | Meminta pengguna mengetikkan teks string.     |
+| `confirm(pertanyaan)`      | Pertanyaan konfirmasi       | `boolean` (`true` / `false`) | Meminta konfirmasi keputusan (OK atau Batal). |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Kotak Notifikasi: `alert(message)`
+
+Menampilkan pesan teks dengan satu tombol **OK**. Tidak mengembalikan data apa pun (`undefined`).
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+alert("Selamat datang di pembelajaran JavaScript Modern!");
+```
 
-// 1. Helper Universal (agar kode tidak crash saat dijalankan via terminal Node.js)
+#### 2. Kotak Input Pengguna: `prompt(message, defaultValue)`
+
+Menyediakan kolom input teks bagi pengguna. Jika pengguna menekan **OK**, mengembalikan teks string yang diketik (atau string kosong `""` jika tidak mengetik apa-apa). Jika pengguna menekan **Batal (_Cancel_)**, mengembalikan nilai `null`.
+
+```javascript
+const nama = prompt("Masukkan nama Anda:", "Pengunjung");
+if (nama !== null) {
+  console.log(`Halo, ${nama}!`);
+}
+```
+
+#### 3. Kotak Konfirmasi Keputusan: `confirm(message)`
+
+Menampilkan pertanyaan dengan tombol **OK** dan **Batal**. Mengembalikan nilai boolean murni.
+
+```javascript
+const yakinHapus = confirm("Apakah Anda yakin ingin menghapus data ini?");
+if (yakinHapus) {
+  console.log("Data berhasil dihapus dari sistem.");
+}
+```
+
+#### 4. Sifat Sinkron Blocking pada Dialog Modal Browser
+
+Selama kotak dialog aktif di layar, siklus render halaman HTML dan eksekusi event listener terhenti total. Tidak ada animasi yang bergerak atau fungsi timer yang dapat memicu rendering baru hingga dialog ditutup.
+
+#### 5. Penanganan Nilai Balik `prompt()` (`string` vs `null`)
+
+Selalu bedakan antara pengguna yang sengaja membatalkan dialog (`null`) dan pengguna yang menekan OK tanpa mengisi teks (`""`):
+
+```javascript
+const input = prompt("Ketik angka:");
+if (input === null) {
+  console.log("Pengguna membatalkan input.");
+} else if (input.trim() === "") {
+  console.log("Pengguna menekan OK tetapi isian kosong!");
+}
+```
+
+#### 6. Pola Pengulangan Interaktif (`while` + `confirm`)
+
+Membangun alur interaksi berulang sampai pengguna memutuskan untuk berhenti:
+
+```javascript
+let ulangi = true;
+while (ulangi) {
+  console.log("Menjalankan proses aplikasi...");
+  ulangi = confirm("Apakah ingin mengulang proses sekali lagi?");
+}
+```
+
+#### 7. Pola Kompatibilitas Lintas Runtime (Universal Helper Guard)
+
+Agar kode dapat diuji di terminal Node.js tanpa memicu fatal error `ReferenceError: alert is not defined`:
+
+```javascript
 const universalAlert =
-  typeof alert !== 'undefined'
+  typeof alert !== "undefined"
     ? alert
     : (msg) => console.log(`[ALERT]: ${msg}`);
 const universalPrompt =
-  typeof prompt !== 'undefined' ? prompt : (msg) => 'Joko Santoso';
-const universalConfirm =
-  typeof confirm !== 'undefined' ? confirm : (msg) => false; // agar loop berhenti di terminal
-
-universalAlert('Selamat datang di Pembelajaran JavaScript!');
-
-let lanjut = true;
-let hitungan = 1;
-
-while (lanjut && hitungan <= 2) {
-  const nama = universalPrompt('Masukkan nama Anda:');
-  universalAlert(`Halo ${nama}, ini iterasi ke-${hitungan}`);
-
-  // Konfirmasi apakah ingin mengulang lagi
-  lanjut = universalConfirm('Apakah Anda ingin mencoba lagi?');
-  hitungan++;
-}
-
-universalAlert('Terima kasih telah berkunjung!');
+  typeof prompt !== "undefined" ? prompt : () => "Nilai Dummy Node.js";
+const universalConfirm = typeof confirm !== "undefined" ? confirm : () => false;
 ```
+
+#### 8. Alasan Industri Beralih ke Modal Kustom HTML/CSS
+
+Dalam aplikasi komersial modern, popup bawaan browser jarang digunakan karena:
+
+1. Tidak dapat dikustomisasi gaya visualnya (tampilan mengikuti OS/browser).
+2. Memblokir thread rendering halaman secara agresif.
+3. Sebagian besar browser modern mengizinkan pengguna mencentang _"Prevent this page from creating additional dialogs"_.
+   Pengembang modern lebih memilih modal kustom berbasis HTML, CSS, dan DOM Events (atau elemen `<dialog>` bawaan HTML5).
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
-[ALERT]: Selamat datang di Pembelajaran JavaScript!
-[ALERT]: Halo Joko Santoso, ini iterasi ke-1
-[ALERT]: Terima kasih telah berkunjung!
+Seluruh implementasi demonstrasi alur notifikasi `alert`, input data `prompt`, validasi konfirmasi `confirm`, perulangan interaktif, serta implementasi _universal helper guard_ telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Berkas ini dirancang untuk dapat dijalankan langsung di terminal Node.js melalui _Universal Helper_, maupun dibuka di peramban web via [`index.html`](index.html).
+
+Jalankan demonstrasi simulasi di terminal:
+
+```bash
+node 01-fundamentals/01-popup-boxes/example.js
 ```
+
+Atau buka [`index.html`](index.html) langsung di browser Anda untuk mencoba kotak popup dialog visual asli.
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Konfirmasi Penghapusan Data Sensitif**: Menampilkan `confirm('Apakah Anda yakin ingin menghapus data ini secara permanen?')` sebelum memicu request delete ke database.
-2. **Rapid Prototyping & Debugging Cepat**: Menguji aliran data logika tanpa perlu membuat elemen form HTML yang rumit.
+1. **Konfirmasi Penghapusan Sensitif Cepat**:
+   ```javascript
+   function onDeleteAccount() {
+     if (confirm("Tindakan ini tidak dapat dibatalkan. Hapus akun permanen?")) {
+       apiDeleteAccount();
+     }
+   }
+   ```
+2. **Pengujian Cepat Input di Console DevTools**: Meminta token otentikasi sementara saat debugging langsung di console browser: `const token = prompt('Masukkan token pengujian:');`.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Error 'alert is not defined' di Node.js**: Pemula sering kaget saat menjalankan file di terminal dengan `node script.js` dan mengalami crash. Objek `alert`, `prompt`, dan `confirm` adalah milik browser (`window`), bukan milik runtime Node.js.
-- **Nilai Kembalian prompt() Selalu String**: Jika pengguna mengetik angka `25`, `prompt()` mengembalikan string `"25"`. Jika Anda melakukan `25 + 5`, hasilnya adalah `"255"`, bukan `30`. Lakukan parsing angka dengan `parseInt()` atau `Number()`.
-- **Mengganggu Pengalaman Pengguna (UX)**: Jangan menggunakan popup box bawaan untuk aplikasi produksi komersial karena menghentikan interaksi user dan tampilannya tidak bisa dikustomisasi dengan CSS.
+- **Mengira Nilai Balik `prompt()` Bertipe Angka**: Nilai balik `prompt()` selalu bertipe `string`. Jika Anda meminta angka umur dan menjumlahkannya `prompt() + 5`, hasilnya adalah penggabungan teks (`"205"`, bukan `25`). Selalu konversi dengan `Number(prompt())`.
+- **Menjalankan di Runtime Node.js Tanpa Guard**: Memanggil `alert()` langsung di Node.js akan melempar fatal error `ReferenceError: alert is not defined`.
 
 ### 🌟 Best Practice
 
-- Selalu gunakan helper guard jika ingin script Anda kompatibel di terminal maupun browser.
-- Untuk aplikasi web modern di produksi, gantikan popup box bawaan browser dengan komponen UI Modal HTML/CSS kustom (misal SweetAlert2 atau Dialog Tailwind/Bootstrap).
+- Gunakan elemen `<dialog>` modern bawaan HTML5 (`dialogElement.showModal()`) daripada `window.prompt()` untuk antarmuka pengguna aplikasi profesional.
+- Selalu gunakan `String(input).trim()` dan periksa `input !== null` saat memproses masukan dari `prompt()`.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah program yang meminta input umur pengguna melalui `prompt()`. Jika umur >= 17, tampilkan alert 'Boleh membuat SIM', jika kurang dari 17 tampilkan alert 'Belum cukup umur'.
-2. Pastikan input string dari `prompt` dikonversi menjadi tipe data number menggunakan `Number()`.
+1. Buka berkas [`index.html`](index.html) di browser. Gunakan DevTools Console (`F12`), buat sebuah alur prompt yang meminta dua angka dari pengguna, konversi keduanya menjadi tipe `number`, lalu tampilkan hasil penjumlahannya menggunakan `alert()`.
+2. Tambahkan logika pengaman: jika pengguna menekan tombol Batal (_Cancel_) pada salah satu prompt, hentikan proses dan tampilkan pesan _"Penghitungan dibatalkan!"_.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ➡️ **Selanjutnya:** [02 - Variabel dan Scope (var, let, const)](../02-variables-and-scope/README.md)
+- ➡️ **Materi Selanjutnya:** [02 - Variables & Scope](../02-variables-and-scope/README.md)
 - 🏠 **Daftar Isi Modul 01:** [README Modul 01](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

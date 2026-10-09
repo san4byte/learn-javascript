@@ -1,32 +1,51 @@
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// 01 - Pengenalan Asynchronous & Arsitektur Event Loop
+// File ini dapat dijalankan langsung di Node.js maupun di Browser.
 
-console.log('--- Demonstrasi Urutan Eksekusi Event Loop ---');
+console.log('========================================================');
+console.log('📌 DEMONSTRASI ARSITEKTUR EVENT LOOP & URUTAN EKSEKUSI');
+console.log('========================================================\n');
 
-console.log('1. [Synchronous] Awal script dieksekusi di Call Stack');
+// 1. Eksekusi Sinkron Utama (Call Stack)
+console.log('1. [Call Stack] Script sinkron mulai berjalan');
 
-// Macrotask (Task Queue)
+// 2. Macrotask (Task Queue) melalui setTimeout
 setTimeout(() => {
   console.log(
-    '4. [Macrotask - setTimeout] Dijalankan setelah antrean microtask kosong'
+    '5. [Macrotask - setTimeout (0ms)] Dijalankan setelah Call Stack dan Microtask kosong',
   );
 }, 0);
 
-// Microtask (Microtask Queue)
+// 3. Penjadwalan Microtask eksplisit via queueMicrotask
+if (typeof queueMicrotask === 'function') {
+  queueMicrotask(() => {
+    console.log(
+      '3. [Microtask - queueMicrotask] Penjadwalan microtask eksplisit',
+    );
+  });
+}
+
+// 4. Microtask melalui Promise Resolution (.then)
 Promise.resolve().then(() => {
   console.log(
-    '3. [Microtask - Promise.then] Dijalankan SEBELUM setTimeout meski delay 0ms!'
+    '4. [Microtask - Promise.then] Callback promise resolved diproses di antrean prioritas tinggi',
   );
 });
 
-console.log('2. [Synchronous] Akhir script sinkron selesai');
+// 5. Akhir Eksekusi Sinkron
+console.log('2. [Call Stack] Seluruh instruksi sinkron selesai diproses\n');
 
 /*
-Penjelasan Alur Eksekusi:
-1. '1. [Synchronous]' masuk Call Stack -> dicetak -> keluar.
-2. setTimeout(..., 0) masuk Call Stack -> didaftarkan ke Web APIs -> masuk ke Macrotask Queue.
-3. Promise.resolve().then(...) masuk Call Stack -> callback didaftarkan ke Microtask Queue.
-4. '2. [Synchronous]' masuk Call Stack -> dicetak -> keluar.
-5. Call Stack sekarang KOSONG.
-6. Event Loop memprioritaskan Microtask Queue: callback Promise dicetak (3).
-7. Microtask Queue kosong, Event Loop beralih ke Macrotask Queue: callback setTimeout dicetak (4).
+URUTAN EKSEKUSI OLEH RUNTIME:
+1. "1. [Call Stack] Script sinkron mulai berjalan" (Call Stack langsung)
+2. setTimeout didaftarkan ke Web/Node API -> Timer 0ms berakhir -> Callback masuk ke Macrotask Queue
+3. queueMicrotask mendaftarkan callback ke Microtask Queue
+4. Promise.resolve().then mendaftarkan callback ke Microtask Queue
+5. "2. [Call Stack] Seluruh instruksi sinkron selesai diproses" (Call Stack langsung)
+6. Call Stack KOSONG!
+7. Event Loop memeriksa Microtask Queue terlebih dahulu:
+   - Menjalankan "3. [Microtask - queueMicrotask]"
+   - Menjalankan "4. [Microtask - Promise.then]"
+8. Microtask Queue kini kosong.
+9. Event Loop beralih mengambil Macrotask Queue:
+   - Menjalankan "5. [Macrotask - setTimeout (0ms)]"
 */

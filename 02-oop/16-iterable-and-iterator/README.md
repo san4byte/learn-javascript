@@ -2,244 +2,255 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Protokol standar agar objek buatan sendiri dapat diulang dengan loop `for...of` dan disebar via _spread operator_ (`...`).
-> - **Kapan Digunakan**: Membuat custom data collection, streaming data, paginasi, dan pengolahan data besar hemat RAM (_lazy evaluation_).
-> - **Aturan Praktis**: Implementasikan method `[Symbol.iterator]()` yang mereturn objek Iterator dengan method `next() -> { value, done }`.
+> - **Fungsi Utama**: Standar protokol antarmuka (_iteration protocols_) di JavaScript yang memungkinkan class atau objek kustom dapat dilalui menggunakan loop `for...of`, diurai dengan _spread operator_ (`...`), dan didekonstruksi (_destructured_).
+> - **Kapan Digunakan**: Mengembangkan koleksi data kustom (_custom collections_), pemrosesan data bervolume besar secara bertahap (_lazy evaluation_ / streaming), atau paginasi feed data.
+> - **Aturan Praktis**: Implementasikan method `[Symbol.iterator]()` yang mengembalikan objek dengan method `next() -> { value, done }`, atau gunakan _generator method_ `*[Symbol.iterator]() { yield ... }`.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami konsep dasar **Iteration Protocol** di JavaScript.
-- Membedakan antara kontrak **Iterable** dan kontrak **Iterator**.
-- Mengetahui cara kerja method spesial **`[Symbol.iterator]()`** dan method **`next()`**.
-- Mengerti bagaimana `for...of` dan _Spread Operator_ (`...`) bekerja di balik layar.
-- **Memahami penggunaan nyata Iterable & Iterator di proyek industri nyata (Real-World Project)**.
+- Memahami arsitektur dua kontrak inti JavaScript: **Iterable Protocol** dan **Iterator Protocol**.
+- Menguasai implementasi method khusus **`[Symbol.iterator]()`** pada class.
+- Memahami struktur respons method **`next()`** yang mengembalikan objek `{ value, done }`.
+- Mengetahui berbagai fitur JavaScript modern yang menjadi konsumen protokol iterasi (`for...of`, `...spread`, destructuring, `Array.from()`, `new Set()`).
+- Membangun koleksi kustom terenkapsulasi yang ramah perulangan tanpa membongkar struktur array internal.
+- Menguasai teknik modern penulisan iterator menggunakan **Generator Method** (`*` dan `yield`).
+- Memahami konsep komputasi tunda (**Lazy Evaluation**) untuk menghasilkan deret data tak hingga tanpa kehabisan memori RAM.
+- Memahami metode pembersihan opsional **`return()`** saat perulangan dihentikan di tengah jalan (_break/throw_).
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Seperti **mesin dispenser nomor antrean di bank**: Mesin dispenser adalah _Iterable_, tombol tiket adalah _Iterator_, dan setiap kali tombol ditekan (`next()`), selembar kertas antrean `{ value, done }` keluar untuk nasabah.
-
-### 1. Masalah yang Diselesaikan
-
-Di JavaScript, kita bisa dengan mudah melakukan perulangan `for...of` atau _spread operator_ `[...]` pada data bawaan seperti **Array**, **String**, **Set**, dan **Map**:
-
-```javascript
-const fruits = ['Apel', 'Jeruk'];
-for (const f of fruits) { ... } // Berhasil!
-```
-
-Namun, jika kita membuat **Class atau Objek buatan kita sendiri**:
-
-```javascript
-class Library { ... }
-const myLib = new Library();
-for (const item of myLib) { ... }
-// ❌ ERROR: TypeError: myLib is not iterable
-```
-
-Objek buatan kita tidak bisa di-`for...of` karena JavaScript tidak tahu bagaimana cara membaca data di dalamnya satu per satu. Agar objek buatan kita bisa diperlakukan seperti Array (bisa di-`for...of` dan di-`spread`), objek kita wajib mematuhi **Protokol Iterasi**!
+> Seperti **mesin dispenser tiket antrean di bank**: Mesin dispenser adalah objek _Iterable_. Tombol merah di dispenser adalah objek _Iterator_. Setiap kali seorang nasabah datang dan menekan tombol (`next()`), dispenser mengeluarkan selembar tiket berisi nomor giliran (_`value`_) dan indikator apakah kuota antrean hari itu masih ada atau sudah habis (_`done: false / true`_). Mesin tidak perlu mencetak 1.000 lembar tiket di awal sekaligus, melainkan hanya saat tombol ditekan.
 
 ---
 
-### 2. Dua Kontrak Protokol Iterasi
+### 1. Tabel Ringkasan Fitur Protokol Iterasi (Cheat-Sheet)
 
-1. **Kontrak `Iterable`**:
-   - Objek apa pun yang memiliki method khusus bernama **`[Symbol.iterator]()`**.
-   - Tugas method ini hanya satu: mengembalikan sebuah objek **Iterator**.
-2. **Kontrak `Iterator`**:
-   - Objek yang memiliki method bernama **`next()`**.
-   - Setiap kali `next()` dipanggil, ia wajib mengembalikan objek berformat:
-     `{ value: dataSaatIni, done: boolean }`
-     - **`value`**: Data elemen saat ini.
-     - **`done`**: Bernilai `false` jika data masih ada, atau `true` jika perulangan sudah selesai.
-
----
-
-### 3. Apa yang Dilakukan `for...of` di Balik Layar?
-
-Saat Anda menulis:
-
-```javascript
-for (const item of data) {
-  console.log(item);
-}
-```
-
-JavaScript sebenarnya mengeksekusi langkah-langkah berikut di balik layar:
-
-```javascript
-// 1. Minta iterator-nya
-const iterator = data[Symbol.iterator]();
-
-// 2. Minta item pertama
-let result = iterator.next();
-
-// 3. Ulangi selama done bernilai false
-while (!result.done) {
-  const item = result.value;
-  console.log(item);
-  result = iterator.next(); // Ambil item berikutnya
-}
-```
+| Komponen / Protokol     | Nama Method / Kunci    | Format Kembalian                | Peran Utama                                            |
+| :---------------------- | :--------------------- | :------------------------------ | :----------------------------------------------------- |
+| **Iterable Contract**   | `[Symbol.iterator]()`  | Objek Iterator                  | Gerbang masuk perulangan JavaScript.                   |
+| **Iterator Contract**   | `next()`               | `{ value: any, done: boolean }` | Menghasilkan elemen berikutnya satu per satu.          |
+| **Konsumen `for...of`** | Loop perulangan        | Otomatis membaca `.value`       | Melakukan iterasi hingga `done === true`.              |
+| **Spread Operator**     | `[...customIterable]`  | Array hasil iterasi             | Membongkar seluruh elemen ke dalam array.              |
+| **Generator Method**    | `*[Symbol.iterator]()` | Iterable Iterator               | Otomatis membuat objek iterator via `yield`.           |
+| **Iterator Cleanup**    | `return()` (opsional)  | `{ value, done: true }`         | Dipicu saat loop dihentikan oleh `break` atau `throw`. |
 
 ---
 
+### 2. Eksplorasi Mendalam Setiap Fitur & Skenario Kasus
+
+Berikut adalah rincian lengkap cara kerja protokol iterasi beserta skenario kasusnya:
+
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+#### 1. Kontrak Protokol Iterable: `[Symbol.iterator]()`
+
+Sebuah objek atau class resmi menjadi _Iterable_ jika memiliki method dengan nama properti terhitung `[Symbol.iterator]`:
 
 ```javascript
-// Penjelasan lengkap dapat dibaca pada README.md
-// Iterable dan Iterator Protocol (Implementation + Real World Project Example)
-
-// 1. Objek hasil (Iterator Result)
-class CounterIteratorResult {
-  constructor(value, done) {
-    this.value = value;
-    this.done = done;
+class AngkaSatuDuaTiga {
+  [Symbol.iterator]() {
+    let n = 1;
+    return {
+      next() {
+        if (n <= 3) return { value: n++, done: false };
+        return { value: undefined, done: true };
+      },
+    };
   }
 }
 
-// 2. Iterator: memiliki method next()
-class CounterIterator {
-  constructor(value, max) {
-    this.value = value;
-    this.max = max;
-  }
-
-  next() {
-    try {
-      if (this.value > this.max) {
-        return new CounterIteratorResult(undefined, true);
-      } else {
-        return new CounterIteratorResult(this.value, false);
-      }
-    } finally {
-      this.value++;
-    }
-  }
+for (const x of new AngkaSatuDuaTiga()) {
+  console.log(x); // Mencetak 1, lalu 2, lalu 3
 }
+```
 
-// 3. Iterable: memiliki method [Symbol.iterator]()
-class Counter {
-  constructor(value, max) {
-    this.value = value;
-    this.max = max;
+---
+
+#### 2. Kontrak Protokol Iterator: `next() -> { value, done }`
+
+Method `next()` dipanggil berulang kali oleh runtime JavaScript. Setiap panggilan harus mengembalikan objek dengan dua properti:
+
+- `value`: Data elemen yang sedang dievaluasi pada langkah saat ini.
+- `done`: `false` jika masih ada elemen tersisa, atau `true` jika perulangan telah usai.
+
+```javascript
+const iterator = new AngkaSatuDuaTiga()[Symbol.iterator]();
+console.log(iterator.next()); // { value: 1, done: false }
+console.log(iterator.next()); // { value: 2, done: false }
+console.log(iterator.next()); // { value: 3, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+```
+
+---
+
+#### 3. Konsumen Protokol Iterasi di JavaScript
+
+Semua fitur modern berikut otomatis memanfaatkan `[Symbol.iterator]()`:
+
+```javascript
+const deret = new AngkaSatuDuaTiga();
+
+// 1. Spread Operator
+const array = [...deret]; // [1, 2, 3]
+
+// 2. Destructuring
+const [pertama, kedua] = deret; // pertama = 1, kedua = 2
+
+// 3. Array.from & Set
+const set = new Set(deret); // Set { 1, 2, 3 }
+```
+
+---
+
+#### 4. Enkapsulasi Koleksi Kustom (Custom Collection Pattern)
+
+Alih-alih mengekspos array internal privat ke publik, kita bisa menerapkan protokol iterasi agar pengguna class dapat melakukan looping secara langsung:
+
+```javascript
+class KatalogToko {
+  #barang = [];
+
+  tambah(nama) {
+    this.#barang.push(nama);
   }
 
   [Symbol.iterator]() {
-    return new CounterIterator(this.value, this.max);
+    let index = 0;
+    const items = this.#barang;
+    return {
+      next() {
+        if (index < items.length) {
+          return { value: items[index++], done: false };
+        }
+        return { value: undefined, done: true };
+      },
+    };
   }
-}
-
-// Pemanggilan dengan for..of
-const counter = new Counter(1, 5);
-for (const val of counter) {
-  console.info('Nilai counter:', val);
 }
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+#### 5. Implementasi Modern dengan Generator Method (`*` & `yield`)
 
-```text
---- 1. Loop Counter Iterable ---
-Nilai counter: 1
-Nilai counter: 2
-Nilai counter: 3
-Nilai counter: 4
-Nilai counter: 5
-
---- 2. Real Project: E-Commerce Product Catalog ---
-Barang: Laptop Gaming | Harga: Rp 15000000
-Barang: Mouse Wireless | Harga: Rp 250000
-Barang: Mechanical Keyboard | Harga: Rp 800000
-Total item katalog via spread: 3
-
---- 3. Modern Real-World: Generator Function* di Class ---
-Buku di rak: Clean Code
-Buku di rak: JavaScript: The Good Parts
-Buku di rak: Refactoring
-```
-
----
-
-## 5. 💡 Panduan Praktis & Studi Kasus
-
-### 🏢 Real-World Use Case & Studi Kasus Industri
-
-Kapan developer di industri benar-benar membuat Custom Iterable & Iterator?
-
-#### A. Custom Collection Enkapsulasi (E-Commerce / Library)
-
-Bayangkan Anda membuat modul keranjang belanja (`ShoppingCart`) atau katalog produk (`ProductCatalog`). Alih-alih mengekspos array internal:
+Di lingkungan industri modern, menulis objek `{ next() ... }` manual terasa panjang. Anda cukup menggunakan tanda bintang generator `*` dan kata kunci `yield`:
 
 ```javascript
-// Bersih & Profesional berkat protokol Iterable:
-for (const item of cart) {
-  console.log(item.name, item.price);
-}
-const daftarBarang = [...cart]; // Otomatis bisa di-spread!
-```
+class RakBuku {
+  #buku = ['Clean Code', 'Refactoring'];
 
-#### B. Lazy Evaluation & Hemat Memori (Mengolah Data Raksasa)
-
-Bayangkan Anda butuh deret jutaan data atau streaming log server:
-
-- **Jika pakai Array biasa**: JavaScript mencoba memuat semua data sekaligus ke RAM $\rightarrow$ Browser/Server langsung crash out-of-memory.
-- **Dengan Iterator (Lazy Evaluation)**: Data berikutnya **baru dihitung saat `next()` dipanggil**! Alokasi memori tetap minimal.
-
-#### C. Infinite Scroll & Stream Paginasi
-
-Saat user men-scroll feed media sosial, Iterator meminta halaman (_page_) berikutnya ke server secara bertahap saat dibutuhkan, bukan mendownload seluruh database sekaligus.
-
-### 🌟 Pendekatan Modern di Industri: Generator Function (`function*` & `yield`)
-
-Di proyek nyata, menulis class Iterator manual terasa panjang. JavaScript modern menyediakan **Generator Function (`function*`)**:
-
-```javascript
-class BookShelf {
-  constructor() {
-    this.books = ['Clean Code', 'Refactoring'];
-  }
-
+  // Generator method otomatis memenuhi kontrak Iterable dan Iterator:
   *[Symbol.iterator]() {
-    for (const book of this.books) {
-      yield book; // yield otomatis membungkus data ke dalam { value, done }!
+    for (const judul of this.#buku) {
+      yield judul; // yield membungkus nilai ke { value, done: false }
     }
   }
 }
 
-const shelf = new BookShelf();
-for (const b of shelf) {
-  console.log(b);
+for (const buku of new RakBuku()) {
+  console.log(buku);
 }
 ```
 
+---
+
+#### 6. Lazy Evaluation dan Penanganan Deret Tak Hingga
+
+Iterator hanya menghitung data berikutnya saat diminta. Ini memungkinkan representasi deret matematika tak hingga tanpa memakan kuota RAM:
+
+```javascript
+class BilanganAsli {
+  *[Symbol.iterator]() {
+    let i = 1;
+    while (true) {
+      yield i++; // Menghasilkan angka baru on-demand selamanya
+    }
+  }
+}
+
+for (const n of new BilanganAsli()) {
+  console.log(n);
+  if (n >= 5) break; // Berhenti dengan aman tanpa out-of-memory crash!
+}
+```
+
+---
+
+#### 7. Pembersihan Resource Saat Berhenti Dini (`return()` Method)
+
+Jika loop `for...of` dihentikan sebelum mencapai akhir (misal karena `break` atau `throw`), JavaScript akan memicu method `return()` pada iterator untuk menutup koneksi atau membersihkan resource:
+
+```javascript
+class SensorStream {
+  [Symbol.iterator]() {
+    return {
+      next() {
+        return { value: Math.random(), done: false };
+      },
+      return() {
+        console.log('Koneksi sensor ditutup dengan aman.');
+        return { value: undefined, done: true };
+      },
+    };
+  }
+}
+
+for (const data of new SensorStream()) {
+  if (data > 0.5) break; // Otomatis memicu method return() di atas
+}
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep iterasi protokol di atas—mulai dari implementasi manual method `next()`, konsumsi via `for...of` & spread operator, enkapsulasi katalog belanja, generator method modern dengan `yield`, evaluasi deret Fibonacci tak hingga, hingga metode _cleanup_ `return()`—telah dirangkum dalam script laboratorium terpadu:
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 02-oop/16-iterable-and-iterator/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
+
+### 🏢 Real-World Use Case
+
+1. **Streaming Data & Paginasi Otomatis**: Mengambil baris data dari database atau API secara bertahap (_batching_) setiap kali iterasi meminta data baru tanpa membebani memori server.
+2. **Koleksi Struktur Data Kustom**: Mengimplementasikan class `LinkedList`, `BinaryTree`, atau `Graph` yang dapat dijelajahi dengan sintaks elegan `for (const node of tree)`.
+3. **Pembangkit ID Unik (Sequence ID Generator)**: Membuat generator nomor resi pengiriman atau order ID berurutan tanpa batas.
+
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Infinite Loop Tanpa Batas**: Lupa meng-increment index atau salah mengevaluasi kondisi `done: true` di method `next()` menyebabkan `for...of` berjalan selamanya.
-- **Mutasi Properti Tidak Sengaja**: Menjalankan perulangan tanpa mengisolasi state internal iterator.
+- **Infinite Loop pada Spread Operator**: Mencoba melakukan spread operator `[...infiniteSequence]` pada generator tak hingga akan langsung membuat aplikasi _hang_ dan crash (_JavaScript out of memory_).
+- **Lupa Menandai `done: true`**: Jika kondisi akhir tidak mengembalikan `done: true`, loop `for...of` tidak akan pernah berhenti.
+- **Memanggil `[Symbol.iterator]()` Tanpa Kurung Siku**: Menulis `Symbol.iterator() { ... }` tanpa tanda kurung siku `[...]` akan mendefinisikan string method biasa, bukan implementasi Symbol resmi.
 
 ### 🌟 Best Practice
 
-- Untuk penulisan iterator yang jauh lebih ringkas di industri modern, gunakan Generator Function (`*[Symbol.iterator]() { yield item; }`).
-- Manfaatkan protokol ini untuk menjaga enkapsulasi data collection Anda.
+- Gunakan _Generator Method_ (`*[Symbol.iterator]() { yield item; }`) untuk implementasi bersih, ringkas, dan minim kesalahan di kode produksi.
+- Selalu sediakan proteksi `return()` jika iterator membuka resource eksternal seperti file descriptor, web socket, atau database cursor.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat class `RentangAngka(dari, sampai)` yang mengimplementasikan `[Symbol.iterator]` sehingga bisa menghasilkan angka dari 1 sampai 10 saat di-loop dengan `for...of`.
-2. Gunakan _Spread Operator_ `[...rentang]` pada class `RentangAngka` tersebut dan buktikan bahwa hasilnya otomatis menjadi sebuah array `[1, 2, 3, ..., 10]`.
+1. Buat class `Rentang(awal, akhir, langkah)` yang mengimplementasikan protokol iterable sehingga `for (const x of new Rentang(0, 10, 2))` mencetak angka genap `0, 2, 4, 6, 8, 10`.
+2. Gunakan _spread operator_ `[...new Rentang(1, 5, 1)]` dan periksa apakah output array-nya bernilai `[1, 2, 3, 4, 5]`.
+3. Tulis ulang class `Rentang` tersebut menggunakan sintaks _Generator Method_ (`*[Symbol.iterator]()`) dan bandingkan efisiensi jumlah baris kodenya.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [15 - Custom Error Class](../15-custom-error/README.md)
 - ➡️ **Selanjutnya:** [01 - Modul 03 (Standard Library)](../../03-standard-library/01-number/README.md)

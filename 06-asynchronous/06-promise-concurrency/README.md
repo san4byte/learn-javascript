@@ -1,132 +1,195 @@
-# 06 - Promise Concurrency (Promise.all, Promise.race, dan Promise.allSettled)
+# 06 - Promise Concurrency (Promise.all, allSettled, race, dan any)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Mengeksekusi banyak operasi asinkron secara paralel bersamaan alih-alih menunggu satu per satu secara berurutan (_sequential_).
-> - **Kapan Digunakan**: Mengambil data dari beberapa endpoint API independen secara simultan untuk memangkas waktu tunggu aplikasi.
-> - **Aturan Praktis**: Gunakan `Promise.all()` jika seluruh data wajib berhasil (_all-or-nothing_), atau `Promise.allSettled()` jika ingin menerima hasil baik sukses maupun gagal tanpa membatalkan yang lain.
+> - **Fungsi Utama**: Menjalankan beberapa operasi asinkron secara paralel dan simultan untuk memangkas total waktu pemrosesan aplikasi web.
+> - **Kapan Digunakan**: Mengambil data dari banyak endpoint REST API independen secara serentak, membuat batas waktu request (_timeout wrapper_), atau mengambil data dari server cadangan (_mirror_) tercepat.
+> - **Aturan Praktis**: Gunakan `Promise.all()` jika seluruh data saling bergantung (_all-or-nothing_). Gunakan `Promise.allSettled()` jika Anda membutuhkan laporan lengkap dan tidak ingin satu kegagalan membatalkan proses lainnya.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Menjalankan beberapa proses asynchronous paralel secara bersamaan.
-- Memahami cara kerja `Promise.all()` (fail-fast jika ada satu promise yang reject).
-- Memahami cara kerja `Promise.race()` (mengambil hasil promise tercepat).
-- Memahami `Promise.allSettled()` untuk audit hasil paralel yang toleran terhadap kegagalan.
-- Mengoptimalkan performa waktu respon aplikasi web.
+- Memahami perbedaan fundamental antara eksekusi asinkron sekuensial vs eksekusi paralel konkuren.
+- Menguasai cara kerja **`Promise.all()`** dan sifat _Fail-Fast_ jika salah satu operasi ditolak (_rejected_).
+- Memahami manfaat **`Promise.allSettled()`** untuk proses audit yang kebal terhadap kegagalan parsial.
+- Memahami konsep balapan waktu pada **`Promise.race()`** (_first-to-settle_).
+- Mengetahui keunggulan **`Promise.any()`** (_first-to-fulfill_) dan cara menangani `AggregateError`.
+- Mampu memilih method kombinator yang tepat berdasarkan kebutuhan arsitektur bisnis.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Seperti **memesan 3 paket kurir secara bersamaan**:
+> Bayangkan Anda memesan **3 barang belanjaan online (Baju, Sepatu, Topi)**:
 >
-> - **Sekuensial (Tanpa Konkurensi)**: Anda memesan paket A, menunggu sampai tiba di rumah (2 hari), baru memesan paket B (2 hari), lalu paket C (2 hari). Total waktu: 6 hari!
-> - **Paralel (`Promise.all`)**: Anda memesan paket A, B, dan C pada jam yang sama. Ketiganya bergerak di jalan secara simultan. Waktu tunggu total hanya sepanjang waktu paket yang paling lambat (misal 2 hari).
-
-### 1. `Promise.all([p1, p2, p3])`
-
-- Menunggu **seluruh** promise berhasil diselesaikan.
-- Mengembalikan array berisi seluruh hasil sukses: `[hasil1, hasil2, hasil3]`.
-- **Fail-Fast**: Jika ada **SATU SAJA** promise yang melempar error (_rejected_), seluruh operasi langsung dibatalkan dan melompat ke blok `.catch()`.
-
-### 2. `Promise.race([p1, p2])`
-
-- Mengembalikan promise pertama yang selesai lebih dulu (_tercepat_), terlepas dari apakah hasil tercepat tersebut berstatus sukses (_resolved_) ataupun gagal (_rejected_).
-
-### 3. `Promise.allSettled([p1, p2])`
-
-- Menunggu seluruh promise selesai tanpa peduli ada yang gagal.
-- Mengembalikan array status detail: `{ status: "fulfilled", value }` atau `{ status: "rejected", reason }`.
+> - **Eksekusi Sekuensial**: Pesan Baju, tunggu paket tiba di rumah (2 hari), baru pesan Sepatu (2 hari), lalu pesan Topi (2 hari). Total waktu: **6 hari**.
+> - **`Promise.all`**: Anda memesan ketiganya bersamaan. Jika seluruh paket tiba dengan selamat, Anda menerima ketiganya dalam **2 hari**. Namun jika penjual Topi kehabisan stok, seluruh pesanan dibatalkan otomatis (_all-or-nothing_).
+> - **`Promise.allSettled`**: Anda memesan ketiganya bersamaan. Anda menerima Baju dan Sepatu, serta menerima surat pemberitahuan bahwa Topi gagal dikirim tanpa membatalkan barang lainnya.
+> - **`Promise.race`**: Anda memesan taksi dari 3 aplikasi transportasi sekaligus; siapa pengemudi pertama yang tiba di depan pagar rumah Anda, itu yang Anda naiki (terlepas dari apakah taksi itu membawa kabar baik atau mogok).
+> - **`Promise.any`**: Anda mengunduh film dari 3 server mirror; server mana pun yang **pertama kali berhasil mengunduh** itulah yang diambil, server yang gagal diabaikan.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Matriks Perbandingan 4 Method Combinator
+
+| Method Combinator        | Syarat Status Selesai (_Fulfilled_)     | Perilaku Saat Gagal (_Rejected_)                         | Kegunaan Ideal                                    |
+| :----------------------- | :-------------------------------------- | :------------------------------------------------------- | :------------------------------------------------ |
+| **`Promise.all`**        | **Semua** promise harus sukses          | Langsung gagal jika **1 saja** gagal (_Fail-Fast_)       | Memuat dependensi wajib (User + Permissions).     |
+| **`Promise.allSettled`** | **Selalu sukses** setelah semua selesai | Tidak pernah melempar _rejection_ ke blok `.catch()`     | Dashboard analitik / laporan audit multi-service. |
+| **`Promise.race`**       | Promise **tercepat** yang selesai       | Mengikuti status hasil tercepat (bisa sukses/gagal)      | Membuat mekanisme _request timeout_.              |
+| **`Promise.any`**        | Promise **pertama yang sukses**         | Gagal hanya jika **seluruhnya gagal** (`AggregateError`) | Mengambil server mirror tercepat & paling sehat.  |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Perbedaan Eksekusi Sekuensial vs Konkuren
+
+Jika 3 fungsi masing-masing membutuhkan waktu 1 detik:
+
+- Sekuensial: $1 + 1 + 1 = 3\text{ detik}$.
+- Konkuren: $\max(1, 1, 1) = 1\text{ detik}$.
 
 ```javascript
-// Async: Concurrency Promise (all, race, any, allSettled)
+// Konkuren: Ketiga promise dimulai pada saat yang sama
+const [user, produk] = await Promise.all([fetchUser(), fetchProduk()]);
+```
 
-const createPromise = (name, delayMs, succeed = true) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (succeed) {
-        resolve(`[SUKSES] ${name} selesai dalam ${delayMs}ms`);
-      } else {
-        reject(new Error(`[GAGAL] ${name} error`));
-      }
-    }, delayMs);
-  });
-};
+#### 2. `Promise.all()` - Pola All-or-Nothing & Mekanisme Fail-Fast
 
-const p1 = createPromise('Service User', 100);
-const p2 = createPromise('Service Payment', 200);
-const p3 = createPromise('Service Notifikasi', 150);
+Menerima array promise dan mengembalikan array data hasil jika semuanya sukses.
 
-// 1. Promise.all: Menunggu SEMUA selesai, gagal jika 1 saja gagal
+```javascript
 Promise.all([p1, p2, p3])
-  .then((results) => {
-    console.log('--- Promise.all Selesai Bersama ---');
-    console.log(results);
+  .then(([res1, res2, res3]) => {
+    console.log("Ketiganya sukses:", res1, res2, res3);
   })
-  .catch((err) => console.error(err));
+  .catch((err) => {
+    console.error("Satu promise gagal, operasi dibatalkan:", err.message);
+  });
+```
 
-// 2. Promise.race: Mengambil yang PALING CEPAT selesai
-const f1 = createPromise('Fast Server', 80);
-const f2 = createPromise('Slow Server', 300);
+#### 3. `Promise.allSettled()` - Audit Lengkap Toleran Kesalahan
 
-Promise.race([f1, f2]).then((winner) => {
-  console.log('--- Promise.race Winner ---');
-  console.log('Pemenang:', winner);
+Setiap elemen array hasil berupa objek `{ status: 'fulfilled', value }` atau `{ status: 'rejected', reason }`.
+
+```javascript
+Promise.allSettled([serviceA, serviceB]).then((hasil) => {
+  hasil.forEach((item) => {
+    if (item.status === "fulfilled") console.log("Sukses:", item.value);
+    else console.log("Gagal:", item.reason.message);
+  });
 });
 ```
 
+#### 4. `Promise.race()` - Pemenang Tercepat Pertama (First-to-Settle)
+
+Mengembalikan hasil dari promise mana pun yang paling awal berpindah dari status `pending`, baik itu sukses maupun melempar error.
+
+```javascript
+const ambilData = fetch("/api/data");
+const timeout = new Promise((_, reject) =>
+  setTimeout(() => reject(new Error("Waktu habis!")), 5000),
+);
+
+// Balapan antara data server vs batas waktu 5 detik:
+Promise.race([ambilData, timeout]);
+```
+
+#### 5. `Promise.any()` - Pemenang Sukses Tercepat Pertama (First-to-Fulfill)
+
+Mengabaikan promise yang gagal dan hanya mencari promise pertama yang sukses menyelesaikan tugasnya.
+
+```javascript
+Promise.any([mirrorUS, mirrorEU, mirrorASIA]).then((dataTercepat) =>
+  console.log("Data dari mirror tercepat:", dataTercepat),
+);
+```
+
+#### 6. Penanganan `AggregateError` pada `Promise.any()`
+
+Jika **seluruh** promise yang diuji di `Promise.any()` mengalami kegagalan, runtime akan melempar objek khusus `AggregateError` yang menampung seluruh daftar error di properti `.errors`.
+
+```javascript
+Promise.any([janjiGagal1, janjiGagal2]).catch((error) => {
+  console.error(error.name); // "AggregateError"
+  console.error(error.errors); // Array berisi error dari masing-masing promise
+});
+```
+
+#### 7. Pola Destructuring Array Hasil pada `Promise.all()`
+
+Gunakan sintaks _array destructuring_ agar hasil dapat langsung disimpan ke variabel yang bermakna.
+
+```javascript
+const [profil, riwayat, setelan] = await Promise.all([
+  getProfilUser(),
+  getRiwayatTransaksi(),
+  getSetelanAplikasi(),
+]);
+```
+
+#### 8. Panduan Keputusan Memilih Combinator yang Tepat
+
+- Apakah satu kegagalan membuat seluruh halaman tidak berguna? $\rightarrow$ Gunakan **`Promise.all`**.
+- Apakah Anda ingin menampilkan widget yang berhasil dan memberi tanda silang pada widget yang gagal? $\rightarrow$ Gunakan **`Promise.allSettled`**.
+- Apakah Anda ingin membatasi durasi maksimal suatu aksi? $\rightarrow$ Gunakan **`Promise.race`**.
+- Apakah Anda memiliki beberapa sumber data cadangan? $\rightarrow$ Gunakan **`Promise.any`**.
+
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- Promise.race Winner ---
-Pemenang: [SUKSES] Fast Server selesai dalam 80ms
---- Promise.all Selesai Bersama ---
-[
-  '[SUKSES] Service User selesai dalam 100ms',
-  '[SUKSES] Service Payment selesai dalam 200ms',
-  '[SUKSES] Service Notifikasi selesai dalam 150ms'
-]
+Seluruh implementasi pengujian konkurensi paralel `Promise.all` dengan destrukturisasi hasil, toleransi error `Promise.allSettled`, perbandingan balapan waktu `Promise.race`, dan pencarian hasil sukses pertama `Promise.any` telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Jalankan demonstrasi menggunakan Node.js di terminal:
+
+```bash
+node 06-asynchronous/06-promise-concurrency/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Dashboard Overview Data**: Saat membuka aplikasi perbankan, aplikasi perlu mengambil data Saldo Akun, Riwayat 5 Transaksi Terakhir, dan Profil Pengguna dari 3 microservices berbeda. Menggunakan `Promise.all()` memangkas waktu loading hingga 60%.
-2. **Request Timeout Guard dengan `Promise.race()`**: Menandingkan pemanggilan API fetch dengan promise timeout 5 detik. Jika server tidak merespons dalam 5 detik, anggap request time-out.
+1. **Dashboard Home Multi-Widget**:
+   ```javascript
+   const widgets = await Promise.allSettled([
+     loadWeatherWidget(),
+     loadStockWidget(),
+     loadNewsWidget(),
+   ]);
+   widgets.forEach(renderWidgetSafe);
+   ```
+2. **Global Network Ping Benchmark**: Menggunakan `Promise.race()` untuk mendeteksi CDN region mana yang memiliki latensi terendah bagi pengguna.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Menggunakan `Promise.all()` saat Ada Request Opsional**: Jika salah satu request (misal widget ramalan cuaca) gagal, seluruh halaman dashboard ikut gagal dimuat. Untuk bagian opsional, gunakan `Promise.allSettled()`.
-- **Salah Menaruh `await` di Loop**: Menulis `for (const id of ids) { await fetchData(id); }` adalah anti-pattern sekuensial lambat. Ubah menjadi `await Promise.all(ids.map(fetchData))`.
+- **Menjalankan `await` di dalam Loop Biasa**: Menulis `for (const id of ids) { await fetch(id); }` adalah kesalahan fatal yang membuat request berjalan sekuensial lambat. Bungkus array dengan `.map()` dan gunakan `Promise.all(ids.map(fetch))`.
+- **Mengira `Promise.all` Membatalkan Eksekusi Fungsi yang Lain**: Meskipun `Promise.all` langsung reject saat ada satu kegagalan, operasi jaringan pada promise lainnya di latar belakang tetap berjalan hingga selesai di level browser/jaringan, hanya saja nilainya diabaikan oleh JavaScript.
 
 ### 🌟 Best Practice
 
-- Gunakan `Promise.all()` untuk request data independen yang saling melengkapi.
-- Gunakan `Promise.allSettled()` jika Anda ingin memproses sebanyak mungkin data yang berhasil tanpa terganggu oleh request yang gagal.
+- Gunakan `Promise.allSettled` daripada `Promise.all` jika Anda memproses batch pengiriman email atau notifikasi agar kegagalan 1 email tidak membatalkan 99 email lainnya.
+- Selalu tangani blok `.catch()` pada `Promise.any()` untuk memeriksa `error.errors`.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat 3 promise tiruan dengan jeda waktu 500ms, 1000ms, dan 1500ms. Jalankan ketiganya secara paralel menggunakan `Promise.all()` dan cetak total durasi waktu eksekusi.
-2. Ubah salah satu promise agar melakukan `reject()`, amati bagaimana `Promise.all()` bereaksi dan bagaimana `Promise.allSettled()` menanganinya.
+1. Buat 3 promise dengan delay acak antara 100ms hingga 500ms. Gunakan `Promise.race()` untuk mencari tahu promise nomor berapa yang selesai paling pertama.
+2. Buat simulasi pengiriman notifikasi massal ke 3 pengguna menggunakan `Promise.allSettled()`, di mana salah satu nomor telepon pengguna sengaja dibuat tidak valid untuk melihat hasil status `'fulfilled'` dan `'rejected'` secara berdampingan.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [05 - Promise](../05-promise/README.md)
-- ➡️ **Selanjutnya:** [07 - Fetch API](../07-fetch-api/README.md)
+- ⬅️ **Materi Sebelumnya:** [05 - Promise](../05-promise/README.md)
+- ➡️ **Materi Selanjutnya:** [07 - Fetch API](../07-fetch-api/README.md)
 - 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

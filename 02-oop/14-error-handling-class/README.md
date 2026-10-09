@@ -2,108 +2,217 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Menangani kesalahan program secara anggun menggunakan `try`, `catch`, `finally`, serta melemparkan error via `throw`.
-> - **Kapan Digunakan**: Mencegah aplikasi web crash saat terjadi error tidak terduga dan membersihkan resource kerja.
-> - **Aturan Praktis**: Selalu lemparkan objek `new Error('pesan')`, bukan string biasa.
+> - **Fungsi Utama**: Mengendalikan dan memulihkan aplikasi dari kondisi kesalahan (_exceptional states_) secara terstruktur menggunakan blok `try...catch...finally` serta melempar objek instance class `Error`.
+> - **Kapan Digunakan**: Memvalidasi argumen yang rusak, menangani kegagalan operasi I/O (jaringan/database/file), dan menjamin pembersihan resource memori (_cleanup_).
+> - **Aturan Praktis**: Selalu gunakan `throw new Error("pesan")` (objek instansiasi resmi) daripada melempar tipe data primitif string atau angka.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami penanganan error berbasis OOP di JavaScript.
-- Memahami class bawaan **`Error`** dan atribut utamanya (`message`, `stack`).
-- Melempar error menggunakan kata kunci **`throw`**.
-- Menangkap dan mengisolasi error menggunakan blok **`try...catch...finally`** agar aplikasi tidak _crash_.
+- Memahami penanganan kesalahan berbasis OOP di JavaScript.
+- Memahami anatomi dan properti utama class bawaan **`Error`** (`message`, `name`, `stack`, `cause`).
+- Menguasai pelemparan exception menggunakan kata kunci **`throw`**.
+- Menguasai penangkapan dan isolasi kegagalan menggunakan blok **`try...catch`** agar aplikasi tidak berhenti (_crash_).
+- Mengetahui jaminan eksekusi pada blok **`finally`** untuk operasi pembersihan (_cleanup_).
+- Membedakan berbagai subclass error bawaan JavaScript (`TypeError`, `RangeError`, `ReferenceError`, `SyntaxError`, `URIError`).
+- Memahami strategi **Error Re-throwing** dan **Error Chaining** menggunakan opsi `{ cause }` (ES2022).
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Seperti **sistem rem darurat pada lift gedung**: Jika sensor mendeteksi kabel putus (`throw Error`), rem magnetik darurat langsung mencengkeram rel agar kereta lift tidak jatuh bebas (`catch`), dan lampu darurat tetap menyala untuk evakuasi aman (`finally`).
-
-Di JavaScript, error direpresentasikan sebagai objek turunan dari class bawaan **`Error`**:
-
-1. **`throw new Error("Pesan error")`**: Menghentikan eksekusi normal dan melempar sinyal kondisi darurat (exception).
-2. **`try`**: Blok kode yang diawasi karena berpotensi menimbulkan error.
-3. **`catch (error)`**: Blok kode yang otomatis dieksekusi saat error terjadi di blok `try`. Objek `error` menampung pesan kesalahan (`error.message`).
-4. **`finally`**: Blok kode yang **pasti selalu dieksekusi**, baik terjadi error maupun tidak. Sangat cocok untuk proses bersih-bersih (_cleanup_), seperti menutup koneksi database atau mematikan animasi loading.
+> Seperti **sistem rem darurat dan pintu keselamatan lift gedung bertingkat**: Jika sensor mendeteksi kabel baja lift putus atau kelebihan beban (`throw new Error`), rem magnetik darurat langsung mencengkeram rel agar kereta lift tidak jatuh bebas ke dasar gedung (`catch`). Baik lift tiba dengan selamat maupun tertahan darurat, lampu penerangan darurat dan pintu evakuasi gedung selalu dibuka untuk menjamin keselamatan penumpang (`finally`).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 1. Tabel Ringkasan Fitur Error Handling (Cheat-Sheet)
+
+| Konstruk / Fitur   | Sintaks                   | Peran / Dampak                                | Kapan Dieksekusi                               |
+| :----------------- | :------------------------ | :-------------------------------------------- | :--------------------------------------------- |
+| **`throw`**        | `throw new Error(...)`    | Menghentikan alur normal dan memicu exception | Saat kondisi abnormal terdeteksi.              |
+| **`try`**          | `try { ... }`             | Membungkus blok kode berisiko                 | Selalu dieksekusi pertama kali.                |
+| **`catch (err)`**  | `catch (err) { ... }`     | Mengisolasi error dan menangkap objek error   | Hanya jika terjadi exception di dalam `try`.   |
+| **`finally`**      | `finally { ... }`         | Pembersihan resource (_cleanup_)              | **Selalu**, baik sukses maupun error.          |
+| **Subclass Error** | `TypeError`, `RangeError` | Spesifikasi kategori error standar            | Sesuai jenis kegagalan tipe data/rentang.      |
+| **Error Chaining** | `{ cause: err }`          | Menautkan akar permasalahan (root cause)      | Saat membungkus low-level error ke high-level. |
+
+---
+
+### 2. Eksplorasi Mendalam Setiap Fitur & Skenario Kasus
+
+Berikut adalah rincian lengkap fitur error handling berbasis class beserta skenario kasusnya:
+
+---
+
+#### 1. Anatomi dan Properti Class `Error`
+
+Objek instansiasi `Error` memiliki tiga properti utama:
+
+- `name`: Nama kelas error (default `"Error"`).
+- `message`: Pesan deskripsi kesalahan yang mudah dibaca manusia.
+- `stack`: Jejak riwayat pemanggilan fungsi (_stack trace_) untuk memudahkan debugging.
 
 ```javascript
-// Penjelasan lengkap dapat dibaca pada README.md
-// Error Handling di OOP menggunakan Class Error, throw, try, catch, dan finally
+const err = new Error('Koneksi gagal');
+console.log(err.name); // "Error"
+console.log(err.message); // "Koneksi gagal"
+console.log(err.stack); // String urutan baris kode sumber
+```
 
-class MathUtils {
-  static sum(...numbers) {
-    if (numbers.length === 0) {
-      throw new Error('Parameter numbers harus diisi, tidak boleh kosong!');
-    }
+---
 
-    let total = 0;
-    for (const number of numbers) {
-      if (typeof number !== 'number') {
-        throw new Error(`Parameter '${number}' bukan tipe number!`);
-      }
-      total += number;
-    }
-    return total;
+#### 2. Kata Kunci `throw` untuk Melempar Exception
+
+Kata kunci `throw` menghentikan eksekusi kode saat ini secara instan dan mencari penampung `catch` terdekat:
+
+```javascript
+function validasiUmur(umur) {
+  if (umur < 0) {
+    throw new Error('Umur tidak boleh bernilai negatif!');
+  }
+  return umur;
+}
+```
+
+---
+
+#### 3. Struktur Pengawasan Blok `try...catch`
+
+Kode yang berisiko diletakkan di dalam `try`. Jika terjadi error, JavaScript langsung melompat ke blok `catch` tanpa menghentikan aplikasi secara total:
+
+```javascript
+try {
+  validasiUmur(-5);
+  console.log('Baris ini tidak akan pernah dijalankan.');
+} catch (error) {
+  console.log(`Tertangkap: ${error.message}`); // "Tertangkap: Umur tidak boleh bernilai negatif!"
+}
+
+console.log('Aplikasi tetap selamat dan terus berjalan normal!');
+```
+
+---
+
+#### 4. Jaminan Pembersihan pada Blok `finally`
+
+Blok `finally` selalu dijalankan dalam kondisi apa pun—bahkan jika blok `try` berhasil, melempar error, atau melakukan `return` di tengah jalan:
+
+```javascript
+function ambilData() {
+  let fileTerbuka = true;
+  try {
+    throw new Error('Gagal membaca byte');
+  } catch (e) {
+    console.log('Penanganan error.');
+  } finally {
+    fileTerbuka = false; // Dijamin selalu dieksekusi!
+    console.log('File berhasil ditutup dengan aman.');
   }
 }
 
-try {
-  console.info('1. Memulai eksekusi di blok try');
-  const hasil = MathUtils.sum(); // Error dilempar di sini
-  console.info('2. Hasil:', hasil);
-} catch (error) {
-  console.error('3. Terjadi Error:', error.message);
-} finally {
-  console.info('4. Blok finally selesai dijalankan.');
+ambilData();
+```
+
+---
+
+#### 5. Subclass Error Bawaan JavaScript
+
+JavaScript memiliki beberapa kelas error bawaan untuk mengindikasikan jenis kegagalan secara tepat:
+
+- `TypeError`: Tipe data tidak sesuai (misal memanggil non-function).
+- `RangeError`: Angka berada di luar jangkauan valid.
+- `ReferenceError`: Mengakses variabel yang belum didefinisikan.
+- `SyntaxError`: Kesalahan tata bahasa sintaks kode.
+
+```javascript
+function parseKapasitas(n) {
+  if (typeof n !== 'number') throw new TypeError('Harus berupa number!');
+  if (n < 0 || n > 100) throw new RangeError('Harus antara 0 - 100!');
 }
-
-console.info('5. Aplikasi tetap berjalan normal tanpa crash!');
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+#### 6. Mekanisme Melempar Ulang (_Error Re-throwing_)
 
-```text
-1. Memulai eksekusi di blok try
-3. Terjadi Error: Parameter numbers harus diisi, tidak boleh kosong!
-4. Blok finally selesai dijalankan.
-5. Aplikasi tetap berjalan normal tanpa crash!
+Jika suatu blok `catch` mendeteksi bahwa error yang tertangkap bukan wewenang yang bisa ditangani, lemparkan kembali error tersebut ke pemanggil atas:
+
+```javascript
+try {
+  eksekusiTugas();
+} catch (err) {
+  if (err instanceof TypeError) {
+    console.log('Tangani TypeError lokal.');
+  } else {
+    // Lempar ulang ke luar agar layer induk tahu
+    throw err;
+  }
+}
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+#### 7. Rantai Penyebab Error dengan Opsi `cause` (ES2022)
+
+Anda dapat membungkus error sistem (low-level) ke dalam error domain bisnis tingkat tinggi tanpa kehilangan informasi akar masalah aslinya:
+
+```javascript
+try {
+  koneksiKeDatabaseServer();
+} catch (dbErr) {
+  throw new Error('Registrasi Pengguna Gagal', { cause: dbErr });
+}
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep error handling berbasis class di atas—mulai dari anatomi class Error, alur try-catch-finally, berbagai subclass bawaan, re-throwing error, hingga error chaining dengan opsi `cause`—telah dirangkum dalam script laboratorium terpadu:
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 02-oop/14-error-handling-class/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-Menangani kegagalan request jaringan HTTP, parsing data JSON corrupt, atau validasi form input user.
+1. **API Request Pipeline**: Menangkap kegagalan jaringan HTTP atau timeout request, mematikan loader animasi di UI via `finally`, lalu menampilkan pesan ramah pengguna.
+2. **Parser Konfigurasi**: Membaca file format JSON/YAML; jika file rusak, melempar pesan kesalahan yang jelas dan mudah dipahami developer.
+3. **Pembersihan Resource / Lock**: Melepaskan _lock file_ atau koneksi socket di blok `finally` untuk mencegah _memory leak_ atau _connection leak_.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Silent Failure**: Menangkap error di blok `catch` kosong tanpa log atau aksi penyelamatan (`catch(e) {}`), sehingga bug tersembunyi dan sulit dideteksi.
-- **Throwing Non-Error**: Melakukan `throw 'pesan'` (string) alih-alih `throw new Error('pesan')` menghilangkan informasi jejak stack trace.
+- **Menelan Error Tanpa Suara (_Swallowing Errors / Silent Failure_)**: Menulis `catch (e) {}` kosong tanpa mencatat log menyebabkan bug tersembunyi berbulan-bulan tanpa jejak.
+- **Melempar Tipe Primitif**: Menggunakan `throw "Terjadi error"` membuat Anda kehilangan properti `.stack` dan kemampuan pengecekan `instanceof Error`.
+- **Menimpa Return di `finally`**: Menaruh perintah `return` di dalam blok `finally` akan menimpa seluruh `return` atau `throw` yang terjadi di blok `try` dan `catch`.
 
 ### 🌟 Best Practice
 
-- Selalu gunakan instance `Error` saat melempar pengecualian.
-- Manfaatkan blok `finally` untuk operasi pembersihan (_cleanup_) seperti menutup loading spinner atau koneksi.
+- Selalu lemparkan instance turunan dari `Error`.
+- Batasi cakupan kode di dalam blok `try` sespesifik mungkin agar mudah mendeteksi baris penyebab masalah.
+- Gunakan blok `finally` secara eksklusif untuk logika _cleanup_ (menutup file, mematikan koneksi, reset state).
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat fungsi `bagi(a, b)` yang melempar `new Error("Tidak bisa membagi dengan angka nol!")` jika `b === 0`. Tangkap error tersebut menggunakan `try...catch`.
+1. Buat fungsi `hitungDiskon(harga, persen)` yang melempar `TypeError` jika argumen bukan number, dan melempar `RangeError` jika persen bernilai $< 0$ atau $> 100$.
+2. Uji fungsi `hitungDiskon` dalam blok `try...catch` dan pisahkan penanganan error berdasarkan kelas errornya menggunakan `instanceof`.
+3. Tunjukkan penggunaan blok `finally` untuk mencatat waktu akhir proses transaksi, terlepas dari apakah transaksi berhasil atau gagal.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [13 - Static Method](../13-static-method/README.md)
 - ➡️ **Selanjutnya:** [15 - Custom Error Class](../15-custom-error/README.md)

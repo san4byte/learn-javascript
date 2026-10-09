@@ -1,128 +1,188 @@
-# 04 - AJAX (Asynchronous JavaScript and XML) dengan XMLHttpRequest
+# 04 - AJAX dengan XMLHttpRequest (XHR)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Mengirim dan menerima data dari server web di latar belakang tanpa me-reload seluruh halaman menggunakan objek klasik `XMLHttpRequest`.
-> - **Kapan Digunakan**: Memahami fondasi historis komunikasi asinkron web sebelum era modern Fetch API dan Axios.
-> - **Aturan Praktis**: Periksa kondisi `xhr.readyState === 4` dan `xhr.status === 200` sebelum memproses data respons.
+> - **Fungsi Utama**: Mengirim dan menerima data dari server web di latar belakang tanpa memuat ulang (_refresh_) halaman web menggunakan objek klasik `XMLHttpRequest`.
+> - **Kapan Digunakan**: Memahami fondasi historis komunikasi jaringan pada web, memelihara kode basis lama (_legacy apps_), atau mengimplementasikan fitur pemantauan progress upload berkas (_upload progress events_).
+> - **Aturan Praktis**: Selalu verifikasi bahwa `xhr.readyState === 4` (selesai) dan kode status HTTP bernilai sukses (`xhr.status === 200`) sebelum melakukan `JSON.parse(xhr.responseText)`.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami konsep dasar AJAX (_Asynchronous JavaScript and XML_).
-- Mengetahui sejarah komunikasi asinkron sebelum Fetch API menggunakan objek `XMLHttpRequest`.
-- Memahami tahapan siklus hidup `readyState` (0 s/d 4) dan kode status HTTP.
-- Memproses data JSON dari REST API server secara asinkron tanpa reload browser.
+- Memahami konsep dasar **AJAX** (_Asynchronous JavaScript and XML_).
+- Mengetahui sejarah komunikasi web sebelum era Fetch API menggunakan objek `XMLHttpRequest`.
+- Menguasai 5 tahap siklus hidup `xhr.readyState` (dari 0 `UNSENT` hingga 4 `DONE`).
+- Memahami interpretasi kode status HTTP (`200 OK`, `404 Not Found`, `500 Server Error`).
+- Mampu mengirim permintaan HTTP GET dan POST berformat payload JSON.
+- Mengetahui alasan teknis mengapa Fetch API modern menggantikan `XMLHttpRequest`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Seperti **pelayan restoran yang mengantarkan pesanan ke dapur**:
-> Anda dan teman Anda tetap duduk mengobrol santai di meja makan (UI web tidak freeze). Pelayan membawa nota pesanan ke dapur di belakang panggung (`xhr.send()`), menunggu juru masak selesai memasak (`readyState 4`), lalu membawakan sepiring makanan hangat kembali ke meja Anda saat sudah siap (`status 200`).
-
-### 1. Apa itu AJAX?
-
-AJAX adalah teknik pengembangan web yang memungkinkan halaman web memperbarui sebagian data secara dinamis dengan bertukar data dengan server di balik layar. Halaman web tidak perlu berkedip atau memuat ulang seluruh struktur HTML.
-
-### 2. Siklus Hidup `readyState`
-
-Objek `XMLHttpRequest` memiliki 5 fase status koneksi:
-
-- **0 (`UNSENT`)**: Objek client telah dibuat, method `open()` belum dipanggil.
-- **1 (`OPENED`)**: Method `open()` telah berhasil dipanggil.
-- **2 (`HEADERS_RECEIVED`)**: Method `send()` telah dipanggil, header respons telah diterima.
-- **3 (`LOADING`)**: Data respons sedang diunduh dari server (_streaming_).
-- **4 (`DONE`)**: Operasi pengambilan data selesai sepenuhnya.
-
-### 3. HTTP Status Code
-
-Selain `readyState === 4`, kita wajib memeriksa status kode HTTP:
-
-- **`200`**: Request sukses (_OK_).
-- **`404`**: Endpoint data tidak ditemukan (_Not Found_).
-- **`500`**: Terjadi kesalahan internal di server (_Internal Server Error_).
+> Bayangkan Anda sedang duduk di **restoran**:
+>
+> - Halaman web adalah **meja makan Anda bersama teman-teman**.
+> - Objek `XMLHttpRequest` adalah **seorang pelayan restoran**.
+> - Anda memesan sepiring makanan (`xhr.open()` dan `xhr.send()`).
+> - Sembari pelayan pergi ke dapur di belakang panggung (`Web APIs`), Anda dan teman-teman tetap asyik mengobrol santai tanpa harus mematung kaku (UI non-blocking).
+> - Pelayan memantau koki memasak (`readyState 1 -> 2 -> 3`). Begitu hidangan selesai (`readyState 4`) dan rasanya enak sesuai pesanan (`status 200`), pelayan mengantarkan piring makanan hangat kembali ke meja makan Anda.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel 5 Tahapan Siklus Hidup `xhr.readyState`
+
+| Nilai Status | Nama Konstanta W3C | Penjelasan Kondisi                                                                |
+| :----------: | :----------------- | :-------------------------------------------------------------------------------- |
+|   **`0`**    | `UNSENT`           | Objek client XHR telah dibuat, tetapi method `open()` belum dipanggil.            |
+|   **`1`**    | `OPENED`           | Method `open()` telah berhasil dipanggil; koneksi HTTP telah dikonfigurasi.       |
+|   **`2`**    | `HEADERS_RECEIVED` | Method `send()` telah dipanggil, header respons server telah diterima peramban.   |
+|   **`3`**    | `LOADING`          | Data badan respon (_response body_) sedang diunduh secara bertahap (_streaming_). |
+|   **`4`**    | `DONE`             | Seluruh operasi transfer data telah rampung seutuhnya (sukses maupun gagal).      |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Konsep Dasar AJAX
+
+AJAX memungkinkan pertukaran data secara asinkron dengan server di balik layar sehingga halaman tidak perlu berkedip atau memuat ulang seluruh layout CSS dan HTML dari awal.
 
 ```javascript
-// AJAX Klasik menggunakan XMLHttpRequest (XHR)
-const btn = document.getElementById('btn-request');
-const output = document.getElementById('output');
-
-btn?.addEventListener('click', () => {
-  const xhr = new XMLHttpRequest();
-  const url = 'https://jsonplaceholder.typicode.com/posts/1';
-
-  // 1. Membuka koneksi HTTP GET secara asynchronous (parameter true)
-  xhr.open('GET', url, true);
-
-  // 2. Event listener saat status koneksi berubah
-  xhr.onreadystatechange = function () {
-    // readyState 4: DONE, status 200: OK
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        const responseData = JSON.parse(xhr.responseText);
-        output.textContent = JSON.stringify(responseData, null, 2);
-        console.log('AJAX Sukses:', responseData);
-      } else {
-        console.error('AJAX Gagal:', xhr.statusText);
-      }
-    }
-  };
-
-  // 3. Mengirimkan request ke server
-  xhr.send();
-});
+const xhr = new XMLHttpRequest();
+console.log("Objek XHR dibuat:", xhr.readyState); // 0 (UNSENT)
 ```
+
+#### 2. Membuka Koneksi: `xhr.open(method, url, async)`
+
+Mengonfigurasi jenis metode HTTP (`GET`, `POST`, `PUT`, `DELETE`), URL target endpoint, dan parameter boolean apakah berjalan asinkron (selalu berikan `true`).
+
+```javascript
+xhr.open("GET", "https://jsonplaceholder.typicode.com/posts/1", true);
+console.log("Koneksi dibuka:", xhr.readyState); // 1 (OPENED)
+```
+
+#### 3. Mengirimkan Permintaan: `xhr.send(body)`
+
+Mengirimkan request ke server. Untuk metode `GET`, kosongkan parameter atau isi `null`.
+
+```javascript
+xhr.send(null); // Memulai pengiriman request jaringan
+```
+
+#### 4. Event `onreadystatechange` vs `onload`
+
+- `onreadystatechange`: Terpicu setiap kali nilai `readyState` berubah (bisa terpanggil 4 kali).
+- `onload`: Event modern pada XHR yang hanya terpicu saat `readyState === 4`.
+
+```javascript
+// Cara Tradisional:
+xhr.onreadystatechange = function () {
+  if (xhr.readyState === 4 && xhr.status === 200) {
+    const data = JSON.parse(xhr.responseText);
+    console.log("Data diterima:", data.title);
+  }
+};
+```
+
+#### 5. Kode Status HTTP Esensial
+
+Selalu periksa status HTTP respons:
+
+- `200`: Permintaan berhasil diproses (_OK_).
+- `201`: Sumber daya baru berhasil dibuat (_Created_).
+- `400`: Format request salah (_Bad Request_).
+- `401` / `403`: Tidak memiliki hak otentikasi / akses (_Unauthorized_ / _Forbidden_).
+- `404`: Alamat endpoint tidak ditemukan (_Not Found_).
+- `500`: Kesalahan pada server pusat (_Internal Server Error_).
+
+#### 6. Mengirim Data JSON via POST & `xhr.setRequestHeader()`
+
+Ketika mengirim data badan (_request body_), Anda wajib menyetel header `Content-Type`:
+
+```javascript
+xhr.open("POST", "https://api.example.com/items", true);
+xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+const payload = JSON.stringify({ nama: "Keyboard Mechanical", harga: 750000 });
+xhr.send(payload);
+```
+
+#### 7. Penanganan Timeout dan Error Jaringan
+
+XHR menyediakan properti `timeout` (dalam ms) dan event listener `ontimeout` serta `onerror`.
+
+```javascript
+xhr.timeout = 5000; // 5 detik
+xhr.ontimeout = () => console.error("Koneksi server time-out!");
+xhr.onerror = () => console.error("Koneksi jaringan terputus!");
+```
+
+#### 8. Mengapa Ekosistem Web Beralih ke Fetch API
+
+Meskipun handal, `XMLHttpRequest` memiliki kelemahan:
+
+1. Berbasis arsitektur event callback yang rumit dan rentan spaghetti code.
+2. Tidak terintegrasi secara bawaan dengan Promise.
+3. Fetch API menyediakan sintaks yang jauh lebih bersih, modern, dan mendukung _streaming request_ serta _AbortController_.
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```json
-{
-  "userId": 1,
-  "id": 1,
-  "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-  "body": "quia et suscipit suscipit recusandae consequuntur expedita et cum..."
-}
+Seluruh implementasi simulasi siklus hidup 5 status `readyState`, penanganan koneksi HTTP GET, parsing data JSON, dan eksekusi jaringan live di browser telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Berkas ini dirancang ganda (_dual-compatible_) untuk dapat diuji di terminal Node.js guna memverifikasi alur siklus hidup, maupun di peramban web via [`index.html`](index.html).
+
+Jalankan demonstrasi simulasi di terminal:
+
+```bash
+node 06-asynchronous/04-ajax-xmlhttprequest/example.js
 ```
+
+Atau buka [`index.html`](index.html) langsung di browser dan buka **DevTools Console (`F12`)** untuk mencoba menekan tombol permintaan data AJAX live ke REST API!
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Fitur Autocomplete Search Box**: Menampilkan saran pencarian produk setiap kali pengguna mengetikkan satu huruf di kolom pencarian tanpa me-reload form.
-2. **Infinite Scroll Feed**: Mengambil 10 artikel berikutnya saat posisi scroll pengguna mendekati bagian bawah layar.
+1. **Upload Progress Tracker**: XHR masih sering digunakan dalam skenario khusus di mana pengembang perlu memantau persentase progres unggah berkas besar via `xhr.upload.onprogress`:
+   ```javascript
+   xhr.upload.onprogress = function (event) {
+     if (event.lengthComputable) {
+       const percent = (event.loaded / event.total) * 100;
+       console.log(`Progres Upload: ${percent.toFixed(0)}%`);
+     }
+   };
+   ```
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Lupa `JSON.parse()`**: Data respons server tiba dalam bentuk string mentah (`xhr.responseText`). Mengakses `xhr.responseText.title` langsung akan menghasilkan `undefined`. Selalu parse string JSON terlebih dahulu.
-- **Membuat Request Synchronous**: Memberikan parameter `false` pada `xhr.open("GET", url, false)` akan membekukan UI browser hingga data selesai diambil, memberikan pengalaman buruk (_bad UX_).
+- **Lupa Melakukan `JSON.parse()`**: `xhr.responseText` selalu bertipe string mentah. Jika Anda langsung mengakses `xhr.responseText.id`, hasilnya adalah `undefined`.
+- **Menyetel `async = false`**: Memanggil `xhr.open('GET', url, false)` akan membekukan (_freeze_) seluruh tab browser sampai respon jaringan kembali. Praktik ini sudah usang dan dilarang keras oleh standar browser modern.
 
 ### 🌟 Best Practice
 
-- Untuk proyek web modern, utamakan menggunakan **Fetch API** (`fetch()`) atau pustaka **Axios** yang berbasis Promise alih-alih `XMLHttpRequest` manual.
-- Namun tetap pahami XHR karena fitur seperti _Upload Progress Event_ persentase file masih sering menggunakan fondasi XHR di balik layar.
+- Gunakan `Fetch API` atau `Axios` untuk semua proyek baru.
+- Jika terpaksa menggunakan `XMLHttpRequest`, gunakan event `onload` dan `onerror` daripada memeriksa `readyState === 4` di dalam `onreadystatechange`.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat request XHR ke URL API publik `https://jsonplaceholder.typicode.com/users/1` dan tampilkan nama serta email pengguna ke dalam elemen HTML.
-2. Tambahkan penanganan kondisi jika URL salah (misal status 404), tampilkan pesan "Data tidak ditemukan" di layar.
+1. Buka berkas [`index.html`](index.html) di peramban web. Tambahkan penanganan `xhr.onerror` pada `example.js` lalu ubah URL ke domain palsu (misal: `https://domain-palsu-tidak-ada.xyz`) untuk melihat bagaimana browser menangani kesalahan jaringan.
+2. Tambahkan indikator teks status _"Sedang memuat data..."_ pada elemen HTML sebelum `xhr.send()` dipanggil.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [03 - Callbacks](../03-callbacks/README.md)
-- ➡️ **Selanjutnya:** [05 - Promise](../05-promise/README.md)
+- ⬅️ **Materi Sebelumnya:** [03 - Callbacks](../03-callbacks/README.md)
+- ➡️ **Materi Selanjutnya:** [05 - Promise](../05-promise/README.md)
 - 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

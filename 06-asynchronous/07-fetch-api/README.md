@@ -1,159 +1,212 @@
-# 05 - Fetch API (HTTP Request Modern)
+# 07 - Fetch API (HTTP Request Modern)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami konsep HTTP Request: Method (GET, POST), Headers, Status Code, dan Payload.
-> - **Kapan Digunakan**: Menguasai penggunaan `fetch()` bawaan browser & Node.js 18+.
-> - **Aturan Praktis**: Selalu periksa `if (!response.ok)` sebelum memanggil `response.json()`.
+> - **Fungsi Utama**: Melakukan komunikasi jaringan (_HTTP Request_) modern berbasis Promise bawaan peramban web dan runtime Node.js (v18+) tanpa ketergantungan pustaka luar.
+> - **Kapan Digunakan**: Mengambil data (_GET_), mengirim data baru (_POST_), memperbarui (_PUT/PATCH_), serta menghapus sumber daya (_DELETE_) pada RESTful API.
+> - **Aturan Praktis**: **`fetch()` tidak melempar rejection saat menerima kode status HTTP 404 atau 500**. Anda **wajib** memeriksa nilai boolean `response.ok` sebelum memanggil `response.json()`.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami konsep HTTP Request: Method (GET, POST), Headers, Status Code, dan Payload.
-- Menguasai penggunaan `fetch()` bawaan browser & Node.js 18+.
-- Memahami parsing response data menggunakan `response.json()` dan `response.text()`.
-- Mengetahui cara menangani error HTTP (karena fetch tidak otomatis melempar error pada 404/500).
+- Menguasai sintaks modern `fetch()` untuk berkomunikasi dengan server backend.
+- Memahami struktur siklus hidup objek `Response` (`status`, `statusText`, `headers`, `ok`).
+- Memahami mengapa status HTTP 404/500 tidak otomatis memicu blok `.catch()` pada `fetch()`.
+- Menguasai parsing badan respons menggunakan `response.json()` dan `response.text()`.
+- Mampu mengirimkan permintaan HTTP POST lengkap dengan konfigurasi headers dan JSON payload.
+- Menguasai teknik pembatalan request (_request aborting_) menggunakan `AbortController`.
+- Mengetahui perbandingan teknis antara Fetch API bawaan vs pustaka pihak ketiga (Axios).
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> `fetch()` seperti **pelayan restoran yang membawa buku menu**: Anda meminta makanan ke pelayan (mengirim HTTP request). Pelayan pergi ke dapur (server) dan kembali membawa nampan tertutup (`Response`). Untuk memakannya, Anda harus membuka tutup nampannya terlebih dahulu (**`response.json()`**). Jika koki kehabisan bahan (Error 404), pelayan tetap datang membawa nampan berisi catatan kosong (Promise fulfilled, tapi `response.ok === false`).
-
-`fetch()` adalah Web API modern standar untuk melakukan pertukaran data melalui jaringan internet (_HTTP Request_) dari JavaScript ke server backend.
-
-`fetch()` menggantikan teknologi kuno `XMLHttpRequest` (XHR) dan library luar seperti jQuery Ajax.
-
-### Ciri Khas Krusial dari `fetch()`:
-
-1. `fetch()` mengembalikan sebuah **Promise**.
-2. **`fetch()` TIDAK melempar error saat server merespon dengan status 404 atau 500!**
-   Promise hanya akan di-_reject_ jika terjadi kegagalan jaringan internet total (_network failure_) atau domain tidak ditemukan.
-   Oleh karena itu, developer **wajib memeriksa properti `response.ok`**!
+> Bayangkan fungsi `fetch()` seperti **seorang kurir paket pos**:
+>
+> - Anda memberikan alamat dan instruksi pengiriman (`fetch(url, options)`).
+> - Kurir pergi ke kantor pusat di kota lain dan kembali membawa **sebuah kardus paket tertutup (`Response`)**.
+> - Kardus tersebut memiliki stiker status di luarnya: bertuliskan _"Diterima Baik"_ (`status: 200, ok: true`) atau _"Alamat Rumah Salah"_ (`status: 404, ok: false`). Kurir tetap berhasil pulang membawakan kardus itu kepada Anda (Promise fulfilled, bukan rejected).
+> - Untuk melihat barang pesanan Anda, Anda harus merobek lakban kardus tersebut terlebih dahulu menggunakan gunting (**`await response.json()`**).
+> - Kurir hanya dinyatakan gagal pulang (_rejected_) jika di tengah jalan jembatan antar-kota runtuh atau bannya bocor total (_Network Offline / DNS Failure_).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Ringkasan Properti & Method Objek Response
+
+| Properti / Method     | Tipe Data         | Deskripsi Singkat                                                  |
+| :-------------------- | :---------------- | :----------------------------------------------------------------- |
+| `response.ok`         | `boolean`         | Bernilai `true` jika kode status berada pada rentang `200 - 299`.  |
+| `response.status`     | `number`          | Angka kode status HTTP (misal: `200`, `201`, `400`, `404`, `500`). |
+| `response.statusText` | `string`          | Deskripsi teks status dari server (misal: `"OK"`, `"Not Found"`).  |
+| `response.headers`    | `Headers`         | Objek antarmuka untuk membaca metadata header respons server.      |
+| `response.json()`     | `Promise<any>`    | Mengurai data badan respons yang berformat JSON.                   |
+| `response.text()`     | `Promise<string>` | Mengambil seluruh isi badan respons sebagai string mentah.         |
+| `response.blob()`     | `Promise<Blob>`   | Mengambil badan respons berupa data biner murni (gambar, PDF).     |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Sintaks Dasar `fetch(url, options)`
+
+Secara default, jika parameter `options` diabaikan, `fetch()` akan menjalankan permintaan HTTP metode `GET`.
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+fetch("https://api.example.com/users")
+  .then((res) => res.json())
+  .then((users) => console.log("Daftar User:", users));
+```
 
-console.log('--- 1. Mengambil Data via HTTP GET ---');
-// Simulasi URL API Publik (JSONPlaceholder)
-const API_URL = 'https://jsonplaceholder.typicode.com/posts/1';
+#### 2. Menangani Objek Response (`status`, `statusText`, `ok`)
 
-// Mock fetch jika offline / diuji di lingkungan tanpa koneksi internet
-const universalFetch =
-  typeof fetch !== 'undefined'
-    ? fetch
-    : async () => ({
-        ok: true,
-        status: 200,
-        json: async () => ({
-          id: 1,
-          title: 'Belajar JavaScript Asynchronous',
-          body: 'Materi Fetch API modern',
-        }),
-      });
+Objek `Response` adalah gerbang pertama yang tiba dari server sebelum data isi body dibaca.
 
-universalFetch(API_URL)
-  .then((response) => {
-    // 1. Cek apakah HTTP status code dalam rentang 200-299
-    if (!response.ok) {
-      throw new Error(`HTTP Error! Status: ${response.status}`);
-    }
-    // 2. Parse response body dari format JSON ke Objek JavaScript
-    return response.json();
-  })
-  .then((data) => {
-    console.log('Data berhasil diambil dari server:');
-    console.log('- ID Post    :', data.id);
-    console.log('- Judul Post :', data.title);
-  })
-  .catch((err) => {
-    console.error('Gagal melakukan fetch:', err.message);
-  });
+```javascript
+const res = await fetch("https://api.example.com/status");
+console.log("Status HTTP :", res.status); // 200
+console.log("Status OK   :", res.ok); // true
+console.log("Tipe Konten :", res.headers.get("content-type"));
+```
 
-console.log('\n--- 2. Mengirim Data via HTTP POST ---');
-async function kirimDataBaru() {
-  try {
-    const payload = {
-      title: 'Artikel Baru',
-      body: 'Konten artikel berhasil dibuat via POST',
-      userId: 1,
-    };
+#### 3. Mengapa `fetch()` TIDAK Melempar Error pada Status 404 dan 500
 
-    const res = await universalFetch(
-      'https://jsonplaceholder.typicode.com/posts',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      }
-    );
+Ini adalah perbedaan terbesar antara `fetch()` dan pustaka Axios: selama browser berhasil menghubungi server dan server merespon (meskipun server merespon dengan 404 atau 500), Promise `fetch()` dianggap **sukses terselesaikan**.
 
-    const hasil = await res.json();
-    console.log(
-      'Sukses menyimpan data ke server! Respons ID:',
-      hasil.id || 101
-    );
-  } catch (error) {
-    console.error('Error kirim data:', error.message);
-  }
+```javascript
+const res = await fetch("/api/halaman-tidak-ada");
+
+// ❌ Jangan anggap ini langsung masuk ke catch!
+if (!res.ok) {
+  // ✅ Wajib periksa sendiri secara manual:
+  throw new Error(`Permintaan gagal dengan kode HTTP: ${res.status}`);
 }
+const data = await res.json();
+```
 
-kirimDataBaru();
+#### 4. Membaca Badan Respons: `response.json()` vs `response.text()`
+
+Method pembacaan _body_ hanya dapat dipanggil **tepat 1 kali** karena data respons dihabiskan sebagai aliran biner (_readable stream_).
+
+```javascript
+// Untuk respon JSON:
+const dataObj = await res.json();
+
+// Untuk dokumen HTML atau log teks:
+// const teksMentah = await res.text();
+```
+
+#### 5. Mengirim Data via HTTP POST
+
+Menyertakan konfigurasi `method`, `headers`, dan mengonversi objek JavaScript ke JSON via `JSON.stringify()`.
+
+```javascript
+const response = await fetch("https://api.example.com/posts", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ judul: "Belajar Fetch", dilihat: 100 }),
+});
+```
+
+#### 6. Menyetel Header Kustom (Authorization Bearer Token)
+
+Digunakan untuk menyertakan token otentikasi JWT pada API terproteksi.
+
+```javascript
+const res = await fetch("/api/dashboard", {
+  headers: {
+    Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    Accept: "application/json",
+  },
+});
+```
+
+#### 7. Membatalkan Request Menggunakan `AbortController`
+
+Memungkinkan pengembang membatalkan permintaan jaringan yang sedang berjalan jika pengguna berpindah halaman atau request telah melebihi batas waktu toleransi.
+
+```javascript
+const controller = new AbortController();
+
+// Mengirim request dengan pengait signal:
+fetch("/api/heavy-data", { signal: controller.signal }).catch((err) => {
+  if (err.name === "AbortError") console.log("Request dibatalkan oleh user!");
+});
+
+// Batalkan sewaktu-waktu:
+controller.abort();
+```
+
+#### 8. Perbandingan Fitur: Fetch API vs Axios
+
+| Fitur                    | Native Fetch API                   | Pustaka Axios                      |
+| :----------------------- | :--------------------------------- | :--------------------------------- |
+| **Instalasi Tambahan**   | ❌ Tidak Perlu (Bawaan Web & Node) | ⚠️ Butuh instalasi via npm         |
+| **JSON Serialization**   | ⚠️ Manual via `JSON.stringify()`   | ✅ Otomatis                        |
+| **Error Status 4xx/5xx** | ⚠️ Harus cek manual via `res.ok`   | ✅ Otomatis reject ke `.catch()`   |
+| **Request Cancellation** | ✅ Standar W3C `AbortController`   | ✅ `AbortController` / CancelToken |
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh implementasi permintaan HTTP GET, verifikasi mutlak `response.ok`, pengiriman data berformat JSON melalui HTTP POST dengan header `Content-Type`, serta pembatalan aksi via `AbortController` telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Jalankan demonstrasi menggunakan Node.js di terminal:
+
+```bash
+node 06-asynchronous/07-fetch-api/example.js
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
-
-```text
---- 1. Mengambil Data via HTTP GET ---
-
---- 2. Mengirim Data via HTTP POST ---
-Data berhasil diambil dari server:
-- ID Post    : 1
-- Judul Post : Belajar JavaScript Asynchronous
-Sukses menyimpan data ke server! Respons ID: 101
-```
-
----
-
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Menampilkan Katalog Produk E-Commerce**: Mengambil data daftar barang dari server database backend saat halaman pertama dibuka.
-2. **Form Login & Register**: Mengirimkan username dan password terenkripsi via HTTP `POST` ke endpoint autentikasi server.
-3. **Integrasi Pihak Ketiga**: Menghubungkan website ke API cuaca (OpenWeatherMap), API ongkos kirim (RajaOngkir), atau Payment Gateway (Midtrans).
+1. **Fungsi Wrapper API Terpusat (Client Helper)**:
+   ```javascript
+   async function apiClient(endpoint, customConfig = {}) {
+     const config = {
+       method: "GET",
+       headers: { "Content-Type": "application/json" },
+       ...customConfig,
+     };
+     const response = await fetch(`/api${endpoint}`, config);
+     if (!response.ok) {
+       const errorData = await response.json().catch(() => ({}));
+       throw new Error(errorData.message || `HTTP Error ${response.status}`);
+     }
+     return response.json();
+   }
+   ```
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Lupa `await` atau `.then()` pada `response.json()`**: Membaca `response.json()` adalah operasi asinkron! Jika Anda menulis `const data = response.json()`, nilai `data` adalah objek `Promise <pending>`, bukan isi datanya.
-- **Tidak Mengecek `response.ok`**: Mengabaikan status `response.ok` akan membuat aplikasi tetap mencoba mem-parse body halaman 404 HTML sebagai JSON, yang berujung pada error `SyntaxError: Unexpected token < in JSON at position 0`.
+- **Lupa Melakukan `await` pada `response.json()`**: `response.json()` mengembalikan Promise, bukan objek langsung. Menulis `const data = response.json();` akan menghasilkan objek Promise tertunda, bukan payload data.
+- **Memanggil `response.json()` Dua Kali**: Jika Anda memanggil `await res.json()` lalu di baris berikutnya memanggil `await res.text()`, browser akan melempar error `TypeError: body stream already read`.
 
 ### 🌟 Best Practice
 
-- Selalu periksa `if (!response.ok)` sebelum memanggil `response.json()`.
-- Selalu cantumkan header `'Content-Type': 'application/json'` saat mengirim payload JSON menggunakan method POST/PUT.
+- Selalu bungkus pemanggilan fetch di dalam fungsi bantuan (_helper_) yang memeriksa `response.ok` secara terpusat.
+- Sambungkan `AbortController` dengan `setTimeout` untuk membuat fungsi `fetchWithTimeout()` yang tangguh saat menghadapi jaringan lemot.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah fungsi `ambilDataPengguna(userId)` menggunakan `fetch` ke `https://jsonplaceholder.typicode.com/users/[userId]`.
-2. Tampilkan nama dan email pengguna ke konsol terminal jika berhasil, dan tangani error jika ID tidak ditemukan.
+1. Buatlah fungsi `cariProduk(keyword)` menggunakan `fetch()` ke endpoint publik `https://dummyjson.com/products/search?q=${keyword}`.
+2. Tambahkan pengecekan `if (!res.ok)` serta tampilkan nama produk dan harga dari hasil respon server di terminal atau Console!
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [04 - Promise](../06-promise-concurrency/README.md)
-- ➡️ **Selanjutnya:** [06 - Async dan Await](../08-async-await/README.md)
+- ⬅️ **Materi Sebelumnya:** [06 - Promise Concurrency](../06-promise-concurrency/README.md)
+- ➡️ **Materi Selanjutnya:** [08 - Async Await](../08-async-await/README.md)
 - 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

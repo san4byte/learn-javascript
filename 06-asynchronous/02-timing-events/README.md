@@ -2,112 +2,189 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami cara menunda eksekusi kode menggunakan `setTimeout()`.
-> - **Kapan Digunakan**: Memahami cara menjalankan kode berulang secara periodik menggunakan `setInterval()`.
-> - **Aturan Praktis**: Selalu simpan timer ID ke dalam variabel dan bersihkan pada saat komponen di-unmount atau aksi dibatalkan.
+> - **Fungsi Utama**: Mengatur penjadwalan eksekusi kode di masa depan: menunda 1 kali eksekusi (`setTimeout`) atau menjalankan berulang secara periodik (`setInterval`).
+> - **Kapan Digunakan**: Fitur jam digital, animasi hitung mundur (_countdown timer_), _debouncing_ pencarian pengguna, _polling_ server, dan rotasi slider gambar otomatis.
+> - **Aturan Praktis**: Selalu simpan ID timer yang dikembalikan (`timerId` / `intervalId`) dan panggil `clearTimeout()` atau `clearInterval()` saat aksi selesai atau komponen dibersihkan guna mencegah kebocoran memori (_memory leak_).
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami cara menunda eksekusi kode menggunakan `setTimeout()`.
-- Memahami cara menjalankan kode berulang secara periodik menggunakan `setInterval()`.
-- Mampu menghentikan timer sebelum dieksekusi menggunakan `clearTimeout()` dan `clearInterval()`.
-- Mengetahui masalah ketepatan waktu (_timer drift_) pada JavaScript.
+- Memahami cara kerja penundaan waktu menggunakan `setTimeout()`.
+- Menguasai eksekusi periodik berulang menggunakan `setInterval()`.
+- Mampu membatalkan timer yang sedang dijadwalkan menggunakan `clearTimeout()` dan `clearInterval()`.
+- Mengetahui cara meneruskan argumen langsung ke dalam fungsi callback timer.
+- Menguasai pola **Recursive setTimeout** sebagai alternatif modern yang lebih aman daripada `setInterval`.
+- Memahami fenomena pergeseran waktu (_Timer Drift_) dan kebijakan penghematan daya (_throttling_) pada tab browser non-aktif.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> **setTimeout** seperti _alarm jam weker di pagi hari_: Anda menyetelnya untuk berdering 1 kali setelah 7 jam. Jika sebelum berdering Anda sudah bangun, Anda bisa menekan tombol cancel (**clearTimeout**). Sedangkan **setInterval** seperti _detak jarum jam dinding_: berbunyi 'tik-tok' secara teratur setiap 1 detik sampai baterainya dicabut (**clearInterval**).
-
-JavaScript menyediakan dua fungsi bawaan untuk mengatur pewaktuan (_scheduling_):
-
-1. **`setTimeout(callback, delayMs, ...args)`**: Menjalankan fungsi callback satu kali setelah jeda waktu tertentu.
-2. **`setInterval(callback, intervalMs, ...args)`**: Menjalankan fungsi callback berulang kali setiap selang waktu tertentu secara terus-menerus.
-
-Setiap pemanggilan fungsi ini mengembalikan sebuah identifier unik bertipe integer (_Timer ID_). Identifier ini digunakan untuk membatalkan timer:
-
-- `clearTimeout(timerId)`
-- `clearInterval(intervalId)`
+> - **`setTimeout`** seperti **alarm jam weker di pagi hari**: Anda menyetelnya untuk berdering 1 kali setelah 7 jam ke depan. Jika Anda terbangun lebih awal sebelum alarm berdering, Anda dapat menekan tombol batal (**`clearTimeout`**).
+> - **`setInterval`** seperti **detak bandul jam dinding**: berbunyi _"tik... tok..."_ secara konsisten setiap 1 detik tanpa henti sampai baterainya dicabut (**`clearInterval`**).
+> - **`Recursive setTimeout`** seperti **pelari estafet mandiri**: pelari baru mulai bersiap lari untuk putaran berikutnya HANYA SETELAH ia selesai menuntaskan putaran saat ini, sehingga tidak akan pernah terjadi tabrakan antar-pelari jika salah satu putaran memakan waktu lebih lambat dari perkiraan.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Ringkasan Fungsi Timing Events
+
+| Fungsi Pewaktuan                  | Return Value            | Tujuan Utama                                            | Cara Membatalkan    |
+| :-------------------------------- | :---------------------- | :------------------------------------------------------ | :------------------ |
+| `setTimeout(fn, delay, ...args)`  | `number` / `Timeout` ID | Menjalankan fungsi 1 kali setelah delay waktu (ms).     | `clearTimeout(id)`  |
+| `clearTimeout(id)`                | `undefined`             | Membatalkan timer pending yang belum sempat dieksekusi. | -                   |
+| `setInterval(fn, delay, ...args)` | `number` / `Timeout` ID | Menjalankan fungsi berulang kali setiap interval (ms).  | `clearInterval(id)` |
+| `clearInterval(id)`               | `undefined`             | Menghentikan perulangan interval selamanya.             | -                   |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Sintaks & Penggunaan `setTimeout(callback, delay, ...args)`
+
+Menunda pengeksekusian fungsi sebesar `delay` milidetik (1 detik = 1000 milidetik).
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const timerId = setTimeout(() => {
+  console.log("Dieksekusi 1 detik kemudian");
+}, 1000);
+```
 
-console.log('--- 1. setTimeout & clearTimeout ---');
+#### 2. Membatalkan Timer Tertunda dengan `clearTimeout(timerId)`
+
+Jika kondisi tertentu terpenuhi sebelum durasi timeout habis, eksekusi dapat digugurkan secara bersih.
+
+```javascript
 const timerPesan = setTimeout(() => {
-  console.log('Pesan ini tidak akan pernah muncul karena di-cancel!');
-}, 2000);
+  console.log("Pesan rahasia terkirim");
+}, 3000);
 
-// Membatalkan timer sebelum 2 detik tercapai
+// Batalkan sebelum 3 detik:
 clearTimeout(timerPesan);
-console.log('Timer berhasil dibatalkan sebelum sempat dieksekusi.');
+```
 
-console.log('\n--- 2. setInterval & clearInterval (Simulasi Countdown) ---');
-let hitungMundur = 3;
+#### 3. Penjadwalan Periodik dengan `setInterval(callback, interval, ...args)`
 
+Fungsi akan terus-menerus dipanggil setiap kelipatan waktu `interval` yang ditentukan.
+
+```javascript
+let detik = 0;
 const intervalId = setInterval(() => {
-  if (hitungMundur > 0) {
-    console.log(`Hitung mundur: ${hitungMundur}...`);
-    hitungMundur--;
-  } else {
-    console.log('🚀 Roket Meluncur!');
-    clearInterval(intervalId); // Wajib dihentikan agar tidak berjalan selamanya
-  }
-}, 300);
+  detik++;
+  console.log(`Detik ke-${detik}`);
+}, 1000);
+```
+
+#### 4. Menghentikan Interval dengan `clearInterval(intervalId)`
+
+Wajib dipanggil untuk menghentikan timer berulang agar tidak memakan sumber daya CPU secara terus-menerus.
+
+```javascript
+// Hentikan interval jika detik sudah mencapai 5:
+if (detik >= 5) {
+  clearInterval(intervalId);
+}
+```
+
+#### 5. Meneruskan Argumen Langsung ke Callback Timer
+
+Anda dapat memberikan argumen tambahan setelah parameter delay tanpa perlu membungkusnya dalam _arrow function_.
+
+```javascript
+function sapa(nama, jabatan) {
+  console.log(`Halo ${nama}, status: ${jabatan}`);
+}
+
+// Meneruskan argumen 'Joko' dan 'Admin' ke fungsi sapa
+setTimeout(sapa, 2000, "Joko", "Admin");
+```
+
+#### 6. Pola Recursive setTimeout vs setInterval (Mencegah Overlapping)
+
+Pada `setInterval`, jika isi callback memakan waktu komputasi 1.5 detik sedangkan interval disetel 1 detik, eksekusi callback akan saling bertumpuk (_overlapping_). Solusi terbaik adalah **Recursive setTimeout**:
+
+```javascript
+function loopAman() {
+  // Lakukan komputasi atau request API...
+  console.log("Selesai diproses.");
+
+  // Jadwalkan putaran berikutnya HANYA setelah pekerjaan di atas selesai:
+  setTimeout(loopAman, 1000);
+}
+setTimeout(loopAman, 1000);
+```
+
+#### 7. Isu Presisi Waktu (Timer Drift) dan Background Throttling
+
+Timer JavaScript **tidak dirancang untuk presisi waktu tingkat mikroskopis/militer**:
+
+- Jika Call Stack sedang sibuk memproses loop komputasi berat, timer akan tertunda (_timer drift_).
+- Pada browser modern, ketika tab browser diminimalkan atau tidak aktif (_background tab_), browser secara otomatis membatasi interval menjadi minimal 1.000ms untuk menghemat baterai laptop/ponsel.
+
+#### 8. Nilai Minimum Delay pada Browser (Aturan 4ms W3C)
+
+Berdasarkan spesifikasi HTML5, setelah 5 tingkat penumpukan timer (_nested timers_), browser akan memberlakukan penundaan minimum paksa sebesar **4 milidetik**, meskipun Anda menyetelnya sebagai `0ms`.
+
+```javascript
+setTimeout(() => {
+  // Nested 5 level akan dipaksa minimum 4ms oleh browser
+}, 0);
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. setTimeout & clearTimeout ---
-Timer berhasil dibatalkan sebelum sempat dieksekusi.
+Seluruh implementasi penundaan waktu, pembatalan dengan `clearTimeout()`, pembuatan timer hitung mundur (_countdown_) via `setInterval()` dan `clearInterval()`, serta implementasi aman pola **Recursive setTimeout** telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. setInterval & clearInterval (Simulasi Countdown) ---
-Hitung mundur: 3...
-Hitung mundur: 2...
-Hitung mundur: 1...
-🚀 Roket Meluncur!
+Jalankan demonstrasi menggunakan Node.js di terminal:
+
+```bash
+node 06-asynchronous/02-timing-events/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Pemberitahuan Toast / Notifikasi Melayang**: Menampilkan pop-up notifikasi 'Data Berhasil Disimpan', lalu menghilangkannya secara otomatis setelah 3 detik menggunakan `setTimeout`.
-2. **Fitur OTP Countdown**: Menampilkan timer 'Kirim Ulang Kode OTP dalam 60 detik' di halaman login/registrasi.
-3. **Session Timeout Warning**: Menampilkan dialog peringatan 'Sesi Anda akan berakhir dalam 1 menit karena tidak ada aktivitas'.
+1. **Implementasi Fitur Pencarian Debounce**: Menunggu pengguna selesai mengetik selama 500ms sebelum mengirim request ke server pencarian:
+   ```javascript
+   let timeoutDebounce;
+   function onSearchInput(event) {
+     clearTimeout(timeoutDebounce);
+     timeoutDebounce = setTimeout(() => {
+       fetchSearchResults(event.target.value);
+     }, 500);
+   }
+   ```
+2. **Auto-Logout Sesi Pengguna**: Mereset timer 15 menit setiap kali pengguna melakukan aktivitas mouse/keyboard di layar.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Lupa Memanggil `clearInterval` (Memory Leak)**: Jika Anda menggunakan `setInterval` pada aplikasi web satu halaman (Single Page App / React), berpindah halaman tanpa memanggil `clearInterval` akan membuat fungsi tersebut terus berjalan di background selamanya, menyedot memori dan CPU.
-- **Timer Tidak 100% Presisi**: Jika CPU komputer sedang sibuk atau tab browser sedang tidak aktif (_background tab_), browser akan menunda eksekusi timer demi menghemat baterai.
+- **Lupa Menyimpan ID Interval dan Menghilangkannya**: Jika Anda memanggil `setInterval()` di dalam fungsi yang dipanggil berulang kali tanpa menyimpan ID-nya, interval baru akan terus bertambah dan berjalan di latar belakang tanpa cara untuk menghentikannya (_memory leak_ parah).
+- **Menulis Callback Sebagai Eksekusi Langsung**: Menulis `setTimeout(sapa(), 1000)` alih-alih `setTimeout(sapa, 1000)`. Tanda kurung `()` menyebabkan fungsi `sapa` langsung dieksekusi seketika saat deklarasi, bukan ditunda.
 
 ### 🌟 Best Practice
 
-- Selalu simpan timer ID ke dalam variabel dan bersihkan pada saat komponen di-unmount atau aksi dibatalkan.
-- Gunakan rekursif `setTimeout` daripada `setInterval` jika durasi eksekusi dari fungsi di dalamnya memakan waktu tidak menentu (misal memanggil API).
+- Selalu bersihkan interval atau timeout saat sebuah halaman web ditinggalkan atau saat komponen UI di-unmount.
+- Lebih prioritaskan pola _Recursive setTimeout_ untuk operasi asinkron yang membutuhkan jeda konsisten antar-request (seperti _polling_ data server).
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah sebuah fungsi `buatJamDigital()` menggunakan `setInterval` yang mencetak waktu saat ini (jam:menit:detik) setiap 1 detik.
-2. Hentikan jam tersebut secara otomatis setelah berjalan sebanyak 5 kali.
+1. Buatlah fungsi jam digital sederhana di terminal atau browser Console yang mencetak waktu saat ini (`new Date().toLocaleTimeString()`) setiap 1 detik.
+2. Buat mekanisme pembatalan otomatis yang menghentikan jam digital tersebut setelah berjalan selama tepat 10 detik menggunakan perpaduan `setInterval` dan `setTimeout`!
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [01 - Asynchronous Intro & Event Loop](../01-event-loop-intro/README.md)
-- ➡️ **Selanjutnya:** [03 - Callbacks dan Callback Hell](../03-callbacks/README.md)
+- ⬅️ **Materi Sebelumnya:** [01 - Asynchronous Intro & Event Loop](../01-event-loop-intro/README.md)
+- ➡️ **Materi Selanjutnya:** [03 - Callbacks](../03-callbacks/README.md)
 - 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

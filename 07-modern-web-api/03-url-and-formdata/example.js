@@ -3,7 +3,7 @@
 console.log('--- 1. Manipulasi Query Param dengan URLSearchParams ---');
 // Simulasi URL katalog produk di toko online
 const urlKatalog = new URL(
-  'https://toko-online.com/katalog?kategori=elektronik&halaman=1'
+  'https://toko-online.com/katalog?kategori=elektronik&halaman=1',
 );
 
 const params = urlKatalog.searchParams;
@@ -35,7 +35,7 @@ for (const [kunci, nilai] of pencarianParams.entries()) {
 }
 
 console.log(
-  '\n--- 3. Bekerja dengan FormData (Simulasi Pengiriman Formulir) ---'
+  '\n--- 3. Bekerja dengan FormData (Simulasi Pengiriman Formulir) ---',
 );
 // Di browser, Anda bisa membuat FormData langsung dari elemen HTML: new FormData(formElement)
 // Di sini kita demonstrasikan pembuatan dan manipulasi FormData terprogram:

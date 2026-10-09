@@ -2,27 +2,28 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami regular expression melalui objek bawaan `RegExp` di JavaScript.
-> - **Kapan Digunakan**: Membedakan cara deklarasi literal (`/.../`) dan konstruktor (`new RegExp()`).
-> - **Aturan Praktis**: Gunakan literal `/pola/` jika pola bersifat statis agar browser mengompilasi regex di awal dengan performa maksimal.
+> - **Fungsi Utama**: Mesin pencocokan pola teks tingkat lanjut bawaan JavaScript melalui objek `RegExp` dan integrasi method String.
+> - **Kapan Digunakan**: Validasi form (email, password, nomor HP), ekstraksi token data log/dokumen (_scraping_), pembersihan kata terlarang, dan pemecahan teks dengan multi-delimiter.
+> - **Aturan Praktis**: Gunakan literal `/pola/` untuk pola statis, hindari flag global `/g` saat melakukan validasi dengan `regex.test()` untuk mencegah bug state `lastIndex`, dan gunakan _Named Capturing Groups_ `(?<nama>...)` untuk ekstraksi yang mudah dibaca.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
 - Memahami regular expression melalui objek bawaan `RegExp` di JavaScript.
-- Membedakan cara deklarasi literal (`/.../`) dan konstruktor (`new RegExp()`).
-- Menguasai modifiers utama: `i` (case-insensitive), `g` (global), dan `m` (multiline).
-- Memahami komponen pola: assertions, character classes (`\d`, `\w`, `\s`), groups & ranges (`[]`, `()`), dan quantifiers (`+`, `*`, `?`, `{n,m}`).
-- Menguasai method RegExp (`test`, `exec`) dan method Regex pada String (`match`, `search`, `replace`, `replaceAll`, `split`).
+- Menguasai seluruh method RegExp (`test()`, `exec()`) dan integrasi method String (`match()`, `matchAll()`, `replace()`, `split()`) beserta contoh kasusnya masing-masing.
+- Membedakan cara deklarasi literal (`/.../`) dan konstruktor dinamis (`new RegExp()`).
+- Menguasai modifiers / flags: `i` (_ignore case_), `g` (_global_), `m` (_multiline_), `s` (_dotAll_), dan `u` (_unicode_).
+- Memahami blok pembangun pola: assertions, character classes (`\d`, `\w`, `\s`), quantifiers (greedy vs lazy), dan groups & ranges (`[]`, `()`, `(?<nama>...)`).
+- Memahami jebakan state `lastIndex` pada regex dengan flag `/g` dan bahaya bencana ReDoS (_catastrophic backtracking_).
 
 ---
 
-## 2. 📖 Penjelasan Konsep & Referensi Lengkap
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> `RegExp` seperti **anjing pelacak kepolisian yang telah dilatih mencium aroma spesifik**: ia tidak peduli apakah target yang Anda cari berwarna biru atau merah; ia hanya mencocokkan jejak pola bentuk yang Anda berikan (misalnya: pola 3 huruf diikuti 4 angka) di antara ribuan tumpukan dokumen.
-
-**Regular Expression (RegExp)** adalah serangkaian karakter yang membentuk pola pencarian (_search pattern_). RegExp digunakan untuk validasi format teks (email, username, nomor HP), pencarian substring tingkat lanjut, serta pembersihan atau penggantian pola teks.
+> `RegExp` seperti **anjing pelacak kepolisian yang telah dilatih mencium aroma pola spesifik**: ia tidak peduli apakah target yang Anda cari berwarna biru atau merah; ia hanya mencocokkan jejak pola bentuk yang Anda tentukan (misalnya: pola 2 huruf diikuti 4 angka) di antara ribuan tumpukan dokumen tebal.
 
 ---
 
@@ -30,7 +31,7 @@
 
 Berikut adalah cara membaca pola regex yang tampak rumit menjadi sangat mudah dipahami dengan diagram penunjuk:
 
-#### 1. Studi Kasus: Pola Validasi Username
+#### 1. Validasi Username
 
 Aturan: Dimulai dengan huruf, panjang total 3–16 karakter, hanya boleh huruf, angka, dan garis bawah (`_`).
 
@@ -39,14 +40,14 @@ Aturan: Dimulai dengan huruf, panjang total 3–16 karakter, hanya boleh huruf, 
 │ │    │            │       │   │ │
 │ │    │            │       │   │ └── Pembatas akhir RegExp (delimiter)
 │ │    │            │       │   └──── Anchor Akhir ($): Wajib berakhir tepat di ujung string
-│ │    │            │       └──────── Quantifier ({2,15}): Ulangi karakter set sebanyak 2 s.d. 15 kali
+│ │    │            │       └──────── Quantifier ({2,15}): Ulangi karakter set 2 s.d. 15 kali
 │ │    │            └──────────────── Character Set: Boleh huruf besar/kecil, angka, atau underscore
 │ │    └───────────────────────────── Karakter Pertama: Wajib 1 huruf (besar atau kecil)
 │ └────────────────────────────────── Anchor Awal (^): Wajib berawal tepat dari awal string
 └──────────────────────────────────── Pembatas awal RegExp (delimiter)
 ```
 
-#### 2. Studi Kasus: Pola Nomor HP Indonesia (dari `example.js`)
+#### 2. Validasi Nomor HP Indonesia
 
 Aturan: Diawali `08`, diikuti 9 sampai 11 digit angka (total panjang 11–13 digit).
 
@@ -62,239 +63,215 @@ Aturan: Diawali `08`, diikuti 9 sampai 11 digit angka (total panjang 11–13 dig
 └─────────────────────────── Pembatas awal RegExp
 ```
 
-#### 3. Studi Kasus: Ekstraksi Invoice dengan Flag Global
-
-Aturan: Format `INV-YYYY-XXXXX`, diambil semua kecocokannya di dalam dokumen.
-
-```text
-/ INV - \d{4} - \d+ / g
-│  │  │   │   │  │  │ │
-│  │  │   │   │  │  │ └── Modifier / Flag Global: Ambil SEMUA yang cocok di seluruh teks
-│  │  │   │   │  │  └──── Pembatas akhir RegExp
-│  │  │   │   │  └─────── Quantifier (+): 1 atau lebih digit angka id pesanan
-│  │  │   │   └────────── Karakter strip literal (-)
-│  │  │   └────────────── Quantifier ({4}): Tepat 4 digit angka tahun
-│  │  └────────────────── Karakter strip literal (-)
-│  └───────────────────── Teks literal "INV"
-└──────────────────────── Pembatas awal RegExp
-```
-
-#### 4. Studi Kasus: Pola Email Standar
-
-Aturan: Format username, tanda `@`, nama domain, dan ekstensi minimal 2 huruf.
-
-```text
-/ ^ [\w.-]+ @ [\w-]+ \. [a-zA-Z]{2,} $ /
-│ │    │    │    │   │       │       │ │
-│ │    │    │    │   │       │       │ └── Pembatas akhir RegExp
-│ │    │    │    │   │       │       └──── Anchor Akhir ($): Wajib berakhir di ujung string
-│ │    │    │    │   │       └──────────── Ekstensi domain (com, id, net) minimal 2 huruf
-│ │    │    │    │   └──────────────────── Titik literal (\.) yang di-escape
-│ │    │    │    └──────────────────────── Nama domain penyedia email (gmail, yahoo, dsb)
-│ │    │    └───────────────────────────── Karakter '@' literal
-│ │    └────────────────────────────────── Username email (huruf, angka, titik, strip) minimal 1 karakter
-│ └─────────────────────────────────────── Anchor Awal (^): Wajib dimulai dari awal string
-└───────────────────────────────────────── Pembatas awal RegExp
-```
-
 ---
 
-### 1. Cara Pembuatan RegExp
+### 1. Cara Pembuatan RegExp: Literal vs Konstruktor
 
-JavaScript menyediakan dua cara untuk membuat objek RegExp:
-
-| Cara Pembuatan           | Sintaks                                      | Kapan Digunakan?                                       | Sifat & Performa                                                          |
-| :----------------------- | :------------------------------------------- | :----------------------------------------------------- | :------------------------------------------------------------------------ |
-| **Sintaks Literal**      | `const regex = /pola/flags;`                 | Pola sudah tetap/statis sejak awal coding.             | Dikompilasi saat skrip dimuat (lebih cepat & efisien).                    |
-| **Konstruktor `RegExp`** | `const regex = new RegExp("pola", "flags");` | Pola dibuat dinamis (misal: dari input form/variabel). | Dikompilasi saat runtime. Karakter khusus wajib double backslash (`\\d`). |
+| Cara Pembuatan           | Sintaks                                      | Kapan Digunakan?                                | Sifat & Performa                                                            |
+| :----------------------- | :------------------------------------------- | :---------------------------------------------- | :-------------------------------------------------------------------------- |
+| **Sintaks Literal**      | `const regex = /pola/flags;`                 | Pola sudah tetap/statis sejak awal coding.      | Dikompilasi saat skrip dimuat (lebih cepat).                                |
+| **Konstruktor `RegExp`** | `const regex = new RegExp("pola", "flags");` | Pola dibuat dinamis (dari variabel/input user). | Dikompilasi saat runtime. Karakter khusus wajib _double-backslash_ (`\\d`). |
 
 ```javascript
 // 1. Literal (Statis)
-const regexStatis = /^[a-z]+$/i;
+const regexStatis = /^\d{4}$/;
 
-// 2. Konstruktor (Dinamis dari variabel pengguna)
-const kataKunci = 'javascript';
-const regexDinamis = new RegExp(kataKunci, 'gi');
-
-// Catatan penting: Pada konstruktor string, gunakan double-backslash:
-const regexAngka = new RegExp('\\d{4}', 'g'); // Sama dengan /\d{4}/g
+// 2. Konstruktor (Dinamis dari variabel)
+const keyword = "javascript";
+const regexDinamis = new RegExp(`\\b${keyword}\\b`, "i"); // Perhatikan double-backslash!
 ```
 
 ---
 
 ### 2. Modifiers (Flags) Utama
 
-Flags diletakkan setelah garis miring penutup `/pola/flags` untuk memodifikasi cara kerja pencarian:
-
-|  Flag   | Nama          | Penjelasan Singkat                                                                                   | Contoh & Efek                                            |
-| :-----: | :------------ | :--------------------------------------------------------------------------------------------------- | :------------------------------------------------------- |
-| **`i`** | _Ignore Case_ | Mengabaikan perbedaan huruf besar dan kecil.                                                         | `/halo/i` cocok dengan `"HALO"`, `"Halo"`, `"halo"`.     |
-| **`g`** | _Global_      | Mencari **semua** kecocokan di dalam string, tidak berhenti di temuan pertama.                       | `"a a a".match(/a/g)` menghasilkan `['a', 'a', 'a']`.    |
-| **`m`** | _Multiline_   | Mengubah anchor `^` dan `$` agar berlaku di **setiap baris** (`\n`), bukan hanya awal/akhir dokumen. | Cocok untuk validasi data teks multi-baris.              |
-| **`s`** | _Dot All_     | Mengizinkan tanda titik `.` mencocokkan karakter baris baru (`\n`).                                  | `/halo.dunia/s` cocok meski ada enter di antara kata.    |
-| **`u`** | _Unicode_     | Mengaktifkan penanganan karakter Unicode & Emoji secara presisi (UTF-16 surrogate pairs).            | `/\u{1F600}/u` mencocokkan emoji 😀.                     |
-| **`y`** | _Sticky_      | Pencarian hanya dilakukan tepat pada indeks `lastIndex` saat ini.                                    | Digunakan pada parser atau tokenizer bahasa pemrograman. |
+|  Flag   | Nama          | Efek & Penjelasan Singkat                                                         |
+| :-----: | :------------ | :-------------------------------------------------------------------------------- |
+| **`i`** | _Ignore Case_ | Mengabaikan perbedaan huruf besar dan kecil (`/halo/i` cocok dengan `"HALO"`).    |
+| **`g`** | _Global_      | Mencari **seluruh** kecocokan di dalam dokumen, tidak berhenti di temuan pertama. |
+| **`m`** | _Multiline_   | Mengubah anchor `^` dan `$` agar berlaku di setiap baris baru (`\n`).             |
+| **`s`** | _Dot All_     | Mengizinkan tanda titik `.` mencocokkan karakter newline (`\n`).                  |
+| **`u`** | _Unicode_     | Mengaktifkan penanganan karakter Unicode & Emoji (UTF-16 surrogate pairs).        |
 
 ---
 
 ### 3. Komponen Pola Sintaksis
 
-Pola RegExp tersusun dari blok-blok pembangun berikut:
-
-#### A. Character Classes (Kategori Karakter)
-
-|  Simbol  | Arti / Padanan                                   | Contoh Kecocokan           | Lawan / Negasi (Huruf Kapital)                   |
-| :------: | :----------------------------------------------- | :------------------------- | :----------------------------------------------- |
-| **`\d`** | Digit angka `[0-9]`                              | `"5"`, `"0"`               | **`\D`**: Bukan digit angka                      |
-| **`\w`** | Karakter kata (alfanumerik + `_`) `[a-zA-Z0-9_]` | `"a"`, `"Z"`, `"9"`, `"_"` | **`\W`**: Bukan kata (spasi, tanda baca, simbol) |
-| **`\s`** | Whitespace (spasi, tab, baris baru)              | `" "`, `"\t"`, `"\n"`      | **`\S`**: Bukan spasi                            |
-| **`.`**  | Sembarang karakter apapun (kecuali `\n`)         | `"a"`, `"9"`, `"@"`, `"-"` | _(Aktifkan flag `s` agar mencakup `\n`)_         |
-
-#### B. Assertions & Boundaries (Posisi & Batas)
-
-|  Simbol  | Arti                         | Contoh      | Keterangan                                                         |
-| :------: | :--------------------------- | :---------- | :----------------------------------------------------------------- |
-| **`^`**  | Awal string / baris          | `/^Halo/`   | String harus dimulai dengan kata `"Halo"`.                         |
-| **`$`**  | Akhir string / baris         | `/Dunia$/`  | String harus diakhiri kata `"Dunia"`.                              |
-| **`\b`** | Batas kata (_word boundary_) | `/\bcat\b/` | Hanya cocok dengan `"cat"`, bukan `"caterpillar"` atau `"bobcat"`. |
-| **`\B`** | Bukan batas kata             | `/\Bcat/`   | Cocok jika `"cat"` berada di dalam kata lain (`"bobcat"`).         |
-
-#### C. Quantifiers (Frekuensi Kemunculan)
-
-Quantifier menentukan berapa kali elemen sebelumnya boleh muncul berurutan:
-
-|   Simbol    | Jumlah Kemunculan                   | Penjelasan Sederhana                                                   |
-| :---------: | :---------------------------------- | :--------------------------------------------------------------------- |
-|   **`+`**   | 1 kali atau lebih ($\ge 1$)         | Wajib ada minimal satu kali (`\d+` cocok `"1"`, `"1234"`).             |
-|   **`*`**   | 0 kali atau lebih ($\ge 0$)         | Boleh tidak ada sama sekali, boleh ada banyak.                         |
-|   **`?`**   | 0 atau 1 kali (opsional)            | Boleh ada 1, boleh tidak ada (`https?` cocok `"http"` atau `"https"`). |
-|  **`{n}`**  | Tepat $n$ kali                      | Tepat sekian kali (`\d{4}` cocok untuk 4 digit tahun).                 |
-| **`{n,}`**  | Minimal $n$ kali                    | Minimal sekian kali tanpa batas atas (`\d{3,}`).                       |
-| **`{n,m}`** | Minimal $n$ kali, maksimal $m$ kali | Rentang batas kemunculan (`\d{9,11}`).                                 |
-
-> 💡 **Greedy vs Lazy:**
-> Secara default, quantifier bersifat **Greedy** (rakus mengambil kecocokan sepanjang mungkin). Tambahkan tanda `?` di belakang quantifier (`+?`, `*?`) untuk mengubahnya menjadi **Lazy** (berhenti di kecocokan terpendek).
-
-#### D. Groups & Ranges (Himpunan & Pengelompokan)
-
-|       Simbol       | Nama                  | Penjelasan & Contoh                                                                    |
-| :----------------: | :-------------------- | :------------------------------------------------------------------------------------- |
-|    **`[abc]`**     | _Character Set_       | Cocok dengan **salah satu** karakter di dalam kurung: `'a'`, `'b'`, atau `'c'`.        |
-|    **`[^abc]`**    | _Negated Set_         | Cocok dengan karakter **apapun selain** `'a'`, `'b'`, dan `'c'`.                       |
-|    **`[a-z]`**     | _Range_ Huruf Kecil   | Semua huruf kecil dari `a` sampai `z`.                                                 |
-|    **`[A-Z]`**     | _Range_ Huruf Besar   | Semua huruf besar dari `A` sampai `Z`.                                                 |
-|    **`[0-9]`**     | _Range_ Angka         | Semua angka dari `0` sampai `9` (setara `\d`).                                         |
-|    **`(abc)`**     | _Capturing Group_     | Mengelompokkan pola bersama dan menyimpan kecocokannya untuk diekstrak.                |
-|   **`(?:abc)`**    | _Non-Capturing Group_ | Mengelompokkan pola tanpa menyimpan hasil ekstraksi (menghemat memori).                |
-| **`(?<nama>abc)`** | _Named Group_         | Memberikan nama alias pada grup ekstraksi agar dapat diakses via `result.groups.nama`. |
-|     **`a\|b`**     | _Alternation (OR)_    | Memilih salah satu: cocok dengan pola `'a'` **atau** pola `'b'`.                       |
-
-#### E. Escape Characters (Karakter Khusus)
-
-Jika Anda ingin mencari karakter simbol regex secara harfiah, beri tanda garis miring terbalik (`\`) di depannya:
-
-```text
-Karakter khusus:  .  *  +  ?  ^  $  {  }  (  )  [  ]  |  \  /
-Contoh escape  :  \. (mencari titik), \$ (mencari dollar), \/ (mencari garis miring)
-```
+- **Character Classes**: `\d` (digit angka), `\w` (huruf/angka/garis bawah), `\s` (spasi/tab/newline), `.` (sembarang karakter).
+- **Assertions**: `^` (awal string), `$` (akhir string), `\b` (batas kata / word boundary).
+- **Quantifiers**: `+` ($\ge 1$), `*` ($\ge 0$), `?` (0 atau 1), `{n,m}` (rentang frekuensi). Sifat default _Greedy_ dapat diubah menjadi _Lazy_ dengan menambahkan tanda `?` (contoh: `+?`).
+- **Groups**: `[abc]` (himpunan karakter), `[^abc]` (negasi), `(abc)` (capturing group), `(?<nama>abc)` (named capturing group).
 
 ---
 
-### 4. Method RegExp & Method String Terkait
+### 4. Tabel Ringkasan Method RegExp & String (Cheat-Sheet)
 
-| Method                            | Pemilik  |   Tipe Return    | Kegunaan Utama                                                           |
-| :-------------------------------- | :------: | :--------------: | :----------------------------------------------------------------------- |
-| **`regex.test(str)`**             | `RegExp` |    `boolean`     | **Validasi Form**: Menguji apakah string memenuhi pola (`true`/`false`). |
-| **`regex.exec(str)`**             | `RegExp` | `Array` / `null` | Mengambil detail pencocokan pertama beserta capturing groups & indeks.   |
-| **`str.match(regex)`**            | `String` | `Array` / `null` | **Ekstraksi Data**: Mengambil array hasil kecocokan teks.                |
-| **`str.matchAll(regex)`**         | `String` |    `Iterator`    | Mengambil seluruh temuan beserta grup ekstraksi (wajib flag `/g`).       |
-| **`str.search(regex)`**           | `String` |     `number`     | Mencari posisi indeks pertama kecocokan (`-1` jika tidak ditemukan).     |
-| **`str.replace(regex, baru)`**    | `String` |     `string`     | **Sensor / Sanitasi**: Mengganti substring yang cocok dengan teks baru.  |
-| **`str.replaceAll(regex, baru)`** | `String` |     `string`     | Mengganti seluruh kecocokan (regex wajib menggunakan flag `/g`).         |
-| **`str.split(regex)`**            | `String` |     `Array`      | Memecah string menjadi array berdasarkan pemisah pola regex.             |
+| Method                         | Pemilik  | Nilai Kembalian   | Deskripsi Singkat                                                          |
+| :----------------------------- | :------: | :---------------- | :------------------------------------------------------------------------- |
+| **`regex.test(str)`**          | `RegExp` | `boolean`         | Menguji apakah pola cocok (ideal untuk validasi form).                     |
+| **`regex.exec(str)`**          | `RegExp` | `Array` \| `null` | Eksekusi pencarian dengan detail indeks & grup.                            |
+| **`str.match(regex)`**         | `String` | `Array` \| `null` | Mengambil array hasil kecocokan teks.                                      |
+| **`str.matchAll(regex)`**      | `String` | `Iterator`        | Mengambil seluruh kecocokan lengkap dengan named groups (wajib flag `/g`). |
+| **`str.replace(regex, baru)`** | `String` | `string`          | Mengganti bagian teks yang cocok (bisa menggunakan replacer callback).     |
+| **`str.split(regex)`**         | `String` | `Array`           | Memecah teks menjadi array berdasarkan delimiter regex.                    |
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 5. Eksplorasi Mendalam Setiap Method RegExp & Integrasi String
+
+Berikut adalah rincian lengkap setiap method pencocokan pola teks beserta skenario kasusnya masing-masing:
+
+---
+
+#### 1. Pengujian Pola Boolean: `regex.test(str)`
+
+Mengembalikan `true` jika string memuat pola yang dicari. Sangat ideal untuk validasi formulir:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const regexHp = /^08\d{9,11}$/;
+console.log(regexHp.test("081234567890")); // true
+console.log(regexHp.test("08123abc")); // false
+```
 
-console.log('--- 1. Validasi Pola dengan regex.test() ---');
-// Pola: Diawali '08', diikuti 9 sampai 11 digit angka
-const regexNoHp = /^08\d{9,11}$/;
-const noHpBenar = '081234567890';
-const noHpSalah = '08123abc45';
+- **Jebakan Fatal State `lastIndex` pada Flag `/g`**:
+  Jika regex memiliki flag global `/g`, method `.test()` akan mencatat posisi akhir pencarian pada `regex.lastIndex`, menyebabkan hasil validasi berganti-ganti:
 
-console.log(`Apakah '${noHpBenar}' valid? :`, regexNoHp.test(noHpBenar)); // true
-console.log(`Apakah '${noHpSalah}' valid? :`, regexNoHp.test(noHpSalah)); // false
+  ```javascript
+  const regG = /abc/g;
+  console.log(regG.test("abc")); // true  (lastIndex = 3)
+  console.log(regG.test("abc")); // false ❌ (karena mencari dari indeks 3!)
+  console.log(regG.test("abc")); // true  (reset ke 0)
 
-console.log('\n--- 2. Ekstraksi Data dengan str.match() ---');
-const regexInvoice = /INV-\d{4}-\d+/g;
-const pesan =
-  'Pesanan nomor INV-2026-001 dan INV-2026-002 telah berhasil dibayar.';
+  // Aturan Emas: JANGAN gunakan flag /g jika hanya ingin validasi regex.test()!
+  ```
 
-const daftarInvoice = pesan.match(regexInvoice);
-console.log('Nomor Invoice Ditemukan   :', daftarInvoice);
+---
 
-console.log('\n--- 3. Penyensoran Teks dengan str.replace() ---');
-const komentar = 'Website ini lambat dan jelek sekali, desainnya jelek.';
+#### 2. Eksekusi Pencarian Mendalam: `regex.exec(str)`
 
-// Flag /gi: g (global/semua kecocokan) dan i (ignore case)
-const komentarBersih = komentar.replace(/jelek/gi, '***');
-console.log('Komentar Asli             :', komentar);
-console.log('Komentar Disensor         :', komentarBersih);
+Mengeksekusi pencarian dan mengembalikan array informasi mendalam (teks cocok, capturing groups, index posisi, input asal) atau `null` jika tidak ditemukan:
+
+```javascript
+const regexToken = /ID-(?<kode>\d+)/;
+const hasilExec = regexToken.exec("Member: ID-4592 Aktif");
+
+console.log(hasilExec[0]); // "ID-4592" (teks penuh cocok)
+console.log(hasilExec[1]); // "4592"    (capturing group 1)
+console.log(hasilExec.groups.kode); // "4592"    (named group)
+console.log(hasilExec.index); // 8         (posisi karakter awal)
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+#### 3. Pencocokan Teks: `str.match(regex)`
 
-```text
---- 1. Validasi Pola dengan regex.test() ---
-Apakah '081234567890' valid? : true
-Apakah '08123abc45' valid? : false
+Mengekstrak kecocokan dari string. Jika regex tidak memiliki flag `/g`, hasilnya mirip `regex.exec()`. Jika memiliki flag `/g`, mengembalikan seluruh teks yang cocok dalam array sederhana:
 
---- 2. Ekstraksi Data dengan str.match() ---
-Nomor Invoice Ditemukan   : [ 'INV-2026-001', 'INV-2026-002' ]
+```javascript
+const teks = "Kucing 1, Kucing 2, Kucing 3";
 
---- 3. Penyensoran Teks dengan str.replace() ---
-Komentar Asli             : Website ini lambat dan jelek sekali, desainnya jelek.
-Komentar Disensor         : Website ini lambat dan *** sekali, desainnya ***.
+// Tanpa /g: mengambil detail temuan pertama
+console.log(teks.match(/Kucing \d/)); // ['Kucing 1', index: 0, ...]
+
+// Dengan /g: mengambil SEMUA temuan
+console.log(teks.match(/Kucing \d/g)); // ['Kucing 1', 'Kucing 2', 'Kucing 3']
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+#### 4. Ekstraksi Lengkap Iterable: `str.matchAll(regex)`
+
+Mengembalikan objek iterator yang memuat seluruh kecocokan lengkap dengan capture groups dan named groups. **Wajib menyertakan flag global `/g`**:
+
+```javascript
+const log = "User: Joko (25 thn), User: Siti (30 thn)";
+const pattern = /User:\s*(?<nama>\w+)\s*\((?<umur>\d+)\s*thn\)/g;
+
+for (const match of log.matchAll(pattern)) {
+  console.log(`${match.groups.nama} berusia ${match.groups.umur} tahun`);
+}
+// Joko berusia 25 tahun
+// Siti berusia 30 tahun
+```
+
+---
+
+#### 5. Penggantian Teks Dinamis: `str.replace(regex, replacement)`
+
+Mengganti teks yang cocok. Parameter kedua bisa berupa string baru atau callback function untuk transformasi nilai dinamis:
+
+```javascript
+const hargaUSD = "Apel $5, Jeruk $3, Mangga $10";
+
+// Konversi harga Dollar ke Rupiah menggunakan callback replacer:
+const hargaIDR = hargaUSD.replace(/\$(\d+)/g, (_, nominal) => {
+  const rupiah = Number(nominal) * 15000;
+  return `Rp ${rupiah.toLocaleString("id-ID")}`;
+});
+
+console.log(hargaIDR); // "Apel Rp 75.000, Jeruk Rp 45.000, Mangga Rp 150.000"
+```
+
+---
+
+#### 6. Pemecahan Delimiter Kompleks: `str.split(regex)`
+
+Memecah string menjadi array menggunakan ekspresi reguler sebagai pemisah (_separator_):
+
+```javascript
+// Memecah teks dengan koma, titik koma, dan spasi yang tidak teratur:
+const dataAcak = "apel, jeruk ; mangga ,pisang;anggur";
+const listBuah = dataAcak.split(/\s*[,;]\s*/);
+
+console.log(listBuah); // ['apel', 'jeruk', 'mangga', 'pisang', 'anggur']
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep validasi pola, jebakan `lastIndex`, literal vs dynamic regex, named capturing groups, greedy vs lazy, manipulasi teks callback, dan pemecahan string multi-delimiter di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan langsung di terminal.
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 03-standard-library/13-regexp/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Validasi Input Pengguna**: Memeriksa format alamat email, kekuatan sandi password, nomor KTP, atau nomor HP di form registrasi.
-2. **Pembersihan Data (Sanitasi String)**: Membuang tag HTML berbahaya dari input komentar user (`teks.replace(/<[^>]*>/g, '')`).
-3. **Web Scraping & Log Parsing**: Mengekstrak kode status HTTP (200, 404, 500) dan alamat IP pengunjung dari file log server raksasa.
+1. **Validasi Formulir Registrasi**: Memeriksa kekuatan password (minimal 8 karakter, kombinasi huruf besar, kecil, angka, dan simbol) serta nomor HP Indonesia.
+2. **Sanitasi Tag HTML (XSS Prevention)**: Menghapus tag-tag HTML liar dari input teks pengguna menggunakan `teks.replace(/<[^>]*>/g, '')`.
+3. **Penyensoran Kata Sensitif Berbasis Kamus**: Mengganti kata-kata kasar dengan tanda bintang menggunakan callback dinamis `str.replace(regexKasar, '***')`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **State `lastIndex` pada regex dengan flag `/g`**: Jika Anda menggunakan `regex.test()` dengan flag `/g`, regex akan mengingat posisi karakter terakhir. Panggilan kedua berturut-turut pada string yang sama bisa menghasilkan `false` secara mengejutkan! Hindari flag `/g` untuk validasi `test()`.
-- **Lupa double-backslash pada konstruktor string**: Saat menulis `new RegExp('\\d+')`, Anda harus menulis dua garis miring terbalik `\\d` karena string JavaScript mengonsumsi garis miring pertama sebagai escape sequence.
-- **Bencana ReDoS (Regular Expression Denial of Service)**: Pola regex bersarang yang buruk (seperti `(a+)+$`) dapat menyebabkan prosesor CPU 100% _freeze_ saat mengevaluasi string panjang yang tidak cocok (_catastrophic backtracking_).
+- **Jebakan `lastIndex` pada Flag `/g`**: Validasi form menghasilkan lolos dan gagal bergantian jika variabel regex disimpan di luar fungsi (_shared instance_).
+- **Lupa Double-Backslash pada `new RegExp()`**: Menulis `new RegExp('\d+')` akan menghasilkan pola `/d+/` (mencocokkan huruf 'd') karena string escape sequence mengonsumsi backslash pertama. Selalu tulis `new RegExp('\\d+')`.
+- **Bencana ReDoS (Catastrophic Backtracking)**: Menulis pola bersarang kompleks seperti `(a+)+$` pada teks masukan yang panjang dan tidak cocok dapat membuat thread Node.js mengalami CPU lock 100%.
 
 ### 🌟 Best Practice
 
-- Gunakan literal `/pola/` jika pola bersifat statis agar browser mengompilasi regex di awal dengan performa maksimal.
-- Gunakan method `regex.test()` murni jika tujuan Anda hanya ingin memeriksa keabsahan boolean.
-- Gunakan _Named Capturing Groups_ ES2018 `(?<tahun>\d{4})` untuk ekstraksi data yang lebih mudah dibaca daripada nomor urut grup numerik.
+- Gunakan literal `/.../` untuk pola statis dan hanya gunakan `new RegExp()` jika pola dirakit dari variabel dinamis pada runtime.
+- Selalu batasi awal dan akhir pola dengan anchor `^` dan `$` saat melakukan validasi form agar seluruh teks terverifikasi tanpa kebocoran.
+- Gunakan _Named Capturing Groups_ `(?<nama>...)` untuk kemudahan refactoring kode ekstraksi teks.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat regex untuk memvalidasi format alamat email standar (harus memuat karakter alfanumerik, simbol `@`, domain, dan ekstensi minimal 2 huruf).
-2. Buat fungsi `ekstrakHashtag(postingan)` yang mengekstrak semua kata berawalan `#` dari teks postingan media sosial menggunakan `match(/#\w+/g)`.
+1. Buat regex untuk memvalidasi format email standar dengan anchor `^` dan `$`.
+2. Diberikan string postingan `"Belajar #javascript dan #nodejs di tahun 2026"`. Gunakan `str.match(/#\w+/g)` untuk mengekstrak seluruh tagar (_hashtags_).
+3. Buat fungsi `formatNomorRupiah(teksAngka)` yang menyisipkan tanda titik pemisah ribuan pada string angka menggunakan regex _positive lookahead_.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [12 - Symbol](../12-symbol/README.md)
 - ➡️ **Selanjutnya:** [14 - Proxy](../14-proxy/README.md)

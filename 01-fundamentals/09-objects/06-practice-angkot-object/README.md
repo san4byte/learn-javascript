@@ -1,135 +1,141 @@
 # 09.6 - Latihan Pengelolaan Angkot Berbasis Objek
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Mengintegrasikan Constructor Function, Method, Array, dan Pengkondisian.
-> * **Kapan Digunakan**: Merepresentasikan Angkot nyata menjadi Objek Utuh (Sopir, Trayek, Kas/Pendapatan, Penumpang).
-> * **Aturan Praktis**: Kelompokkan data dan method yang saling terkait ke dalam satu objek utuh (*High Cohesion*).
+>
+> - **Fungsi Utama**: Mengintegrasikan seluruh konsep Object (Constructor Function, prototype methods, `this`, array state, dan logika percabangan) ke dalam pemodelan sistem armada angkutan kota.
+> - **Kapan Digunakan**: Menggabungkan data status (_properties_) dan tindakan operasi (_methods_) yang saling terkait ke dalam satu kesatuan entitas objek utuh (_High Cohesion_).
+> - **Aturan Praktis**: Gunakan _Constructor Function_ dengan method yang disematkan pada `prototype` untuk memungkinkan instansiasi banyak armada secara efisien dan mandiri.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
-- Mengintegrasikan Constructor Function, Method, Array, dan Pengkondisian.
-- Merepresentasikan Angkot nyata menjadi Objek Utuh (Sopir, Trayek, Kas/Pendapatan, Penumpang).
-- Mampu menangani transaksi pembayaran saat penumpang turun.
+
+- Mengintegrasikan Constructor Function, kata kunci `this`, array, dan percabangan dalam studi kasus komprehensif.
+- Memodelkan karakteristik fisik dan finansial armada angkot (sopir, trayek rute, kursi penumpang, kas pendapatan, batas kapasitas).
+- Mengimplementasikan alur transaksi pembayaran tunai saat penumpang turun.
+- Menerapkan arsitektur _Prototype Method_ untuk efisiensi memori seluruh armada.
+- Menangani skenario kapasitas penuh dan daur ulang kursi kosong (_seat recycling_).
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
-> Objek Angkot seperti **sebuah mobil angkot fisik nyata lengkap dengan buku catatan kas sopirnya**: di dalamnya ada sopir di balik kemudi, daftar bangku penumpang di belakang, dan kotak kayu tempat menyimpan uang kembalian dan setoran.
 
-Latihan **Angkot Berbasis Objek** adalah puncak dari pemahaman objek dan logika dasar.
-
-Daripada menyimpan data sopir, penumpang, dan kas dalam variabel-variabel terpisah yang rawan berantakan, kita membungkus seluruh karakteristik angkot ke dalam satu **Constructor Function `Angkot`**:
-
-### Properti Objek Angkot:
-* `sopir`: Nama sopir angkot.
-* `trayek`: Rute perjalanan (contoh: `['Cicaheum', 'Cibiru']`).
-* `penumpang`: Array daftar kursi penumpang.
-* `kas`: Total uang pendapatan yang diperoleh dari ongkos penumpang.
-
-### Method Objek Angkot:
-* `penumpangNaik(namaPenumpang)`: Menambahkan nama penumpang ke kursi.
-* `penumpangTurun(namaPenumpang, bayar)`: Menghapus penumpang dari kursi dan menambahkan uang bayar ke dalam kas angkot.
+> Objek Angkot seperti **sebuah mobil minibus angkutan umum nyata lengkap dengan kotak kas sopirnya**:
+>
+> - Di kursi kemudi depan duduk sang sopir (**properti `sopir`**).
+> - Di kaca depan tertera stiker rute trayek (**properti `trayek`**).
+> - Di bangku belakang berderet kursi penumpang (**properti array `penumpang`**).
+> - Di dashboard terdapat kotak kayu tempat menyimpan uang setoran (**properti `kas`**).
+> - Dan setiap kali penumpang turun, sopir menerima uang ongkos yang langsung dimasukkan ke dalam kotak kas tersebut (**method `penumpangTurun()`**).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Spesifikasi Entitas Objek Angkot
+
+| Komponen                          | Tipe Data       | Peran / Deskripsi                      |
+| :-------------------------------- | :-------------- | :------------------------------------- |
+| **`sopir`**                       | String          | Nama pengemudi angkot                  |
+| **`trayek`**                      | Array of String | Rute asal dan tujuan perjalanan        |
+| **`penumpang`**                   | Array           | Daftar nama penumpang di kursi         |
+| **`kas`**                         | Number          | Saldo akumulasi uang pendapatan angkot |
+| **`kapasitas`**                   | Number          | Kuota kursi maksimum armada            |
+| **`penumpangNaik(nama)`**         | Method          | Menempatkan penumpang ke kursi kosong  |
+| **`penumpangTurun(nama, bayar)`** | Method          | Mengosongkan kursi dan menambah kas    |
+| **`infoArmada()`**                | Method          | Mengembalikan ringkasan status armada  |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Arsitektur Pemodelan Angkot Berbasis Objek
+
+Daripada mengelola variabel global yang tercerai-berai, seluruh state dienkapsulasi di dalam instans:
+
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
-
-console.log('--- Sistem Pengelolaan Angkot Berbasis Objek ---');
-
-function Angkot(sopir, trayek, penumpang, kas) {
+function Angkot(sopir, trayek, kasAwal = 0, kapasitas = 4) {
   this.sopir = sopir;
   this.trayek = trayek;
-  this.penumpang = penumpang;
-  this.kas = kas;
-
-  // Method Penumpang Naik
-  this.penumpangNaik = function (nama) {
-    this.penumpang.push(nama);
-    console.log(`[NAIK]: ${nama} naik ke angkot trayek ${this.trayek.join(' - ')}.`);
-    return this.penumpang;
-  };
-
-  // Method Penumpang Turun & Pembayaran
-  this.penumpangTurun = function (nama, ongkos) {
-    if (this.penumpang.length === 0) {
-      console.log('Angkot masih kosong!');
-      return false;
-    }
-
-    for (let i = 0; i < this.penumpang.length; i++) {
-      if (this.penumpang[i] === nama) {
-        this.penumpang[i] = undefined; // Kursi kosong kembali
-        this.kas += ongkos; // Kas bertambah
-        console.log(`[TURUN & BAYAR]: ${nama} turun dan membayar Rp ${ongkos.toLocaleString('id-ID')}.`);
-        console.log(`-> Kas Sopir ${this.sopir} saat ini: Rp ${this.kas.toLocaleString('id-ID')}`);
-        return this.penumpang;
-      }
-    }
-
-    console.log(`Penumpang '${nama}' tidak ada di angkot ini.`);
-    return this.penumpang;
-  };
+  this.penumpang = [];
+  this.kas = kasAwal;
+  this.kapasitas = kapasitas;
 }
+```
 
-// Inisialisasi Armada Angkot 1
-const angkot1 = new Angkot('Pak Joko', ['Cicaheum', 'Cibiru'], [], 0);
+#### 2. Deklarasi Constructor Function Angkot
 
-// Operasi Penumpang:
-angkot1.penumpangNaik('Budi');
-angkot1.penumpangNaik('Siti');
-console.log('Daftar Penumpang:', angkot1.penumpang);
+Kata kunci `this` mengikat setiap properti ke instans armada yang sedang dibuat melalui pemanggilan `new Angkot(...)`.
 
-// Penumpang turun dan membayar ongkos Rp 5.000
-angkot1.penumpangTurun('Budi', 5000);
-angkot1.penumpangTurun('Siti', 5000);
+#### 3. Optimasi Method Prototype `penumpangNaik`
 
-console.log('Total Kas Akhir:', angkot1.kas);
+Menyimpan method di `Angkot.prototype` agar 100 unit armada berbagi kode fungsi yang sama di memori. Method memeriksa:
+
+1. Validasi duplikasi nama.
+2. Penempatan di kursi kosong `undefined` jika ada.
+3. Batas kuota armada (`length >= kapasitas`).
+4. Penambahan di kursi paling belakang.
+
+#### 4. Method Prototype `penumpangTurun` & Transaksi Kas
+
+Ketika penumpang turun, kursi ditandai `undefined` (bukan dihapus dengan `splice` agar nomor kursi lain tidak bergeser), dan parameter `ongkos` ditambahkan ke `this.kas`:
+
+```javascript
+this.penumpang[i] = undefined;
+this.kas += ongkos;
+```
+
+#### 5. Method Ringkasan `infoArmada`
+
+Mengembalikan string ringkasan yang memfilter penumpang aktif (`filter(Boolean)`) untuk menampilkan rasio keterisian kursi secara presisi.
+
+#### 6. Manajemen Siklus Hidup Instans Armada
+
+Setiap armada bekerja secara independen: pemasukan kas Pak Joko tidak akan bercampur dengan kas Pak Herman.
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh implementasi demonstrasi arsitektur sistem armada Angkot berbasis Constructor Function & Prototype, validasi kursi penuh, transaksi pembayaran saat penumpang turun, daur ulang kursi kosong oleh penumpang baru, serta pelaporan ringkasan armada telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Jalankan demonstrasi secara langsung di terminal Anda:
+
+```bash
+node 01-fundamentals/09-objects/06-practice-angkot-object/example.js
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
-```text
---- Sistem Pengelolaan Angkot Berbasis Objek ---
-[NAIK]: Budi naik ke angkot trayek Cicaheum - Cibiru.
-[NAIK]: Siti naik ke angkot trayek Cicaheum - Cibiru.
-Daftar Penumpang: [ 'Budi', 'Siti' ]
-[TURUN & BAYAR]: Budi turun dan membayar Rp 5.000.
--> Kas Sopir Pak Joko saat ini: Rp 5.000
-[TURUN & BAYAR]: Siti turun dan membayar Rp 5.000.
--> Kas Sopir Pak Joko saat ini: Rp 10.000
-Total Kas Akhir: 10000
-```
-
----
-
-## 5. 💡 Panduan Praktis & Studi Kasus
-
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
-1. **Sistem Akuntansi Taksi Online (Grab/Gojek)**: Setiap trip perjalanan memiliki status driver, rute penjemputan-tujuan, dan wallet saldo yang bertambah setelah pembayaran transaksi selesai.
-2. **Game Toko / RPG Inventory**: Karakter hero memiliki nama, kantong tas (array inventory), dan saldo koin emas (kas).
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
-* **Lupa `this.kas += ongkos`**: Lupa menyertakan keyword `this.` saat memodifikasi properti kas akan membuat JavaScript mencari variabel lokal kas yang tidak ada, sehingga saldo tidak pernah bertambah.
+1. **Sistem Pemesanan Taksi Online (Ride-Hailing)**: Model kelas `Trip` yang menampung profil driver, titik jemput, penumpang, dan status pembayaran dompet digital.
+2. **Game RPG Hero & Inventory**: Karakter pahlawan dengan status HP, tas ransel (array), dan kantong koin emas yang bertambah saat menyelesaikan misi.
+
+### ⚠️ Common Pitfalls
+
+- **Lupa Kata Kunci `this.` Saat Menambah Kas**: Menulis `kas += ongkos` alih-alih `this.kas += ongkos` tidak akan mengubah properti kas objek, melainkan mencari variabel lokal `kas` yang berujung pada error.
+- **Menggunakan Arrow Function pada Method Prototype**: Menulis `Angkot.prototype.penumpangNaik = () => { ... }` akan merusak binding `this`, sehingga `this` menunjuk ke modul global alih-alih ke armada angkot.
 
 ### 🌟 Best Practice
-* Kelompokkan data dan method yang saling terkait ke dalam satu objek utuh (*High Cohesion*).
-* Kembalikan data mutasi di akhir method agar pemanggil dapat memeriksa status hasil operasi.
+
+- Gunakan _High Cohesion_: Satukan semua fungsi yang memanipulasi properti angkot ke dalam method prototipe objek tersebut.
+- Selalu kembalikan nilai boolean atau status array dari method agar pemanggil dapat memeriksa keberhasilan tindakan.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
-1. Buatlah armada kedua `angkot2 = new Angkot('Pak Herman', ['Kebon Kelapa', 'Ledeng'], [], 10000)`.
-2. Lakukan simulasi 2 orang naik dan 1 orang turun dengan ongkos Rp 7.000.
+## 5. ✍️ Latihan Mandiri
+
+1. Buatlah instans armada kedua: `angkot2 = new Angkot('Pak Herman', ['Kebon Kelapa', 'Ledeng'], 10000, 5)`. Lakukan simulasi 2 penumpang naik dan 1 penumpang turun dengan ongkos Rp 7.000.
+2. Tambahkan method `tarikKas(nominal)` pada `Angkot.prototype` yang memungkinkan sopir mengambil sebagian uang kas untuk membeli bensin, dengan syarat saldo kas mencukupi.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
+
 - ⬅️ **Sebelumnya:** [09.5 - Object Lanjutan](../05-advanced-objects/README.md)
-- ➡️ **Selanjutnya:** [10.1 - Game Suit Jawa](../../10-mini-games/01-suit-jawa/README.md)
+- ➡️ **Selanjutnya:** [11 - Tipe Data dan Operator](../../11-data-types-and-operators/README.md)
 - 🏠 **Daftar Isi Modul 01:** [README Modul 01](../../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../../README.md)

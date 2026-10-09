@@ -3,7 +3,7 @@
 if (typeof document === 'undefined') {
   console.log('--- 07. Latihan Manipulasi Warna Background ---');
   console.log(
-    "Buka file 'index.html' di browser Anda untuk mencoba tombol warna dan slider RGB secara visual!"
+    "Buka file 'index.html' di browser Anda untuk mencoba tombol warna dan slider RGB secara visual!",
   );
 } else {
   console.log('--- 07. Latihan Warna (Browser) ---');

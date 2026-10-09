@@ -2,246 +2,399 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami implementasi struktur data Queue (FIFO) dan Stack (LIFO) menggunakan method array native.
-> - **Kapan Digunakan**: Menguasai method pencarian predikat modern: `find()`, `findIndex()`, `includes()`, `indexOf()`, dan `lastIndexOf()`.
-> - **Aturan Praktis**: Gunakan `find()` jika Anda hanya membutuhkan 1 objek pertama, bukan `filter()[0]` yang membuang waktu menyaring seluruh array.
+> - **Fungsi Utama**: Struktur data list berurutan dinamis untuk menampung elemen apa pun, mendukung operasi Stack (LIFO), Queue (FIFO), pencarian predikat, dan pemrograman fungsional.
+> - **Kapan Digunakan**: Mengelola kumpulan data, memfilter data tabel, mengurutkan daftar, menghitung agregasi total/rata-rata, dan mengalirkan antrean pemrosesan tugas.
+> - **Aturan Praktis**: Gunakan `find()` alih-alih `filter()[0]` untuk mencari 1 item, selalu berikan `initialValue` pada `reduce()`, dan gunakan `toSorted()` / `toReversed()` (ES2023) untuk manipulasi tanpa mutasi data asli.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami implementasi struktur data Queue (FIFO) dan Stack (LIFO) menggunakan method array native.
-- Menguasai method pencarian predikat modern: `find()`, `findIndex()`, `includes()`, `indexOf()`, dan `lastIndexOf()`.
-- Menguasai transformasi data mendalam: `map()`, `reduce()`, dan `reduceRight()`.
-- Memahami perbedaan semantik komprehensif antara `forEach()` dan transformasi array.
+- Menguasai implementasi struktur data Queue (FIFO) dan Stack (LIFO) menggunakan method native array.
+- Mengetahui perbedaan method yang memutasi data asli (_mutating_) vs menghasilkan salinan baru (_non-mutating / immutable_).
+- Menguasai seluruh method pencarian, validasi, dan transformasi fungsional Array beserta skenario kasusnya masing-masing.
+- Menghindari jebakan leksikografis pada `sort()` dan bahaya `reduce()` tanpa nilai awal.
+- Menguasai utilitas statis: `Array.isArray()`, `Array.from()`, dan `Array.of()`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep & Referensi Method Lengkap
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Queue seperti **antrean loket bioskop** (siapa yang datang duluan membeli tiket dan masuk lebih dulu). Stack seperti **tumpukan piring kotor di tempat cuci** (piring yang ditaruh paling terakhir di atas tumpukan justru yang pertama kali diambil dan dicuci).
-
-Array di JavaScript bukan sekadar penampung data berurutan, melainkan fondasi bagi berbagai struktur data algoritma klasik dan pemrosesan fungsional. Berikut adalah referensi lengkap method bawaan yang wajib dikuasai:
-
-### 1. Struktur Data Antrean: Queue (FIFO - First In, First Out)
-
-Elemen yang masuk pertama kali akan dilayani dan dikeluarkan pertama kali (seperti antrean loket bank atau printer spooler).
-
-- **`push(...items)`**: Menambahkan satu atau lebih elemen baru ke bagian **paling belakang** antrean.
-- **`shift()`**: Mengambil sekaligus menghapus elemen di bagian **paling depan** antrean. Mengembalikan elemen yang dihapus, atau `undefined` jika array kosong.
-
-```javascript
-const antrean = [];
-antrean.push('Tiket A'); // masuk antrean belakang
-antrean.push('Tiket B');
-const dipanggil = antrean.shift(); // "Tiket A" keluar depan
-```
-
-### 2. Struktur Data Tumpukan: Stack (LIFO - Last In, First Out)
-
-Elemen yang ditaruh paling terakhir justru yang pertama kali diambil (seperti tumpukan piring atau riwayat aksi Undo/Redo).
-
-- **`push(...items)`**: Menaruh elemen baru di bagian **paling atas/belakang**.
-- **`pop()`**: Mengambil sekaligus menghapus elemen di bagian **paling atas/belakang**. Mengembalikan elemen yang dihapus, atau `undefined` jika array kosong.
-
-```javascript
-const riwayat = [];
-riwayat.push('Halaman 1'); // taruh di atas
-riwayat.push('Halaman 2');
-const tombolBack = riwayat.pop(); // "Halaman 2" diambil
-```
-
-### 3. Kumpulan Method Pencarian (Search Methods)
-
-| Method                                | Nilai Balik                      | Kegunaan & Contoh                                                                                                 |
-| :------------------------------------ | :------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
-| **`find(predicate)`**                 | Objek / Nilai (atau `undefined`) | Mengembalikan **elemen pertama** yang lolos kondisi fungsi callback predikat: `arr.find(item => item.id === 101)` |
-| **`findIndex(predicate)`**            | Angka Indeks (atau `-1`)         | Mengembalikan **nomor indeks pertama** elemen yang lolos kondisi: `arr.findIndex(item => item.id === 101)`        |
-| **`includes(value, [fromIndex])`**    | `true` / `false`                 | Memeriksa apakah nilai primitif ada di dalam array: `['A', 'B'].includes('A') // true`                            |
-| **`indexOf(value, [fromIndex])`**     | Angka Indeks (atau `-1`)         | Mencari indeks kemunculan **pertama** dari suatu nilai dari kiri: `['a', 'b', 'a'].indexOf('a') // 0`             |
-| **`lastIndexOf(value, [fromIndex])`** | Angka Indeks (atau `-1`)         | Mencari indeks kemunculan **terakhir** dari suatu nilai dari kanan: `['a', 'b', 'a'].lastIndexOf('a') // 2`       |
-
-### 4. Penyaringan Data: `filter(predicate)`
-
-- Mengembalikan **array baru** yang hanya memuat elemen-elemen di mana fungsi callback mengembalikan `true`.
-- Bersifat _immutable_ (tidak mengubah isi array aslinya).
-
-```javascript
-const angka = [10, 5, 20, 8];
-const diAtasSepuluh = angka.filter((n) => n >= 10); // [10, 20]
-```
-
-### 5. Transformasi Data: `map()`, `reduce()`, dan `reduceRight()`
-
-- **`map(callback)`**:
-  Mentransformasikan setiap elemen menjadi bentuk baru. Selalu menghasilkan array baru dengan panjang yang sama persis.
-
-  ```javascript
-  const nama = ['joko', 'budi'];
-  const kapital = nama.map((n) => n.toUpperCase()); // ["JOKO", "BUDI"]
-  ```
-
-- **`reduce(callback, [initialValue])`**:
-  Mengakumulasikan seluruh isi array dari urutan **kiri ke kanan** (indeks `0` ke `length-1`) menjadi satu nilai tunggal.
-
-  ```javascript
-  const angka = [1, 2, 3, 4];
-  const total = angka.reduce((acc, curr) => acc + curr, 0); // 10
-  ```
-
-- **`reduceRight(callback, [initialValue])`**:
-  Sama seperti `reduce()`, tetapi memproses urutan secara terbalik dari **kanan ke kiri** (indeks terakhir mundur ke indeks `0`). Sangat berguna untuk evaluasi ekspresi matematis terbalik atau perakitan hierarki pohon (_tree flattening_).
-  ```javascript
-  const kata = ['A', 'B', 'C'];
-  const balik = kata.reduceRight((acc, curr) => acc + curr, ''); // "CBA"
-  ```
-
-### 6. Perulangan Efek Samping: `forEach(callback)` vs `map()`
-
-- **`forEach()`**: Hanya digunakan untuk mengeksekusi aksi/efek samping (_side-effects_), seperti mencetak log atau memicu mutasi eksternal. **Tidak mengembalikan apa pun (`undefined`)**.
-- **`map()`**: Digunakan untuk membuat koleksi data baru tanpa efek samping (_pure transformation_). Jangan gunakan `map()` jika Anda tidak membutuhkan nilai array baliknya.
+> - **Queue (FIFO - First-In First-Out)** seperti **antrean loket tiket bioskop**: pengunjung yang datang paling awal akan dilayani dan keluar dari loket paling awal.
+> - **Stack (LIFO - Last-In First-Out)** seperti **tumpukan piring di meja prasmanan**: piring yang ditaruh paling terakhir di atas tumpukan justru yang pertama kali diambil oleh tamu.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 1. Tabel Ringkasan Method Array (Cheat-Sheet)
+
+| Kategori          | Method                 | Mutasi Asli? | Nilai Kembalian           | Deskripsi Singkat                                             |
+| :---------------- | :--------------------- | :----------: | :------------------------ | :------------------------------------------------------------ |
+| **Stack & Queue** | `push(...items)`       |      Ya      | `number` (panjang baru)   | Menambahkan elemen di bagian belakang (kanan).                |
+|                   | `pop()`                |      Ya      | Elemen \| `undefined`     | Menghapus dan mengambil elemen paling belakang.               |
+|                   | `unshift(...items)`    |      Ya      | `number` (panjang baru)   | Menambahkan elemen di bagian paling depan (kiri).             |
+|                   | `shift()`              |      Ya      | Elemen \| `undefined`     | Menghapus dan mengambil elemen paling depan.                  |
+| **Pencarian**     | `find(predicate)`      |    Tidak     | Elemen \| `undefined`     | Elemen pertama yang lolos kondisi predikat.                   |
+|                   | `findLast(predicate)`  |    Tidak     | Elemen \| `undefined`     | Elemen terakhir yang lolos kondisi predikat.                  |
+|                   | `findIndex(predicate)` |    Tidak     | `number` (indeks / `-1`)  | Indeks pertama elemen yang lolos kondisi.                     |
+|                   | `some(predicate)`      |    Tidak     | `boolean`                 | `true` jika minimal 1 elemen lolos kondisi.                   |
+|                   | `every(predicate)`     |    Tidak     | `boolean`                 | `true` jika **seluruh** elemen lolos kondisi.                 |
+|                   | `includes(value)`      |    Tidak     | `boolean`                 | Cek keberadaan nilai (mendukung deteksi `NaN`).               |
+|                   | `indexOf(value)`       |    Tidak     | `number`                  | Menemukan indeks kemunculan pertama.                          |
+|                   | `at(index)`            |    Tidak     | Elemen \| `undefined`     | Akses elemen (mendukung indeks negatif `-1`).                 |
+| **Transformasi**  | `map(callback)`        |    Tidak     | `Array` baru              | Memetakan setiap elemen ke bentuk baru.                       |
+|                   | `filter(predicate)`    |    Tidak     | `Array` baru              | Menyaring elemen yang mengembalikan `true`.                   |
+|                   | `reduce(cb, initial)`  |    Tidak     | Nilai akumulasi           | Mengakumulasi nilai array dari kiri ke kanan.                 |
+|                   | `flat(depth)`          |    Tidak     | `Array` baru              | Meratakan array bersarang (multidimensi).                     |
+|                   | `flatMap(callback)`    |    Tidak     | `Array` baru              | Pemetaan `map()` dilanjutkan `flat(1)`.                       |
+| **Manipulasi**    | `splice(start, count)` |      Ya      | `Array` (elemen terhapus) | Hapus/sisipkan elemen di tengah array.                        |
+|                   | `slice(start, end)`    |    Tidak     | `Array` baru              | Mengekstrak salinan potongan array.                           |
+|                   | `sort(compareFn)`      |      Ya      | `Array` (terurut)         | Mengurutkan elemen di tempat (_in-place_).                    |
+|                   | `toSorted(compareFn)`  |    Tidak     | `Array` baru              | Mengurutkan elemen tanpa memutasi array asli (ES2023).        |
+|                   | `toReversed()`         |    Tidak     | `Array` baru              | Membalik urutan elemen tanpa memutasi array asli (ES2023).    |
+|                   | `with(index, value)`   |    Tidak     | `Array` baru              | Mengganti nilai di indeks tertentu secara immutable (ES2023). |
+| **Utilitas**      | `Array.isArray(val)`   |      -       | `boolean`                 | Validasi ketat tipe array sejati.                             |
+|                   | `Array.from(src, map)` |      -       | `Array` baru              | Membuat array dari iterable / array-like.                     |
+|                   | `Array.of(...items)`   |      -       | `Array` baru              | Membuat array baru dari sekumpulan elemen.                    |
+|                   | `join(separator)`      |    Tidak     | `string`                  | Menggabungkan seluruh elemen menjadi satu string.             |
+
+---
+
+### 2. Eksplorasi Mendalam Setiap Method Array
+
+Berikut adalah rincian lengkap setiap method `Array` beserta skenario kasusnya masing-masing:
+
+---
+
+#### 1. Menambah di Belakang: `arr.push(...items)`
+
+Menambahkan satu atau lebih elemen ke akhir array dan mengembalikan panjang (_length_) array yang baru.
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
-
-console.log('--- 1. Struktur Data Stack (LIFO: Last-In First-Out) ---');
-const riwayatAksi = [];
-riwayatAksi.push("Ketik: 'Halo'");
-riwayatAksi.push("Ketik: 'Halo Dunia'");
-riwayatAksi.push('Format: Bold');
-console.log('Tumpukan aksi saat ini        :', riwayatAksi);
-
-// Tombol Undo (mengambil aksi terakhir yang ditaruh di atas)
-const aksiDibatalkan = riwayatAksi.pop();
-console.log('Aksi di-undo (pop)            :', aksiDibatalkan);
-console.log('Sisa tumpukan aksi            :', riwayatAksi);
-
-console.log(
-  '\n--- 2. Studi Kasus Nyata: Antrean Pesanan (Queue FIFO, Search, & Reduce) ---'
-);
-class AntreanPesanan {
-  // Enkapsulasi data antrean menggunakan Private Field (#)
-  #daftar = [];
-
-  tambahPesanan(data) {
-    this.#daftar.push(data);
-    console.log(`[+] Pesanan masuk antrean: ID ${data.id} (${data.nama})`);
-  }
-
-  prosesPesanan() {
-    if (this.#daftar.length === 0) {
-      return 'Antrean kosong';
-    }
-    const pesanan = this.#daftar.shift();
-    return `Pesanan ID ${pesanan.id} milik ${pesanan.nama} selesai diproses`;
-  }
-
-  cariPesananById(targetId) {
-    const pesanan = this.#daftar.find((item) => item.id === targetId);
-    if (!pesanan) {
-      return `Pesanan dengan ID ${targetId} tidak ditemukan`;
-    }
-    return `ID ${targetId} ditemukan: ${pesanan.nama} (Rp ${pesanan.total.toLocaleString('id-ID')})`;
-  }
-
-  hitungTotalPendapatan() {
-    const total = this.#daftar.reduce((acc, item) => acc + item.total, 0);
-    return `Total Nilai Antrean: ${total.toLocaleString('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      maximumFractionDigits: 0,
-    })}`;
-  }
-
-  get daftarAntrean() {
-    return [...this.#daftar]; // Kembalikan salinan array agar data asli aman
-  }
-}
-
-// Pengujian Kasus Uji:
-const antreanResto = new AntreanPesanan();
-
-antreanResto.tambahPesanan({ id: 1, nama: 'Budi', total: 150000 });
-antreanResto.tambahPesanan({ id: 2, nama: 'Andi', total: 10000 });
-antreanResto.tambahPesanan({ id: 3, nama: 'Siti', total: 25000 });
-
-console.log('\n--- Pemrosesan Antrean (Queue: First-In First-Out) ---');
-console.log(antreanResto.prosesPesanan()); // Budi diproses lebih dulu (FIFO)
-console.log(antreanResto.prosesPesanan()); // Andi diproses kedua
-
-console.log('\n--- Pencarian Data (Array.find) ---');
-console.log(antreanResto.cariPesananById(3)); // Siti ditemukan
-console.log(antreanResto.cariPesananById(99)); // ID tidak ada
-
-console.log('\n--- Akumulasi Data (Array.reduce) ---');
-console.log(antreanResto.hitungTotalPendapatan()); // Sisa pesanan Siti (Rp 25.000)
+const antrean = ['A', 'B'];
+const panjangBaru = antrean.push('C', 'D');
+console.log(panjangBaru); // 4
+console.log(antrean); // ['A', 'B', 'C', 'D']
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+#### 2. Mengambil dari Belakang: `arr.pop()`
 
-```text
---- 1. Struktur Data Stack (LIFO: Last-In First-Out) ---
-Tumpukan aksi saat ini        : [ "Ketik: 'Halo'", "Ketik: 'Halo Dunia'", 'Format: Bold' ]
-Aksi di-undo (pop)            : Format: Bold
-Sisa tumpukan aksi            : [ "Ketik: 'Halo'", "Ketik: 'Halo Dunia'" ]
+Menghapus dan mengembalikan elemen paling terakhir. Mengembalikan `undefined` jika array kosong.
 
---- 2. Studi Kasus Nyata: Antrean Pesanan (Queue FIFO, Search, & Reduce) ---
-[+] Pesanan masuk antrean: ID 1 (Budi)
-[+] Pesanan masuk antrean: ID 2 (Andi)
-[+] Pesanan masuk antrean: ID 3 (Siti)
-
---- Pemrosesan Antrean (Queue: First-In First-Out) ---
-Pesanan ID 1 milik Budi selesai diproses
-Pesanan ID 2 milik Andi selesai diproses
-
---- Pencarian Data (Array.find) ---
-ID 3 ditemukan: Siti (Rp 25.000)
-Pesanan dengan ID 99 tidak ditemukan
-
---- Akumulasi Data (Array.reduce) ---
-Total Nilai Antrean: Rp 25.000
+```javascript
+const tumpukan = [10, 20, 30];
+const item = tumpukan.pop();
+console.log(item); // 30
+console.log(tumpukan); // [10, 20]
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+#### 3. Menambah di Depan: `arr.unshift(...items)`
+
+Menambahkan satu atau lebih elemen ke awal array dan menggeser elemen lainnya ke kanan ($O(n)$).
+
+```javascript
+const deret = [2, 3];
+deret.unshift(0, 1);
+console.log(deret); // [0, 1, 2, 3]
+```
+
+---
+
+#### 4. Mengambil dari Depan: `arr.shift()`
+
+Menghapus dan mengembalikan elemen paling pertama dari array ($O(n)$).
+
+```javascript
+const loket = ['Pasien 1', 'Pasien 2'];
+const dipanggil = loket.shift();
+console.log(dipanggil); // "Pasien 1"
+console.log(loket); // ['Pasien 2']
+```
+
+---
+
+#### 5. Pencarian Elemen: `arr.find(predicate)` & `arr.findLast(predicate)`
+
+Mencari elemen yang pertama kali atau terakhir kali memenuhi fungsi kondisi. Berhenti seketika (_early exit_) begitu ditemukan.
+
+```javascript
+const produk = [
+  { id: 1, harga: 50000 },
+  { id: 2, harga: 120000 },
+  { id: 3, harga: 80000 },
+];
+
+console.log(produk.find((p) => p.harga > 70000)); // { id: 2, harga: 120000 } (pertama)
+console.log(produk.findLast((p) => p.harga > 70000)); // { id: 3, harga: 80000 }  (terakhir)
+```
+
+---
+
+#### 6. Pencarian Indeks: `arr.findIndex(predicate)`
+
+Mengembalikan nomor indeks pertama yang lolos kondisi predikat, atau `-1` jika tidak ada.
+
+```javascript
+const angka = [10, 25, 40, 15];
+console.log(angka.findIndex((n) => n > 30)); // 2
+console.log(angka.findIndex((n) => n > 50)); // -1
+```
+
+---
+
+#### 7. Validasi Parsial: `arr.some(predicate)`
+
+Mengembalikan `true` jika **minimal satu** elemen memenuhi kondisi predikat.
+
+```javascript
+const nilai = [40, 55, 80];
+console.log(nilai.some((n) => n >= 75)); // true (ada yang tuntas)
+```
+
+---
+
+#### 8. Validasi Total: `arr.every(predicate)`
+
+Mengembalikan `true` jika **seluruh** elemen tanpa kecuali memenuhi kondisi predikat.
+
+```javascript
+console.log(nilai.every((n) => n >= 50)); // false (karena 40 < 50)
+```
+
+---
+
+#### 9. Pengecekan Nilai: `arr.includes(value, [fromIndex])`
+
+Memeriksa keberadaan nilai. Menggunakan algoritma _SameValueZero_ sehingga mampu mendeteksi `NaN`:
+
+```javascript
+const list = [1, NaN, 3];
+console.log(list.includes(NaN)); // true ✅
+console.log(list.includes(2)); // false
+```
+
+---
+
+#### 10. Indeks Nilai: `arr.indexOf(value)` & `lastIndexOf(value)`
+
+Mencari posisi indeks nilai primitif menggunakan kesamaan ketat (`===`):
+
+```javascript
+const warna = ['merah', 'biru', 'merah'];
+console.log(warna.indexOf('merah')); // 0
+console.log(warna.lastIndexOf('merah')); // 2
+```
+
+---
+
+#### 11. Akses Elemen Modern: `arr.at(index)` (ES2022)
+
+Mendukung indeks negatif untuk membaca elemen dari posisi belakang:
+
+```javascript
+const huruf = ['A', 'B', 'C', 'D'];
+console.log(huruf.at(-1)); // "D" (terakhir)
+console.log(huruf.at(-2)); // "C"
+```
+
+---
+
+#### 12. Pemetaan: `arr.map(callback)`
+
+Mentransformasikan setiap elemen menjadi elemen baru di array baru:
+
+```javascript
+const angka = [1, 2, 3];
+const kuadrat = angka.map((n) => n * n);
+console.log(kuadrat); // [1, 4, 9]
+```
+
+---
+
+#### 13. Penyaringan: `arr.filter(predicate)`
+
+Menyaring dan mengembalikan array baru berisi seluruh elemen yang menghasilkan `true`:
+
+```javascript
+const umur = [12, 17, 22, 15, 30];
+const dewasa = umur.filter((u) => u >= 17);
+console.log(dewasa); // [17, 22, 30]
+```
+
+---
+
+#### 14. Akumulasi: `arr.reduce(callback[, initialValue])`
+
+Memadatkan array menjadi satu nilai akumulasi:
+
+```javascript
+const belanja = [25000, 15000, 10000];
+// Selalu berikan nilai awal (misal: 0):
+const total = belanja.reduce((acc, curr) => acc + curr, 0);
+console.log(total); // 50000
+```
+
+---
+
+#### 15. Meratakan Struktur: `arr.flat([depth])` & `flatMap(callback)`
+
+Meratakan kedalaman array bersarang:
+
+```javascript
+const nested = [1, [2, [3]]];
+console.log(nested.flat(1)); // [1, 2, [3]]
+console.log(nested.flat(Infinity)); // [1, 2, 3]
+
+// flatMap: map lalu flat level 1
+const kata = ['halo dunia', 'belajar js'];
+console.log(kata.flatMap((k) => k.split(' '))); // ['halo', 'dunia', 'belajar', 'js']
+```
+
+---
+
+#### 16. Mutasi di Tempat: `arr.splice(start, deleteCount, ...items)`
+
+Memotong dan/atau menyisipkan elemen di tengah array (memutasi array asli):
+
+```javascript
+const item = ['A', 'B', 'C', 'D'];
+const dihapus = item.splice(1, 2, 'X', 'Y');
+console.log(dihapus); // ['B', 'C']
+console.log(item); // ['A', 'X', 'Y', 'D']
+```
+
+---
+
+#### 17. Salinan Potongan: `arr.slice([start, [end]])`
+
+Mengekstrak sebagian array tanpa mengubah array aslinya:
+
+```javascript
+const buah = ['apel', 'jeruk', 'mangga', 'pisang'];
+console.log(buah.slice(1, 3)); // ['jeruk', 'mangga']
+console.log(buah); // ['apel', 'jeruk', 'mangga', 'pisang'] (utuh)
+```
+
+---
+
+#### 18. Pengurutan Mutasi: `arr.sort([compareFn])`
+
+Mengurutkan array di tempat. **Wajib memberikan compare function untuk angka**:
+
+```javascript
+const angkaAcak = [25, 100, 5];
+angkaAcak.sort((a, b) => a - b);
+console.log(angkaAcak); // [5, 25, 100] ✅
+```
+
+---
+
+#### 19. Operasi Tanpa Mutasi (ES2023): `toSorted()`, `toReversed()`, `with()`
+
+Menghasilkan array baru tanpa memutasi array asli:
+
+```javascript
+const asli = [3, 1, 2];
+console.log(asli.toSorted((a, b) => a - b)); // [1, 2, 3]
+console.log(asli.toReversed()); // [2, 1, 3]
+console.log(asli.with(0, 99)); // [99, 1, 2]
+console.log(asli); // [3, 1, 2] (tidak tersentuh!)
+```
+
+---
+
+#### 20. Validasi Tipe Array: `Array.isArray(val)`
+
+Pemeriksaan ketat apakah nilai merupakan instance array sejati:
+
+```javascript
+console.log(Array.isArray([])); // true
+console.log(Array.isArray({ length: 0 })); // false
+```
+
+---
+
+#### 21. Konversi Iterable: `Array.from(src[, mapFn])`
+
+Mengonversi objek array-like atau iterable (Set, Map, String) menjadi array:
+
+```javascript
+console.log(Array.from('ABC')); // ['A', 'B', 'C']
+console.log(Array.from([1, 2, 3], (x) => x * 2)); // [2, 4, 6]
+```
+
+---
+
+#### 22. Inisialisasi Elemen: `Array.of(...items)`
+
+Membuat array dengan elemen-elemen yang diberikan (mengatasi keanehan `new Array(3)`):
+
+```javascript
+console.log(Array.of(3)); // [3]
+```
+
+---
+
+#### 23. Penggabungan String: `arr.join([separator])`
+
+Menggabungkan seluruh elemen array menjadi satu string dengan pemisah tertentu:
+
+```javascript
+const tag = ['javascript', 'frontend', 'web'];
+console.log(tag.join(' / ')); // "javascript / frontend / web"
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep Stack/Queue, mutasi vs immutability (ES2023), pencarian predikat, dan transformasi fungsional di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan langsung di terminal.
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 03-standard-library/03-array/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Sistem Undo/Redo**: Fitur Undo di text editor menyimpan state riwayat aksi ke dalam struktur data Stack (`pop()` saat tombol Undo ditekan).
-2. **Background Job Runner**: Antrean download file atau pemrosesan email yang dieksekusi berurutan menggunakan pola Queue (`push` dan `shift`).
-3. **Pencarian ID Produk di E-Commerce**: Mencari item keranjang tertentu dengan cepat menggunakan `cart.find(item => item.id === targetId)`.
+1. **Sistem Antrean Pemrosesan Tugas (Job Queue)**: Menggunakan pola Queue (`push` dan `shift`) untuk mengeksekusi antrean pengiriman email secara berurutan.
+2. **Fitur Riwayat Aksi (Undo/Redo Stack)**: Menyimpan snapshot state dokumen ke dalam struktur Stack (`push` saat ada aksi baru, `pop` saat tombol Undo ditekan).
+3. **Agregasi Data Keranjang Belanja**: Menghitung subtotal belanjaan dan diskon dari kumpulan item menggunakan `reduce()`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Performa `shift()` dan `unshift()`**: Operasi di awal array membutuhkan penggeseran indeks seluruh elemen ($O(n)$). Untuk antrean raksasa (puluhan ribu elemen), pertimbangkan struktur Linked List.
-
-* **Lupa `initialValue` pada `reduce`**: Jika initial value tidak diberikan pada array kosong, JavaScript akan melempar fatal error `TypeError: Reduce of empty array with no initial value`.
-* **Menghapus elemen di tengah perulangan `forEach`**: Melakukan mutasi ukuran array saat sedang di-loop akan menyebabkan elemen terlewatkan secara tidak terduga.
+- **Mengurutkan angka dengan `sort()` polos**: `[10, 5, 20].sort()` menghasilkan `[10, 20, 5]` karena diurutkan sebagai string. Selalu sertakan `(a, b) => a - b`.
+- **Lupa `initialValue` pada `reduce()`**: Menyebabkan fatal runtime error jika array kosong.
+- **Memutasi array yang dibagikan (_shared state_)**: Menggunakan `sort()` atau `reverse()` langsung pada parameter fungsi dapat merusak data di bagian aplikasi lain. Gunakan `toSorted()` atau buat salinan terlebih dahulu `[...arr].sort()`.
 
 ### 🌟 Best Practice
 
-- Gunakan `find()` jika Anda hanya membutuhkan 1 objek pertama, bukan `filter()[0]` yang membuang waktu menyaring seluruh array.
-
-* Selalu cantumkan nilai awal (_initial value_) saat memanggil `reduce()` atau `reduceRight()` demi keamanan kode.
-* Pilih `push` + `pop` (Stack) untuk operasi berkecepatan tinggi ($O(1)$).
-
----
-
-## 6. ✍️ Latihan Mandiri
-
-1. Buat class sederhana `AntreanKlinik` dengan method `masuk(namaPasien)` dan `panggil()` yang bekerja dengan prinsip FIFO Queue.
-2. Diberikan array objek transaksi `[{ id: 1, tipe: 'debit', nominal: 50000 }, { id: 2, tipe: 'kredit', nominal: 20000 }]`. Hitung saldo akhir dengan `reduce()` di mana debit menambah saldo dan kredit mengurangi saldo.
+- Gunakan `find()` jika hanya butuh 1 elemen pertama, jangan gunakan `filter()[0]`.
+- Manfaatkan method immutable ES2023 (`toSorted()`, `toReversed()`, `with()`) untuk mencegah efek samping mutasi state pada aplikasi modern (React/Vue/Node.js).
+- Gunakan `Array.isArray()` untuk memvalidasi parameter bertipe array.
 
 ---
 
-## 7. 🧭 Navigasi
+## 5. ✍️ Latihan Mandiri
+
+1. Buat class `RiwayatBrowser` yang memiliki method `kunjungi(url)`, `kembali()`, dan properti getter `halamanSaatIni` menggunakan struktur data Stack.
+2. Diberikan array transaksi `[{ kategori: 'makanan', nominal: 25000 }, { kategori: 'transport', nominal: 15000 }, { kategori: 'makanan', nominal: 50000 }]`. Gunakan `reduce()` untuk menghasilkan objek rekap total per kategori: `{ makanan: 75000, transport: 15000 }`.
+3. Buat fungsi `hapusDuplikat(arr)` yang mengembalikan array baru berisi elemen unik tanpa mengubah array asli.
+
+---
+
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [02 - String](../02-string/README.md)
 - ➡️ **Selanjutnya:** [04 - Object](../04-object/README.md)

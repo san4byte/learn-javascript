@@ -2,222 +2,199 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami kekurangan fatal dari memantau posisi scroll menggunakan `window.addEventListener('scroll')`.
-> - **Kapan Digunakan**: Memahami konsep kerja `IntersectionObserver` dan terminologi `threshold` serta `rootMargin`.
-> - **Aturan Praktis**: Selalu berikan placeholder gambar dengan ukuran aspect ratio yang tepat (misal dengan CSS `aspect-ratio: 16/9`) agar layout halaman tidak melompat (_Cumulative Layout Shift / CLS_).
+> - **Fungsi Utama**: Memantau visibilitas elemen HTML terhadap area pandang layar (_viewport_) secara asinkron tanpa membebani thread rendering browser.
+> - **Kapan Digunakan**: _Lazy loading_ gambar dan video, _infinite scroll pagination_, animasi saat elemen di-scroll ke layar (_scroll animations_), serta pelacakan tayangan iklan (_ad impression tracking_).
+> - **Aturan Praktis**: Segera panggil `observer.unobserve(entry.target)` setelah gambar berhasil di-_lazy load_ agar memori dibebaskan. Selalu tentukan ukuran rasio kontainer (CSS `aspect-ratio`) untuk mencegah pergeseran tata letak yang merusak skor SEO (_Cumulative Layout Shift / CLS_).
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami kekurangan fatal dari memantau posisi scroll menggunakan `window.addEventListener('scroll')`.
-- Memahami konsep kerja `IntersectionObserver` dan terminologi `threshold` serta `rootMargin`.
-- Mampu membuat fitur Lazy Loading gambar untuk mempercepat loading halaman web.
-- Mampu mengimplementasikan Infinite Scroll modern berbasis Sentinel Element.
+- Memahami bahaya _Layout Thrashing / Reflow_ akibat penggunaan `getBoundingClientRect()` di dalam event scroll biasa.
+- Menguasai cara kerja antarmuka standar W3C **`IntersectionObserver`**.
+- Memahami 3 opsi konfigurasi utama: `root`, `rootMargin`, dan `threshold`.
+- Mampu membedah properti objek `IntersectionObserverEntry` (`isIntersecting`, `intersectionRatio`, `target`).
+- Mengimplementasikan fitur _Image Lazy Loading_ modern menggunakan atribut `data-src`.
+- Mengimplementasikan fitur _Infinite Scroll Pagination_ berbasis elemen penanda (_Sentinel Element_).
+- Mengetahui cara melepas pemantauan dengan `unobserve()` dan `disconnect()`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Memantau posisi scroll dengan event listener biasa seperti seorang **satpam yang setiap detik bolak-balik menengok ke gerbang** untuk mengecek apakah ada tamu datang (sangat melelahkan dan boros tenaga). Sedangkan **IntersectionObserver** seperti **sensor inframerah laser di gerbang**: satpam bisa tidur tenang di pos, alarm baru berbunyi secara otomatis ketika tamu melangkah melewati batas gerbang.
-
-Secara historis, untuk mengetahui apakah sebuah elemen (seperti gambar produk atau tombol 'Load More') sudah terlihat di layar pengguna, developer menggunakan:
-
-```javascript
-window.addEventListener('scroll', () => {
-  const rect = element.getBoundingClientRect();
-  if (rect.top < window.innerHeight) {
-    /* elemen terlihat */
-  }
-});
-```
-
-Metode jadul ini **sangat buruk untuk performa** karena memanggil `getBoundingClientRect()` di dalam event scroll memaksa browser melakukan _synchronous layout calculation_ (_Layout Thrashing / Reflow_), yang menyebabkan konsumsi CPU melonjak dan scrolling terasa patah-patah.
-
-### Solusi Modern: `IntersectionObserver` API
-
-`IntersectionObserver` memungkinkan kode JavaScript mendaftarkan fungsi callback yang dieksekusi secara asinkron oleh browser **hanya ketika** elemen target masuk atau keluar dari area pandang layar (_viewport_).
-
-### Konsep Kunci:
-
-1. **Target**: Elemen DOM yang ingin kita pantau.
-2. **Root**: Area batas pemantauan (default-nya adalah viewport browser / layar perangkat).
-3. **Threshold**: Angka antara 0 sampai 1.0 yang menunjukkan berapa persen bagian target yang harus terlihat sebelum callback dipanggil:
-   - `threshold: 0` -> Callback dipanggil seketika saat ujung elemen 1 pixel mulai menyentuh layar.
-   - `threshold: 0.5` -> Callback dipanggil saat 50% bagian elemen sudah terlihat.
-   - `threshold: 1.0` -> Callback dipanggil hanya saat 100% seluruh tubuh elemen tampak di layar.
-4. **Root Margin**: Jarak margin luar untuk memicu observer lebih awal (misal: `rootMargin: '200px'` akan mendownload gambar 200 pixel sebelum user benar-benar mencapai posisi gambar tersebut).
+> - **Event Scroll Jadul + `getBoundingClientRect()`** seperti **seorang satpam yang setiap detik berlari bolak-balik memeriksa pintu gerbang** untuk melihat apakah ada mobil tamu yang datang. Satpam kelelahan dan kehabisan napas (CPU 100% dan layar patah-patah).
+> - **`IntersectionObserver`** seperti **sensor inframerah laser otomatis di pintu gerbang**: Satpam bisa duduk tenang di pos jaga sambil minum kopi. Sensor laser baru membunyikan sinyal ke pos jaga HANYA KETIKA ban mobil tamu melintasi garis batas gerbang (`isIntersecting: true`).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Ringkasan Properti & Method Intersection Observer
+
+| Komponen / Properti       | Tipe Data | Deskripsi Singkat                                               |
+| :------------------------ | :-------- | :-------------------------------------------------------------- |
+| `observer.observe(el)`    | Method    | Memulai pemantauan visibilitas pada elemen target.              |
+| `observer.unobserve(el)`  | Method    | Menghentikan pemantauan pada satu elemen target spesifik.       |
+| `observer.disconnect()`   | Method    | Menghentikan seluruh pemantauan pada semua elemen sekaligus.    |
+| `entry.isIntersecting`    | `boolean` | `true` jika elemen target sedang bersinggungan dengan viewport. |
+| `entry.intersectionRatio` | `number`  | Persentase keterlihatan elemen di layar ($0.0$ sampai $1.0$).   |
+| `entry.target`            | `Element` | Simpul elemen DOM yang sedang diamati.                          |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Masalah Kinerja `getBoundingClientRect()` pada Event Scroll
+
+Memanggil `getBoundingClientRect()` di dalam event scroll memaksa browser melakukan kalkulasi tata letak sinkron (_Layout Thrashing_), yang memicu lonjakan CPU dan menurunkan frame rate layar dari 60 FPS ke bawah 20 FPS.
+
+#### 2. Konstruktor `new IntersectionObserver(callback, options)`
+
+Menerima callback fungsi yang akan dipanggil browser setiap kali ambang batas keterlihatan terpenuhi.
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
-
-console.log('--- 1. Konsep Dasar Konstruktor IntersectionObserver ---');
-
-// Mock sederhana jika dijalankan di Node.js (di browser IntersectionObserver adalah API bawaan)
-const ObserverClass =
-  typeof IntersectionObserver !== 'undefined'
-    ? IntersectionObserver
-    : class {
-        constructor(callback, options) {
-          this.callback = callback;
-          this.options = options;
-        }
-        observe(target) {
-          console.log(
-            `[Observer] Mulai memantau elemen: <${target.tagName || 'elemen'}>`
-          );
-          // Simulasi asinkron bahwa elemen masuk ke viewport layar
-          setTimeout(() => {
-            this.callback(
-              [{ target, isIntersecting: true, intersectionRatio: 0.75 }],
-              this
-            );
-          }, 100);
-        }
-        unobserve(target) {
-          console.log(
-            `[Observer] Berhenti memantau elemen: <${target.tagName || 'elemen'}> (hemat memori)`
-          );
-        }
-        disconnect() {
-          console.log(`[Observer] Mematikan seluruh pemantauan`);
-        }
-      };
-
-// Pengaturan observer
-const observerOptions = {
-  root: null, // Menggunakan viewport browser sebagai acuan
-  rootMargin: '100px', // Trigger 100px sebelum elemen benar-benar masuk layar
-  threshold: 0.25, // Trigger saat minimal 25% bagian elemen terlihat
-};
-
-// Callback yang akan dipanggil browser secara asinkron
-function onIntersectCallback(entries, observer) {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
-      console.log(
-        `Elemen terlihat di layar! Rasio visibilitas: ${entry.intersectionRatio}`
-      );
-      observer.unobserve(entry.target);
-    }
-  });
-}
-
-// Inisialisasi observer
-const myObserver = new ObserverClass(onIntersectCallback, observerOptions);
-myObserver.observe({ tagName: 'SECTION', id: 'banner-promosi' });
-
-console.log('\n--- 2. Pola Real-World: Lazy Loading Gambar Produk ---');
-/*
-Struktur HTML Gambar di E-Commerce:
-<img class="lazy-image" data-src="https://cdn.toko.com/produk-hd.jpg" src="placeholder-blur.jpg" alt="Laptop">
-*/
-
-function setupLazyImages() {
-  const imageObserver = new ObserverClass((entries, observer) => {
+const observer = new IntersectionObserver(
+  (entries, obs) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        const img = entry.target;
-        console.log(
-          `[LAZY LOAD] Mendownload gambar HD untuk: ${img.alt || 'Produk'}`
-        );
-        // img.src = img.dataset.src;
-        // img.classList.remove('lazy-image');
-        observer.unobserve(img); // Jangan dipantau lagi setelah gambar di-load
+        console.log("Elemen tampak di layar:", entry.target);
       }
     });
-  });
-
-  // Contoh simulasi elemen target
-  const dummyElement = { tagName: 'IMG', alt: 'Laptop Gaming ASUS ROG' };
-  imageObserver.observe(dummyElement);
-}
-
-setupLazyImages();
-
-console.log('\n--- 3. Pola Real-World: Infinite Scroll Sentinel ---');
-/*
-Daripada menghitung posisi scroll, taruh sebuah elemen kecil kosong di bawah daftar:
-<div id="scroll-sentinel"></div>
-*/
-function setupInfiniteScroll(fetchNextPageCallback) {
-  const infiniteObserver = new ObserverClass((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        console.log(
-          '[INFINITE SCROLL] Pengguna mencapai batas bawah halaman -> Memuat batch data baru...'
-        );
-        fetchNextPageCallback?.();
-      }
-    });
-  });
-
-  const sentinel = { tagName: 'DIV', id: 'scroll-sentinel' };
-  infiniteObserver.observe(sentinel);
-}
-
-setupInfiniteScroll(() =>
-  console.log('--> Fetch API halaman berikutnya sukses')
+  },
+  { threshold: 0.5 },
 );
 ```
 
----
+#### 3. Parameter Konfigurasi: `root`, `rootMargin`, dan `threshold`
 
-## 4. 🖥️ Output yang Diharapkan
+- **`root`**: Elemen leluhur pembatas (berikan `null` untuk menggunakan viewport browser).
+- **`rootMargin`**: Jarak margin pemicu sebelum elemen menyentuh layar (misal: `'200px'` untuk mulai mengunduh gambar 200px sebelum user tiba).
+- **`threshold`**: Nilai $0.0$ (1 pixel pertama terlihat) hingga $1.0$ (seluruh tubuh elemen tampak di layar).
 
-```text
---- 1. Konsep Dasar Konstruktor IntersectionObserver ---
-[Observer] Mulai memantau elemen: <SECTION>
+```javascript
+const options = {
+  root: null,
+  rootMargin: "150px 0px", // Pre-fetch sebelum terlihat
+  threshold: 0.1, // 10% terlihat
+};
+```
 
---- 2. Pola Real-World: Lazy Loading Gambar Produk ---
-[Observer] Mulai memantau elemen: <IMG>
+#### 4. Membedah Objek `IntersectionObserverEntry`
 
---- 3. Pola Real-World: Infinite Scroll Sentinel ---
-[Observer] Mulai memantau elemen: <DIV>
---> Fetch API halaman berikutnya sukses
-Elemen terlihat di layar! Rasio visibilitas: 0.75
-[Observer] Berhenti memantau elemen: <SECTION> (hemat memori)
-[LAZY LOAD] Mendownload gambar HD untuk: Laptop Gaming ASUS ROG
-[Observer] Berhenti memantau elemen: <IMG> (hemat memori)
-[INFINITE SCROLL] Pengguna mencapai batas bawah halaman -> Memuat batch data baru...
---> Fetch API halaman berikutnya sukses
+Setiap entri memuat data telemetri posisi elemen:
+
+```javascript
+function handler(entries) {
+  for (const entry of entries) {
+    console.log("Apakah terlihat? :", entry.isIntersecting);
+    console.log("Rasio tampak     :", entry.intersectionRatio);
+    console.log("Elemen target    :", entry.target.id);
+  }
+}
+```
+
+#### 5. Pola Implementasi Image Lazy Loading via `data-src`
+
+Simpan URL gambar asli di atribut `data-src`, dan pasang gambar placeholder ringan di atribut `src`.
+
+```javascript
+const imageObserver = new IntersectionObserver((entries, obs) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      img.src = img.dataset.src; // Ganti ke URL asli
+      obs.unobserve(img); // Berhenti memantau agar hemat RAM
+    }
+  });
+});
+
+document
+  .querySelectorAll("img[data-src]")
+  .forEach((img) => imageObserver.observe(img));
+```
+
+#### 6. Pola Implementasi Infinite Scroll Berbasis Sentinel Element
+
+Tempatkan sebuah elemen penanda kosong (`<div id="sentinel"></div>`) di bagian paling bawah daftar:
+
+```javascript
+const sentinelObserver = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    loadNextPageData(); // Muat batch data berikutnya saat sentinel terlihat
+  }
+});
+
+sentinelObserver.observe(document.getElementById("sentinel"));
+```
+
+#### 7. Pelepasan Pengamatan: `unobserve()` dan `disconnect()`
+
+- `unobserve(el)`: Dilepas segera setelah aksi 1 kali selesai (seperti lazy loading foto).
+- `disconnect()`: Dipanggil saat halaman atau komponen di-unmount.
+
+```javascript
+// Mematikan seluruh pemantauan sekaligus:
+observer.disconnect();
+```
+
+#### 8. Mencegah Cumulative Layout Shift (CLS)
+
+Saat gambar lazy load selesai diunduh, jika kontainernya tidak memiliki tinggi tetap, konten teks di bawahnya akan melompat secara tiba-tiba (_CLS penalty_).
+
+```css
+/* Wajib beri rasio aspek pada tag gambar: */
+img.lazy {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #f1f5f9;
+}
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh implementasi inisialisasi `IntersectionObserver`, simulasi asinkron perlintasan batas layar (_intersection ratio_), pola arsitektur _Image Lazy Loading_, serta mekanisme _Infinite Scroll Sentinel_ telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Jalankan demonstrasi simulasi di terminal:
+
+```bash
+node 07-modern-web-api/06-intersection-observer/example.js
+```
+
+Atau buka [`index.html`](index.html) langsung di browser dan buka **DevTools Console (`F12`)** untuk mengamati bagaimana gambar produk dimuat secara cerdas saat Anda menggulir halaman ke bawah.
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Lazy Loading Media (Gambar & Video Iframe)**: Menghemat kuota internet pengguna ponsel dengan hanya memuat gambar saat gambar tersebut digulir mendekati layar.
-2. **Infinite Scroll (TikTok / Twitter / Instagram Feed)**: Mendeteksi elemen paling bawah daftar artikel secara otomatis untuk mengambil postingan berikutnya dari backend.
-3. **Analitik Iklan Sponsor (Ad Impressions)**: Menghitung impresi iklan secara akurat hanya jika iklan tersebut benar-benar terlihat minimal 50% di layar user selama minimal 1 detik.
+1. **Lazy Loading Banner & Iklan Berbayar**: Menghitung tayangan iklan (_Ad Impressions_) hanya jika iklan tersebut benar-benar terlihat minimal 50% di layar selama lebih dari 1 detik.
+2. **Animasi Reveal Saat Scroll (AOS)**: Menambahkan class CSS `.fade-in` pada kartu layanan saat pengguna menggulir ke bagian seksi tersebut.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Lupa Memanggil `observer.unobserve(target)`**: Untuk skenario lazy loading satu kali, jika Anda lupa memanggil `unobserve()`, observer akan terus hidup di memori browser dan memicu callback berulang kali setiap elemen keluar-masuk layar.
-- **Tidak Memberikan Dimensi Awal (Aspect Ratio / Min-Height)**: Jika kontainer gambar kosong memiliki tinggi `0px`, semua gambar di bawahnya akan seketika masuk ke viewport pada saat halaman pertama kali dibuka, sehingga seluruh gambar langsung terdownload sekaligus dan membatalkan manfaat lazy loading.
+- **Lupa Memanggil `unobserve()` pada Lazy Loaded Images**: Membiarkan ratusan gambar terus dipantau setelah selesai dimuat akan membuang-buang alokasi memori observer.
+- **Mengabaikan Root Margin**: Jika `rootMargin` disetel 0px, pengguna dengan koneksi internet lambat akan melihat kotak kosong sebelum gambar selesai diunduh. Berikan `rootMargin: '200px'` agar pengunduhan dimulai sebelum elemen masuk layar.
 
 ### 🌟 Best Practice
 
-- Selalu berikan placeholder gambar dengan ukuran aspect ratio yang tepat (misal dengan CSS `aspect-ratio: 16/9`) agar layout halaman tidak melompat (_Cumulative Layout Shift / CLS_).
-- Manfaatkan `rootMargin: '200px'` agar gambar sudah selesai diunduh beberapa saat sebelum pengguna benar-benar melihatnya, memberikan pengalaman yang mulus tanpa menunggu.
+- Gunakan atribut native HTML `loading="lazy"` untuk kebutuhan dasar, dan gunakan `IntersectionObserver` untuk kontrol penuh atas placeholder efek blur (_blur-up effect_).
+- Selalu sediakan dimensi CSS yang jelas (`aspect-ratio` atau `min-height`) pada kontainer media lazy load.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buka file `index.html` pada modul ini di browser dan amati bagaimana gambar kartu produk hanya diunduh saat kartu digulir masuk ke layar.
-2. Tambahkan efek transisi CSS `fade-in` agar gambar yang baru dimuat muncul secara halus.
+1. Buka berkas [`index.html`](index.html) di peramban web. Tambahkan opsi `threshold: [0, 0.5, 1.0]` pada observer dan amati log konsol ketika elemen target mulai masuk, setengah terlihat, dan terlihat utuh di layar.
+2. Buat elemen sentinel di bawah galeri artikel dan panggil fungsi simulasi `muatArtikelTambahan()` setiap kali sentinel menyentuh layar!
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [05 - Debounce dan Throttle Optimization](../05-debounce-and-throttle/README.md)
+- ⬅️ **Materi Sebelumnya:** [05 - Debounce & Throttle](../05-debounce-and-throttle/README.md)
+- ➡️ **Modul Selanjutnya:** [08 - Build Tools & Ecosystem](../../08-build-tools/README.md)
 - 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

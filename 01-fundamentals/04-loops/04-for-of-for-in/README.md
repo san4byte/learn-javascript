@@ -2,132 +2,173 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami perbedaan mutlak antara perulangan `for..of` dan `for..in`.
-> - **Kapan Digunakan**: Menggunakan `for..of` untuk mengiterasi nilai dari Iterable (Array, String, arguments).
-> - **Aturan Praktis**: Gunakan **`for...of`** untuk Array, Set, Map, dan String.
+> - **Fungsi Utama**: Menyediakan sintaks perulangan modern tingkat tinggi untuk membaca isi koleksi _Iterable_ (`for...of`) atau menelusuri nama properti (_enumerable keys_) dari objek (`for...in`).
+> - **Kapan Digunakan**: Gunakan `for...of` untuk `Array`, `String`, `Set`, dan `Map`. Gunakan `for...in` khusus saat Anda perlu membaca nama properti (_keys_) dari sebuah objek literal `{}`.
+> - **Aturan Praktis**: Jangan pernah menggunakan `for...in` untuk array karena urutan indeks tidak dijamin konsisten dan bertipe string. Gunakan `Object.hasOwn(obj, key)` saat menggunakan `for...in` untuk menyaring properti rantai _prototype_.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami perbedaan mutlak antara perulangan `for..of` dan `for..in`.
-- Menggunakan `for..of` untuk mengiterasi nilai dari Iterable (Array, String, arguments).
-- Menggunakan `for..in` untuk mengiterasi nama properti (key) dari sebuah Objek.
-- Mampu menggunakan `entries()` pada array untuk mendapatkan index dan nilai sekaligus di `for..of`.
+- Memahami perbedaan fundamental antara mekanisme `for...of` (ekstraksi nilai) dan `for...in` (ekstraksi kunci properti).
+- Menguasai perulangan `for...of` pada berbagai jenis objek _Iterable_ (`Array`, `String`, `Set`, dan `Map`).
+- Menggunakan metode `array.entries()` bersama teknik _destructuring_ untuk memperoleh indeks dan nilai sekaligus di dalam `for...of`.
+- Menguasai penelusuran properti objek menggunakan `for...in` serta menyaring properti warisan prototype dengan `Object.hasOwn()`.
+- Mengetahui alternatif modern yang lebih aman untuk objek menggunakan `Object.keys()`, `Object.values()`, dan `Object.entries()`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> `for...of` seperti **membuka kotak kado satu per satu dan mengeluarkan mainan di dalamnya** (mengambil isi/nilai). Sedangkan `for...in` seperti **membaca daftar label stiker yang ditempel di luar lemari** (membaca nama kunci/properti).
-
-ES6 memperkenalkan dua sintaks perulangan modern yang sangat bersih dan mudah dibaca:
-
-### Perbedaan Mendasar:
-
-- **`for...of` (UNTUK VALUE DARI ITERABLE)**:
-  - Digunakan untuk mengulang **nilai (_value_)** dari objek yang bersifat _Iterable_ (seperti `Array`, `String`, `Set`, `Map`, `NodeList`).
-  - **TIDAK BISA** digunakan langsung pada objek biasa `{}` (kecuali sudah menerapkan iterator protocol seperti di Modul 05).
-- **`for...in` (UNTUK PROPERTY / KEY DARI OBJEK)**:
-  - Digunakan untuk mengulang **nama properti (_enumerable keys_)** dari sebuah `Object`.
-  - **HINDARI** menggunakan `for...in` pada Array karena urutan index tidak terjamin konsisten.
+> - `for...of` seperti **membuka kotak kado satu per satu dan mengeluarkan hadiah di dalamnya**: Anda fokus langsung pada isi barang (_value_) tanpa peduli nomor seri kotaknya.
+> - `for...in` seperti **membaca daftar label stiker di pintu luar laci lemari**: Anda memeriksa nama-nama label laci (_keys/property names_) satu per satu untuk mengetahui laci apa saja yang tersedia, termasuk laci bawaan pabrik lemari tersebut (_prototype chain_).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Perbandingan `for...of` vs `for...in`
+
+| Fitur                             | `for (const item of iterable)`                     | `for (const key in object)`              |
+| :-------------------------------- | :------------------------------------------------- | :--------------------------------------- |
+| **Fokus Pengambilan Data**        | Mengambil **Nilai / Value** elemen                 | Mengambil **Nama Properti / Key**        |
+| **Target Tipe Data**              | Objek _Iterable_ (`Array`, `String`, `Set`, `Map`) | Sembarang `Object` JavaScript            |
+| **Dukungan Objek Literal `{}`**   | ❌ Melempar _TypeError: not iterable_              | ✅ Berjalan mulus membaca properti       |
+| **Bahaya Prototype Chain**        | Aman (hanya membaca data internal)                 | Rawan membaca properti turunan prototype |
+| **Dukungan `break` & `continue`** | ✅ Didukung penuh                                  | ✅ Didukung penuh                        |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Perulangan `for...of` untuk Koleksi Iterable
+
+`for...of` secara otomatis memanggil protokol iterator (`Symbol.iterator`) dari struktur data koleksi untuk mengekstraksi nilai secara berurutan:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
-
-console.log('--- 1. for..of pada Array ---');
-const bahasaFavorit = ['JavaScript', 'TypeScript', 'Python'];
-
-for (const bahasa of bahasaFavorit) {
-  console.log(`Saya sedang mempelajari: ${bahasa}`);
+const buah = ["Apel", "Mangga", "Jeruk"];
+for (const item of buah) {
+  console.log(item); // 'Apel', 'Mangga', 'Jeruk'
 }
+```
 
-console.log('\n--- 2. for..of dengan entries() untuk mendapatkan Index ---');
-for (const [index, bahasa] of bahasaFavorit.entries()) {
-  console.log(`Urutan ke-${index + 1}: ${bahasa}`);
+#### 2. Mendapatkan Indeks dan Nilai Sekaligus via `array.entries()`
+
+Jika Anda membutuhkan nomor indeks dan nilai elemen sekaligus di dalam `for...of`, pasangkan dengan metode `.entries()` dan pola _destructuring array_:
+
+```javascript
+const hewan = ["Kucing", "Anjing", "Kelinci"];
+for (const [index, nama] of hewan.entries()) {
+  console.log(`No #${index + 1}: ${nama}`);
 }
+```
 
-console.log('\n--- 3. for..of pada String ---');
-const kataKunci = 'KODE';
-for (const huruf of kataKunci) {
-  console.log(`Karakter: ${huruf}`);
+#### 3. Iterasi Karakter String dengan `for...of`
+
+`for...of` memecah teks string karakter demi karakter secara aman terhadap karakter Unicode dan emoji:
+
+```javascript
+for (const char of "KODE") {
+  console.log(char); // 'K', 'O', 'D', 'E'
 }
+```
 
-console.log('\n--- 4. for..in pada Objek (Membaca Property & Value) ---');
-const profilLaptop = {
-  merk: 'ThinkPad',
-  ramGB: 16,
-  ssdGB: 512,
-  os: 'Ubuntu Linux',
-};
+#### 4. Iterasi Struktur `Set` dan `Map` dengan `for...of`
 
-for (const properti in profilLaptop) {
-  console.log(`- ${properti}: ${profilLaptop[properti]}`);
+Dua struktur data modern ES6 (`Set` dan `Map`) adalah koleksi iterable sejati yang bekerja secara mulus dengan `for...of`:
+
+```javascript
+const kamus = new Map([
+  ["id", "Indonesia"],
+  ["jp", "Jepang"],
+]);
+for (const [kodeNegara, namaNegara] of kamus) {
+  console.log(`${kodeNegara} => ${namaNegara}`);
+}
+```
+
+#### 5. Perulangan `for...in` untuk Properti Objek
+
+`for...in` membaca nama kunci properti yang dapat dihitung (_enumerable properties_) dari suatu objek:
+
+```javascript
+const user = { nama: "Joko", role: "Developer" };
+for (const key in user) {
+  console.log(`${key}: ${user[key]}`);
+}
+```
+
+#### 6. Bahaya Warisan Prototype pada `for...in` dan Solusi `Object.hasOwn()`
+
+`for...in` menelusuri rantai prototype hingga ke `Object.prototype`. Untuk memastikan properti tersebut merupakan milik objek itu sendiri (_own property_), gunakan fungsi statis modern `Object.hasOwn()`:
+
+```javascript
+for (const key in user) {
+  if (Object.hasOwn(user, key)) {
+    // Aman: Hanya mengeksekusi properti asli milik objek user
+  }
+}
+```
+
+#### 7. Pola Modern: `Object.entries()` dengan `for...of`
+
+Standar industri modern lebih memilih mengubah objek menjadi iterable menggunakan `Object.entries()` lalu mengulanginya dengan `for...of`:
+
+```javascript
+const setting = { tema: "dark", zoom: 100 };
+for (const [kunci, nilai] of Object.entries(setting)) {
+  console.log(`${kunci} disetel ke ${nilai}`);
 }
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. for..of pada Array ---
-Saya sedang mempelajari: JavaScript
-Saya sedang mempelajari: TypeScript
-Saya sedang mempelajari: Python
+Seluruh implementasi demonstrasi perulangan `for...of` pada array dan string, ekstraksi indeks via `.entries()`, iterasi struktur `Set` & `Map`, pemindaian properti objek via `for...in` terproteksi `Object.hasOwn()`, serta pemanfaatan `Object.entries()` telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. for..of dengan entries() untuk mendapatkan Index ---
-Urutan ke-1: JavaScript
-Urutan ke-2: TypeScript
-Urutan ke-3: Python
+Jalankan demonstrasi secara langsung di terminal Anda:
 
---- 3. for..of pada String ---
-Karakter: K
-Karakter: O
-Karakter: D
-Karakter: E
-
---- 4. for..in pada Objek (Membaca Property & Value) ---
-- merk: ThinkPad
-- ramGB: 16
-- ssdGB: 512
-- os: Ubuntu Linux
+```bash
+node 01-fundamentals/04-loops/04-for-of-for-in/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Iterasi NodeList DOM**: Mengambil seluruh tombol di halaman web menggunakan `document.querySelectorAll('button')` lalu melakukan looping dengan `for (const btn of buttons)`.
-2. **Serialisasi Objek Dinamis**: Membaca semua konfigurasi formulir pengguna menggunakan `for (const key in formData)`.
+1. **Iterasi Koleksi Elemen DOM Web Browser**:
+   ```javascript
+   const cards = document.querySelectorAll(".card");
+   for (const card of cards) {
+     card.classList.add("visible");
+   }
+   ```
+2. **Serialisasi Payload Formulir HTTP**: Mengambil seluruh kunci dan nilai dari form data menggunakan `for (const [key, val] of Object.entries(formData))`.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Tertukar antara `of` dan `in`**: Menggunakan `for...in` pada Array akan menghasilkan string index (`"0"`, `"1"`, `"2"`), bukan isi elemennya. Menggunakan `for...of` pada Objek biasa akan melempar `TypeError: obj is not iterable`.
-- **Properti Prototype Bocor di `for...in`**: `for...in` akan menelusuri properti hingga ke rantai prototype. Gunakan `Object.hasOwn(obj, prop)` jika hanya ingin properti milik objek itu sendiri.
+- **Menggunakan `for...in` pada Array**: Menggunakan `for...in` pada array menghasilkan nilai berupa string indeks (`"0"`, `"1"`), dan jika ada pustaka eksternal yang memodifikasi `Array.prototype`, properti tambahan tersebut akan ikut teriterasi!
+- **Mencoba `for...of` pada Objek Literal**: Menulis `for (const val of {})` akan langsung memicu `TypeError: obj is not iterable`. Gunakan `Object.values(obj)` atau `Object.entries(obj)`.
 
 ### 🌟 Best Practice
 
-- Gunakan **`for...of`** untuk Array, Set, Map, dan String.
-- Gunakan **`for...in`** khusus untuk Objek JavaScript murni.
-- Jika ingin mengulang array beserta indeksnya secara fungsional, pertimbangkan juga `array.forEach((val, i) => {})`.
+- Gunakan `for...of` untuk koleksi data (`Array`, `Set`, `Map`, `NodeList`).
+- Gunakan `Object.entries(obj)` dikombinasikan dengan `for...of` sebagai pengganti `for...in` untuk keterbacaan yang lebih terprediksi dan bebas kebocoran prototype.
+- Berbeda dengan metode array callback (`.forEach()`), `for...of` mendukung kata kunci kontrol `break`, `continue`, dan pemanggilan `await` asinkron secara sekuensial.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Diberikan array daftar nilai `[80, 95, 70, 85]`. Gunakan `for...of` untuk menghitung nilai total dan rata-ratanya.
-2. Diberikan objek `buku = { judul: 'Clean Code', penulis: 'Robert C. Martin', halaman: 464 }`. Gunakan `for...in` untuk mencetak semua informasi buku tersebut.
+1. Diberikan array daftar nilai `const nilai = [75, 88, 92, 60, 85]`. Gunakan `for...of` dengan `entries()` untuk mencetak hanya siswa yang nilainya di atas 80 beserta nomor urutnya.
+2. Diberikan objek `buku = { judul: 'Clean Architecture', pengarang: 'Robert C. Martin', tahun: 2017 }`. Gunakan `Object.entries()` dan `for...of` untuk mencetak seluruh pasangan kunci dan nilainya dalam format `"[KUNCI] -> NILAI"`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [04.3 - Pengulangan Bersarang](../03-nested-loops/README.md)
 - ➡️ **Selanjutnya:** [05.1 - Pengkondisian If Else](../../05-conditionals/01-if-else/README.md)

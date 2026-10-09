@@ -1,65 +1,106 @@
-// Fungsi pembungkus fetch dengan simulasi jika offline / tanpa internet
-async function universalFetch(url, options = {}) {
+// 07 - Fetch API (HTTP Request Modern)
+// File ini dapat dijalankan langsung di Node.js maupun di Browser.
+
+console.log('========================================================');
+console.log('📌 DEMONSTRASI FETCH API (HTTP GET, POST, & ABORT)');
+console.log('========================================================\n');
+
+// Wrapper fetch universal (menggunakan native fetch jika ada koneksi, atau fallback mock aman)
+async function safeFetch(url, options = {}) {
   try {
-    if (typeof fetch !== 'undefined') {
+    if (typeof fetch === 'function') {
       const response = await fetch(url, options);
       return response;
     }
-  } catch (err) {
-    // Jika tidak ada koneksi internet (offline), gunakan data simulasi
+  } catch {
+    // Fallback jika tidak ada akses jaringan internet (offline sandbox)
   }
+
+  // Objek Response tiruan jika offline
   return {
     ok: true,
-    status: 200,
+    status: options.method === 'POST' ? 201 : 200,
+    statusText: 'OK',
     json: async () => {
       if (options.method === 'POST') {
-        return { id: 101, status: 'Tersimpan via simulasi offline' };
+        return { id: 101, ...JSON.parse(options.body || '{}') };
       }
       return {
+        userId: 1,
         id: 1,
-        title: 'Belajar JavaScript Asynchronous',
-        body: 'Materi Fetch API modern (Simulasi)',
+        title: 'Belajar Fetch API Modern di JavaScript',
+        body: 'Menguasai komunikasi data RESTful API',
       };
     },
+    text: async () => 'Contoh respons teks mentah',
   };
 }
 
-console.log('--- 1. Mengambil Data via HTTP GET ---');
-universalFetch('https://jsonplaceholder.typicode.com/posts/1')
+// 1. Permintaan HTTP GET dengan Pengecekan response.ok
+console.log('--- 1. Permintaan HTTP GET (Membaca Data) ---');
+safeFetch('https://jsonplaceholder.typicode.com/posts/1')
   .then((response) => {
-    if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+    console.log(`[HTTP STATUS]: ${response.status} ${response.statusText}`);
+    // Wajib: Periksa properti response.ok sebelum parsing JSON!
+    if (!response.ok) {
+      throw new Error(`HTTP Error! Status: ${response.status}`);
+    }
     return response.json();
   })
   .then((data) => {
-    console.log('Data berhasil diambil dari server:');
-    console.log('- ID Post    :', data.id);
-    console.log('- Judul Post :', data.title);
+    console.log('[GET SUKSES]: Data diterima dari server:');
+    console.log(`- ID    : ${data.id}`);
+    console.log(`- Judul : ${data.title}`);
+    jalankanHttpPost();
   })
   .catch((err) => {
-    console.error('Gagal melakukan fetch:', err.message);
+    console.error('[GET ERROR]:', err.message);
   });
 
-console.log('\\n--- 2. Mengirim Data via HTTP POST ---');
-async function kirimDataBaru() {
+// 2. Permintaan HTTP POST (Mengirimkan Payload JSON)
+async function jalankanHttpPost() {
+  console.log('\n--- 2. Permintaan HTTP POST (Mengirim Data) ---');
   try {
-    const payload = {
-      title: 'Artikel Baru',
-      body: 'Konten artikel berhasil dibuat',
-      userId: 1,
+    const payloadBaru = {
+      title: 'Materi Asynchronous Terlengkap',
+      body: 'Panduan lengkap Event Loop hingga Web Workers',
+      userId: 42,
     };
-    const res = await universalFetch(
+
+    const response = await safeFetch(
       'https://jsonplaceholder.typicode.com/posts',
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      }
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer TOKEN_SIMULASI_123',
+        },
+        body: JSON.stringify(payloadBaru),
+      },
     );
-    const hasil = await res.json();
-    console.log('Sukses menyimpan data ke server! Respons ID:', hasil.id);
+
+    const hasilPost = await response.json();
+    console.log('[POST SUKSES]: Berhasil menyimpan data baru:', hasilPost);
+
+    jalankanAbortControllerDemo();
   } catch (error) {
-    console.error('Error kirim data:', error.message);
+    console.error('[POST ERROR]:', error.message);
   }
 }
 
-kirimDataBaru();
+// 3. Membatalkan Request dengan AbortController
+function jalankanAbortControllerDemo() {
+  console.log('\n--- 3. Pembatalan Request via AbortController ---');
+  const controller = new AbortController();
+  const signal = controller.signal;
+
+  console.log('Request dimulai dengan signal AbortController...');
+  // Batalkan request secara instan
+  controller.abort();
+
+  if (signal.aborted) {
+    console.log(
+      '[ABORTED]: Request berhasil dibatalkan menggunakan controller.abort()',
+    );
+  }
+}

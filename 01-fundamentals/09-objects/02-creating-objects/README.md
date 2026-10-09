@@ -2,137 +2,153 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami pembuatan objek menggunakan Object Literal.
-> - **Kapan Digunakan**: Memahami pola Function Declaration / Factory Function.
-> - **Aturan Praktis**: Gunakan huruf kapital di awal (_PascalCase_) untuk nama Constructor Function agar Anda dan tim selalu ingat untuk menambahkan `new`.
+> - **Fungsi Utama**: Memilih dan menerapkan paradigma pembuatan objek di JavaScript: deklarasi langsung (_Object Literal_), fungsi pencetak (_Factory Function_), konstruktor berprototipe (_Constructor Function_), atau pewarisan murni (_Object.create_).
+> - **Kapan Digunakan**: Gunakan Object Literal untuk objek tunggal sekali pakai; gunakan Factory Function untuk objek berulang tanpa `this`; gunakan Constructor Function / ES6 Class untuk entitas massal berprototipe.
+> - **Aturan Praktis**: Gunakan penamaan huruf besar (_PascalCase_) untuk nama Constructor Function, dan selalu sertakan kata kunci `new` saat memanggilnya.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami pembuatan objek menggunakan Object Literal.
-- Memahami pola Function Declaration / Factory Function.
-- Memahami pola Constructor Function dan penggunaan keyword `new`.
+- Menguasai pembuatan objek menggunakan sintaks _Object Literal_ `{}`.
+- Memahami pola pembuatan objek modular melalui _Factory Function_ tanpa kata kunci `this`.
+- Menguasai pola _Constructor Function_ klasik serta memahami 4 langkah yang dieksekusi mesin di balik operator `new`.
+- Mengoptimalkan alokasi memori dengan menyematkan metode bersama ke dalam properti `Constructor.prototype`.
+- Memahami pembuatan pewarisan objek secara langsung menggunakan `Object.create()`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Object Literal seperti **membuat kue manual dari nol di dapur untuk dimakan sendiri**. Factory Function seperti **alat cetakan kue martabak**: adonan dimasukkan, kue dicetak dan disajikan. Constructor Function seperti **pabrik cetak massal otomatis berlisensi**: setiap produk yang keluar dari pabrik dijamin memiliki stempel resmi (_instanceof_).
-
-Di JavaScript, terdapat 3 pendekatan klasik untuk membuat objek:
-
-### 1. Object Literal `{}`
-
-Cara paling sederhana dan langsung. Cocok untuk objek tunggal yang tidak dibuat berulang-ulang:
-
-```javascript
-const user = { nama: 'Joko', umur: 25 };
-```
-
-### 2. Function Declaration (Factory Function)
-
-Fungsi biasa yang membuat objek di dalamnya dan me-return objek tersebut. Cocok jika butuh cetakan objek banyak tanpa membingungkan keyword `this`:
-
-```javascript
-function buatUser(nama, umur) {
-  return { nama, umur };
-}
-```
-
-### 3. Constructor Function (Keyword `new`)
-
-Pondasi Pemrograman Berorientasi Objek klasik di JavaScript (sebelum sintaks `class` ES6).
-
-- Menggunakan huruf kapital di awal nama fungsi (konvensi).
-- Menggunakan keyword `this` untuk menempelkan properti.
-- **WAJIB** dipanggil dengan keyword **`new`**.
+> - **Object Literal** seperti **memasak kue rumahan satu loyang untuk dimakan sendiri**: Dibuat langsung secara instan, tidak butuh cetakan pabrik.
+> - **Factory Function** seperti **cetakan martabak manual**: Anda memasukkan bahan telur dan tepung ke alat (_parameter_), alat mencetak dan menyajikan martabak baru ke piring Anda (_return object_).
+> - **Constructor Function** seperti **pabrik perakitan mobil berlisensi**: Setiap mobil yang keluar dari lini produksi otomatis membawa cap merek resmi pabrikan (**`instanceof`**), nomor rangka baru, dan buku manual standar dari pusat (**`prototype`**).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Perbandingan Pendekatan Pembuatan Objek
+
+| Pendekatan               | Pemanggilan        | Binding `this`             | Dukungan `instanceof` | Efisiensi Memori Method               |
+| :----------------------- | :----------------- | :------------------------- | :-------------------- | :------------------------------------ |
+| **Object Literal**       | Langsung `{}`      | Lingkup lokal objek        | ❌ `Object` biasa     | Rendah (duplikasi method per objek)   |
+| **Factory Function**     | `buatUser()`       | Bebas `this` (opsional)    | ❌ `Object` biasa     | Rendah (kecuali pakai closure)        |
+| **Constructor Function** | `new User()`       | `this` menunjuk objek baru | ✅ `instanceof User`  | **Sangat Tinggi** (via `.prototype`)  |
+| **`Object.create()`**    | `Object.create(p)` | Terikat objek baru         | Tergantung proto      | **Sangat Tinggi** (berbagi prototype) |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Pendekatan 1: Object Literal `{}`
+
+Cara paling ringkas dan sering digunakan untuk struktur data tunggal:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
-
-console.log('--- 1. Object Literal (Satu Objek Spesifik) ---');
-const mhs1 = {
-  nama: 'Joko Santoso',
-  nim: '1012001',
-  jurusan: 'Informatika',
+const user = {
+  nama: "Joko",
+  peran: "Admin",
 };
-console.log('Literal:', mhs1.nama);
+```
 
-console.log('\n--- 2. Function Declaration (Factory Function) ---');
-function buatMahasiswa(nama, nim, jurusan) {
-  const mhs = {};
-  mhs.nama = nama;
-  mhs.nim = nim;
-  mhs.jurusan = jurusan;
-  return mhs;
+#### 2. Pendekatan 2: Factory Function
+
+Fungsi biasa yang merakit dan mengembalikan objek baru. Sangat disukai karena tidak bergantung pada perilaku rumit dari keyword `this`:
+
+```javascript
+function buatPengguna(nama, peran) {
+  return { nama, peran };
 }
+const user1 = buatPengguna("Budi", "Editor");
+```
 
-const mhs2 = buatMahasiswa('Budi', '1012002', 'Sistem Informasi');
-console.log('Factory Function:', mhs2);
+#### 3. Pendekatan 3: Constructor Function & Operator `new`
 
-console.log('\n--- 3. Constructor Function (Keyword new) ---');
-function Mahasiswa(nama, nim, jurusan) {
-  // Di balik layar: JavaScript otomatis membuat: let this = Object.create(Mahasiswa.prototype);
+Fondasi OOP klasik JavaScript. Dideklarasikan dengan huruf kapital _PascalCase_:
+
+```javascript
+function Mahasiswa(nama, nim) {
   this.nama = nama;
   this.nim = nim;
-  this.jurusan = jurusan;
-  // Di balik layar: JavaScript otomatis melakukan: return this;
 }
+const mhs = new Mahasiswa("Siti", "101");
+```
 
-const mhs3 = new Mahasiswa('Siti', '1012003', 'Teknik Elektro');
-console.log('Constructor:', mhs3);
-console.log('Apakah mhs3 instance dari Mahasiswa?', mhs3 instanceof Mahasiswa);
+#### 4. Di Balik Layar Operator `new` (4 Langkah Mekanisme)
+
+Saat Anda mengetik `new Mahasiswa(...)`, mesin JavaScript menjalankan 4 instruksi otomatis:
+
+1. Membuat sebuah objek kosong baru di memori: `{}`.
+2. Menghubungkan prototype objek baru tersebut ke `Mahasiswa.prototype`.
+3. Mengikat (_binding_) kata kunci `this` agar merujuk ke objek kosong baru tersebut, lalu menjalankan badan fungsi konstruktor.
+4. Secara otomatis mengembalikan objek `this` baru tersebut (kecuali konstruktor mengembalikan objek lain secara eksplisit).
+
+#### 5. Optimasi Memori dengan Prototype Method
+
+Jangan menaruh method di dalam badan constructor function, karena setiap kali `new` dipanggil, fungsi method tersebut akan diduplikasi di RAM. Sematkan ke prototype:
+
+```javascript
+Mahasiswa.prototype.sapa = function () {
+  return `Halo ${this.nama}`;
+};
+```
+
+#### 6. Pendekatan 4: Pewarisan Eksplisit via `Object.create()`
+
+Membuat objek baru dengan menentukan prototipe induknya secara langsung tanpa fungsi konstruktor:
+
+```javascript
+const proto = {
+  bersuara() {
+    return "Miau!";
+  },
+};
+const kucing = Object.create(proto);
+console.log(kucing.bersuara()); // 'Miau!'
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. Object Literal (Satu Objek Spesifik) ---
-Literal: Joko Santoso
+Seluruh implementasi demonstrasi perbandingan Object Literal untuk DTO, pembuatan Factory Function yang bersih, Constructor Function dengan method prototype terpusat, pengujian identitas `instanceof`, serta teknik pewarisan prototipe via `Object.create()` telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. Function Declaration (Factory Function) ---
-Factory Function: { nama: 'Budi', nim: '1012002', jurusan: 'Sistem Informasi' }
+Jalankan demonstrasi secara langsung di terminal Anda:
 
---- 3. Constructor Function (Keyword new) ---
-Constructor: Mahasiswa { nama: 'Siti', nim: '1012003', jurusan: 'Teknik Elektro' }
-Apakah mhs3 instance dari Mahasiswa? true
+```bash
+node 01-fundamentals/09-objects/02-creating-objects/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Library & Framework Lama**: Sebelum ES6 Class, hampir seluruh library besar (seperti jQuery, Express, Three.js) dibangun menggunakan Constructor Function.
-2. **Object Literal untuk DTO (Data Transfer Object)**: Mengirim paket data payload ringkas antar fungsi.
+1. **Pustaka JavaScript Klasik**: Pustaka seperti Three.js, Leaflet, dan jQuery menggunakan konstruktor berprototipe untuk membuat ribuan objek grafis (misal `new THREE.Mesh()`) dengan efisiensi memori maksimal.
+2. **Factory Function untuk State Generator**: Menghasilkan objek konfigurasi form yang bersih pada aplikasi web frontend.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Lupa Keyword `new` pada Constructor Function**: Jika Anda memanggil `Mahasiswa('Budi')` tanpa `new`, fungsi berjalan sebagai fungsi biasa, `this` akan menunjuk ke objek `window/global`, dan fungsi mengembalikan `undefined`!
+- **Lupa Kata Kunci `new`**: Memanggil `Mahasiswa('Budi')` tanpa `new` mengeksekusinya sebagai fungsi biasa; `this` akan menunjuk ke global `window`/`globalThis` dan fungsi mengembalikan `undefined`.
+- **Mendefinisikan Method di Dalam Constructor**: Menulis `this.hitung = function() {}` di dalam constructor membuat 10.000 instans objek menduplikasi 10.000 salinan fungsi yang sama di memori komputer.
 
 ### 🌟 Best Practice
 
-- Gunakan huruf kapital di awal (_PascalCase_) untuk nama Constructor Function agar Anda dan tim selalu ingat untuk menambahkan `new`.
-- Di JavaScript modern, Anda juga bisa menggunakan sintaks `class` (yang telah kita bahas tuntas di Modul 05).
+- Gunakan konvensi nama _PascalCase_ untuk seluruh Constructor Function (contoh: `RekeningBank`, `PemainGame`).
+- Di era JavaScript modern (ES6+), pertimbangkan untuk menggunakan sintaks `class` resmi yang merupakan _syntactic sugar_ modern di atas constructor function dan prototype.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buatlah Constructor Function bernama `Produk(nama, harga, stok)` yang memiliki method `beli(jumlah)` untuk mengurangi stok.
-2. Buat dua objek produk baru menggunakan keyword `new`.
+1. Buatlah Constructor Function bernama `Mobil(merk, tahun)` yang memiliki method bersama di `Mobil.prototype.getUsia()` untuk menghitung umur mobil berdasarkan tahun berjalan (`new Date().getFullYear() - this.tahun`).
+2. Buatlah Factory Function `buatAkun(username, email)` yang mengembalikan objek dengan properti privat `status: 'AKTIF'` dan buktikan bahwa pembuatannya tidak memerlukan operator `new`.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [09.1 - Dasar Object](../01-object-basics/README.md)
 - ➡️ **Selanjutnya:** [09.3 - Keyword This](../03-keyword-this/README.md)

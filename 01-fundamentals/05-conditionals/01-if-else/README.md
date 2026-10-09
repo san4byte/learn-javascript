@@ -2,117 +2,178 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami konsep percabangan logika if dan else.
-> - **Kapan Digunakan**: Memahami evaluasi Truthy dan Falsy di JavaScript.
-> - **Aturan Praktis**: Selalu gunakan `===` (triple equals) daripada `==` (double equals) untuk menghindari konversi tipe data implisit (_type coercion_).
+> - **Fungsi Utama**: Mengendalikan alur logika program dengan mengeksekusi blok kode tertentu berdasarkan kebenaran ekspresi boolean (_truthy_ / _falsy_).
+> - **Kapan Digunakan**: Mengambil keputusan bercabang dua (misal: validasi formulir, pengecekan otorisasi, atau penentuan nilai konfigurasi default).
+> - **Aturan Praktis**: Selalu gunakan _Strict Equality_ (`===`) untuk menghindari konversi tipe data otomatis (_type coercion_). Gunakan operator ternary (`? :`) hanya untuk ekspresi penugasan nilai ringkas satu baris.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami konsep percabangan logika if dan else.
-- Memahami evaluasi Truthy dan Falsy di JavaScript.
-- Mampu menyederhanakan percabangan dua kondisi menggunakan Ternary Operator (`? :`).
+- Memahami mekanisme evaluasi logika pada blok `if` dan `else`.
+- Mengetahui perbedaan kritis antara kesetaraan ketat (_Strict Equality_ `===`) dan kesetaraan longgar (_Loose Equality_ `==`).
+- Menguasai daftar 8 nilai _Falsy_ bawaan JavaScript serta memahami bahwa objek `{}` dan array `[]` kosong bernilai _Truthy_.
+- Mampu menyederhanakan ekspresi penugasan dua opsi menggunakan _Ternary Operator_ (`? :`).
+- Memahami evaluasi jalan pintas (_Short-circuiting_) menggunakan operator logika `&&`, `||`, dan _Nullish Coalescing_ `??`.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> If-Else seperti **rambu lampu lalu lintas**: jika lampu berwarna hijau (`if`), kendaraan maju; jika tidak hijau (`else`), kendaraan wajib berhenti.
-
-**Pengkondisian (Conditional Flow)** memungkinkan program kita mengambil keputusan dan mengeksekusi blok kode yang berbeda berdasarkan nilai kebenaran suatu kondisi (_Boolean expression_).
-
-### Struktur Dasar:
-
-- **`if (kondisi)`**: Dijalankan jika kondisi bernilai `true` (atau bernilai _truthy_).
-- **`else`**: Dijalankan sebagai alternatif jika kondisi pada `if` bernilai `false` (atau bernilai _falsy_).
-
-### Nilai Falsy di JavaScript:
-
-Hanya ada 6 nilai falsy utama di JavaScript: `false`, `0`, `""` (string kosong), `null`, `undefined`, dan `NaN`. Semua nilai lainnya dianggap **Truthy**!
-
-### Operator Ternary (`kondisi ? jikaBenar : jikaSalah`):
-
-Sintaks ringkas untuk percabangan if-else satu baris yang langsung menghasilkan nilai (ekspresi).
+> Struktur If-Else seperti **lampu pengatur lalu lintas di persimpangan jalan**:
+> Jika lampu menyala hijau (`if (kondisi)`), kendaraan dipersilakan melaju terus. Jika lampu bukan hijau (`else`), seluruh kendaraan wajib berhenti. Tidak ada kondisi di mana kendaraan berjalan dan berhenti di saat yang bersamaan.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Daftar 8 Nilai Falsy di JavaScript
+
+Segala nilai di luar daftar ini secara otomatis bernilai **Truthy** ketika dievaluasi dalam konteks Boolean:
+
+| Nilai Falsy        | Tipe Data       | Keterangan                                       |
+| :----------------- | :-------------- | :----------------------------------------------- |
+| `false`            | Boolean         | Nilai boolean negatif literal                    |
+| `0`, `-0`, `0n`    | Number / BigInt | Angka nol (termasuk nol negatif dan nol BigInt)  |
+| `""`, `''`, `\`\`` | String          | Teks string kosong dengan panjang karakter 0     |
+| `null`             | Null            | Representasi nilai ketiadaan yang disengaja      |
+| `undefined`        | Undefined       | Variabel yang belum diinisialisasi nilai         |
+| `NaN`              | Number          | _Not-a-Number_ (hasil kalkulasi numerik invalid) |
+
+> ⚠️ **Catatan Penting**: Array kosong `[]` dan Objek kosong `{}` **bukan Falsy**, keduanya bernilai **Truthy**!
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Sintaks Percabangan `if` dan `else`
+
+Blok `if` mengevaluasi ekspresi di dalam kurung bulat. Jika bernilai truthy, blok kurung kurawal pertama dijalankan; jika falsy, alur melompat ke blok `else`.
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
-
-console.log('--- 1. Struktur If-Else Standar ---');
-const usiaPengunjung = 18;
-
-if (usiaPengunjung >= 17) {
-  console.log('Status: Boleh masuk dan menonton film bioskop dewasa.');
+const usia = 20;
+if (usia >= 17) {
+  console.log("Memenuhi syarat pembuatan KTP");
 } else {
-  console.log('Status: Usia belum mencukupi untuk menonton.');
+  console.log("Belum memenuhi syarat");
 }
+```
 
-console.log('\n--- 2. Evaluasi Truthy dan Falsy ---');
-const namaInput = ''; // String kosong adalah Falsy
+#### 2. Strict Equality (`===`) vs Loose Equality (`==`)
 
-if (namaInput) {
-  console.log(`Selamat datang, ${namaInput}!`);
-} else {
-  console.log('Peringatan: Nama tidak boleh dikosongkan! (Terdeteksi Falsy)');
+Operator `==` melakukan konversi tipe data implisit yang berbahaya (`0 == false` bernilai `true`), sedangkan `===` memeriksa tipe data dan nilai secara presisi:
+
+```javascript
+const angka = 0;
+// Salah: angka == false (true karena coercion)
+// Benar:
+if (angka === 0) {
+  console.log("Angka bernilai nol");
 }
+```
 
-console.log('\n--- 3. Ternary Operator (Sintaks Ringkas) ---');
-const nilaiUjian = 82;
-// kondisi ? ekspresi_jika_true : ekspresi_jika_false
-const statusKelulusan = nilaiUjian >= 75 ? 'LULUS DENGAN BAIK' : 'REMIDIAL';
+#### 3. Delapan Nilai Falsy di JavaScript
 
-console.log(`Nilai Siswa: ${nilaiUjian} -> Hasil: ${statusKelulusan}`);
+Saat menguji keberadaan nilai, JavaScript otomatis mengonversinya ke boolean:
+
+```javascript
+let nama = "";
+if (!nama) {
+  console.log("Nama belum diisi (string kosong terdeteksi Falsy)");
+}
+```
+
+#### 4. Sifat Truthy pada Objek dan Array Kosong
+
+Banyak pemula berasumsi `[]` atau `{}` adalah falsy karena kosong. Padahal di JavaScript keduanya adalah objek referensi valid:
+
+```javascript
+const keranjang = [];
+if (keranjang) {
+  // Blok ini SELALU berjalan!
+  // Periksa panjangnya: if (keranjang.length === 0)
+}
+```
+
+#### 5. Operator Ternary (`kondisi ? ekspresiTrue : ekspresiFalse`)
+
+Operator ternary menghasilkan nilai (_expression_) yang dapat langsung ditampung ke dalam variabel:
+
+```javascript
+const nilai = 85;
+const status = nilai >= 75 ? "Lulus" : "Remedial";
+```
+
+#### 6. Evaluasi Hubung Singkat (_Short-Circuit Evaluation_)
+
+- `A && B`: Jika `A` falsy, berhenti dan kembalikan `A`. Jika `A` truthy, evaluasi dan kembalikan `B`.
+- `A || B`: Jika `A` truthy, berhenti dan kembalikan `A`. Jika `A` falsy, kembalikan `B` (sering dipakai sebagai fallback nilai default).
+
+```javascript
+const isLoggedIn = true;
+isLoggedIn && console.log("Tampilkan dashboard pengguna");
+```
+
+#### 7. Operator Nullish Coalescing (`??`)
+
+Operator `??` berbeda dari `||` karena hanya memperlakukan `null` dan `undefined` sebagai pemicu fallback. Angka `0` atau string kosong `""` tetap dianggap nilai sah:
+
+```javascript
+const kuota = 0;
+const hasilOR = kuota || 10; // 10 (karena 0 adalah falsy)
+const hasilNullish = kuota ?? 10; // 0 (karena 0 bukan null atau undefined)
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. Struktur If-Else Standar ---
-Status: Boleh masuk dan menonton film bioskop dewasa.
+Seluruh implementasi demonstrasi evaluasi percabangan `if...else`, pengujian 8 nilai falsy vs keunikan array/objek kosong, penugasan berbasis ternary, serta perbandingan evaluasi hubung singkat (`&&`, `||`, `??`) telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. Evaluasi Truthy dan Falsy ---
-Peringatan: Nama tidak boleh dikosongkan! (Terdeteksi Falsy)
+Jalankan demonstrasi secara langsung di terminal Anda:
 
---- 3. Ternary Operator (Sintaks Ringkas) ---
-Nilai Siswa: 82 -> Hasil: LULUS DENGAN BAIK
+```bash
+node 01-fundamentals/05-conditionals/01-if-else/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Proteksi Autentikasi Pengguna**: Mengecek `if (user.isLoggedIn)` untuk mengizinkan akses ke halaman profil, atau `else` mengarahkan ke form login.
-2. **Conditional Rendering di Frontend**: Menampilkan badge 'Diskon 50%' pada kartu barang jika `produk.isOnSale === true`.
+1. **Proteksi Autentikasi Rute Pengguna**:
+   ```javascript
+   function guardDashboard(user) {
+     if (user && user.role === "admin") {
+       return renderAdminView();
+     }
+     return redirectLogin();
+   }
+   ```
+2. **Penentuan Nilai Konfigurasi Port / Skor Default**: Menggunakan `??` untuk membaca konfigurasi port server tanpa merusak port `0`.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Tertukar antara Operator Assignment (`=`) dan Operator Kesetaraan (`===`)**:
-  Menulis `if (angka = 10)` akan selalu bernilai true karena ini adalah penugasan nilai, bukan pengecekan. Selalu gunakan `===` (_strict equality_).
-- **Nested Ternary yang Berlebihan**: Menumpuk ternary operator hingga 4 tingkat (`a ? b : c ? d : e ? f : g`) membuat kode sulit dipahami. Gunakan if-else atau switch jika kondisi lebih dari 2.
+- **Salah Ketik Penugasan (`=`) pada Kondisi `if`**: Menulis `if (role = 'admin')` alih-alih `if (role === 'admin')` akan mengubah nilai variabel menjadi `'admin'` dan selalu menghasilkan truthy!
+- **Menggunakan `||` untuk Nilai Angka 0**: Menulis `const score = userScore || 50` akan menimpa nilai pemain yang memiliki skor `0` menjadi `50`. Selalu gunakan `??` untuk data numerik.
 
 ### 🌟 Best Practice
 
-- Selalu gunakan `===` (triple equals) daripada `==` (double equals) untuk menghindari konversi tipe data implisit (_type coercion_).
-- Gunakan operator ternary untuk penugasan nilai variabel ringkas yang hanya memiliki 2 kemungkinan.
+- Selalu gunakan `===` dan `!==` di seluruh baris kode.
+- Gunakan _Guard Clauses_ (pola `if (!kondisi) return;`) untuk keluar dari fungsi sedini mungkin daripada membuat blok `if...else` bersarang yang terlalu dalam (_avoid pyramid of doom_).
+- Hindari _nested ternary_ bertumpuk lebih dari 1 tingkat (`a ? b : c ? d : e`) karena sangat merusak keterbacaan kode.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat program yang memeriksa apakah suatu bilangan adalah bilangan GENAP atau GANJIL menggunakan operator modulus `%` dan operator ternary.
-2. Uji nilai `angka = 15` dan `angka = 20`.
+1. Buat program yang memeriksa status bilangan bulat: cetak `"GENAP"` jika bilangan habis dibagi 2 (`% 2 === 0`), atau `"GANJIL"` jika tidak, menggunakan operator ternary satu baris.
+2. Diberikan objek preferensi pengguna `const config = { volume: 0, mode: 'silent' }`. Bandingkan hasil nilai variabel baru saat membaca `config.volume` menggunakan operator `||` dengan operator `??`. Jelaskan mengapa hasilnya berbeda!
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [04.4 - For..of dan For..in](../../04-loops/04-for-of-for-in/README.md)
 - ➡️ **Selanjutnya:** [05.2 - Else If dan Switch Case](../02-else-if-switch/README.md)

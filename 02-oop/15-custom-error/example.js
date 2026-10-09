@@ -1,41 +1,125 @@
-// Penjelasan lengkap dapat dibaca pada README.md
-// Custom Error Class (Membuat jenis class error sendiri dengan extends Error)
+/**
+ * 15 - Custom Error Class
+ *
+ * Demonstrasi lengkap Custom Error Class di JavaScript:
+ * 1. Pembuatan Base Custom Error (AppError extends Error)
+ * 2. Menjaga identitas 'name' dan stack trace (Error.captureStackTrace)
+ * 3. Spesialisasi Subclass Error (ValidationError, NotFoundError, UnauthorizedError)
+ * 4. Penambahan metadata spesifik (statusCode, field, resource, timestamp)
+ * 5. Serialisasi toJSON() untuk format response REST API
+ * 6. Routing penanganan error secara polimorfis via 'instanceof'
+ */
 
-class ValidationError extends Error {
-  constructor(message, field) {
+console.log('=== 1. Fondasi Base Custom Error ===');
+class AppError extends Error {
+  constructor(message, statusCode = 500) {
     super(message);
-    this.name = 'ValidationError';
-    this.field = field; // Menyimpan info field formulir mana yang salah
-  }
-}
+    this.name = this.constructor.name; // Otomatis mengikuti nama class anak
+    this.statusCode = statusCode;
+    this.timestamp = new Date().toISOString();
 
-class MathUtils {
-  static sum(...numbers) {
-    if (numbers.length === 0) {
-      throw new ValidationError('Daftar angka tidak boleh kosong!', 'numbers');
+    // Memangkas constructor dari stack trace di engine V8 (Node.js)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
     }
+  }
 
-    let total = 0;
-    for (const number of numbers) {
-      if (typeof number !== 'number') {
-        throw new ValidationError(`Nilai '${number}' harus berupa number!`, 'element');
-      }
-      total += number;
+  toJSON() {
+    return {
+      success: false,
+      error: {
+        type: this.name,
+        message: this.message,
+        statusCode: this.statusCode,
+        timestamp: this.timestamp,
+      },
+    };
+  }
+}
+
+console.log('=== 2. Spesialisasi Subclass Error Berjenjang ===');
+class ValidationError extends AppError {
+  constructor(message, field, invalidValue) {
+    super(message, 400);
+    this.field = field;
+    this.invalidValue = invalidValue;
+  }
+
+  toJSON() {
+    const base = super.toJSON();
+    base.error.field = this.field;
+    base.error.invalidValue = this.invalidValue;
+    return base;
+  }
+}
+
+class NotFoundError extends AppError {
+  constructor(resource, id) {
+    super(`${resource} dengan ID '${id}' tidak ditemukan di database.`, 404);
+    this.resource = resource;
+    this.id = id;
+  }
+}
+
+class UnauthorizedError extends AppError {
+  constructor(message = 'Akses ditolak: Token tidak valid atau kedaluwarsa') {
+    super(message, 401);
+  }
+}
+
+console.log('=== 3. Pengujian Pelemparan & Serialisasi JSON ===');
+const errNotFound = new NotFoundError('Produk', 'PRD-990');
+console.log('Instance NotFoundError:', errNotFound.toJSON());
+
+const errValidation = new ValidationError(
+  "Email tidak memiliki karakter '@'",
+  'email',
+  'joko.gmail.com'
+);
+console.log('Instance ValidationError:', errValidation.toJSON());
+console.log();
+
+console.log('=== 4. Penanganan Polimorfis di Blok catch ===');
+function prosesPermintaanPengguna(aksi) {
+  try {
+    if (aksi === 'LOGIN_GAGAL') {
+      throw new UnauthorizedError();
     }
-
-    return total;
+    if (aksi === 'DATA_KOSONG') {
+      throw new NotFoundError('Pengguna', 101);
+    }
+    if (aksi === 'INPUT_RUSAK') {
+      throw new ValidationError('Umur harus berupa angka positif', 'umur', -10);
+    }
+    if (aksi === 'SISTEM_CRASH') {
+      throw new Error('Kabel server fisik terputus!');
+    }
+    console.log('Permintaan berhasil diproses.');
+  } catch (error) {
+    // Routing error berdasarkan tipe instance
+    if (error instanceof ValidationError) {
+      console.log(
+        `[HTTP 400] Input field '${error.field}' salah: ${error.message}`
+      );
+    } else if (error instanceof NotFoundError) {
+      console.log(
+        `[HTTP 404] Resource '${error.resource}' (ID: ${error.id}) tidak ada.`
+      );
+    } else if (error instanceof UnauthorizedError) {
+      console.log(`[HTTP 401] Otentikasi gagal: ${error.message}`);
+    } else if (error instanceof AppError) {
+      console.log(
+        `[HTTP ${error.statusCode}] Kesalahan aplikasi: ${error.message}`
+      );
+    } else {
+      console.log(
+        `[HTTP 500] Kesalahan sistem internal tak terduga: ${error.message}`
+      );
+    }
   }
 }
 
-try {
-  const hasil = MathUtils.sum('bukan angka');
-  console.info(hasil);
-} catch (error) {
-  if (error instanceof ValidationError) {
-    console.error(`[VALIDASI GAGAL] Pada field '${error.field}': ${error.message}`);
-  } else {
-    console.error(`[SISTEM ERROR]: ${error.message}`);
-  }
-} finally {
-  console.info('Pengecekan kalkulasi selesai.');
-}
+prosesPermintaanPengguna('LOGIN_GAGAL');
+prosesPermintaanPengguna('DATA_KOSONG');
+prosesPermintaanPengguna('INPUT_RUSAK');
+prosesPermintaanPengguna('SISTEM_CRASH');

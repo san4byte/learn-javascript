@@ -1,6 +1,6 @@
 # 🎨 Modul 05: JavaScript DOM (Document Object Model)
 
-Selamat datang di **Modul 05**! Document Object Model (DOM) adalah jembatan yang menghubungkan kode JavaScript dengan dokumen HTML di browser. Modul ini menyajikan hierarki elemen hingga studi kasus interaktif antarmuka web modern.
+Selamat datang di **Modul 05**! Document Object Model (DOM) adalah jembatan yang menghubungkan kode JavaScript dengan dokumen HTML di browser. Modul ini menyajikan konsep hierarki elemen, seleksi, manipulasi, traversal, hingga penanganan event pengguna.
 
 ---
 
@@ -22,12 +22,16 @@ Selamat datang di **Modul 05**! Document Object Model (DOM) adalah jembatan yang
    - Mengambil nilai input (`input.value`), validasi form, dan mencegah refresh browser via `event.preventDefault()`.
 8. [08 - HTML Table Elements](08-html-table-elements/README.md)
    - Manipulasi baris dan sel tabel secara terstruktur dengan method bawaan `insertRow()` dan `insertCell()`.
-9. [09 - Latihan Mandiri: Manipulasi Warna Background](09-practice-color-picker/README.md)
-   - Mengubah warna latar belakang menggunakan angka acak RGB dan slider range interaktif.
-10. [10 - Latihan Mandiri: Game Suit Jawa GUI Interaktif](10-practice-suit-jawa-gui/README.md)
-    - Membangun antarmuka visual game Suit Jawa dengan animasi putar gambar komputer.
-11. [11 - Latihan Mandiri: Galeri Gambar Interaktif](11-practice-image-gallery/README.md)
-    - Komponen thumbnail gambar e-commerce modern dengan efek transisi fade-in.
+
+---
+
+## 🎮 Latihan Praktik & Studi Kasus Interaktif (Mini Projects)
+
+Seluruh proyek latihan aplikasi mini berbasis DOM telah dikelompokkan ke direktori [`projects/mini-projects/`](../projects/mini-projects/README.md):
+
+- 🎨 **[Color Picker (Pengubah Warna & Slider RGB)](../projects/mini-projects/04-color-picker/README.md)**: Manipulasi warna background dengan tombol acak dan slider range RGB.
+- 🐘 **[Game Suit Jawa GUI 2.0](../projects/mini-projects/05-suit-jawa-gui/README.md)**: Game grafis dengan animasi putar gambar, papan skor, dan efek interaktif.
+- 🖼️ **[Galeri Gambar Interaktif](../projects/mini-projects/06-image-gallery/README.md)**: Komponen thumbnail foto dengan _event delegation_ dan efek transisi _fade-in_.
 
 ---
 

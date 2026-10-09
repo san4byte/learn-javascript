@@ -1,63 +1,78 @@
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// 03 - Callbacks dan Fenomena Callback Hell
+// File ini dapat dijalankan langsung di Node.js maupun di Browser.
 
-console.log('--- 1. Asynchronous Callback Dasar ---');
-function ambilDataPengguna(id, callbackSukses, callbackGagal) {
+console.log('========================================================');
+console.log('📌 DEMONSTRASI POLA CALLBACK & CALLBACK HELL');
+console.log('========================================================\n');
+
+// 1. Synchronous Callback
+console.log('--- 1. Synchronous Callback ---');
+const angka = [1, 2, 3, 4, 5];
+const hasilKuadrat = angka.map((n) => n * n); // callback berjalan sinkron seketika
+console.log('Hasil kuadrat sinkron:', hasilKuadrat);
+
+// 2. Error-First Callback Convention (Standar Klasik Node.js)
+console.log('\n--- 2. Pola Node.js Error-First Callback (err, data) ---');
+function bacaFileSimulasi(namaFile, callback) {
   setTimeout(() => {
-    if (id > 0) {
-      callbackSukses({
-        id: id,
-        nama: 'Joko Santoso',
-        email: 'joko@example.com',
-      });
+    if (namaFile === 'config.json') {
+      callback(null, { database: 'localhost', port: 5432 }); // Sukses: err = null
     } else {
-      callbackGagal(new Error('ID pengguna tidak valid!'));
+      callback(new Error(`File "${namaFile}" tidak ditemukan!`), null); // Gagal
     }
-  }, 200);
+  }, 100);
 }
 
-ambilDataPengguna(
-  1,
-  (user) => console.log('Berhasil ambil user:', user.nama),
-  (err) => console.error('Gagal:', err.message)
-);
+bacaFileSimulasi('config.json', (err, config) => {
+  if (err) {
+    console.error('[ERROR]:', err.message);
+    return;
+  }
+  console.log('[SUKSES BACA FILE]:', config);
 
-console.log('\n--- 2. Ilustrasi Callback Hell (Pyramid of Doom) ---');
-// Simulasi proses berantai zaman dulu (sebelum ada Promise):
-function ambilPesanan(userId, callback) {
-  setTimeout(() => callback(['Order #101', 'Order #102']), 200);
-}
+  // 3. Simulasi Callback Hell (Pyramid of Doom)
+  jalankanCallbackHell();
+});
 
-function ambilDetailOrder(orderId, callback) {
-  setTimeout(
-    () => callback({ orderId, status: 'Terkirim', kurir: 'JNE' }),
-    200
-  );
-}
+// 3. Simulasi Masalah Callback Hell
+function jalankanCallbackHell() {
+  console.log('\n--- 3. Simulasi Callback Hell (Pyramid of Doom) ---');
 
-// Nested Callback bertingkat:
-ambilDataPengguna(
-  1,
-  (user) => {
-    console.log(`[Piramida Step 1] User didapat: ${user.nama}`);
+  function getPengguna(id, cb) {
+    setTimeout(() => cb(null, { id, nama: 'Joko Santoso' }), 100);
+  }
 
-    ambilPesanan(
-      user.id,
-      (daftarOrder) => {
-        console.log(`[Piramida Step 2] Jumlah pesanan: ${daftarOrder.length}`);
+  function getDaftarOrder(userId, cb) {
+    setTimeout(() => cb(null, ['ORD-001', 'ORD-002']), 100);
+  }
 
-        ambilDetailOrder(
-          daftarOrder[0],
-          (detail) => {
-            console.log(
-              `[Piramida Step 3] Status pesanan pertama: ${detail.status}`
-            );
-            // Jika butuh 5 langkah lagi, kode akan menjorok sangat jauh ke kanan!
-          },
-          (err) => console.error(err)
-        );
-      },
-      (err) => console.error(err)
+  function getDetailOrder(orderId, cb) {
+    setTimeout(
+      () => cb(null, { id: orderId, total: 250000, status: 'Lunas' }),
+      100,
     );
-  },
-  (err) => console.error(err)
-);
+  }
+
+  // Bersarang bertingkat (Nested Callback)
+  getPengguna(1, (errUser, user) => {
+    if (errUser) return console.error(errUser);
+    console.log(`[Step 1] User didapat: ${user.nama}`);
+
+    getDaftarOrder(user.id, (errOrder, orders) => {
+      if (errOrder) return console.error(errOrder);
+      console.log(
+        `[Step 2] Ditemukan ${orders.length} pesanan. Memeriksa ${orders[0]}...`,
+      );
+
+      getDetailOrder(orders[0], (errDetail, detail) => {
+        if (errDetail) return console.error(errDetail);
+        console.log(
+          `[Step 3] Detail Pesanan: ID=${detail.id}, Total=Rp ${detail.total}, Status=${detail.status}`,
+        );
+        console.log(
+          '\n💡 Perhatikan bagaimana nesting kode menjorok ke kanan dan penanganan error berulang!',
+        );
+      });
+    });
+  });
+}

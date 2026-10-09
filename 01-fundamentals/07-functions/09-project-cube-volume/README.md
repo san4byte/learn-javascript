@@ -2,108 +2,154 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Menerapkan prinsip Modular Programming dan Dekomposisi Fungsi.
-> - **Kapan Digunakan**: Membuat fungsi pembantu (_helper function_) yang dapat digunakan kembali.
-> - **Aturan Praktis**: Berikan nama parameter yang jelas dan terstandarisasi.
+> - **Fungsi Utama**: Mengintegrasikan seluruh materi fungsi (deklarasi, parameter, return, modularitas, dan komposisi fungsi) ke dalam pemecahan masalah komputasi dunia nyata.
+> - **Kapan Digunakan**: Memecah masalah matematika atau logika aplikasi yang kompleks menjadi sub-fungsi kecil independen (_Function Decomposition_).
+> - **Aturan Praktis**: Terapkan prinsip _Pure Functions_ (fungsi murni yang selalu mengembalikan hasil yang sama untuk input yang sama tanpa efek samping mutasi variabel luar).
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Menerapkan prinsip Modular Programming dan Dekomposisi Fungsi.
-- Membuat fungsi pembantu (_helper function_) yang dapat digunakan kembali.
-- Menghindari duplikasi kode perhitungan matematika.
+- Menguasai teknik Dekomposisi Masalah (_Problem Decomposition_) menjadi modul-modul fungsi kecil.
+- Menerapkan prinsip _Pure Function_ (fungsi deterministik bebas efek samping).
+- Memahami konsep Komposisi Fungsi (_Function Composition_) di mana satu fungsi memanggil fungsi pembantu (_helper_) lainnya.
+- Memperluas fleksibilitas fungsi komputasi menggunakan teknik _Rest Parameter_ variadik.
+- Mengembangkan pemikiran modularitas untuk memperluas sistem ke bentuk geometri lainnya (seperti balok).
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> Modular programming seperti **merakit balok LEGO**: Daripada mencetak satu patung istana utuh yang kaku, kita membuat balok-balok kecil (fungsi pembantu) yang bisa dirakit menjadi istana, rumah, atau mobil kapan pun kita butuhkan.
-
-Proyek **Perhitungan Volume Dua Kubus** adalah studi kasus klasik untuk memahami bagaimana memecah masalah besar menjadi fungsi-fungsi kecil yang rapi:
-
-### Alur Masalah:
-
-Diberikan panjang sisi dua buah kubus ($sisiA$ dan $sisiB$). Kita ingin menghitung **jumlah total volume** kedua kubus tersebut:
-$$Total = sisiA^3 + sisiB^3$$
-
-Daripada menuliskan rumus perhitungan pangkat tiga secara berulang-ulang di banyak tempat, kita mendefinisikan fungsi `hitungVolumeKubus(sisi)`, lalu memanggilnya di dalam fungsi `jumlahkanVolumeDuaKubus()`.
+> Modularitas fungsi seperti **merakit balok mainan LEGO**:
+> Daripada mencetak satu patung kastil istana raksasa yang paten dari pabrik (**fungsi monolitik gemuk / _god function_**), kita mendesain dan mencetak balok-balok persegi kecil standar (**fungsi pembantu spesifik**). Balok-balok kecil ini dapat digabungkan menjadi jembatan, rumah, atau menara kapan pun kita ingin membangun arsitektur yang berbeda.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Dekomposisi Arsitektur Proyek
+
+| Lapisan / Fungsi                         | Peran Desain                                   | Masukan                    | Keluaran                       |
+| :--------------------------------------- | :--------------------------------------------- | :------------------------- | :----------------------------- |
+| **`hitungVolumeKubus(sisi)`**            | _Atomic Helper Function_ (Hitung $s^3$)        | 1 Angka numerik positif    | Nilai volume kubus tunggal     |
+| **`jumlahVolumeDuaKubus(sisiA, sisiB)`** | _Coordinator Function_ (Komposisi $V_a + V_b$) | 2 Angka numerik            | Total gabungan volume 2 kubus  |
+| **`jumlahVolumeBanyakKubus(...sisi)`**   | _Variadic Function_ (Fleksibel tak terbatas)   | Koleksi angka tak terbatas | Total akumulasi volume n-kubus |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Masalah & Dekomposisi Fungsi
+
+Diberikan panjang sisi dua buah kubus ($sisiA$ dan $sisiB$). Masalah komputasi:
+$$\text{Total Volume} = sisiA^3 + sisiB^3$$
+
+Pendekatan amatir menuliskan formula `sisiA * sisiA * sisiA + sisiB * sisiB * sisiB` secara berulang. Pendekatan modular memisahkan rumus volume kubus menjadi fungsi pembantu tersendiri.
+
+#### 2. Implementasi Fungsi Murni (_Pure Function_) `hitungVolumeKubus`
+
+Fungsi murni tidak bergantung pada atau memodifikasi state luar:
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
-
-console.log('--- Project Perhitungan Volume Dua Kubus ---');
-
-// Fungsi pembantu independen (Modular Helper)
 function hitungVolumeKubus(sisi) {
-  return sisi * sisi * sisi; // atau Math.pow(sisi, 3)
+  return Math.pow(sisi, 3);
 }
+```
 
-// Fungsi utama yang mengombinasikan hasil
-function jumlahVolumeDuaKubus(sisiA, sisiB) {
-  const volumeA = hitungVolumeKubus(sisiA);
-  const volumeB = hitungVolumeKubus(sisiB);
+#### 3. Komposisi Fungsi dalam `jumlahVolumeDuaKubus`
 
-  return volumeA + volumeB;
+Fungsi koordinator memanggil fungsi pembantu untuk tiap kubus, lalu menjumlahkannya:
+
+```javascript
+function jumlahVolumeDuaKubus(a, b) {
+  return hitungVolumeKubus(a) + hitungVolumeKubus(b);
 }
+```
 
-const sisiKubus1 = 8;
-const sisiKubus2 = 3;
+#### 4. Validasi Argumen & Penanganan Galat Tipe Data
 
-const totalVolume = jumlahVolumeDuaKubus(sisiKubus1, sisiKubus2);
+Menambahkan proteksi di pintu gerbang fungsi helper agar kalkulasi selalu menerima input yang absah:
 
-console.log(
-  `Kubus 1 (sisi ${sisiKubus1}) volume : ${hitungVolumeKubus(sisiKubus1)}`
-);
-console.log(
-  `Kubus 2 (sisi ${sisiKubus2}) volume : ${hitungVolumeKubus(sisiKubus2)}`
-);
-console.log(`Total gabungan volume      : ${totalVolume}`);
+```javascript
+if (typeof sisi !== "number" || sisi <= 0) {
+  throw new TypeError("Sisi kubus wajib berupa angka positif!");
+}
+```
+
+#### 5. Generalisasi Fleksibel Menggunakan Rest Parameter
+
+Menggunakan kombinasi _Rest Parameter_, `map`, dan `reduce` agar fungsi dapat menghitung 2, 5, atau 100 kubus sekaligus tanpa mengubah kode inti:
+
+```javascript
+function jumlahVolumeBanyakKubus(...sisi) {
+  return sisi.map(hitungVolumeKubus).reduce((acc, v) => acc + v, 0);
+}
+```
+
+#### 6. Ekstensi Modularitas: Fungsi Volume Balok
+
+Modularitas memudahkan penambahan fitur baru tanpa menyentuh kode lama yang sudah teruji:
+
+```javascript
+function hitungVolumeBalok(p, l, t) {
+  return p * l * t;
+}
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- Project Perhitungan Volume Dua Kubus ---
-Kubus 1 (sisi 8) volume : 512
-Kubus 2 (sisi 3) volume : 27
-Total gabungan volume      : 539
+Seluruh implementasi demonstrasi fungsi murni perhitungan volume kubus tunggal, fungsi komposer dua kubus, generalisasi variadik dinamis berapapun kubus dengan _Rest Parameter_, serta modul fungsi volume balok telah dirangkum dalam berkas praktik [`example.js`](example.js).
+
+Jalankan demonstrasi secara langsung di terminal Anda:
+
+```bash
+node 01-fundamentals/07-functions/09-project-cube-volume/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Sistem Perhitungan Pajak E-Commerce**: Fungsi `hitungPajak(nominal)` dipanggil berulang kali saat menghitung pajak barang, pajak ongkos kirim, dan biaya layanan admin.
-2. **Kalkulator BMI & Kalori Kesehatan**: Fungsi menghitung BMR dan fungsi menghitung kalori aktivitas digabungkan untuk menghasilkan rekomendasi diet harian.
+1. **Mesin Kalkulasi Pajak dan Diskon E-Commerce**:
+   ```javascript
+   function hitungPPN(nominal) {
+     return nominal * 0.11;
+   }
+   function hitungBiayaAdmin(nominal) {
+     return 2500;
+   }
+   function kalkulasiTotalCheckout(subtotal, voucher) {
+     return (
+       subtotal - voucher + hitungPPN(subtotal) + hitungBiayaAdmin(subtotal)
+     );
+   }
+   ```
+2. **Kalkulator Indeks Massa Tubuh (BMI) & Kalori Harian**: Memecah penghitungan BMR, faktor aktivitas, dan rekomendasi defisit kalori ke dalam fungsi-fungsi modular.
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Fungsi Terlalu Gemuk (God Function)**: Menaruh seluruh logika perhitungan, validasi input, dan formatting teks ke dalam satu fungsi raksasa 200 baris. Selalu pecah menjadi fungsi-fungsi kecil yang spesifik.
+- **Duplikasi Rumus (Violating DRY Principle)**: Menulis rumus matematika yang sama berulang kali di berbagai berkas, sehingga saat aturan rumus berubah (misal aturan perpajakan), pengembang harus mengubahnya di puluhan tempat terpisah.
+- **Membuat Fungsi yang Terlalu Banyak Tanggung Jawab (_God Function_)**: Menggabungkan validasi input form HTML, koneksi database, dan rumus matematika di dalam satu fungsi raksasa 300 baris.
 
 ### 🌟 Best Practice
 
-- Berikan nama parameter yang jelas dan terstandarisasi.
-- Buat fungsi pembantu murni (_pure function_) yang tidak bergantung pada variabel global di luarnya agar mudah diuji (_unit testing_).
+- Usahakan setiap fungsi pembantu berukuran ringkas (di bawah 10 baris kode).
+- Pertahankan fungsi agar selalu berstatus _Pure Function_ (bebas efek samping) agar mudah dibuatkan pengujian otomatis (_Unit Testing_ dengan Jest/Vitest).
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Kembangkan fungsi di atas agar dapat menjumlahkan volume dari **tiga buah kubus** sekaligus.
-2. Buat fungsi pembantu serupa untuk menghitung volume balok: `hitungVolumeBalok(panjang, lebar, tinggi)`.
+1. Buat fungsi pembantu `hitungVolumeTabung(radius, tinggi)` yang menghitung volume tabung ($\pi \times r^2 \times t$). Gunakan `Math.PI`.
+2. Buat fungsi koordinator `jumlahVolumeDuaTabung(tabung1, tabung2)` yang menerima dua objek tabung `{ radius, tinggi }` dan mengembalikan gabungan volume keduanya.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [07.8 - Fungsi Rekursif](../08-recursion/README.md)
 - ➡️ **Selanjutnya:** [08.1 - Manipulasi Array](../../08-arrays/01-array-manipulation/README.md)

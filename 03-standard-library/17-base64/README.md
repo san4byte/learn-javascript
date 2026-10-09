@@ -1,158 +1,215 @@
-# 17 - Base64 (btoa, atob, dan Penanganan Teks UTF-8 Unicode)
+# 17 - Base64 (btoa, atob, Penanganan UTF-8 Unicode, dan Base64URL)
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Memahami konsep encoding **Base64** sebagai representasi data biner dalam 64 karakter ASCII yang aman.
-> - **Kapan Digunakan**: Menguasai fungsi bawaan `btoa()` (binary to ASCII) dan `atob()` (ASCII to binary).
-> - **Aturan Praktis**: Gunakan helper berbasis `TextEncoder` dan `TextDecoder` untuk menjamin keamanan konversi string beraksen dan emoji.
+> - **Fungsi Utama**: Mengonversi data biner menjadi 64 karakter ASCII yang aman ditransmisikan melalui kanal berbasis teks (seperti HTTP, email, atau JSON).
+> - **Kapan Digunakan**: Mengirim data kredensial via HTTP Basic Auth header, menyematkan gambar kecil via Data URL, atau mengemas payload token web (JWT).
+> - **Aturan Praktis**: `btoa()` **hanya mendukung karakter Latin-1 (0–255)**; selalu gunakan pola `TextEncoder`/`TextDecoder` atau `Buffer.from()` jika data memuat aksara non-Latin atau emoji, dan **ingat bahwa Base64 adalah encoding, BUKAN enkripsi pengamanan data**.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Memahami konsep encoding **Base64** sebagai representasi data biner dalam 64 karakter ASCII yang aman.
-- Menguasai fungsi bawaan `btoa()` (binary to ASCII) dan `atob()` (ASCII to binary).
-- Memahami **batasan kritis `btoa`** yang hanya mendukung karakter rentang Latin-1 (code point 0x00 - 0xFF).
-- Mampu menangani string Unicode / UTF-8 modern (seperti huruf beraksen, aksara Asia, dan emoji) agar tidak melempar InvalidCharacterError.
+- Memahami konsep skema encoding **Base64** dan alasan penggunaannya dalam transmisi data web.
+- Menguasai fungsi bawaan standar browser dan Node.js: `btoa()` (_binary to ASCII_) dan `atob()` (_ASCII to binary_).
+- Memahami aturan penambahan padding tanda sama dengan (`=`) serta konsekuensi pembengkakan ukuran data sebesar $\approx 33\%$.
+- Menganalisis batasan kritis rentang Latin-1 ($0x00 - 0xFF$) pada `btoa()` dan cara menangani `InvalidCharacterError`.
+- Mengimplementasikan helper universal modern berbasis **`TextEncoder`** & **`TextDecoder`** untuk mendukung karakter UTF-8 dan Emoji secara penuh.
+- Memanfaatkan API bawaan **`Buffer`** pada ekosistem Node.js untuk konversi cepat.
+- Memahami varian **Base64URL** (URL-Safe) untuk skenario token web (JWT) dan parameter query URL.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> `Base64` seperti **layanan telegram diplomatik zaman dahulu**: jaringan telegraf radio hanya mendukung alfabet teks huruf Latin standar. Jika Anda ingin mengirim lukisan sketsa atau gambar dokumen biner rahasia, Anda harus menerjemahkan titik-titik piksel gambar tersebut menjadi deretan kombinasi karakter teks biasa (`btoa`) agar bisa dikirim lewat kabel radio telegraf tanpa mengalami distorsi.
-
-**Base64** adalah skema encoding biner-ke-teks yang merepresentasikan data biner dalam format string ASCII berbasis 64 karakter (`A-Z`, `a-z`, `0-9`, `+`, `/`, dengan `=` sebagai padding).
-
-### 1. Fungsi Bawaan Browser & Node.js Modern
-
-- **`btoa(stringBiner)`**: _Binary to ASCII_, mengonversi string biner/teks menjadi string terenkripsi Base64.
-- **`atob(stringBase64)`**: _ASCII to Binary_, mengembalikan string Base64 kembali ke bentuk aslinya.
-
-### 2. Batasan Kritis: Masalah Karakter Latin-1 vs Unicode (UTF-8)
-
-Fungsi `btoa()` secara historis dirancang hanya untuk menangani karakter dalam rentang **Latin-1** (kode karakter $0$ hingga $255$).
-Jika Anda memasukkan karakter di luar rentang ini—seperti karakter kanji, aksara Arab/Jawa, atau **Emoji** (misal: `"Halo Dunia 🚀"`):
-
-```javascript
-btoa('Belajar JavaScript 🚀');
-// ❌ ERROR FATAL: DOMException / InvalidCharacterError: The string to be encoded contains characters outside of the Latin1 range.
-```
-
-### 3. Solusi Universal Meng-encode Unicode ke Base64
-
-Agar string Unicode modern dapat di-encode dengan aman menggunakan Base64:
-
-1. **Pendekatan Modern (Node.js & Browser Modern)**:
-   Menggunakan objek standar **`TextEncoder`** dan **`TextDecoder`** atau `Buffer` di Node.js.
-2. **Pendekatan Universal / Web Legacy**:
-   Mengonversi karakter Unicode menjadi urutan byte persen via `encodeURIComponent` sebelum dimasukkan ke `btoa()`:
-   ```javascript
-   function utf8_to_b64(str) {
-     return btoa(
-       encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => {
-         return String.fromCharCode('0x' + p1);
-       })
-     );
-   }
-   ```
+> `Base64` seperti **layanan telegram diplomatik zaman dahulu**: stasiun radio telegraf hanya memiliki tuts tombol untuk huruf alfabet Latin standar. Jika Anda ingin mengirimkan sketsa gambar atau dokumen stempel rahasia, operator telegram harus menerjemahkan titik-titik biner gambar tersebut menjadi kombinasi deretan huruf teks biasa (`btoa`) agar dapat dikirim lewat kabel telegraf tanpa risiko distorsi karakter. Di stasiun penerima, operator menerjemahkan kembali deretan huruf tersebut menjadi gambar semula (`atob`).
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### 1. Cheat-Sheet API & Komparasi Base64
+
+| Metode / Fitur             | Lingkungan    | Input                    | Output                 | Penanganan UTF-8 / Emoji            |
+| :------------------------- | :------------ | :----------------------- | :--------------------- | :---------------------------------- |
+| **`btoa(str)`**            | Web & Node.js | String Latin-1 ($0-255$) | String Base64          | ❌ Melempar `InvalidCharacterError` |
+| **`atob(base64)`**         | Web & Node.js | String Base64            | String Latin-1         | ❌ Menghasilkan karakter terpotong  |
+| **`TextEncoder` + `btoa`** | Web & Node.js | String UTF-8 Bebas       | String Base64          | ✅ Aman untuk semua aksara & emoji  |
+| **`Buffer.from()`**        | Node.js Murni | String / Buffer          | String Base64 / UTF-8  | ✅ Sangat cepat dan otomatis        |
+| **Base64URL**              | Web & Node.js | String Base64            | Safe String (`-`, `_`) | ✅ Aman dimasukkan ke parameter URL |
+
+---
+
+### 2. Anatomi Base64 & Karakter Padding (`=`)
+
+Base64 memetakan data dengan mengelompokkan setiap 3 byte ($3 \times 8 = 24$ bit) menjadi 4 unit 6-bit ($4 \times 6 = 24$ bit). Masing-masing unit 6-bit dipetakan ke 64 karakter indeks ASCII (`A-Z`, `a-z`, `0-9`, `+`, `/`).
+
+Jika jumlah byte input tidak habis dibagi 3, karakter `=` ditambahkan di ujung sebagai penyeimbang (_padding_):
+
+- **1 byte input** $\rightarrow$ menghasilkan 2 karakter Base64 + 2 padding (`==`).
+- **2 byte input** $\rightarrow$ menghasilkan 3 karakter Base64 + 1 padding (`=`).
+- **3 byte input** $\rightarrow$ menghasilkan 4 karakter Base64 + 0 padding.
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+console.log(btoa("a")); // "YQ==" (1 byte -> butuh 2 padding)
+console.log(btoa("ab")); // "YWI=" (2 byte -> butuh 1 padding)
+console.log(btoa("abc")); // "YWJj"  (3 byte -> pas kelipatan 3, tanpa padding)
+```
 
-console.log('--- 1. Dasar Encoding & Decoding Base64 (ASCII Murni) ---');
-const teksBiasa = 'Joko Santoso:Programmer';
-const textToBase64 = btoa(teksBiasa);
-const base64ToText = atob(textToBase64);
+> ⚠️ **Catatan Overhead Ukuran**:
+> Karena setiap 3 byte data diubah menjadi 4 karakter ASCII, ukuran data yang di-encode ke Base64 selalu **membengkak sekitar 33%** lebih besar dari ukuran file aslinya.
 
-console.log('Teks Asli                :', teksBiasa);
-console.log('Hasil btoa() (Base64)    :', textToBase64);
-console.log('Hasil atob() (Decode)    :', base64ToText);
+---
 
-console.log('\n--- 2. Penanganan Masalah Karakter Unicode / Emoji ---');
-const teksUnicode = 'Halo Dunia! 🌟 Selamat Belajar JavaScript 🚀';
+### 3. Batasan Kritis `btoa()`: Jebakan Karakter Latin-1
 
-// Helper Encode Unicode ke Base64 (Aman untuk UTF-8 dan Emoji)
-function encodeBase64Unicode(str) {
-  // 1. Bongkar string/emoji menjadi deretan byte UTF-8 (Uint8Array: angka 0-255)
+Fungsi `btoa()` secara historis dirancang untuk memproses string biner di mana setiap karakter hanya berukuran 1 byte (rentang kode $0$ s.d. $255$).
+Ketika Anda memasukkan karakter di luar rentang tersebut (misalnya huruf beraksen, aksara Mandarin/Arab/Jawa, atau Emoji), JavaScript akan melempar fatal error:
+
+```javascript
+try {
+  btoa("Kopi ☕"); // Simbol ☕ memiliki code point 9749 (> 255)
+} catch (err) {
+  console.error(err.name); // "InvalidCharacterError"
+}
+```
+
+---
+
+### 4. Solusi Universal Modern: `TextEncoder` & `TextDecoder`
+
+Di browser modern dan Node.js 18+, solusi standar dan paling elegan untuk menangani string Unicode UTF-8 adalah memanfaatkan pasangan Web Standard API: **`TextEncoder`** dan **`TextDecoder`**.
+
+```javascript
+// Helper Encode Aman untuk UTF-8 & Emoji
+function utf8ToBase64(str) {
+  // 1. Ubah string ke deretan byte UTF-8 (Uint8Array, angka 0-255)
   const bytes = new TextEncoder().encode(str);
-  // 2. Ubah tiap angka byte menjadi karakter Latin-1 (0-255) agar muat di btoa
+  // 2. Petakan Uint8Array menjadi string biner Latin-1
   const binString = Array.from(bytes, (byte) => String.fromCharCode(byte)).join(
-    ''
+    "",
   );
-  // 3. Masukkan ke btoa yang hanya menerima karakter rentang 0-255
+  // 3. Masukkan ke btoa bawaan
   return btoa(binString);
 }
 
-// Helper Decode Base64 ke Unicode Asli
-function decodeBase64Unicode(base64) {
-  // 1. Buka Base64 kembali menjadi string karakter biner Latin-1
+// Helper Decode Aman ke Teks Unicode Asli
+function base64ToUtf8(base64) {
+  // 1. Bongkar Base64 ke binary string
   const binString = atob(base64);
-  // 2. Ambil nilai kode angka asli (0-255) dari tiap karakter menjadi Uint8Array
+  // 2. Ambil nilai kode angka asli ke Uint8Array
   const bytes = Uint8Array.from(binString, (char) => char.charCodeAt(0));
-  // 3. Rakit kembali deretan byte UTF-8 menjadi string teks/emoji asli
+  // 3. Rakit kembali bytes UTF-8 menjadi string teks asli
   return new TextDecoder().decode(bytes);
 }
 
-const base64Aman = encodeBase64Unicode(teksUnicode);
-const hasilDecodeAman = decodeBase64Unicode(base64Aman);
-
-console.log('Teks Unicode Asli        :', teksUnicode);
-console.log('Base64 Aman UTF-8        :', base64Aman);
-console.log('Hasil Decode Sempurna    :', hasilDecodeAman);
+const encoded = utf8ToBase64("Halo Dunia! 🌟");
+console.log(encoded); // "SGFsbyBEdW5pYSEg8J+Mnw=="
+console.log(base64ToUtf8(encoded)); // "Halo Dunia! 🌟" ✅
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+### 5. Pendekatan Spesifik Node.js: `Buffer.from()`
 
-```text
---- 1. Dasar Encoding & Decoding Base64 (ASCII Murni) ---
-Teks Asli                : Joko Santoso:Programmer
-Hasil btoa() (Base64)    : Sm9rbyBTYW50b3NvOlByb2dyYW1tZXI=
-Hasil atob() (Decode)    : Joko Santoso:Programmer
+Jika aplikasi Anda berjalan di lingkungan backend Node.js murni, Anda dapat menggunakan kelas global **`Buffer`** yang jauh lebih ringkas dan dioptimasi di level C++:
 
---- 2. Penanganan Masalah Karakter Unicode / Emoji ---
-Teks Unicode Asli        : Halo Dunia! 🌟 Selamat Belajar JavaScript 🚀
-Base64 Aman UTF-8        : SGFsbyBEdW5pYSEg8J+MnyBTZWxhbWF0IEJlbGFqYXIgSmF2YVNjcmlwdCDwn5qA
-Hasil Decode Sempurna    : Halo Dunia! 🌟 Selamat Belajar JavaScript 🚀
+```javascript
+const teks = "Belajar JavaScript 🚀";
+
+// String UTF-8 ke Base64
+const base64Str = Buffer.from(teks, "utf-8").toString("base64");
+
+// Base64 kembali ke String UTF-8
+const restoredStr = Buffer.from(base64Str, "base64").toString("utf-8");
+
+console.log(base64Str); // "QmVsYWphciBKYXZhU2NyaXB0IPCfjqA="
+console.log(restoredStr); // "Belajar JavaScript 🚀" ✅
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+### 6. Base64URL: Varian Aman untuk URL dan Web Token (JWT)
+
+Karakter bawaan Base64 standar memuat simbol `+` dan `/`, serta padding `=`. Ketiga karakter ini merupakan _reserved characters_ di URL yang berisiko merusak parameter routing atau HTTP query.
+
+Spesifikasi **Base64URL** (RFC 7515) mengatasi masalah ini dengan:
+
+1. Mengganti karakter `+` menjadi `-` (dash/hyphen).
+2. Mengganti karakter `/` menjadi `_` (underscore).
+3. Menghapus karakter padding `=` di bagian akhir.
+
+```javascript
+function toBase64Url(base64) {
+  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function fromBase64Url(base64Url) {
+  let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  while (base64.length % 4 !== 0) {
+    base64 += "=";
+  }
+  return base64;
+}
+
+const sample = "users?query=node.js&filter=true";
+const b64 = utf8ToBase64(sample); // "dXNlcnM/cXVlcnk9bm9kZS5qcyZmaWx0ZXI9dHJ1ZQ=="
+const b64Url = toBase64Url(b64); // "dXNlcnM_cXVlcnk9bm9kZS5qcyZmaWx0ZXI9dHJ1ZQ" ✅
+```
+
+---
+
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
+
+Seluruh implementasi dasar `btoa()`/`atob()`, demonstrasi pembuktian padding `=`, penanganan `InvalidCharacterError`, helper universal `TextEncoder`/`TextDecoder`, API `Buffer` Node.js, konversi Base64URL, hingga studi kasus HTTP Basic Auth dan Data URL dirangkum dalam satu laboratorium kode terpadu yang siap dijalankan.
+
+📁 File: [`example.js`](./example.js)
+
+```bash
+# Jalankan langsung dari terminal:
+node 03-standard-library/17-base64/example.js
+```
+
+---
+
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Data URL Gambar Inline**: Menyematkan gambar ikon kecil langsung di dalam CSS atau HTML (`<img src='data:image/png;base64,iVBORw0KGgo...' />`) tanpa perlu request HTTP terpisah.
-2. **HTTP Basic Authentication Header**: Mengirim kredensial username dan password di header `Authorization: Basic ${btoa(user + ':' + pass)}`.
-3. **Payload JSON Web Token (JWT)**: Token otentikasi JWT menggunakan format Base64URL untuk membungkus claims data pengguna.
+1. **Header HTTP Basic Authentication**:
+   Mengirimkan kombinasi `username:password` pada header HTTP:
+   `Authorization: Basic ${btoa(username + ':' + password)}`.
+2. **Data URL Gambar / Media Kecil**:
+   Menyematkan icon kecil langsung pada atribut `src` HTML atau CSS background tanpa menambah request HTTP jaringan:
+   `<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0..." />`.
+3. **Payload Token JWT (JSON Web Token)**:
+   JWT terdiri dari tiga bagian terpisah titik (`header.payload.signature`), di mana header dan payload dikemas dalam format Base64URL.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
-- **Mengira Base64 adalah Enkripsi**: Base64 adalah **encoding**, BUKAN enkripsi pengamanan data! Siapapun bisa membuka data Base64 semudah memanggil `atob()`. Jangan gunakan Base64 untuk menyembunyikan password.
-- **Bencana `InvalidCharacterError`**: Memanggil `btoa('🚀')` langsung tanpa helper Unicode akan langsung merusak aplikasi dengan error runtime yang fatal.
-- **Ukuran file membengkak ~33%**: Data yang di-encode ke Base64 mengalami peningkatan ukuran byte sekitar 33%. Jangan gunakan Base64 untuk file gambar atau video berukuran besar.
+- **Mengira Base64 adalah Enkripsi**:
+  Base64 adalah **encoding data publik**, bukan enkripsi keamanan! Siapa pun dapat membalikkan string Base64 dalam hitungan milidetik hanya dengan memanggil `atob()`. **Jangan pernah menyimpan password atau token rahasia dalam bentuk Base64 mentah.**
+- **Crash `InvalidCharacterError` saat Menerima Emoji**:
+  Memanggil `btoa(inputUser)` secara langsung tanpa helper UTF-8 akan langsung merusak aplikasi pengguna saat mereka memasukkan simbol atau emoji.
+- **Pembengkakan Ukuran File Besar**:
+  Menyematkan gambar besar (misal > 50 KB) menggunakan Data URL Base64 memperberat dokumen HTML/CSS sebesar 33% dan mencegah browser melakukan caching aset biner secara efisien.
 
 ### 🌟 Best Practice
 
-- Gunakan helper berbasis `TextEncoder` dan `TextDecoder` untuk menjamin keamanan konversi string beraksen dan emoji.
-- Ingat bahwa Base64 hanya untuk kemudahan transmisi data di media berbasis teks, bukan untuk keamanan rahasia.
-- Batasi penggunaan Data URL gambar Base64 hanya untuk file berukuran kecil (di bawah 10 KB).
+- Gunakan helper universal berbasis `TextEncoder` dan `TextDecoder` untuk semua operasi Base64 string dinamis.
+- Gunakan Base64URL jika data Base64 akan disematkan ke dalam URL path, parameter query, atau cookie web.
+- Batasi penggunaan Data URL Base64 hanya untuk ikon mini (di bawah 5–10 KB).
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Buat fungsi `buatHeaderAuthBasic(username, password)` yang menghasilkan string otentikasi header HTTP `Basic <base64>` menggunakan `btoa()`.
-2. Ujilah helper `encodeBase64Unicode` dengan memasukkan nama Anda beserta simbol dan emoji, lalu buktikan bahwa string dapat dikembalikan secara utuh dengan `decodeBase64Unicode`.
+1. Buat fungsi `buatHeaderAuthBasic(username, password)` yang menerima dua argumen kredensial dan menghasilkan string header HTTP `Basic <base64>` yang aman untuk UTF-8.
+2. Buat fungsi `parseDataUrl(dataUrlString)` yang menerima string format `data:<mimeType>;base64,<data>` lalu mengekstrak serta mengembalikan objek `{ mimeType, contentText }` menggunakan fungsi decoding UTF-8.
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [16 - Encode](../16-encode/README.md)
 - ➡️ **Selanjutnya:** [18 - Eval](../18-eval/README.md)

@@ -1,44 +1,68 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Dom Selection</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>02 - DOM Selection</title>
     <style>
-      * {
-        border: 2px solid #dedede;
-        padding: 15px;
-        margin: 15px;
-      }
-      html {
-        margin: 0;
-        padding: 0;
-      }
       body {
-        max-width: 600px;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        max-width: 650px;
         margin: 30px auto;
-        font-family: sans-serif;
-        color: #333;
+        color: #1e293b;
+        line-height: 1.5;
+        padding: 0 15px;
+      }
+      #container {
+        border: 2px dashed #94a3b8;
+        border-radius: 8px;
+        padding: 16px;
+        background: #f8fafc;
+      }
+      section {
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 12px;
+        margin: 12px 0;
+        background: #ffffff;
+      }
+      .highlight {
+        background-color: #fef08a !important;
+      }
+      .card-item {
+        color: #2563eb;
+        font-weight: 500;
       }
     </style>
   </head>
   <body>
-    <h1 id="judul">Hello World</h1>
+    <h1 id="judul-utama">02 - DOM Selection Playground</h1>
     <div id="container">
-      <section id="a">
-        <p class="p1">paragraf 1</p>
-        <a href="https://developer.mozilla.org">Dokumentasi JavaScript</a>
-        <p class="p2">paragraf 2</p>
-        <p class="p3">paragraf 3</p>
+      <section id="section-a">
+        <p class="paragraf p1">Paragraf 1 (Class p1)</p>
+        <a id="link-mdn" href="https://developer.mozilla.org" target="_blank"
+          >Dokumentasi MDN JavaScript</a
+        >
+        <p class="paragraf p2">Paragraf 2 (Class p2)</p>
+        <p class="paragraf p3">Paragraf 3 (Class p3)</p>
       </section>
-      <section id="b">
-        <p>paragraf 4</p>
-        <ul>
-          <li>item 1</li>
-          <li>item 2</li>
-          <li>item 3</li>
+
+      <section id="section-b">
+        <p class="paragraf">Paragraf 4 di Section B</p>
+        <ul id="daftar-item">
+          <li class="card-item">Item Belajar 1: getElementById</li>
+          <li class="card-item">Item Belajar 2: querySelector</li>
+          <li class="card-item">Item Belajar 3: querySelectorAll</li>
         </ul>
       </section>
     </div>
+
     <script src="./example.js"></script>
   </body>
 </html>

@@ -2,190 +2,191 @@
 
 > ⏱️ **TL;DR (Ringkasan Cepat):**
 >
-> - **Fungsi Utama**: Menguasai sintaks Optional Chaining (`?.`) untuk mengakses nested object tanpa memicu TypeError.
-> - **Kapan Digunakan**: Memahami perbedaan krusial antara Nullish Coalescing (`??`) dan Logical OR (`||`).
-> - **Aturan Praktis**: Gabungkan `?.` dengan `??` untuk nilai default yang bersih dan elegan:
+> - **Fungsi Utama**: Menguasai penulisan kode JavaScript modern (rilisan TC39 ES2020 hingga ES2023) yang lebih ringkas, aman dari crash runtime, dan mendukung prinsip _immutability_.
+> - **Kapan Digunakan**: Mengakses data bersarang (_nested response_) dari REST API tanpa fatal error, menyediakan nilai bawaan (_default value_) yang tepat, menyalin objek secara mandiri (_deep clone_), serta memanipulasi array tanpa merusak state asli.
+> - **Aturan Praktis**: Gunakan `?.` untuk navigasi objek opsional dan padukan dengan `??` untuk nilai fallback. Gunakan `structuredClone()` untuk deep copy dan `toSorted()` / `toReversed()` alih-alih `sort()` / `reverse()` agar tidak memutasi data sumber.
+
+---
 
 ## 1. 🎯 Tujuan Belajar
 
-- Menguasai sintaks Optional Chaining (`?.`) untuk mengakses nested object tanpa memicu TypeError.
-- Memahami perbedaan krusial antara Nullish Coalescing (`??`) dan Logical OR (`||`).
-- Mampu menduplikasi objek bertingkat secara mendalam menggunakan `structuredClone()`.
-- Memahami method Array baru ES2023 (`toSorted()`, `toReversed()`, `toSpliced()`) untuk prinsip Immutability.
+- Menguasai operator _Optional Chaining_ (`?.`) pada akses properti, pemanggilan method dinamis, dan indeks array.
+- Memahami perbedaan mendasar antara _Nullish Coalescing_ (`??`) dan _Logical OR_ (`||`).
+- Menguasai operator penugasan logika (_Logical Assignment Operators_): `??=`, `||=`, dan `&&=`.
+- Memahami cara kerja fungsi bawaan `structuredClone()` untuk _deep copy_ objek bertingkat.
+- Menguasai 4 method array _immutable_ standar ES2023: `toSorted()`, `toReversed()`, `toSpliced()`, dan `with()`.
+- Menerapkan prinsip _immutability_ pada manajemen state aplikasi modern.
 
 ---
 
-## 2. 📖 Penjelasan Konsep
+## 2. 📖 Penjelasan Konsep & API Reference
 
 ### 🎭 Analogi Dunia Nyata
 
-> **Optional Chaining (`?.`)** dianalogikan seperti kurir pengantar paket: kurir mengetuk pagar rumah Anda; jika rumah kosong/pagar terkunci, kurir mencatat 'penerima tidak ditemukan' (`undefined`) dan langsung pulang dengan selamat. Tanpa `?.`, kurir akan mendobrak pintu rumah dan membunyikan alarm keras polisi (_Crash / TypeError_).
-
-JavaScript terus berevolusi setiap tahun melalui komite TC39. Fitur-fitur yang dirilis antara tahun 2020 hingga 2023 membawa perubahan besar pada cara developer menulis kode industri: lebih ringkas, aman dari error runtime, dan menganut prinsip _immutability_.
-
-### 1. Optional Chaining (`?.`)
-
-Sebelum ES2020, jika kita mengakses properti dari objek yang nilainya `null` atau `undefined`, JavaScript akan mengalami crash fatal: `TypeError: Cannot read properties of undefined`.
-Dengan `?.`, JavaScript akan segera berhenti mengevaluasi dan mengembalikan `undefined` jika target bernilai `null` atau `undefined`.
-
-- Properti: `user?.profile?.address?.city`
-- Method: `user.logActivity?.()`
-- Array Index: `users?.[0]?.name`
-
-### 2. Nullish Coalescing (`??`) vs Logical OR (`||`)
-
-Operator `||` menganggap nilai berikut sebagai falsy: `false`, `0`, `""` (string kosong), `NaN`, `null`, `undefined`.
-Seringkali nilai `0` atau `""` adalah nilai input yang valid (misal: skor 0 atau deskripsi kosong).
-Operator `??` **HANYA** akan mengambil nilai fallback jika sisi kiri bernilai `null` atau `undefined`.
-
-### 3. Deep Copy Modern: `structuredClone()`
-
-Sebelumnya, menyalin objek bertingkat (_nested object_) sering menggunakan trik lambat `JSON.parse(JSON.stringify(obj))` yang gagal pada tipe data Date, Set, Map, atau circular reference. `structuredClone()` adalah fungsi standar bawaan browser dan Node.js modern.
-
-### 4. ES2023 Immutable Array Methods:
-
-Method array lama seperti `sort()`, `reverse()`, dan `splice()` **memutasikan** (mengubah) array asli secara langsung.
-ES2023 menambahkan metode immutable yang menghasilkan array baru:
-
-- `array.toSorted()`
-- `array.toReversed()`
-- `array.toSpliced()`
+> - **Optional Chaining (`?.`)** seperti **kurir pengantar paket yang sopan**: Kurir mengetuk gerbang depan rumah (`alamat?.blok?.nomor`); jika rumah kosong atau alamat belum dibangun, kurir langsung mencatat _"tidak ditemukan"_ (`undefined`) dan pulang dengan selamat. Tanpa `?.`, kurir akan mendobrak paksa pintu rumah dan membunyikan alarm keras polisi (**`TypeError: Cannot read properties of undefined`**).
+> - **Nullish Coalescing (`??`)** seperti **kasir toko yang teliti**: Jika Anda membayar pulsa dengan kupon diskon bernilai Rp 0 (`volume = 0`), kasir tetap menghargai diskon 0 tersebut. Sementara operator lama `||` bertindak ceroboh dengan menganggap angka 0 sama dengan "tidak ada uang" lalu membatalkan transaksi Anda.
+> - **`structuredClone()`** seperti **mesin printer 3D fotokopi sempurna**: mencetak miniatur replika baru yang terpisah total. Anda bisa mengecat miniatur baru tanpa merusak miniatur asli di lemari.
 
 ---
 
-## 3. 💻 Contoh Kode (`example.js`)
+### Tabel Ringkasan Fitur Modern ES2020 - ES2023
+
+| Fitur / Operator           | Standar ECMAScript | Perilaku & Manfaat                                                                           |
+| :------------------------- | :----------------- | :------------------------------------------------------------------------------------------- |
+| **`obj?.prop`**            | ES2020             | Mengembalikan `undefined` jika sisi kiri bernilai `null` atau `undefined` (mencegah crash).  |
+| **`a ?? b`**               | ES2020             | Mengambil `b` HANYA jika `a` bernilai `null` atau `undefined` (mempertahankan `0` dan `""`). |
+| **`a ??= b`**              | ES2021             | Mengisi variabel `a` dengan nilai `b` hanya jika `a` saat ini bernilai _nullish_.            |
+| **`structuredClone(obj)`** | Web API / Node 17+ | Mengkloning objek bertingkat secara mendalam (_deep clone_) tanpa merusak referensi asli.    |
+| **`arr.toSorted()`**       | ES2023             | Mengurutkan array dan mengembalikan **array baru** (array asli tidak berubah).               |
+| **`arr.toReversed()`**     | ES2023             | Membalik urutan array dan mengembalikan **array baru**.                                      |
+| **`arr.with(index, val)`** | ES2023             | Mengganti satu elemen pada indeks tertentu dan mengembalikan **array baru**.                 |
+
+---
+
+### Pembahasan Mendalam Fitur & API
+
+#### 1. Optional Chaining (`?.`) pada Properti Bersarang
+
+Menghilangkan kebutuhan menulis percabangan panjang `if (user && user.address && user.address.city)`.
 
 ```javascript
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+const user = { name: "Joko" };
+// Aman: mengembalikan undefined tanpa melempar TypeError
+const kota = user?.address?.city;
+console.log(kota); // undefined
+```
 
-console.log('--- 1. Optional Chaining (?.) ---');
-const responseAPI = {
-  status: 200,
-  data: {
-    user: {
-      id: 42,
-      profile: {
-        name: 'Joko Santoso',
-        // address sengaja tidak ada
-      },
-    },
-  },
-};
+#### 2. Optional Chaining pada Method Call (`?.()`) dan Array (`?.[]`)
 
-// Akses aman properti bersarang tanpa khawatir TypeError
-const userCity = responseAPI?.data?.user?.profile?.address?.city;
-console.log('Kota pengguna:', userCity); // undefined (tidak crash!)
+Dapat dipasang untuk memanggil fungsi yang mungkin tidak didefinisikan atau mengambil elemen array yang mungkin kosong.
 
-// Panggilan method opsional
-const hitungBonus = responseAPI?.data?.user?.calculateBonus?.();
-console.log('Panggilan method opsional:', hitungBonus); // undefined
+```javascript
+// Memanggil method opsional:
+user.kirimNotifikasi?.();
 
-console.log('\n--- 2. Nullish Coalescing (??) vs Logical OR (||) ---');
-const konfigurasiUser = {
-  volume: 0, // User sengaja menyetel volume 0 (mute)
-  namaTampilan: '', // User mengosongkan nama tampilan
-  delayDetik: null, // Belum dikonfigurasi
-};
+// Mengambil indeks array opsional:
+const itemUtama = order?.items?.[0];
+```
 
-// Masalah dengan Logical OR (||):
-console.log('Volume dengan || :', konfigurasiUser.volume || 50); // 50 (SALAH: 0 dianggap false!)
-console.log('Volume dengan ?? :', konfigurasiUser.volume ?? 50); // 0 (BENAR: 0 dipertahankan)
+#### 3. Perbedaan Krusial Nullish Coalescing (`??`) vs Logical OR (`||`)
 
-console.log('Nama dengan ||   :', konfigurasiUser.namaTampilan || 'Anonim'); // "Anonim"
-console.log('Nama dengan ??   :', konfigurasiUser.namaTampilan ?? 'Anonim'); // "" (string kosong valid)
+Operator `||` menganggap angka `0`, string kosong `""`, dan boolean `false` sebagai nilai falsy. Sedangkan `??` **hanya** mendeteksi `null` dan `undefined`.
 
-console.log('Delay dengan ??  :', konfigurasiUser.delayDetik ?? 5); // 5 (karena null)
+```javascript
+const setting = { volume: 0, judul: "" };
 
-console.log('\n--- 3. Deep Clone dengan structuredClone() ---');
-const masterProduk = {
-  sku: 'PRD-001',
-  tags: new Set(['elektronik', 'gadget']),
-  spesifikasi: {
-    beratGram: 500,
-    dimensi: { panjang: 20, lebar: 15 },
-  },
-};
+console.log(setting.volume || 100); // 100 (❌ SALAH: volume 0 ditimpa 100)
+console.log(setting.volume ?? 100); // 0   (✅ BENAR: volume 0 dipertahankan)
+```
 
-// Deep copy independen
-const klonProduk = structuredClone(masterProduk);
-klonProduk.spesifikasi.dimensi.panjang = 99; // Mengubah hasil klon
+#### 4. Kombinasi Emas: `?.` Dipadukan dengan `??`
 
-console.log('Panjang asli :', masterProduk.spesifikasi.dimensi.panjang); // Tetap 20
-console.log('Panjang klon :', klonProduk.spesifikasi.dimensi.panjang); // 99
+Pola standar industri untuk mengambil data berstruktur dalam sekaligus menyiapkan nilai _fallback_ yang aman:
 
-console.log('\n--- 4. Immutable Array Methods (ES2023) ---');
-const daftarSkor = [85, 92, 78, 95, 60];
+```javascript
+const role = apiResponse?.data?.user?.role ?? "Tamu";
+console.log("Peran aktif:", role);
+```
 
-// toSorted() tidak memutasikan array asli
-const skorUrut = daftarSkor.toSorted((a, b) => a - b);
-const skorBalik = daftarSkor.toReversed();
+#### 5. Logical Assignment Operators (`??=`, `||=`, `&&=`)
 
-console.log('Array Asli   :', daftarSkor);
-console.log('Hasil toSorted :', skorUrut);
-console.log('Hasil toReversed :', skorBalik);
+Menyederhanakan inisialisasi konfigurasi:
+
+```javascript
+const config = { host: "localhost" };
+config.port ??= 8080; // set 8080 jika port null/undefined
+config.host ||= "127.0.0.1"; // set jika falsy
+```
+
+#### 6. Deep Clone Modern Menggunakan `structuredClone()`
+
+Menggantikan trik lawas `JSON.parse(JSON.stringify(obj))` yang lambat dan gagal pada `Date`, `Set`, `Map`, atau _circular reference_.
+
+```javascript
+const original = { detail: { skor: 90 }, waktu: new Date() };
+const salinan = structuredClone(original);
+
+salinan.detail.skor = 100;
+console.log(original.detail.skor); // Tetap 90 (independen murni)
+```
+
+#### 7. ES2023 Immutable Array: `toSorted()` dan `toReversed()`
+
+Method klasik `.sort()` dan `.reverse()` memutasikan array asli di tempat (_in-place mutation_), yang sering memicu bug pada state React/Vue.
+
+```javascript
+const angka = [3, 1, 4];
+const urut = angka.toSorted();
+console.log(angka); // [3, 1, 4] (Array asli tetap aman)
+console.log(urut); // [1, 3, 4]
+```
+
+#### 8. ES2023 Immutable Array: `toSpliced()` dan `with()`
+
+- `toSpliced(start, deleteCount, ...items)`: Versi immutable dari `.splice()`.
+- `with(index, value)`: Menyalin array dan memperbarui elemen pada satu indeks tertentu.
+
+```javascript
+const warna = ["merah", "kuning", "hijau"];
+const warnaBaru = warna.with(1, "biru");
+console.log(warnaBaru); // ['merah', 'biru', 'hijau']
 ```
 
 ---
 
-## 4. 🖥️ Output yang Diharapkan
+## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-```text
---- 1. Optional Chaining (?.) ---
-Kota pengguna: undefined
-Panggilan method opsional: undefined
+Seluruh implementasi navigasi properti bersarang via `?.`, perbandingan `??` vs `||`, operator penugasan `??=`, kloning mendalam `structuredClone()`, serta 4 method immutable array ES2023 telah dirangkum dalam berkas praktik [`example.js`](example.js).
 
---- 2. Nullish Coalescing (??) vs Logical OR (||) ---
-Volume dengan || : 50
-Volume dengan ?? : 0
-Nama dengan ||   : Anonim
-Nama dengan ??   :
-Delay dengan ??  : 5
+Jalankan demonstrasi menggunakan Node.js di terminal:
 
---- 3. Deep Clone dengan structuredClone() ---
-Panjang asli : 20
-Panjang klon : 99
-
---- 4. Immutable Array Methods (ES2023) ---
-Array Asli   : [ 85, 92, 78, 95, 60 ]
-Hasil toSorted : [ 60, 78, 85, 92, 95 ]
-Hasil toReversed : [ 60, 95, 78, 92, 85 ]
+```bash
+node 07-modern-web-api/02-modern-syntax-es2020/example.js
 ```
 
 ---
 
-## 5. 💡 Panduan Praktis & Studi Kasus
+## 4. 💡 Panduan Praktis & Studi Kasus
 
 ### 🏢 Real-World Use Case
 
-1. **Konsumsi REST API / GraphQL**: Response dari server sering kali tidak memiliki field tertentu jika data belum lengkap di database (misal: user belum mengisi alamat rumah).
-2. **State Management di React/Vue/Redux**: Framework modern melarang keras mutasi langsung pada array/objek state. Penggunaan `toSorted()` dan `structuredClone()` menjadi solusi standar industri.
-3. **Form Setting Audio / Games**: Fitur game dengan volume suara `0` akan rusak jika menggunakan `volume || 100`, karena volume `0` akan otomatis ter-reset ke `100`.
+1. **Konsumsi Data API Pihak Ketiga**:
+   ```javascript
+   function renderUserAvatar(user) {
+     const avatarUrl =
+       user?.meta?.images?.thumbnail?.url ?? "/assets/default-avatar.png";
+     document.getElementById("avatar").src = avatarUrl;
+   }
+   ```
+2. **State Management Tanpa Mutasi (Redux / React State)**:
+   ```javascript
+   function updateTodoStatus(todos, index, isCompleted) {
+     return todos.with(index, { ...todos[index], completed: isCompleted });
+   }
+   ```
 
-### ⚠️ Common Pitfalls (Jebakan Umum)
+### ⚠️ Common Pitfalls
 
-- **Salah Tempat Menggunakan `?.`**: Jangan gunakan `?.` pada variabel yang dideklarasikan dengan `let` atau `const` yang belum ada (contoh: `variabelGaib?.nama` tetap memicu _ReferenceError_). `?.` hanya melindungi properti dari objek yang bernilai `null` atau `undefined`.
-- **Menggunakan `structuredClone` untuk Function**: `structuredClone()` tidak dapat mengkloning function atau element DOM (akan melempar `DataCloneError`).
+- **Menggunakan `||` untuk Konfigurasi Nilai Numerik**: Mengakibatkan pengaturan angka `0` (misal: `diskon = 0`, `durasi = 0`) selalu ditolak dan keliru digantikan oleh nilai default.
+- **Menggunakan `structuredClone()` pada Fungsi**: Fungsi tidak dapat disalin oleh `structuredClone()` dan akan melempar eksepsi `DOMException: could not be cloned`.
 
 ### 🌟 Best Practice
 
-- Gabungkan `?.` dengan `??` untuk nilai default yang bersih dan elegan:
-  `const avatarUrl = user?.profile?.avatar ?? '/images/default-avatar.png';`
-- Gunakan `toSorted()` saat ingin menampilkan daftar yang terurut di frontend tanpa merusak urutan asli data di state.
+- Utamakan penggunaan `??` daripada `||` untuk semua evaluasi parameter opsi atau _fallback values_.
+- Gunakan method immutable (`toSorted`, `toReversed`, `with`) untuk mencegah _side effect_ yang tidak disengaja saat mengolah data array.
 
 ---
 
-## 6. ✍️ Latihan Mandiri
+## 5. ✍️ Latihan Mandiri
 
-1. Diberikan objek pesanan:
-   `const pesanan = { id: 12, pelanggan: { kontak: {} } };`
-   Ambil nomor telepon pelanggan menggunakan `?.` dan berikan fallback string `"Nomor telepon belum diatur"` menggunakan `??`.
-2. Buatlah sebuah array daftar harga `[50000, 20000, 100000, 15000]`. Urutkan dari yang termurah tanpa mengubah isi array aslinya.
+1. Diberikan objek `const mobil = { mesin: { cc: 1500 } }`. Gunakan kombinasi `?.` dan `??` untuk mengambil nilai transmisi `mobil?.mesin?.transmisi` dengan nilai fallback `"Manual"`.
+2. Gunakan method `.with()` pada array nama hari `['Senin', 'Selasa', 'Rabu']` untuk mengganti `'Selasa'` menjadi `'Tuesday'` tanpa merusak array aslinya!
 
 ---
 
-## 7. 🧭 Navigasi
+## 6. 🧭 Navigasi
 
-- ⬅️ **Sebelumnya:** [01 - Web Storage API](../01-web-storage/README.md)
-- ➡️ **Selanjutnya:** [03 - URL dan FormData API](../03-url-and-formdata/README.md)
+- ⬅️ **Materi Sebelumnya:** [01 - Web Storage API](../01-web-storage/README.md)
+- ➡️ **Materi Selanjutnya:** [03 - URL & FormData API](../03-url-and-formdata/README.md)
 - 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

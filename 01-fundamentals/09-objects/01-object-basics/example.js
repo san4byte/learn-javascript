@@ -1,8 +1,10 @@
-// Penjelasan lengkap materi ini dapat dilihat di README.md
+// =============================================================================
+// MODUL 01 - FUNDAMENTALS: 09.1 - DASAR OBJECT (PROPERTI & METHOD)
+// =============================================================================
 
-console.log('--- 1. Anatomi Objek dengan Properti dan Method ---');
+console.log('=== 1. ANATOMI OBJEK, PROPERTI & METHOD SHORTHAND ===');
 const pengguna = {
-  // Properti
+  // Properti primitif dan bersarang
   id: 101,
   namaLengkap: 'Joko Santoso',
   email: 'joko@example.com',
@@ -13,35 +15,48 @@ const pengguna = {
     provinsi: 'DKI Jakarta',
   },
 
-  // Method (Fungsi di dalam Objek)
+  // Method tradisional
   perkenalkanDiri: function () {
     return `Halo, nama saya ${this.namaLengkap} dari ${this.alamat.kota}.`;
   },
 
-  // Shorthand Method (ES6)
+  // Method Shorthand ES6
   hitungTotalKeahlian() {
     return this.keahlian.length;
   },
 };
 
-console.log('Akses via Dot Notation     :', pengguna.namaLengkap);
-console.log('Akses Nested Object        :', pengguna.alamat.kota);
-console.log('Akses Array dalam Objek    :', pengguna.keahlian[0]);
-console.log('Memanggil Method           :', pengguna.perkenalkanDiri());
+console.log('Dot Notation (nama)        :', pengguna.namaLengkap);
+console.log('Nested Access (kota)       :', pengguna.alamat.kota);
+console.log('Array in Object (keahlian) :', pengguna.keahlian[0]);
+console.log('Panggil Method             :', pengguna.perkenalkanDiri());
 console.log(
-  'Memanggil Shorthand Method :',
+  'Panggil Method Shorthand   :',
   pengguna.hitungTotalKeahlian(),
-  'keahlian'
+  'keahlian',
 );
 
-console.log('\n--- 2. Bracket Notation Dinamis ---');
-const propertiYangDicari = 'email';
-console.log('Akses Dinamis:', pengguna[propertiYangDicari]); // pengguna["email"]
+console.log('\n=== 2. BRACKET NOTATION & AKSES DINAMIS ===');
+// Wajib pakai bracket notation untuk nama kunci dinamis atau berspasi
+const propertiTarget = 'email';
+console.log(`Akses Dinamis [${propertiTarget}]:`, pengguna[propertiTarget]);
 
-// Menambah dan mengubah properti secara dinamis
-pengguna.umur = 25;
-pengguna.isAktif = false;
-console.log('Objek setelah diupdate:', {
-  umur: pengguna.umur,
-  isAktif: pengguna.isAktif,
-});
+pengguna['nomor telepon utama'] = '0812-3456-7890';
+console.log('Akses Properti Berspasi    :', pengguna['nomor telepon utama']);
+
+console.log('\n=== 3. PENAMBAHAN, MODIFIKASI & OPERATOR DELETE ===');
+pengguna.umur = 25; // Menambah properti baru
+pengguna.isAktif = false; // Mengubah nilai properti yang ada
+console.log('Sebelum delete umur        :', pengguna.umur);
+
+// Menghapus properti secara permanen dari memori
+delete pengguna.umur;
+console.log('Setelah delete pengguna.umur:', pengguna.umur); // undefined
+
+console.log('\n=== 4. PENGECEKAN KEBERADAAN PROPERTI ===');
+console.log("Apakah ada properti 'email' (in)       :", 'email' in pengguna);
+console.log("Apakah ada properti 'umur' (in)        :", 'umur' in pengguna);
+console.log(
+  'Pengecekan Object.hasOwn(pengguna, id) :',
+  Object.hasOwn(pengguna, 'id'),
+);

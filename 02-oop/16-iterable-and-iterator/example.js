@@ -1,130 +1,168 @@
-// Penjelasan lengkap dapat dibaca pada README.md
-// Iterable dan Iterator Protocol (Implementation + Real World Project Example)
+/**
+ * 16 - Iterable dan Iterator Protocol
+ *
+ * Demonstrasi lengkap Iteration Protocols di JavaScript:
+ * 1. Implementasi manual kontrak Iterable & Iterator (Counter)
+ * 2. Konsumsi protokol: for...of, Spread operator (...), Destructuring, Array.from()
+ * 3. Custom Collection Enkapsulasi (ProductCatalog)
+ * 4. Implementasi modern menggunakan Generator Method (*[Symbol.iterator]() & yield)
+ * 5. Lazy Evaluation: Deret tak hingga (Infinite Fibonacci Generator) hemat memori
+ * 6. Method iterator opsional: return() untuk cleanup saat break/keluar dini
+ */
 
-// ====================================================================
-// 1. IMPLEMENTASI DASAR ITERABLE PROTOCOL
-// ====================================================================
-
-// Objek hasil kontrak Iterator
-class CounterIteratorResult {
-  constructor(value, done) {
-    this.value = value;
-    this.done = done;
-  }
-}
-
-// Iterator yang memiliki method next()
-class CounterIterator {
-  constructor(value, max) {
-    this.value = value;
-    this.max = max;
+console.log('=== 1. Implementasi Manual Kontrak Iterable & Iterator ===');
+class RentangAngka {
+  constructor(dari, sampai) {
+    this.dari = dari;
+    this.sampai = sampai;
   }
 
-  next() {
-    try {
-      if (this.value > this.max) {
-        return new CounterIteratorResult(undefined, true);
-      } else {
-        return new CounterIteratorResult(this.value, false);
-      }
-    } finally {
-      this.value++;
-    }
-  }
-}
-
-// Objek Iterable yang memiliki method [Symbol.iterator]()
-class Counter {
-  constructor(value, max) {
-    this.value = value;
-    this.max = max;
-  }
-
+  // Kontrak Iterable: Menyediakan method ber-symbol [Symbol.iterator]()
   [Symbol.iterator]() {
-    return new CounterIterator(this.value, this.max);
-  }
-}
+    let saatIni = this.dari;
+    const batas = this.sampai;
 
-console.info('--- 1. Loop Counter Iterable ---');
-const counter = new Counter(1, 5);
-
-// Karena mematuhi kontrak Iterable, objek counter bisa langsung di-loop dengan for..of!
-for (const val of counter) {
-  console.info('Nilai counter:', val);
-}
-
-
-// ====================================================================
-// 2. CONTOH NYATA DI REAL PROJECT: Custom Product Catalog & Pagination
-// ====================================================================
-// Bayangkan Anda membuat aplikasi E-Commerce. Anda ingin katalog produk
-// bisa langsung di-for..of atau di-spread [...catalog] tanpa harus membuka
-// struktur data internalnya (encapsulation).
-
-class ProductCatalog {
-  constructor() {
-    this.products = [];
-  }
-
-  addProduct(name, price) {
-    this.products.push({ name, price });
-  }
-
-  // Membuat katalog ini menjadi Iterable secara ringkas & native!
-  [Symbol.iterator]() {
-    let index = 0;
-    const items = this.products;
-
+    // Kontrak Iterator: Mengembalikan objek dengan method next()
     return {
       next() {
-        if (index < items.length) {
-          return { value: items[index++], done: false };
-        } else {
-          return { value: undefined, done: true };
+        if (saatIni <= batas) {
+          return { value: saatIni++, done: false };
         }
+        return { value: undefined, done: true };
       },
     };
   }
 }
 
-console.info('\n--- 2. Real Project: E-Commerce Product Catalog ---');
-const catalog = new ProductCatalog();
-catalog.addProduct('Laptop Gaming', 15000000);
-catalog.addProduct('Mouse Wireless', 250000);
-catalog.addProduct('Mechanical Keyboard', 800000);
+const deret = new RentangAngka(1, 4);
 
-// Bisa langsung di-for..of secara elegan:
-for (const product of catalog) {
-  console.info(`Barang: ${product.name} | Harga: Rp ${product.price}`);
+console.log('Konsumsi via for...of:');
+for (const angka of deret) {
+  console.log(`- Angka: ${angka}`);
 }
+console.log();
 
-// Bisa langsung dibongkar dengan Spread Operator:
-const allItems = [...catalog];
-console.info('Total item katalog via spread:', allItems.length);
+console.log('=== 2. Konsumen Protokol Iterasi di JavaScript ===');
+// a. Spread Operator
+const arrayAngka = [...deret];
+console.log('Spread [...deret]           :', arrayAngka);
 
+// b. Destructuring Assignment
+const [pertama, kedua] = deret;
+console.log('Destructuring [pertama, ...] :', pertama, kedua);
 
-// ====================================================================
-// 3. CARA MODERN & PRAKTIS DI INDUSTRI: Generator Function (function*)
-// ====================================================================
-// Di industri modern, menulis objek Iterator manual dengan next() dan done
-// cukup panjang. JavaScript menyediakan Generator (function*) dengan 'yield'
-// yang otomatis membuat Iterable & Iterator di balik layar!
+// c. Array.from()
+const dariArray = Array.from(deret);
+console.log('Array.from(deret)            :', dariArray);
 
-class BookShelf {
-  constructor() {
-    this.books = ['Clean Code', 'JavaScript: The Good Parts', 'Refactoring'];
+// d. new Set()
+const himpunan = new Set(deret);
+console.log('new Set(deret)               :', himpunan);
+console.log();
+
+console.log('=== 3. Custom Collection Enkapsulasi (Katalog Produk) ===');
+class KatalogProduk {
+  #daftar = [];
+
+  tambah(nama, harga) {
+    this.#daftar.push({ nama, harga });
   }
 
-  // Generator method otomatis menjadi [Symbol.iterator]
+  // Mengekspos item secara aman melalui protokol iterasi
+  [Symbol.iterator]() {
+    let indeks = 0;
+    const items = this.#daftar;
+
+    return {
+      next() {
+        if (indeks < items.length) {
+          return { value: items[indeks++], done: false };
+        }
+        return { value: undefined, done: true };
+      },
+    };
+  }
+}
+
+const katalog = new KatalogProduk();
+katalog.tambah('Laptop Ultra', 18_000_000);
+katalog.tambah('Mouse Ergonomis', 450_000);
+
+for (const item of katalog) {
+  console.log(`Produk: ${item.nama} | Rp${item.harga.toLocaleString('id-ID')}`);
+}
+console.log();
+
+console.log('=== 4. Pendekatan Modern: Generator Method (* & yield) ===');
+class RakBuku {
+  #buku = ['Clean Code', 'Design Patterns', 'Refactoring'];
+
+  // Generator otomatis mengembalikan objek Iterator yang mematuhi protokol
   *[Symbol.iterator]() {
-    for (const book of this.books) {
-      yield book; // yield mengembalikan value dan menunggu pemanggilan berikutnya
+    for (const judul of this.#buku) {
+      yield judul; // Membungkus nilai ke { value, done: false } secara otomatis
     }
   }
 }
 
-console.info('\n--- 3. Modern Real-World: Generator Function* di Class ---');
-const shelf = new BookShelf();
-for (const book of shelf) {
-  console.info('Buku di rak:', book);
+const rak = new RakBuku();
+for (const judul of rak) {
+  console.log(`Buku: ${judul}`);
+}
+console.log();
+
+console.log('=== 5. Lazy Evaluation: Deret Fibonacci Tak Hingga ===');
+class GeneratorFibonacci {
+  *[Symbol.iterator]() {
+    let [prev, curr] = [0, 1];
+    while (true) {
+      yield curr;
+      [prev, curr] = [curr, prev + curr];
+    }
+  }
+}
+
+const deretFibo = new GeneratorFibonacci();
+const hasilFibo = [];
+
+// Konsumsi deret tak terhingga secukupnya menggunakan break
+for (const n of deretFibo) {
+  hasilFibo.push(n);
+  if (hasilFibo.length >= 8) break; // Berhenti setelah 8 angka
+}
+
+console.log('8 Bilangan Fibonacci Pertama:', hasilFibo);
+console.log();
+
+console.log('=== 6. Cleanup Resource saat Keluar Dini via return() ===');
+class StreamSensor {
+  [Symbol.iterator]() {
+    let aktif = true;
+    let hitung = 1;
+
+    return {
+      next() {
+        if (aktif && hitung <= 5) {
+          return { value: `DataSensor-${hitung++}`, done: false };
+        }
+        return { value: undefined, done: true };
+      },
+      // Dipanggil otomatis oleh engine jika loop dihentikan oleh break / throw
+      return() {
+        console.log(
+          '-> [Cleanup]: Loop dihentikan dini, koneksi sensor ditutup!',
+        );
+        aktif = false;
+        return { value: undefined, done: true };
+      },
+    };
+  }
+}
+
+for (const sample of new StreamSensor()) {
+  console.log('Membaca:', sample);
+  if (sample === 'DataSensor-2') {
+    console.log('Kondisi terpenuhi, melakukan break...');
+    break; // Mematikan iterator & memicu method return()
+  }
 }
