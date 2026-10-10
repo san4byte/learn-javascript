@@ -112,3 +112,34 @@ console.log('Ukuran setelah delete         :', sesiUser.size);
 // .clear() menghapus seluruh isi Map
 konfigurasi.clear();
 console.log('Ukuran konfigurasi sesudah .clear():', konfigurasi.size); // 0
+
+console.log('\n=== 6. KOMPARASI WEAKMAP (MENCEGAH MEMORY LEAK) ===');
+// A. Inisialisasi WeakMap
+const cacheMetadata = new WeakMap();
+
+// Objek target yang akan dijadikan kunci
+let tombolBeli = { id: 'btn-beli', tagName: 'BUTTON' };
+
+// B. Menyimpan data (Key WAJIB berupa Objek)
+cacheMetadata.set(tombolBeli, {
+  jumlahKlik: 12,
+  terakhirDitekan: '2026-10-10 17:35:00',
+});
+
+console.log('Ambil data dari WeakMap (.get)  :', cacheMetadata.get(tombolBeli));
+console.log('Cek keberadaan key (.has)       :', cacheMetadata.has(tombolBeli)); // true
+
+// C. Karakteristik khusus WeakMap:
+// - Non-iterable: tidak bisa di-loop dengan for..of atau forEach
+// - Tidak memiliki properti .size
+console.log('Properti .size di WeakMap       :', cacheMetadata.size); // undefined
+
+// D. Hapus data secara eksplisit (.delete)
+const statusHapusWeak = cacheMetadata.delete(tombolBeli);
+console.log('Status delete WeakMap           :', statusHapusWeak); // true
+
+// E. Skenario Pencegahan Memory Leak:
+// Jika tombolBeli = null, entri pada cacheMetadata akan otomatis dibersihkan
+// oleh Garbage Collector (GC) tanpa perlu intervensi manual!
+tombolBeli = null;
+console.log('Kunci tombolBeli dilepas ke GC  : Aman dari memory leak!');

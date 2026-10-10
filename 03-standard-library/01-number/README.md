@@ -114,14 +114,14 @@ JavaScript menggunakan 53 bit untuk menyimpan bagian integer ($2^{53} - 1 = 9007
   Fungsi bawaan `isNaN()` global secara diam-diam memaksakan konversi tipe (_implicit type coercion_) ke angka terlebih dahulu.
 
   ```javascript
-  console.log(isNaN('halo')); // true! ❌ (Karena 'halo' diubah jadi NaN terlebih dahulu)
+  console.log(isNaN("halo")); // true! ❌ (Karena 'halo' diubah jadi NaN terlebih dahulu)
   console.log(isNaN(undefined)); // true! ❌
   ```
 
 - **Solusi Modern: `Number.isNaN(value)`**:
   Hanya mengembalikan `true` jika nilai tersebut **bertipe number dan memang bernilai NaN murni**:
   ```javascript
-  console.log(Number.isNaN('halo')); // false ✅ (tipe string, bukan NaN)
+  console.log(Number.isNaN("halo")); // false ✅ (tipe string, bukan NaN)
   console.log(Number.isNaN(undefined)); // false ✅
   console.log(Number.isNaN(0 / 0)); // true ✅ (hasil pembagian ilegal bernilai NaN)
   console.log(Number.isNaN(NaN)); // true ✅
@@ -135,8 +135,8 @@ JavaScript menggunakan 53 bit untuk menyimpan bagian integer ($2^{53} - 1 = 9007
 - **`Number.isFinite()`**: Memeriksa secara ketat tanpa konversi:
 
   ```javascript
-  console.log(isFinite('100')); // true (string '100' dikonversi jadi angka 100)
-  console.log(Number.isFinite('100')); // false ✅ (karena bertipe string)
+  console.log(isFinite("100")); // true (string '100' dikonversi jadi angka 100)
+  console.log(Number.isFinite("100")); // false ✅ (karena bertipe string)
 
   console.log(Number.isFinite(100)); // true ✅
   console.log(Number.isFinite(Infinity)); // false
@@ -153,7 +153,7 @@ JavaScript menggunakan 53 bit untuk menyimpan bagian integer ($2^{53} - 1 = 9007
   ```javascript
   console.log(Number.isInteger(10)); // true
   console.log(Number.isInteger(10.5)); // false
-  console.log(Number.isInteger('10')); // false (tidak ada coercion)
+  console.log(Number.isInteger("10")); // false (tidak ada coercion)
 
   // Kasus Unik di JavaScript:
   console.log(Number.isInteger(10.0)); // true! (karena 10.0 identik secara bit dengan 10)
@@ -176,22 +176,22 @@ Mengambil bilangan bulat dari teks.
 
   ```javascript
   // Praktik Terbaik: Selalu beri radix 10 secara eksplisit!
-  console.log(Number.parseInt('42', 10)); // 42
+  console.log(Number.parseInt("42", 10)); // 42
   ```
 
 - **Kasus B: Karakter Non-Digit di Belakang (_Trailing Text_)**
   `parseInt` membaca karakter dari kiri hingga menemukan karakter bukan angka pertama:
 
   ```javascript
-  console.log(Number.parseInt('100px', 10)); // 100 (berguna untuk CSS parsing)
-  console.log(Number.parseInt('  50 kg', 10)); // 50 (spasi di depan diabaikan)
-  console.log(Number.parseInt('Harga: 100', 10)); // NaN (karena karakter awal adalah huruf)
+  console.log(Number.parseInt("100px", 10)); // 100 (berguna untuk CSS parsing)
+  console.log(Number.parseInt("  50 kg", 10)); // 50 (spasi di depan diabaikan)
+  console.log(Number.parseInt("Harga: 100", 10)); // NaN (karena karakter awal adalah huruf)
   ```
 
 - **Kasus C: Basis Lain (Heksadesimal, Oktal, Biner)**
   ```javascript
-  console.log(Number.parseInt('FF', 16)); // 255 (basis 16 heksadesimal)
-  console.log(Number.parseInt('1010', 2)); // 10 (basis 2 biner)
+  console.log(Number.parseInt("FF", 16)); // 255 (basis 16 heksadesimal)
+  console.log(Number.parseInt("1010", 2)); // 10 (basis 2 biner)
   ```
 
 ---
@@ -204,8 +204,8 @@ Membaca nilai desimal dari teks.
   - Otomatis mengenali tanda titik `.` sebagai pemisah desimal.
   - Mendukung notasi eksponensial (saintifik) seperti `'2.5e3'`:
   ```javascript
-  console.log(Number.parseFloat('3.14159rad')); // 3.14159
-  console.log(Number.parseFloat('2.5e3')); // 2500 (2.5 * 10^3)
+  console.log(Number.parseFloat("3.14159rad")); // 3.14159
+  console.log(Number.parseFloat("2.5e3")); // 2500 (2.5 * 10^3)
   ```
 
 ---
@@ -216,12 +216,12 @@ Jangan tertukar antara fungsi parsing dan fungsi konversi tipe:
 
 ```javascript
 // parseInt mengabaikan akhiran string:
-console.log(Number.parseInt('42px', 10)); // 42
+console.log(Number.parseInt("42px", 10)); // 42
 
 // Number() ketat: seluruh karakter harus merupakan angka yang valid:
-console.log(Number('42px')); // NaN ❌
-console.log(Number('   42   ')); // 42 (spasi bersih masih diterima)
-console.log(Number('')); // 0 (string kosong menjadi 0!)
+console.log(Number("42px")); // NaN ❌
+console.log(Number("   42   ")); // 42 (spasi bersih masih diterima)
+console.log(Number("")); // 0 (string kosong menjadi 0!)
 ```
 
 ---
@@ -291,17 +291,17 @@ Menampilkan angka sesuai bahasa dan konvensi regional tanpa perlu membuat rumus 
 const gaji = 12500000;
 
 // Format Rupiah Indonesia tanpa desimal sen
-const rupiah = gaji.toLocaleString('id-ID', {
-  style: 'currency',
-  currency: 'IDR',
+const rupiah = gaji.toLocaleString("id-ID", {
+  style: "currency",
+  currency: "IDR",
   maximumFractionDigits: 0,
 });
 console.log(rupiah); // "Rp 12.500.000"
 
 // Format Dolar AS
-const dollar = gaji.toLocaleString('en-US', {
-  style: 'currency',
-  currency: 'USD',
+const dollar = gaji.toLocaleString("en-US", {
+  style: "currency",
+  currency: "USD",
 });
 console.log(dollar); // "$12,500,000.00"
 ```
@@ -322,7 +322,7 @@ console.log(typeof objek); // "object"
 // Jebakan Kondisional (Objek selalu bernilai truthy!):
 const angkaNolObj = new Number(0);
 if (angkaNolObj) {
-  console.log('Ini akan dieksekusi! ⚠️'); // Karena semua objek bernilai truthy, meskipun nilainya 0!
+  console.log("Ini akan dieksekusi! ⚠️"); // Karena semua objek bernilai truthy, meskipun nilainya 0!
 }
 ```
 
@@ -375,6 +375,7 @@ node 03-standard-library/01-number/example.js
 
 ## 6. 🧭 Navigasi
 
+- ⬅️ **Modul Sebelumnya:** [16 - Iterable dan Iterator (Modul 02)](../../02-oop/16-iterable-and-iterator/README.md)
 - ➡️ **Selanjutnya:** [02 - String](../02-string/README.md)
 - 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

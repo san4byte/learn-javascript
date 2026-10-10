@@ -359,9 +359,9 @@ Mengunci objek sehingga tidak bisa lagi ditambahkan properti baru. Mengembalikan
 
 ---
 
-### 4. 🔍 Studi Kasus Nyata: Mengapa Urutan Eksekusi `Reflect.set` Sangat Krusial? (Pelajaran dari Capstone OmniStore Pro)
+### 4. 🔍 Studi Kasus Nyata: Mengapa Urutan Eksekusi `Reflect.set` Sangat Krusial?
 
-Saat membangun sistem **Reactive State Management** di Capstone Project ([`projects/omnistore-pro/src/state/store.js`](../../projects/omnistore-pro/src/state/store.js)):
+Saat membangun sistem **Reactive State Management** berbasis Vanilla JS:
 
 ```javascript
 export const state = new Proxy(rawState, {

@@ -217,5 +217,6 @@ node 03-standard-library/18-eval/example.js
 ## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [17 - Base64](../17-base64/README.md)
+- ➡️ **Modul Selanjutnya:** [01 - Tanpa Module (Modul 04)](../../04-modules/01-without-module/README.md)
 - 🏠 **Daftar Isi Modul 03:** [README Modul 03](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

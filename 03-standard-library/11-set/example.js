@@ -93,3 +93,44 @@ const subTim = new Set(['Budi']);
 console.log('isSubsetOf (subTim bagian timA?) :', subTim.isSubsetOf(timA)); // true
 console.log('isSupersetOf (timA memuat subTim?):', timA.isSupersetOf(subTim)); // true
 console.log('isDisjointFrom (timA & timB lepas?):', timA.isDisjointFrom(timB)); // false (ada irisan)
+
+console.log('\n=== 6. KOMPARASI WEAKSET (MENCEGAH MEMORY LEAK) ===');
+// A. Inisialisasi WeakSet
+const sesiAktif = new WeakSet();
+
+// Objek target (Elemen WAJIB berupa Objek)
+let userLogin = { username: 'joko_dev', role: 'editor' };
+let userTamu = { username: 'anonim', role: 'guest' };
+
+// B. Menambah elemen (.add)
+sesiAktif.add(userLogin);
+
+console.log('Apakah userLogin aktif? (.has)   :', sesiAktif.has(userLogin)); // true
+console.log('Apakah userTamu aktif? (.has)    :', sesiAktif.has(userTamu)); // false
+
+// C. Karakteristik khusus WeakSet:
+// - Non-iterable: tidak bisa di-loop dengan for..of atau forEach
+// - Tidak memiliki properti .size
+console.log('Properti .size di WeakSet        :', sesiAktif.size); // undefined
+
+// D. Hapus elemen secara eksplisit (.delete)
+const statusHapusSet = sesiAktif.delete(userLogin);
+console.log('Hapus sesi userLogin (.delete)   :', statusHapusSet); // true
+console.log('Status setelah dihapus (.has)    :', sesiAktif.has(userLogin)); // false
+
+// E. Skenario Keamanan Memori & Garbage Collection:
+// Menandai objek untuk validasi tanpa memutasi objek:
+const transaksiDiproses = new WeakSet();
+let order1 = { orderId: 'TRX-1001', amount: 500000 };
+
+transaksiDiproses.add(order1);
+console.log(
+  'order1 sudah diproses? (.has)    :',
+  transaksiDiproses.has(order1),
+); // true
+
+// Jika order1 selesai dan variabel dilepas:
+order1 = null;
+console.log(
+  'order1 dilepas ke GC             : Memori otomatis dibersihkan oleh Garbage Collector!',
+);

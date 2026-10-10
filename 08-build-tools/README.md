@@ -69,4 +69,5 @@ npm run preview  # Preview hasil build produksi
 ## 🧭 Navigasi
 
 - ⬅️ **Modul Sebelumnya:** [07 - Modern Web API & Real-World JS](../07-modern-web-api/README.md)
+- ➡️ **Proyek Akhir (Capstone):** [OmniStore Pro — Modern E-Commerce Storefront](../projects/omnistore-pro/README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../README.md)

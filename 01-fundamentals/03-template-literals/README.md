@@ -180,6 +180,6 @@ node 01-fundamentals/03-template-literals/example.js
 ## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [02 - Variabel dan Scope](../02-variables-and-scope/README.md)
-- ➡️ **Selanjutnya:** [04.1 - Looping: While Loop](../04-loops/01-while/README.md)
+- ➡️ **Selanjutnya:** [04 - Loops](../04-loops/README.md)
 - 🏠 **Daftar Isi Modul 01:** [README Modul 01](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

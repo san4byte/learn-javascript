@@ -118,7 +118,7 @@ Variabel lingkungan dibaca melalui `import.meta.env.VITE_NAMA_VARIABEL`.
 
 ## 3. 💻 Struktur Proyek & Panduan Eksekusi
 
-Struktur berkas lengkap proyek modern Vite berlokasi di direktori [08-build-tools/02-vite/](file:///home/jokosantoso/code/learn-javascript/08-build-tools/02-vite):
+Struktur berkas lengkap proyek modern Vite berlokasi di direktori ini:
 
 ```text
 08-build-tools/02-vite/
@@ -184,5 +184,6 @@ npm run preview
 ## 6. 🧭 Navigasi
 
 - ⬅️ **Sub-Modul Sebelumnya:** [01 - Webpack 5 (Tradisional Bundler)](../01-webpack/README.md)
+- ➡️ **Proyek Akhir (Capstone):** [OmniStore Pro — Modern E-Commerce Storefront](../../projects/omnistore-pro/README.md)
 - 🛠️ **Kembali ke Modul 08:** [08 - Build Tools](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

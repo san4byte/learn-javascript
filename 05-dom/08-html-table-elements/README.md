@@ -162,6 +162,7 @@ Atau buka [`index.html`](index.html) langsung di browser dan buka **DevTools Con
 ### 🏢 Real-World Use Case
 
 1. **Keranjang Belanja E-Commerce (Cart Table)**:
+
    ```javascript
    function renderCartItem(tbody, item) {
      const row = tbody.insertRow(-1);
@@ -178,6 +179,7 @@ Atau buka [`index.html`](index.html) langsung di browser dan buka **DevTools Con
      cellAction.appendChild(btnRemove);
    }
    ```
+
 2. **Auto-Numbering Kolom Tabel**: Menghitung ulang nomor urut kolom pertama (`cells[0].textContent = idx + 1`) setelah baris dihapus.
 
 ### ⚠️ Common Pitfalls
@@ -202,6 +204,6 @@ Atau buka [`index.html`](index.html) langsung di browser dan buka **DevTools Con
 ## 6. 🧭 Navigasi
 
 - ⬅️ **Materi Sebelumnya:** [07 - HTML Form Elements](../07-html-form-elements/README.md)
-- ➡️ **Modul Selanjutnya:** [06 - Asynchronous JavaScript](../../06-asynchronous/README.md)
+- ➡️ **Modul Selanjutnya:** [01 - Event Loop & Asynchronous Architecture (Modul 06)](../../06-asynchronous/01-event-loop-intro/README.md)
 - 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

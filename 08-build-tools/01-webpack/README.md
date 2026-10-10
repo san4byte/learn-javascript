@@ -98,7 +98,7 @@ Menyediakan server HTTP lokal dengan kemampuan _Live Reloading_ dan _Hot Module 
 
 ## 3. 💻 Struktur Proyek & Panduan Eksekusi
 
-Proyek ini telah dikonfigurasi penuh dengan arsitektur modular di direktori [08-build-tools/01-webpack/](file:///home/jokosantoso/code/learn-javascript/08-build-tools/01-webpack):
+Proyek ini telah dikonfigurasi penuh dengan arsitektur modular di direktori ini:
 
 ```text
 08-build-tools/01-webpack/
@@ -157,6 +157,7 @@ npm run build
 
 ## 6. 🧭 Navigasi
 
-- ⬅️ **Kembali ke Modul 08:** [README Modul 08](../README.md)
+- ⬅️ **Modul Sebelumnya:** [05 - Intersection Observer (Modul 07)](../../07-modern-web-api/05-intersection-observer/README.md)
 - ➡️ **Materi Selanjutnya:** [02 - Modern Tooling dengan Vite 8 & Rolldown](../02-vite/README.md)
+- 🏠 **Daftar Isi Modul 08:** [README Modul 08](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

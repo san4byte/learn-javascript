@@ -227,7 +227,7 @@ node 06-asynchronous/01-event-loop-intro/example.js
 
 ## 6. 🧭 Navigasi
 
-- ⬅️ **Modul Sebelumnya:** [05 - JavaScript DOM](../../05-dom/README.md)
+- ⬅️ **Modul Sebelumnya:** [08 - HTML Table Elements (Modul 05)](../../05-dom/08-html-table-elements/README.md)
 - ➡️ **Materi Selanjutnya:** [02 - Timing Events](../02-timing-events/README.md)
 - 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

@@ -182,6 +182,7 @@ node 04-modules/01-without-module/example.js
 
 ## 6. 🧭 Navigasi
 
+- ⬅️ **Modul Sebelumnya:** [18 - Eval (Modul 03)](../../03-standard-library/18-eval/README.md)
 - ➡️ **Selanjutnya:** [02 - Export dan Import](../02-export-and-import/README.md)
 - 🏠 **Daftar Isi Modul 04:** [README Modul 04](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

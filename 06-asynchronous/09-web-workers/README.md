@@ -199,6 +199,6 @@ Atau buka [`index.html`](index.html) langsung di browser dan coba ketik teks di 
 ## 6. 🧭 Navigasi
 
 - ⬅️ **Materi Sebelumnya:** [08 - Async Await](../08-async-await/README.md)
-- ➡️ **Modul Selanjutnya:** [07 - Modern Web API](../../07-modern-web-api/README.md)
+- ➡️ **Modul Selanjutnya:** [01 - Web Storage (Modul 07)](../../07-modern-web-api/01-web-storage/README.md)
 - 🏠 **Daftar Isi Modul 06:** [README Modul 06](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

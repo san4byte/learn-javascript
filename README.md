@@ -20,14 +20,13 @@ Fondasi logika pemrograman, sintaks dasar, dan fitur modern ES6+:
 1. [01 - Popup Boxes (alert, prompt, confirm)](01-fundamentals/01-popup-boxes/README.md)
 2. [02 - Variables and Scope (var, let, const, Hoisting & TDZ)](01-fundamentals/02-variables-and-scope/README.md)
 3. [03 - Template Literals & String Interpolation](01-fundamentals/03-template-literals/README.md)
-4. [04 - Loops (While, For, Nested Loops, For..of, For..in)](01-fundamentals/04-loops/01-while/README.md)
-5. [05 - Conditionals (If Else, Switch Case, Ternary)](01-fundamentals/05-conditionals/01-if-else/README.md)
-6. [07 - Functions (Params, Scope, Closures, Arrow, HOF, Rest, Recursion)](01-fundamentals/07-functions/01-intro/README.md)
-7. [08 - Arrays (Manipulasi, Destructuring, Spread, Pengelolaan Penumpang)](01-fundamentals/08-arrays/01-array-manipulation/README.md)
-8. [09 - Objects (Literal, This, Destructuring, Prototype, Angkot Object)](01-fundamentals/09-objects/01-object-basics/README.md)
-9. [11 - Tipe Data Lanjutan, Operator in, typeof, Falsy Truthy](01-fundamentals/11-data-types-and-operators/README.md)
-10. [12 - Sintaks Modern ES Lanjutan (Optional Chaining, Nullish Coalescing, Strict Mode)](01-fundamentals/12-advanced-syntax/README.md)
-    _(Latihan Mini Projects: [Juragan Angkot](projects/mini-projects/01-juragan-angkot/README.md), [Suit Jawa CLI](projects/mini-projects/02-suit-jawa-cli/README.md), [Tebak Angka CLI](projects/mini-projects/03-tebak-angka-cli/README.md))_
+4. [04 - Loops (While, Do-While, For, Nested Loops, For..of, For..in)](01-fundamentals/04-loops/README.md)
+5. [05 - Conditionals (If Else, Switch Case, Ternary)](01-fundamentals/05-conditionals/README.md)
+6. [06 - Functions (Deklarasi, Scope, Closures, Arrow, HOF, Rest, Rekursif)](01-fundamentals/06-functions/README.md)
+7. [07 - Arrays (Manipulasi Indeks, Mutator & Accessor, Destructuring, Spread)](01-fundamentals/07-arrays/README.md)
+8. [08 - Objects (Literal, This, Methods, Destructuring, Prototype)](01-fundamentals/08-objects/README.md)
+9. [09 - Tipe Data Lanjutan, Operator in, typeof, Falsy Truthy](01-fundamentals/09-data-types-and-operators/README.md)
+10. [10 - Sintaks Modern ES Lanjutan (Optional Chaining, Nullish Coalescing, Strict Mode)](01-fundamentals/10-advanced-syntax/README.md)
 
 ---
 
@@ -67,8 +66,8 @@ Pustaka standar bawaan (Standard Library) JavaScript mencakup objek global dan t
 7. [07 - Date (Epoch Timestamp, ISO 8601, Getter & Setter)](03-standard-library/07-date/README.md)
 8. [08 - Math (Konstanta & Operasi Matematika)](03-standard-library/08-math/README.md)
 9. [09 - Boolean (Boolean Wrapper, valueOf)](03-standard-library/09-boolean/README.md)
-10. [10 - Map (Key-Value Collection Modern)](03-standard-library/10-map/README.md)
-11. [11 - Set (Koleksi Nilai Unik)](03-standard-library/11-set/README.md)
+10. [10 - Map & WeakMap (Key-Value Collection Modern & Pencegahan Memory Leak)](03-standard-library/10-map/README.md)
+11. [11 - Set & WeakSet (Koleksi Nilai Unik, Operasi Himpunan ES2024 & Object Tagging)](03-standard-library/11-set/README.md)
 12. [12 - Symbol (Primitive Unik & Symbol Registry)](03-standard-library/12-symbol/README.md)
 13. [13 - RegExp (Pola Regex, Modifiers & Assertions)](03-standard-library/13-regexp/README.md)
 14. [14 - Proxy (Metaprogramming & Interceptor Traps)](03-standard-library/14-proxy/README.md)
@@ -106,7 +105,6 @@ Interaksi JavaScript dengan dokumen web dan antarmuka HTML dinamis:
 6. [06 - DOM Traversal dan Event Delegation](05-dom/06-dom-traversal/README.md)
 7. [07 - HTML Form Elements (Form, Input, submit event)](05-dom/07-html-form-elements/README.md)
 8. [08 - HTML Table Elements (insertRow & insertCell)](05-dom/08-html-table-elements/README.md)
-   _(Latihan Mini Projects: [Color Picker](projects/mini-projects/04-color-picker/README.md), [Suit Jawa GUI](projects/mini-projects/05-suit-jawa-gui/README.md), [Galeri Gambar](projects/mini-projects/06-image-gallery/README.md))_
 
 ---
 
@@ -131,11 +129,10 @@ Pemrograman asinkron modern untuk menangani proses non-blocking:
 Pola arsitektur, Web API browser modern, dan teknik optimasi performa industri:
 
 1. [01 - Web Storage API (localStorage, sessionStorage, Cookies)](07-modern-web-api/01-web-storage/README.md)
-2. [02 - Modern Syntax ES2020-ES2023](07-modern-web-api/02-modern-syntax-es2020/README.md)
-3. [03 - URL, URLSearchParams, dan FormData API](07-modern-web-api/03-url-and-formdata/README.md)
-4. [04 - Asynchronous Paralel & AbortController](07-modern-web-api/04-async-parallel-abort/README.md)
-5. [05 - Optimasi Performa Event (Debounce dan Throttle)](07-modern-web-api/05-debounce-and-throttle/README.md)
-6. [06 - Intersection Observer API (Lazy Loading & Infinite Scroll)](07-modern-web-api/06-intersection-observer/README.md)
+2. [02 - URL, URLSearchParams, dan FormData API](07-modern-web-api/02-url-and-formdata/README.md)
+3. [03 - Asynchronous Paralel & AbortController](07-modern-web-api/03-async-parallel-abort/README.md)
+4. [04 - Optimasi Performa Event (Debounce dan Throttle)](07-modern-web-api/04-debounce-and-throttle/README.md)
+5. [05 - Intersection Observer API (Lazy Loading & Infinite Scroll)](07-modern-web-api/05-intersection-observer/README.md)
 
 ---
 
@@ -155,8 +152,8 @@ Direktori implementasi terbagi menjadi dua kategori utama:
 1. **[OmniStore Pro — Modern E-Commerce Storefront & Detail](projects/omnistore-pro/README.md)** (Full-Scale Capstone):
    - **Teknologi**: Vanilla JavaScript (ES Modules), Vite Multi-Page Application (MPA), Tailwind CSS v4, DummyJSON Products API.
    - **Fitur Utama**: Live Search dengan Debounce & AbortController, Infinite Scroll & Lazy Loading Gambar (IntersectionObserver), Halaman Detail Produk Dinamis & Galeri Foto, serta Keranjang Belanja Reaktif (Proxy State) & Persisten (LocalStorage).
-2. **[Mini Projects — Latihan Logika & DOM Interaktif (WPU Series)](projects/mini-projects/README.md)** (6 Mini Apps):
-   - **Koleksi**: [01 - Juragan Angkot](projects/mini-projects/01-juragan-angkot/README.md), [02 - Suit Jawa CLI](projects/mini-projects/02-suit-jawa-cli/README.md), [03 - Tebak Angka CLI](projects/mini-projects/03-tebak-angka-cli/README.md), [04 - Color Picker](projects/mini-projects/04-color-picker/README.md), [05 - Suit Jawa GUI](projects/mini-projects/05-suit-jawa-gui/README.md), [06 - Image Gallery](projects/mini-projects/06-image-gallery/README.md).
+2. **[Mini Projects — Latihan Logika & DOM Interaktif (WPU Series)](projects/mini-projects/README.md)** (8 Mini Apps):
+   - **Koleksi**: [01 - Juragan Angkot](projects/mini-projects/01-juragan-angkot/README.md), [02 - Suit Jawa CLI](projects/mini-projects/02-suit-jawa-cli/README.md), [03 - Tebak Angka CLI](projects/mini-projects/03-tebak-angka-cli/README.md), [04 - Color Picker](projects/mini-projects/04-color-picker/README.md), [05 - Suit Jawa GUI](projects/mini-projects/05-suit-jawa-gui/README.md), [06 - Image Gallery](projects/mini-projects/06-image-gallery/README.md), [07 - Penumpang Angkot](projects/mini-projects/07-penumpang-angkot/README.md), [08 - Angkot Object](projects/mini-projects/08-angkot-object/README.md).
 
 ---
 
@@ -168,7 +165,7 @@ Seluruh materi logika, algoritma, OOP, Standard Library, dan sintaks yang tidak 
 
 ```bash
 # Menjalankan materi fungsi
-node 01-fundamentals/07-functions/01-intro/example.js
+node 01-fundamentals/06-functions/example.js
 
 # Menjalankan materi OOP
 node 02-oop/03-class/example.js

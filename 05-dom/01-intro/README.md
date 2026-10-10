@@ -192,7 +192,7 @@ Atau buka [`index.html`](index.html) langsung di browser (atau via ekstensi VS C
 
 ## 6. 🧭 Navigasi
 
-- ⬅️ **Kembali ke Modul Sebelumnya:** [04 - JavaScript Modules](../../04-modules/README.md)
+- ⬅️ **Modul Sebelumnya:** [08 - Dynamic Module Loading (Modul 04)](../../04-modules/08-dynamic-module-loading/README.md)
 - ➡️ **Materi Selanjutnya:** [02 - DOM Selection](../02-dom-selection/README.md)
 - 🏠 **Daftar Isi Modul 05:** [README Modul 05](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

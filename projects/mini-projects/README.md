@@ -15,6 +15,8 @@ Projek-projek ini berfungsi sebagai jembatan yang menghubungkan teori dasar baha
 | **01** | [`01-juragan-angkot`](./01-juragan-angkot/README.md) | Loops & Conditionals | Simulasi pengelolaan operasional 10 armada angkot bertingkat (angkot normal, rusak, dan lembur). |
 | **02** | [`02-suit-jawa-cli`](./02-suit-jawa-cli/README.md) | Random Math & Branching | Game klasik Suit Jawa (Gajah, Orang, Semut) melawan komputer berbasis terminal / prompt dialog. |
 | **03** | [`03-tebak-angka-cli`](./03-tebak-angka-cli/README.md) | Do-While & Number Range | Permainan menebak angka rahasia 1–10 dengan batas 3 kali kesempatan tebakan. |
+| **07** | [`07-penumpang-angkot`](./07-penumpang-angkot/README.md) | Arrays & Data Management | Sistem manajemen alokasi kursi penumpang angkot, daur ulang slot kosong, dan proteksi duplikasi data. |
+| **08** | [`08-angkot-object`](./08-angkot-object/README.md) | Objects & Constructor Prototype | Pemodelan armada angkot berorientasi objek (sopir, trayek, transaksi kas, dan manajemen penumpang). |
 
 ### 2. Antarmuka Web Interaktif (DOM Manipulation & Events)
 
@@ -38,6 +40,12 @@ node projects/mini-projects/02-suit-jawa-cli/example.js
 
 # Menjalankan tebak angka CLI:
 node projects/mini-projects/03-tebak-angka-cli/example.js
+
+# Menjalankan pengelolaan kursi penumpang angkot:
+node projects/mini-projects/07-penumpang-angkot/example.js
+
+# Menjalankan pengelolaan angkot objek:
+node projects/mini-projects/08-angkot-object/example.js
 ```
 
 ### B. Menjalankan Projek GUI (Browser)

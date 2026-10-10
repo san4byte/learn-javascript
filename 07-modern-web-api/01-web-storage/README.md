@@ -187,7 +187,7 @@ Atau buka [`index.html`](index.html) langsung di browser dan buka **DevTools App
 
 ## 6. 🧭 Navigasi
 
-- ⬅️ **Modul Sebelumnya:** [06 - Asynchronous JavaScript](../../06-asynchronous/README.md)
-- ➡️ **Materi Selanjutnya:** [02 - Modern Syntax ES2020+](../02-modern-syntax-es2020/README.md)
+- ⬅️ **Modul Sebelumnya:** [09 - Web Workers (Modul 06)](../../06-asynchronous/09-web-workers/README.md)
+- ➡️ **Materi Selanjutnya:** [02 - URL, URLSearchParams & FormData](../02-url-and-formdata/README.md)
 - 🏠 **Daftar Isi Modul 07:** [README Modul 07](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

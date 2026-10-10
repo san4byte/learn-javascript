@@ -233,6 +233,7 @@ node 02-oop/01-constructor-function/example.js
 
 ## 6. 🧭 Navigasi
 
+- ⬅️ **Modul Sebelumnya:** [10 - Sintaks Modern ES Lanjutan (Modul 01)](../../01-fundamentals/10-advanced-syntax/README.md)
 - ➡️ **Selanjutnya:** [02 - Prototype Inheritance](../02-prototype/README.md)
 - 🏠 **Daftar Isi Modul 02:** [README Modul 02](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

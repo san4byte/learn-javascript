@@ -24,10 +24,10 @@ Selamat datang di **Modul 03**! JavaScript Standard Library mencakup objek bawaa
    - Objek statis operasi matematika: konstanta (`PI`, `E`), teknik pembulatan (`floor`, `ceil`, `round`, `trunc`), nilai mutlak, perpangkatan, trigonometri, dan angka acak terdistribusi.
 9. [09 - Boolean](09-boolean/README.md)
    - Objek pembungkus primitif logika: perbedaan krusial antara tipe primitif `boolean` dengan instansiasi `new Boolean()`, konversi objek ke primitif (`valueOf`), dan stringifikasi.
-10. [10 - Map](10-map/README.md)
-    - Koleksi pasangan key-value berurutan modern: mendukung kunci bertipe data apapun (termasuk Object dan Function), performa tinggi penambahan/penghapusan, dan properti `size`.
-11. [11 - Set](11-set/README.md)
-    - Koleksi nilai unik berurutan: teknik eliminasi duplikasi array otomatis, operasi himpunan (Union, Intersection, Difference), dan metode `has()`, `add()`, `delete()`.
+10. [10 - Map & WeakMap](10-map/README.md)
+    - Koleksi pasangan key-value modern (kunci bertipe apapun, properti `size`) serta komparasi mendalam dengan `WeakMap` berbasis referensi lemah (_weak reference_) untuk proteksi dari kebocoran memori (_memory leak_).
+11. [11 - Set & WeakSet](11-set/README.md)
+    - Koleksi nilai unik, eliminasi duplikasi array instan, operasi aljabar himpunan modern ES2024 (Union, Intersection, Difference), serta komparasi dengan `WeakSet` untuk penandaan objek (_object tagging_).
 12. [12 - Symbol](12-symbol/README.md)
     - Tipe data primitif unik dan tidak dapat diubah: pembuatan pengenal unik untuk properti objek, pencegahan tabrakan kunci (property collision), dan Global Symbol Registry (`Symbol.for`, `Symbol.keyFor`).
 13. [13 - RegExp](13-regexp/README.md)

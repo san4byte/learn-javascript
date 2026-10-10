@@ -17,6 +17,7 @@
 - Memahami evaluasi nilai unik pada objek referensi vs nilai primitif dan perlakuan khusus `NaN`.
 - Menguasai iterasi data himpunan menggunakan `for...of`, `.values()`, `.entries()`, dan `.forEach()`.
 - Menguasai metode himpunan matematika modern ES2024: `union()`, `intersection()`, `difference()`, `symmetricDifference()`, `isSubsetOf()`, `isSupersetOf()`, dan `isDisjointFrom()`.
+- Memahami konsep referensi lemah (_weak reference_), pembersihan memori oleh Garbage Collector, dan komparasi mendalam antara `Set` vs `WeakSet`.
 
 ---
 
@@ -274,9 +275,60 @@ console.log(frontEnd.isDisjointFrom(backEnd)); // false (karena ada irisan 'JS')
 
 ---
 
+### 3. Komparasi Mendalam: `Set` vs `WeakSet` (Object Tagging & Keamanan Memori)
+
+Sama halnya dengan relasi `Map` dan `WeakMap`, ECMAScript juga menyediakan koleksi **`WeakSet`** yang dioptimalkan khusus untuk relasi himpunan objek berbasis referensi lemah (_weak reference_).
+
+#### 1. Konsep Dasar & Garbage Collection pada WeakSet
+
+Pada `Set` biasa, jika Anda memasukkan objek ke dalam himpunan, objek tersebut dipegang dengan referensi kuat (_strong reference_). Objek tidak akan pernah dibersihkan oleh Garbage Collector (GC) meskipun variabel aslinya sudah dihapus (`obj = null`), berpotensi memicu kebocoran memori.
+
+Pada **`WeakSet`**:
+
+- Nilai yang disimpan **hanya boleh berupa Objek** (atau Symbol non-registered).
+- Nilai dipegang secara **lemah (_weak reference_)**: jika objek tersebut tidak lagi memiliki referensi lain di memori aplikasi, Garbage Collector akan **langsung membersihkannya secara otomatis**.
+
+```javascript
+let sesiPengguna = { token: "AUTH-XYZ", userId: 99 };
+
+// Menggunakan WeakSet
+const sesiAktif = new WeakSet();
+sesiAktif.add(sesiPengguna);
+
+console.log(sesiAktif.has(sesiPengguna)); // true
+
+// Skenario logout / objek keluar dari memori:
+sesiPengguna = null;
+// Di balik layar, entri pada sesiAktif otomatis siap dibersihkan oleh GC!
+```
+
+---
+
+#### 2. Tabel Komparasi: `Set` vs `WeakSet`
+
+| Karakteristik              | `Set` Standar                                      | `WeakSet`                                    |
+| :------------------------- | :------------------------------------------------- | :------------------------------------------- |
+| **Tipe Data Nilai**        | Bebas (Primitif, Objek, Symbol)                    | **Wajib Objek** (atau Symbol non-registered) |
+| **Sifat Referensi**        | _Strong Reference_ (Menahan pembersihan GC)        | **_Weak Reference_ (Aman dari memory leak)** |
+| **Dapat Diiterasi?**       | Ya (`for..of`, `forEach`, `.values()`)             | **Tidak bisa** (Non-iterable)                |
+| **Mengetahui Ukuran**      | Properti `set.size`                                | **Tidak ada properti `.size`**               |
+| **Metode Pembersihan**     | Mendukung `set.clear()`                            | **Tidak ada metode `.clear()`**              |
+| **Operasi Aljabar ES2024** | Didukung (`union`, `intersection`, dll.)           | **Tidak didukung**                           |
+| **Method API**             | Lengkap: `add`, `has`, `delete`, `clear`, iterator | Minimalis: `add`, `has`, `delete`            |
+
+---
+
+#### 3. Kapan Menggunakan `WeakSet`?
+
+1. **Penandaan Objek Tanpa Mutasi (_Object Tagging/Marking_)**: Melacak apakah suatu objek telah diproses, divalidasi, atau di-serialize tanpa menambahkan properti buatan ke objek itu sendiri (misalnya `obj.isProcessed = true` yang mencemari bentuk objek).
+2. **Pencegahan Siklus Tak Hingga (_Circular Reference Tracking_)**: Mendeteksi apakah suatu node/objek pohon sudah pernah dikunjungi selama algoritma traversal grafik atau kloning objek mendalam.
+3. **Pemeriksaan Hak Akses Instance Method**: Menandai instance sah dari sebuah class untuk memastikan method internal hanya dijalankan oleh instance yang diizinkan.
+
+---
+
 ## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-Seluruh konsep inisialisasi, deduplikasi array, pengecekan instan $O(1)$, referensi memori objek, penanganan `NaN`, dan implementasi aljabar himpunan modern ES2024 di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan langsung di terminal.
+Seluruh konsep inisialisasi, deduplikasi array, pengecekan instan $O(1)$, aljabar himpunan modern ES2024, serta komparasi `WeakSet` di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan langsung di terminal.
 
 📁 File: [`example.js`](./example.js)
 
@@ -294,10 +346,12 @@ node 03-standard-library/11-set/example.js
 1. **Deduplikasi Array Data API**: Membersihkan array kategori produk, daftar email penerima newsletter, atau tag blog menggunakan `[...new Set(array)]`.
 2. **Sistem Otorisasi Peran (RBAC Permissions)**: Menyimpan daftar _permission codes_ pengguna di dalam Set agar fungsi pengecekan `hasPermission(p)` berjalan instan $O(1)$.
 3. **Analitik Segmentasi Pelanggan (ES2024)**: Menghitung pengguna yang membeli produk A dan produk B menggunakan method `pembeliA.intersection(pembeliB)`.
+4. **Pelacakan Objek Tanpa Mutasi (`WeakSet`)**: Menandai apakah suatu request atau model data telah divalidasi tanpa risiko kebocoran memori.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
 - **Mencoba Mengakses via Indeks `set[0]`**: Set tidak mengizinkan akses indeks dan akan selalu menghasilkan `undefined`. Konversi dulu ke array via `[...set][0]`.
+- **Menyimpan Tipe Primitif di `WeakSet`**: Memasukkan tipe primitif ke `WeakSet` seperti `weakSet.add(100)` atau `weakSet.add('teks')` akan langsung melempar fatal error `TypeError: Invalid value used in weak set`.
 - **Deduplikasi Objek Literal Gagal**: Mengira `new Set([{id: 1}, {id: 1}])` akan membuang salah satu objek, padahal keduanya memiliki alamat memori berbeda.
 - **Mengubah Properti di Dalam Objek yang Tersimpan**: Memodifikasi properti objek di dalam Set tidak memicu evaluasi ulang keunikan.
 
@@ -306,6 +360,7 @@ node 03-standard-library/11-set/example.js
 - Selalu gunakan `Set` jika operasi utama adalah pengecekan keberadaan elemen (`has()`) pada koleksi data berukuran ratusan hingga ribuan item.
 - Gunakan metode Set ES2024 (`union`, `intersection`, `difference`) untuk operasi logika data antar grup secara deklaratif.
 - Manfaatkan `[...new Set(arr)]` untuk deduplikasi cepat data primitif.
+- Gunakan `WeakSet` murni untuk memberikan penanda (_tagging/flagging_) pada objek yang siklus hidupnya dikelola di luar kontrol langsung aplikasi Anda.
 
 ---
 
@@ -314,6 +369,7 @@ node 03-standard-library/11-set/example.js
 1. Buat fungsi `cariTagBersama(artikelA, artikelB)` yang menerima dua array tag dan mengembalikan array berisi tag yang ada pada kedua artikel menggunakan `Set.prototype.intersection()`.
 2. Diberikan array objek karyawan `[{ id: 1, nama: 'Budi' }, { id: 2, nama: 'Andi' }, { id: 1, nama: 'Budi' }]`. Buat fungsi untuk mendeduplikasi array objek tersebut berdasarkan properti `id` uniknya.
 3. Buat class `BlacklistManager` dengan method `blokir(ip)`, `bukaBlokir(ip)`, dan `apakahDiblokir(ip)` menggunakan struktur data `Set`.
+4. Buatlah class `AuditProcessor` menggunakan `WeakSet` yang memiliki method `tandaiSudahDiproses(objek)` dan `apakahSudahDiproses(objek)`. Ujilah dengan dua objek transaksi terpisah dan buktikan bahwa `WeakSet` dapat melacak status pemrosesan tanpa memodifikasi properti objek aslinya.
 
 ---
 

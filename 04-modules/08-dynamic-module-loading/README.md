@@ -196,6 +196,6 @@ node 04-modules/08-dynamic-module-loading/example.js
 ## 6. 🧭 Navigasi
 
 - ⬅️ **Sebelumnya:** [07 - Aggregating Modules](../07-aggregating-modules/README.md)
-- ➡️ **Selanjutnya:** [01 - Modul 05 (JavaScript DOM)](../../05-dom/README.md)
+- ➡️ **Selanjutnya:** [01 - Pengenalan DOM (Modul 05)](../../05-dom/01-intro/README.md)
 - 🏠 **Daftar Isi Modul 04:** [README Modul 04](../README.md)
 - 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

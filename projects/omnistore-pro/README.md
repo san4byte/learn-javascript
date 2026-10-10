@@ -157,3 +157,11 @@ Seluruh file HTML, JavaScript, dan CSS akan dioptimasi dan dikemas ke dalam fold
 ```bash
 npm run preview
 ```
+
+---
+
+## 🧭 Navigasi
+
+- ⬅️ **Modul Teori Sebelumnya:** [08 - Build Tools & Ecosystem](../../08-build-tools/README.md)
+- 🎮 **Koleksi Mini Projects:** [Mini Projects (WPU Series)](../mini-projects/README.md)
+- 📑 **Daftar Isi Utama:** [Kembali ke Root README](../../README.md)

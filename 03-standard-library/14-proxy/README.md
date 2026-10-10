@@ -383,7 +383,7 @@ node 03-standard-library/14-proxy/example.js
 ### 🏢 Real-World Use Case
 
 1. **Reaktivitas Framework Modern**: Vue.js 3 menggunakan `Proxy` untuk mendeteksi perubahan state secara otomatis dan me-render ulang UI seketika (_fine-grained reactivity_).
-2. **State Management Vanilla JS (Capstone OmniStore Pro)**: Diimplementasikan di [`projects/omnistore-pro/src/state/store.js`](../../projects/omnistore-pro/src/state/store.js) sebagai Single Source of Truth yang otomatis reaktif. Objek asli `rawState` disembunyikan dan dibungkus Proxy. Setiap kali nilai state diubah (`state.cart = ...`), trap `set()` otomatis menyimpan data ke `localStorage` dan mengabari semua komponen UI yang berlangganan (_Subscriber_).
+2. **State Management Vanilla JS**: Pada arsitektur Single Source of Truth yang otomatis reaktif, objek asli `rawState` disembunyikan dan dibungkus Proxy. Setiap kali nilai state diubah (`state.cart = ...`), trap `set()` otomatis menyimpan data ke `localStorage` dan mengabari semua komponen UI yang berlangganan (_Subscriber_).
    - **Trik `state.cart = state.cart`**: Pada operasi mutasi internal Map (`cart.addItem(product)`), referensi variabel tidak berganti. Penugasan ulang `state.cart = state.cart` digunakan sebagai pemicu formal agar sensor trap `set` pada Proxy terbangun dan UI seketika terbarui.
 3. **Validasi Skema Model Runtime**: Memastikan tipe data objek database atau formulir sesuai aturan sebelum disimpan ke database.
 4. **Audit Logging & Analitik**: Merekam setiap kali fungsi atau properti sensitif dipanggil di sistem backend.

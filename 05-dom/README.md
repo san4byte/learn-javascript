@@ -25,16 +25,6 @@ Selamat datang di **Modul 05**! Document Object Model (DOM) adalah jembatan yang
 
 ---
 
-## 🎮 Latihan Praktik & Studi Kasus Interaktif (Mini Projects)
-
-Seluruh proyek latihan aplikasi mini berbasis DOM telah dikelompokkan ke direktori [`projects/mini-projects/`](../projects/mini-projects/README.md):
-
-- 🎨 **[Color Picker (Pengubah Warna & Slider RGB)](../projects/mini-projects/04-color-picker/README.md)**: Manipulasi warna background dengan tombol acak dan slider range RGB.
-- 🐘 **[Game Suit Jawa GUI 2.0](../projects/mini-projects/05-suit-jawa-gui/README.md)**: Game grafis dengan animasi putar gambar, papan skor, dan efek interaktif.
-- 🖼️ **[Galeri Gambar Interaktif](../projects/mini-projects/06-image-gallery/README.md)**: Komponen thumbnail foto dengan _event delegation_ dan efek transisi _fade-in_.
-
----
-
 ## 🛠️ Cara Menjalankan
 
 Buka file `index.html` yang tersedia di masing-masing sub-folder langsung di browser Anda, atau gunakan ekstensi **Live Server** di VS Code.

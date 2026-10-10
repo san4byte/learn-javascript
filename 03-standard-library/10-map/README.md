@@ -15,6 +15,7 @@
 - Mampu memilih pola iterasi yang tepat (`.keys()`, `.values()`, `.entries()`, `forEach`, `for...of`).
 - Mengetahui cara konversi data antara Map, Array, dan Object.
 - Memahami perbandingan referensi memori kunci bertipe Objek.
+- Memahami konsep referensi lemah (_weak reference_), manajemen Garbage Collection, dan komparasi mendalam antara `Map` vs `WeakMap`.
 
 ---
 
@@ -455,9 +456,57 @@ Mengeksekusi fungsi callback untuk setiap elemen pasangan di dalam Map.
 
 ---
 
+### 4. Komparasi Mendalam: `Map` vs `WeakMap` (Mencegah Kebocoran Memori)
+
+Selain `Map` standar, ECMAScript menyediakan varian khusus bernama **`WeakMap`** yang dirancang khusus untuk skenario optimasi memori tingkat lanjut.
+
+#### 1. Konsep Dasar Referensi Lemah (_Weak Reference_) & Garbage Collection
+
+Pada `Map` biasa, jika sebuah objek dijadikan kunci, `Map` tersebut memegang referensi kuat (_strong reference_) ke objek tersebut. Artinya, meskipun variabel yang menampung objek asli diatur menjadi `null` atau keluar dari scope, mesin JavaScript **Garbage Collector (GC)** tidak akan pernah bisa menghapus objek tersebut dari memori RAM selama masih ada di dalam `Map`. Hal ini berisiko memicu **kebocoran memori (_memory leak_)**.
+
+Sebaliknya, pada **`WeakMap`**, relasi kunci bersifat **lemah (_weak reference_)**:
+
+- Jika tidak ada referensi lain di program yang menunjuk ke objek kunci tersebut, Garbage Collector akan **secara otomatis membersihkan objek kunci beserta nilai pasangannya** dari memori.
+
+```javascript
+let elemenTombol = { id: "btn-checkout", tag: "BUTTON" };
+
+// Menggunakan WeakMap
+const metadataWeak = new WeakMap();
+metadataWeak.set(elemenTombol, { klik: 5, waktuAkses: Date.now() });
+
+// Jika elemen dihapus dari DOM dan variabel di-null-kan:
+elemenTombol = null;
+// Di balik layar, metadataWeak otomatis mengizinkan GC membersihkan data di atas!
+```
+
+---
+
+#### 2. Tabel Komparasi: `Map` vs `WeakMap`
+
+| Karakteristik          | `Map` Standar                                             | `WeakMap`                                    |
+| :--------------------- | :-------------------------------------------------------- | :------------------------------------------- |
+| **Tipe Data Kunci**    | Bebas (Primitif, Objek, Fungsi, Symbol)                   | **Wajib Objek** (atau Symbol non-registered) |
+| **Tipe Data Nilai**    | Bebas                                                     | Bebas                                        |
+| **Sifat Referensi**    | _Strong Reference_ (Menahan pembersihan GC)               | **_Weak Reference_ (Aman dari memory leak)** |
+| **Dapat Diiterasi?**   | Ya (`for..of`, `forEach`, `.keys()`, `.entries()`)        | **Tidak bisa** (Non-iterable)                |
+| **Mengetahui Ukuran**  | Properti `map.size`                                       | **Tidak ada properti `.size`**               |
+| **Metode Pembersihan** | Mendukung `map.clear()`                                   | **Tidak ada metode `.clear()`**              |
+| **Method API**         | Lengkap: `set`, `get`, `has`, `delete`, `clear`, iterator | Minimalis: `set`, `get`, `has`, `delete`     |
+
+---
+
+#### 3. Kapan Menggunakan `WeakMap`?
+
+1. **Metadata untuk Objek DOM (Frameworks/Libraries)**: Menyimpan state, event listener khusus, atau data tambahan yang terikat pada elemen DOM tanpa takut memory leak saat elemen tersebut dihapus dari dokumen oleh interaksi pengguna.
+2. **Data Privat (Private Data Storage)**: Mengasosiasikan state internal ke instance objek class tanpa mengekspos propertinya ke publik (sangat populer pada era sebelum sintaks `#privateField` ES2022).
+3. **Memoization / Caching Objek Transien**: Melakukan caching kalkulasi berat dengan parameter objek tanpa mencegah objek tersebut dilepaskan dari memori saat proses selesai.
+
+---
+
 ## 3. 💻 Kode Praktik Terpadu (`example.js`)
 
-Seluruh konsep, method, dan skenario di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan dan dieksplorasi secara langsung di terminal.
+Seluruh konsep, method, skenario `Map`, serta komparasi `WeakMap` di atas dirangkum ke dalam satu script laboratorium terpadu yang siap dijalankan dan dieksplorasi secara langsung di terminal.
 
 📁 File: [`example.js`](./example.js)
 
@@ -473,19 +522,20 @@ node 03-standard-library/10-map/example.js
 ### 🏢 Real-World Use Case
 
 1. **Sistem Cache Memori (In-Memory Caching)**: Menyimpan hasil komputasi berat dengan objek parameter request sebagai kuncinya.
-2. **Metadata Elemen DOM**: Memetakan elemen tombol HTML langsung sebagai kunci tanpa harus mengubah atau mencemari objek DOM itu sendiri.
+2. **Metadata Objek & Elemen DOM Tanpa Memory Leak (`WeakMap`)**: Mengasosiasikan data transien ke objek DOM atau instance class tanpa risiko kebocoran memori.
 3. **Frekuensi Penghitungan Kata**: Menghitung jumlah kemunculan kata atau ID pengguna dengan penambahan data berkecepatan tinggi.
 
 ### ⚠️ Common Pitfalls (Jebakan Umum)
 
 - **Mengakses Map dengan bracket notation `map[key]`**: Menulis `map['nama'] = 'Joko'` tidak menyimpan data ke dalam struktur Map internal, melainkan menambahkan properti objek JS biasa. Properti `map.size` tidak akan bertambah! Selalu gunakan `map.set()` dan `map.get()`.
+- **Kunci Primitif pada `WeakMap`**: Memasukkan tipe data primitif seperti `weakMap.set('token', 123)` akan langsung melempar runtime error `TypeError: Invalid value used as weak map key`. Kunci `WeakMap` wajib berupa Objek atau Symbol non-registered.
 - **Perbandingan referensi pada kunci objek**: Menulis `map.set({ role: 'admin' }, 'data')` **tidak bisa diambil** dengan `map.get({ role: 'admin' })` dan akan mengembalikan `undefined`! Hal ini terjadi karena kedua tanda kurung kurawal `{}` tersebut memesan alamat memori yang berbeda. Kunci objek wajib disimpan ke dalam satu variabel referensi terlebih dahulu.
 - **Serialisasi JSON langsung**: `JSON.stringify(map)` menghasilkan string kosong `{}` karena JSON tidak mendukung Map secara native. Konversi dulu via `Object.fromEntries(map)` atau `[...map]`.
 
 ### 🌟 Best Practice
 
-- Gunakan `Map` jika kunci tidak diketahui hingga runtime atau bertipe non-string.
-- Gunakan `Map` jika Anda membutuhkan frekuensi penambahan dan penghapusan key secara berkala demi performa memori yang optimal.
+- Gunakan `Map` jika kunci tidak diketahui hingga runtime, bertipe non-string, atau membutuhkan iterasi dan pengecekan jumlah elemen (`.size`).
+- Gunakan `WeakMap` jika Anda ingin mengasosiasikan data ke sebuah objek yang siklus hidupnya dikelola di luar kontrol Anda (misalnya elemen DOM atau objek eksternal), guna mencegah kebocoran memori.
 - Gunakan `Object` biasa jika Anda hanya memerlukan struktur data rekaman statis (_record_) yang telah ditentukan field-fieldnya sejak awal.
 
 ---
@@ -494,6 +544,7 @@ node 03-standard-library/10-map/example.js
 
 1. Buatlah class `CacheService` sederhana yang menggunakan `Map` di dalamnya, memiliki method `simpan(kunci, nilai)` dan `ambil(kunci)`.
 2. Diberikan array string `['apel', 'jeruk', 'apel', 'mangga', 'jeruk', 'apel']`. Gunakan `Map` untuk menghitung frekuensi kemunculan setiap buah.
+3. Buatlah implementasi `DOMTracker` menggunakan `WeakMap` untuk melacak jumlah klik pada objek elemen DOM simulasi `{ id: 'btn-checkout', tag: 'BUTTON' }`. Buktikan bahwa data metadata dapat diambil dengan benar via `.get()`, dan jelaskan mengapa referensi lemah pada `WeakMap` menjamin objek aman dari _memory leak_ saat elemen dihapus.
 
 ---
 
